@@ -9,17 +9,7 @@ RUN bun install --production
 
 COPY src src
 COPY tsconfig.json .
-
-ENV JUDGE0_HOST = http://localhost
-ENV JUDGE0_PORT = 2358
-
-ENV PSQL_CONNECTION_STRING = postgres://skopek:skopek@localhost:5432/et-db
-ENV PSQL_HOST = localhost
-ENV PSQL_USER = skopek
-ENV PSQL_PASSWORD = skopek
-ENV PSQL_NAME = et-db
-
-# RUN bunx drizzle-kit generate:pg
+COPY drizzle.config.ts .
 
 ENV NODE_ENV production
 

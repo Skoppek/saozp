@@ -1,31 +1,31 @@
 {
-    "name": "engineering-thesis-backend",
-    "version": "1.0.50",
-    "type": "module",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "bun run --watch src/index.ts",
-        "lint": "bunx prettier -w ./src/ --config .prettierrc.json",
-        "create-migration": "bunx drizzle-kit generate:pg",
-        "push-migration": "bunx drizzle-kit push:pg"
-    },
-    "dependencies": {
-        "@elysiajs/cron": "latest",
-        "@elysiajs/swagger": "latest",
-        "axios": "^1.6.7",
-        "dotenv": "^16.4.3",
-        "drizzle-orm": "^0.29.3",
-        "elysia": "latest",
-        "email-validator": "^2.0.4",
-        "lodash": "^4.17.21",
-        "pg": "^8.11.3",
-        "postgres": "^3.4.3"
-    },
-    "devDependencies": {
-        "drizzle-kit": "^0.20.14",
-        "@types/lodash": "^4.17.0",
-        "bun-types": "latest",
-        "prettier": "^3.2.5"
-    },
-    "module": "src/index.js"
+  "name": "engineering-thesis-backend",
+  "version": "1.0.50",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "lint": "bunx prettier -w ./src/ --config .prettierrc.json",
+    "create-migration": "bunx drizzle-kit generate:pg",
+    "push-migration": "bunx drizzle-kit push:pg"
+  },
+  "dependencies": {
+    "@elysiajs/cron": "latest",
+    "@elysiajs/swagger": "latest",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.3",
+    "drizzle-kit": "^0.20.14",
+    "drizzle-orm": "^0.30.8",
+    "elysia": "latest",
+    "email-validator": "^2.0.4",
+    "lodash": "^4.17.21",
+    "pg": "^8.11.3",
+    "postgres": "^3.4.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.0",
+    "bun-types": "latest",
+    "prettier": "^3.2.5"
+  },
+  "module": "src/index.js"
 }

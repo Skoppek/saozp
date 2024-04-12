@@ -2,8 +2,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import schema from './schema';
 
-// const connectionString = process.env.PSQL_CONNECTION_STRING;
-const connectionString = 'reee';
+const connectionString = process.env.DB_CONNECTION_STRING;
 
 if (!connectionString) {
     throw new Error('Connection string not found!');

@@ -38,6 +38,7 @@ const app = new Elysia()
     .use(problemController)
     .use(submissionController)
     .use(adminsController)
+    .get('/healthcheck', () => 'Response from healthcheck!')
     .listen(3000);
 
 export const server = app.server;

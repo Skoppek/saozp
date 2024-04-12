@@ -26,7 +26,7 @@ services:
         links:
             - db
         environment:
-            DB_CONNECTION_STRING: postgres://postgres:postgres@db:5432/postgres
+            DB_CONNECTION_STRING: postgres://postgres:postgres@localhost:5432/postgres
 
 networks:
     mynet:

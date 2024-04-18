@@ -48,18 +48,11 @@ export default new Elysia()
                 httpOnly: true,
             });
 
-            const newProfile = (
-                await profileRepository.createProfile({
-                    userId: newUser.id,
-                    firstName: firstName,
-                    lastName: lastName,
-                })
-            ).at(0);
-
-            return {
-                firstName: newProfile?.firstName ?? '',
-                lastName: newProfile?.lastName ?? '',
-            };
+            await profileRepository.createProfile({
+                userId: newUser.id,
+                firstName: firstName,
+                lastName: lastName,
+            });
         },
         {
             detail: {
@@ -68,10 +61,6 @@ export default new Elysia()
             body: t.Object({
                 email: t.String({ format: 'email' }),
                 password: t.String(),
-                firstName: t.String(),
-                lastName: t.String(),
-            }),
-            response: t.Object({
                 firstName: t.String(),
                 lastName: t.String(),
             }),

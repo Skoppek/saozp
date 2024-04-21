@@ -8,24 +8,24 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
-    // children: [
-    //   {
-    //     path: "/login",
-    //   },
-    //   {
-    //     path: "/register",
-    //   },
-    //   {
-    //     path: "/me",
-    //   },
-    //   {
-    //     path: "/me/problems",
-    //   },
-    //   {
-    //     path: "/problems",
-    //   },
-    //   {},
-    // ],
+    children: [
+      {
+        path: "/login",
+      },
+      {
+        path: "/register",
+      },
+      {
+        path: "/me",
+      },
+      {
+        path: "/me/problems",
+      },
+      {
+        path: "/problems",
+      },
+      {},
+    ],
   },
 ]);
 

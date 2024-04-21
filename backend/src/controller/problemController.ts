@@ -74,7 +74,7 @@ export default new Elysia({ prefix: '/problem' })
                 return {
                     problemId: problem.id,
                     name: problem.name,
-                    description: problem.description,
+                    description: problem.description ?? undefined,
                     languageId: problem.languageId,
                 };
             });
@@ -87,7 +87,7 @@ export default new Elysia({ prefix: '/problem' })
                 t.Object({
                     problemId: t.Number(),
                     name: t.String(),
-                    description: t.Nullable(t.String()),
+                    description: t.Optional(t.String()),
                     languageId: t.Number(),
                 }),
             ),
@@ -115,6 +115,7 @@ export default new Elysia({ prefix: '/problem' })
                     '/',
                     async ({ problem }) => {
                         return {
+                            problemId: problem.id,
                             name: problem.name,
                             description: problem.description,
                             prompt: problem.prompt,
@@ -128,6 +129,7 @@ export default new Elysia({ prefix: '/problem' })
                             tags: ['Problems'],
                         },
                         response: t.Object({
+                            problemId: t.Number(),
                             name: t.String(),
                             description: t.Nullable(t.String()),
                             prompt: t.String(),

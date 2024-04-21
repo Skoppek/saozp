@@ -1,9 +1,5 @@
-import { Outlet } from "react-router-dom";
+import { Button, DarkThemeToggle } from "flowbite-react";
 
 export const Root = () => {
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
+  return <DarkThemeToggle />;
 };

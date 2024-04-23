@@ -68,15 +68,19 @@ export default new Elysia()
     )
     .post(
         '/sign-in',
-        async ({ body, cookie: { session } }) => {
+        async ({ body, cookie: { session }, set }) => {
             const { email, password } = body;
+
+            set.headers['content-type'] = 'application/json';
 
             const user = (await userRepository.getUserByEmail(email)).at(0);
             if (!user) {
+                set.status = 401;
                 throw new Error('User not found!');
             }
 
             if (!Bun.password.verifySync(password, user.password)) {
+                set.status = 401;
                 throw new Error('Unauthenticated');
             }
 
@@ -100,12 +104,14 @@ export default new Elysia()
 
             // @ts-ignore
             session.set({
+                path: '/',
                 value: sessionData.id,
                 expires: sessionData?.expiresAt,
                 httpOnly: true,
+                secure: true,
+                sameSite: 'lax',
+                domain: 'localhost',
             });
-
-            return { session: sessionData.id };
         },
         {
             detail: {
@@ -115,15 +121,12 @@ export default new Elysia()
                 email: t.String(),
                 password: t.String(),
             }),
-            response: t.Object({
-                session: t.String(),
-            }),
         },
     )
     .put(
         '/logout',
         async ({ cookie: { session }, set }) => {
-            if (!session) {
+            if (!session || !session.value) {
                 set.status = 400;
                 throw new Error('No session id in cookie!');
             }

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Root } from "./pages/Root";
+import { LoginForm } from "./components/LoginForm";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login",
+        element: <LoginForm />,
       },
       {
         path: "/register",

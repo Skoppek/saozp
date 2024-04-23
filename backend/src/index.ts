@@ -5,8 +5,20 @@ import submissionController from './controller/submissionController';
 import judge0Controller from './controller/judge0Controller';
 import authController from './controller/authController';
 import adminsController from './controller/adminsController';
+import cors from '@elysiajs/cors';
 
 const app = new Elysia()
+    .use(
+        cors({
+            origin: true,
+            allowedHeaders: [
+                'Authorization',
+                'Content-Type',
+                'Cookie',
+                'Set-Cookie',
+            ],
+        }),
+    )
     .use(
         // @ts-ignore
         swagger({
@@ -33,12 +45,15 @@ const app = new Elysia()
             },
         }),
     )
+    // .onBeforeHandle(({ set }) => {
+    //     set.headers['content-type'] = 'application/json';
+    // })
     .use(judge0Controller)
     .use(authController)
     .use(problemController)
     .use(submissionController)
     .use(adminsController)
-    .get('/healthcheck', () => 'Response from healthcheck!')
+    .get('/healthcheck', () => 'Healthcheck!')
     .listen(3000);
 
 export const server = app.server;

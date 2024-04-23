@@ -57,7 +57,9 @@ const registerUser = (newUserInfo: LoginCredentials & Profile) => {
 };
 
 const loginUser = (credentials: LoginCredentials) => {
-  return axios.post(`${API_URL}/sign-in`, credentials);
+  return axios.post(`${API_URL}/sign-in`, credentials, {
+    withCredentials: true,
+  });
 };
 
 const logout = () => {

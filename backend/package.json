@@ -10,11 +10,12 @@
     "push-migration": "bunx drizzle-kit push:pg"
   },
   "dependencies": {
+    "@elysiajs/cors": "^1.0.2",
     "@elysiajs/cron": "latest",
     "@elysiajs/swagger": "latest",
     "axios": "^1.6.7",
     "dotenv": "^16.4.3",
-    "drizzle-kit": "^0.20.14",
+    "drizzle-kit": "^0.20.17",
     "drizzle-orm": "^0.30.8",
     "elysia": "latest",
     "email-validator": "^2.0.4",

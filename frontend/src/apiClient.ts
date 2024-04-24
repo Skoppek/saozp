@@ -57,50 +57,46 @@ const axiosConfig = {
 };
 
 const registerUser = (newUserInfo: LoginCredentials & Profile) => {
-  return axios.post(`${API_URL}/sign-up`, newUserInfo, axiosConfig);
+  return axios.post(`api/sign-up`, newUserInfo, axiosConfig);
 };
 
 const loginUser = (credentials: LoginCredentials) => {
-  return axios.post(`${API_URL}/sign-in`, credentials, axiosConfig);
+  return axios.post(`api/sign-in`, credentials, axiosConfig);
 };
 
 const logout = () => {
-  return axios.put(`${API_URL}/logout`, axiosConfig);
+  return axios.put(`api/logout`, axiosConfig);
 };
 
 const createProblem = (newProblem: NewProblem) => {
-  return axios.post(`${API_URL}/problem/`, newProblem, axiosConfig);
+  return axios.post(`api/problem/`, newProblem, axiosConfig);
 };
 
 const getAllProblems = () => {
-  return axios.get(`${API_URL}/problem`, axiosConfig);
+  return axios.get(`api/problem`, axiosConfig);
 };
 
 const getProblemById = (problemId: number) => {
-  return axios.get(`${API_URL}/problem/${problemId}`, axiosConfig);
+  return axios.get(`api/problem/${problemId}`, axiosConfig);
 };
 
 const updateProblemById = (
   problemId: number,
   problemUpdate: Partial<Omit<ProblemDetails, "problemId"> & Tests>,
 ) => {
-  return axios.put(
-    `${API_URL}/problem/${problemId}`,
-    problemUpdate,
-    axiosConfig,
-  );
+  return axios.put(`api/problem/${problemId}`, problemUpdate, axiosConfig);
 };
 
 const deleteProblemByid = (problemId: number) => {
-  return axios.delete(`${API_URL}/problem/${problemId}`, axiosConfig);
+  return axios.delete(`api/problem/${problemId}`, axiosConfig);
 };
 
 const getSubmissions = (query: SubmissionQuery) => {
-  return axios.get(`${API_URL}/submissions`, { ...axiosConfig, params: query });
+  return axios.get(`api/submissions`, { ...axiosConfig, params: query });
 };
 
 const getSubmissionById = (submissionId: number) => {
-  return axios.get(`${API_URL}/submissions/${submissionId}`, axiosConfig);
+  return axios.get(`api/submissions/${submissionId}`, axiosConfig);
 };
 
 interface NewSubmission {
@@ -110,7 +106,7 @@ interface NewSubmission {
 
 const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
   return axios.post(
-    `${API_URL}/problem/${problemId}/submission`,
+    `api/problem/${problemId}/submission`,
     newSubmission,
     axiosConfig,
   );

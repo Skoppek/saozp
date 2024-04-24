@@ -16,6 +16,7 @@ const app = new Elysia({ prefix: '/api' })
                 'Content-Type',
                 'Cookie',
                 'Set-Cookie',
+                'Access-Control-Allow-Credentials',
             ],
             credentials: true,
         }),

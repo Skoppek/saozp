@@ -71,7 +71,7 @@ export default new Elysia()
         async ({ body, cookie: { session }, set }) => {
             const { email, password } = body;
 
-            set.headers['content-type'] = 'application/json';
+            console.log(session?.value);
 
             const user = (await userRepository.getUserByEmail(email)).at(0);
             if (!user) {
@@ -91,11 +91,11 @@ export default new Elysia()
                 existingSession && existingSession.expiresAt > new Date()
                     ? await sessionRepository.refreshSession(
                           existingSession.id,
-                          15,
+                          60 * 2,
                       )
                     : await sessionRepository.createSession({
                           userId: user.id,
-                          expiresAt: new Date(Date.now() + 1000 * 60 * 15),
+                          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
                       });
 
             if (!sessionData?.id) {
@@ -104,13 +104,12 @@ export default new Elysia()
 
             // @ts-ignore
             session.set({
-                path: '/',
+                // path: '/',
                 value: sessionData.id,
                 expires: sessionData?.expiresAt,
-                httpOnly: true,
+                // httpOnly: true,
                 secure: true,
-                sameSite: 'lax',
-                domain: 'localhost',
+                sameSite: 'none',
             });
         },
         {

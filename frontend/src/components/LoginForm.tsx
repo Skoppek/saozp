@@ -1,14 +1,14 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [isWrongCredentials, setIsWrongCredentials] = useState<boolean>();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(["session"]);
 
   useEffect(() => {
@@ -53,11 +53,11 @@ export const LoginForm = () => {
         onClick={() => {
           apiClient
             .loginUser({
-              email: email ?? "",
-              password: password ?? "",
+              email: "email1@gmail.com",
+              password: "password1",
             })
-            .then((response) => {
-              console.log(response);
+            .then(() => {
+              console.log(cookies);
               //   navigate("/me");
             })
             .catch((error) => {

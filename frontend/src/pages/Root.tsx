@@ -34,7 +34,9 @@ export const Root = () => {
           <DarkThemeToggle />
         </Navbar.Collapse>
       </Navbar>
-      <Outlet />
+      <div className="h-full">
+        <Outlet />
+      </div>
     </>
   );
 };

@@ -7,7 +7,7 @@ import authController from './controller/authController';
 import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
 
-const app = new Elysia()
+const app = new Elysia({ prefix: '/api' })
     .use(
         cors({
             origin: true,
@@ -17,6 +17,7 @@ const app = new Elysia()
                 'Cookie',
                 'Set-Cookie',
             ],
+            credentials: true,
         }),
     )
     .use(

@@ -8,15 +8,17 @@ import profileRepository from '../repository/profileRepository';
 export default new Elysia()
     .post(
         '/sign-up',
-        async ({ body, cookie: { session } }) => {
+        async ({ body, cookie: { session }, set }) => {
             const { email, password, firstName, lastName } = body;
 
             const user = (await userRepository.getUserByEmail(email)).at(0);
             if (user) {
-                throw new Error('User already exists!');
+                set.status = 409;
+                throw new Error('User with this email already exists!');
             }
 
             if (!EmailValidator.validate(email)) {
+                set.status = 400;
                 throw new Error('Invalid email!');
             }
 
@@ -30,6 +32,7 @@ export default new Elysia()
             ).at(0);
 
             if (!newUser || !newUser.id) {
+                set.status = 500;
                 throw new Error('User creation failure!');
             }
 
@@ -39,6 +42,7 @@ export default new Elysia()
             });
 
             if (!newSession?.id) {
+                set.status = 500;
                 throw new Error('Failed to create session');
             }
 
@@ -71,11 +75,9 @@ export default new Elysia()
         async ({ body, cookie: { session }, set }) => {
             const { email, password } = body;
 
-            console.log(session?.value);
-
             const user = (await userRepository.getUserByEmail(email)).at(0);
             if (!user) {
-                set.status = 401;
+                set.status = 400;
                 throw new Error('User not found!');
             }
 
@@ -104,10 +106,9 @@ export default new Elysia()
 
             // @ts-ignore
             session.set({
-                // path: '/',
                 value: sessionData.id,
                 expires: sessionData?.expiresAt,
-                // httpOnly: true,
+                httpOnly: true,
                 secure: true,
                 sameSite: 'none',
             });

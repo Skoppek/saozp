@@ -1,19 +1,15 @@
-import { Button, Label, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import apiClient from "../apiClient";
-// import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
+import { TextInput } from "flowbite-react/components/TextInput";
+import { Label } from "flowbite-react/components/Label";
+import { Button } from "flowbite-react/components/Button";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isWrongCredentials, setIsWrongCredentials] = useState<boolean>();
-  // const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["session"]);
-
-  useEffect(() => {
-    console.log(cookies);
-  }, [cookies]);
+  const navigate = useNavigate();
 
   return (
     <div className="flex max-w-md flex-col gap-4">
@@ -53,12 +49,11 @@ export const LoginForm = () => {
         onClick={() => {
           apiClient
             .loginUser({
-              email: "email1@gmail.com",
-              password: "password1",
+              email,
+              password,
             })
             .then(() => {
-              console.log(cookies);
-              //   navigate("/me");
+              navigate("/me");
             })
             .catch((error) => {
               if (error.response.status && error.response.status == 401) {

@@ -21,7 +21,7 @@ export const Root = () => {
           <Link to={"login"}>
             <Button>Zaloguj się</Button>
           </Link>
-          <Link to={"login"}>
+          <Link to={"register"}>
             <Button>Zarejestruj się</Button>
           </Link>
           <Button

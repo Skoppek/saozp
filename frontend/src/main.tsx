@@ -4,7 +4,7 @@ import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Root } from "./pages/Root";
 import { LoginForm } from "./components/LoginForm";
-import { EditorPage } from "./pages/EditorPage";
+import { RegisterForm } from "./components/RegisterForm";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/register",
-        element: <EditorPage />,
+        element: <RegisterForm />,
       },
       {
         path: "/me",

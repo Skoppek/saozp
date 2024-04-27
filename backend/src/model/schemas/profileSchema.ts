@@ -7,8 +7,8 @@ export const profiles = pgTable(
         userId: integer('user_id')
             .references(() => users.id)
             .primaryKey(),
-        firstName: varchar('first_name', { length: 32 }),
-        lastName: varchar('last_name', { length: 32 }),
+        firstName: varchar('first_name', { length: 32 }).notNull(),
+        lastName: varchar('last_name', { length: 32 }).notNull(),
     },
     (profiles) => ({
         userIdIdx: index('user_id_idx').on(profiles.userId),

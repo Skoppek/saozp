@@ -6,8 +6,12 @@ const createProfile = async (newProfile: NewProfile) => {
     await db.insert(profiles).values(newProfile);
 };
 
-const getProfileByUserId = async (userId: number): Promise<Profile[]> => {
-    return await db.select().from(profiles).where(eq(profiles.userId, userId));
+const getProfileByUserId = async (
+    userId: number,
+): Promise<Profile | undefined> => {
+    return (
+        await db.select().from(profiles).where(eq(profiles.userId, userId))
+    ).at(0);
 };
 
 export default {

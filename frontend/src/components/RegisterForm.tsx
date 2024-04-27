@@ -94,7 +94,9 @@ export const RegisterForm = () => {
               lastName,
             })
             .then(() => {
-              navigate("/me");
+              apiClient.getUserOfCurrentSession().then((response) => {
+                console.log(response.data);
+              });
             })
             .catch((error) => {
               if (error.response.status && error.response.status) {

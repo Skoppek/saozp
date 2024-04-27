@@ -6,6 +6,7 @@ import judge0Controller from './controller/judge0Controller';
 import authController from './controller/authController';
 import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
+import profileController from './controller/profileController';
 
 const app = new Elysia({ prefix: '/api' })
     .use(
@@ -32,6 +33,10 @@ const app = new Elysia({ prefix: '/api' })
                             'Authentication and autorization endpoints',
                     },
                     {
+                        name: 'Profiles',
+                        description: 'Getting user profile information',
+                    },
+                    {
                         name: 'Problems',
                         description: 'Problems management',
                     },
@@ -47,11 +52,9 @@ const app = new Elysia({ prefix: '/api' })
             },
         }),
     )
-    // .onBeforeHandle(({ set }) => {
-    //     set.headers['content-type'] = 'application/json';
-    // })
     .use(judge0Controller)
     .use(authController)
+    .use(profileController)
     .use(problemController)
     .use(submissionController)
     .use(adminsController)

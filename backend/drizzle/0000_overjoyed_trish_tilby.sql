@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS "problems" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "profiles" (
 	"user_id" integer PRIMARY KEY NOT NULL,
-	"first_name" varchar(32),
-	"last_name" varchar(32)
+	"first_name" varchar(32) NOT NULL,
+	"last_name" varchar(32) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "results" (

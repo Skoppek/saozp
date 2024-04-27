@@ -52,6 +52,11 @@ interface SubmissionQuery {
   problemId?: number;
 }
 
+interface NewSubmission {
+  code: string;
+  userTests: TestData[];
+}
+
 const axiosConfig = {
   withCredentials: true,
 };
@@ -99,17 +104,16 @@ const getSubmissionById = (submissionId: number) => {
   return axios.get(`api/submissions/${submissionId}`, axiosConfig);
 };
 
-interface NewSubmission {
-  code: string;
-  userTests: TestData[];
-}
-
 const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
   return axios.post(
     `api/problem/${problemId}/submission`,
     newSubmission,
     axiosConfig,
   );
+};
+
+const getUserOfCurrentSession = () => {
+  return axios.get(`api/me`, axiosConfig);
 };
 
 export default {
@@ -124,4 +128,5 @@ export default {
   getSubmissions,
   getSubmissionById,
   submitSolution,
+  getUserOfCurrentSession,
 };

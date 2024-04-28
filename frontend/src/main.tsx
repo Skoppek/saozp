@@ -6,6 +6,8 @@ import { Root } from "./pages/Root";
 import { LoginForm } from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
 import { MePage } from "./pages/MePage";
+import { ProblemsPage } from "./pages/ProblemsPage";
+import { CreateProblemPage } from "./pages/CreateProblemPage";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/problems",
+        element: <ProblemsPage />,
+      },
+      {
+        path: "/problems/create",
+        element: <CreateProblemPage />,
       },
       {},
     ],

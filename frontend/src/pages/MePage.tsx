@@ -7,6 +7,7 @@ export const MePage = () => {
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
   const [user, setUser] = useState<User | undefined>();
+  const [submissions, setSubmissions] = useState();
 
   useEffect(() => {
     apiClient
@@ -16,8 +17,10 @@ export const MePage = () => {
         if (
           "firstName" in data &&
           "lastName" in data &&
+          "userId" in data &&
           data.firstName &&
-          data.lastName
+          data.lastName &&
+          data.userId
         ) {
           setUser(data);
         }
@@ -27,7 +30,23 @@ export const MePage = () => {
           navigate("/login");
         }
       });
+    // if (submissions !== undefined) {
+    //   return;
+    // }
+    // apiClient
+    //   .getSubmissions({
+    //     userId: user?.userId,
+    //   })
+    //   .then((response) => {
+    //     setSubmissions(response.data);
+    //   });
   }, [authContext?.isLogged]);
 
-  return <></>;
+  console.log(submissions);
+
+  return (
+    <div className="flex-column flex">
+      <div className="text-6xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
+    </div>
+  );
 };

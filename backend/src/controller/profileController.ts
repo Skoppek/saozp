@@ -38,6 +38,7 @@ export default new Elysia()
             }
 
             return {
+                userId,
                 firstName: profile.firstName,
                 lastName: profile.lastName,
             };
@@ -47,6 +48,7 @@ export default new Elysia()
                 tags: ['Profiles'],
             },
             response: t.Object({
+                userId: t.Number(),
                 firstName: t.String(),
                 lastName: t.String(),
             }),

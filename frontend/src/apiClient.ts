@@ -57,6 +57,11 @@ interface NewSubmission {
   userTests: TestData[];
 }
 
+export interface User {
+  firstName: string;
+  lastName: string;
+}
+
 const axiosConfig = {
   withCredentials: true,
 };

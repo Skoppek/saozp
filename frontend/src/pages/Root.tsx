@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import { Navigation } from "../components/Navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
 import apiClient from "../apiClient";
-import { useCookies } from "react-cookie";
 
 export const AuthContext = createContext<
   | {
@@ -13,8 +12,6 @@ export const AuthContext = createContext<
 >(undefined);
 
 export const Root = () => {
-  const [cookie] = useCookies(["session"]);
-
   const [isLogged, setIsLogged] = useState(false);
 
   const setLogged = useCallback((value: boolean) => {
@@ -22,10 +19,6 @@ export const Root = () => {
   }, []);
 
   useEffect(() => {
-    if (!cookie.session) {
-      setIsLogged(false);
-      return;
-    }
     apiClient.isLoggedIn().then((response) => {
       setIsLogged(response.data);
     });

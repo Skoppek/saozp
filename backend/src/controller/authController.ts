@@ -50,7 +50,7 @@ export default new Elysia()
             session.set({
                 value: newSession.id,
                 expires: newSession?.expiresAt,
-                httpOnly: false,
+                httpOnly: true,
                 secure: true,
                 sameSite: 'none',
             });
@@ -111,7 +111,7 @@ export default new Elysia()
             session.set({
                 value: sessionData.id,
                 expires: sessionData?.expiresAt,
-                httpOnly: false,
+                httpOnly: true,
                 secure: true,
                 sameSite: 'none',
             });
@@ -178,6 +178,7 @@ export default new Elysia()
                 session.value,
             );
             if (!sessionData || sessionData.expiresAt < new Date()) {
+                session.remove();
                 return false;
             }
 
@@ -192,7 +193,6 @@ export default new Elysia()
             }
 
             session.expires = refreshedSession.expiresAt;
-
             return true;
         },
         {

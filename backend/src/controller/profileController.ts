@@ -13,7 +13,7 @@ export default new Elysia()
         );
         if (!sessionData) {
             set.status = 401;
-            throw new Error(session.value);
+            throw new Error('No session cookie found');
         }
         if (sessionData.expiresAt < new Date()) {
             set.status = 401;

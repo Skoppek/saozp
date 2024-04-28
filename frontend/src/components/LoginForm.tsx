@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import apiClient from "../apiClient";
 import { TextInput } from "flowbite-react/components/TextInput";
 import { Label } from "flowbite-react/components/Label";
@@ -13,6 +13,13 @@ export const LoginForm = () => {
   const navigate = useNavigate();
 
   const authContext = useContext(AuthContext);
+
+  useEffect(() => {
+    console.log(authContext);
+    if (authContext?.isLogged) {
+      navigate("me");
+    }
+  }, []);
 
   return (
     <div className="flex max-w-md flex-col gap-4">

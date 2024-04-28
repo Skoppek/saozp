@@ -1,42 +1,44 @@
-import { Button, DarkThemeToggle, Navbar } from "flowbite-react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { Navigation } from "../components/Navigation";
+import { createContext, useCallback, useEffect, useState } from "react";
 import apiClient from "../apiClient";
+import { useCookies } from "react-cookie";
+
+export const AuthContext = createContext<
+  | {
+      isLogged: boolean;
+      setIsLogged: (value: boolean) => void;
+    }
+  | undefined
+>(undefined);
 
 export const Root = () => {
+  const [cookie] = useCookies(["session"]);
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  const setLogged = useCallback((value: boolean) => {
+    setIsLogged(value);
+  }, []);
+
+  useEffect(() => {
+    if (!cookie.session) {
+      setIsLogged(false);
+      return;
+    }
+    apiClient.isLoggedIn().then((response) => {
+      setIsLogged(response.data);
+    });
+  }, []);
+
   return (
     <>
-      <Navbar fluid className="bg-sky-600 dark:bg-slate-700 dark:text-white">
-        <Navbar.Brand>
-          <Link to={"/"}>
-            <span className="self-center whitespace-nowrap text-xl font-semibold">
-              SAOZP
-            </span>
-          </Link>
-        </Navbar.Brand>
-        <Navbar.Collapse>
-          <Link to={"/problems"}>Zadania</Link>
-          <Link to={"/submissions"}>Moje rozwiązania</Link>
-        </Navbar.Collapse>
-        <Navbar.Collapse>
-          <Link to={"login"}>
-            <Button>Zaloguj się</Button>
-          </Link>
-          <Link to={"register"}>
-            <Button>Zarejestruj się</Button>
-          </Link>
-          <Button
-            onClick={() => {
-              apiClient.logout();
-            }}
-          >
-            Wyloguj się
-          </Button>
-          <DarkThemeToggle />
-        </Navbar.Collapse>
-      </Navbar>
-      <div className="h-full">
-        <Outlet />
-      </div>
+      <AuthContext.Provider value={{ isLogged, setIsLogged: setLogged }}>
+        <Navigation />
+        <div className="h-full">
+          <Outlet />
+        </div>
+      </AuthContext.Provider>
     </>
   );
 };

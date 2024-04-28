@@ -1,9 +1,10 @@
 import { Button } from "flowbite-react/components/Button";
 import { Label } from "flowbite-react/components/Label";
 import { TextInput } from "flowbite-react/components/TextInput";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import apiClient from "../apiClient";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../pages/Root";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState<string>();
@@ -12,6 +13,8 @@ export const RegisterForm = () => {
   const [lastName, setLastName] = useState<string>();
   const [isWrongData, setIsWrongData] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const authContext = useContext(AuthContext);
 
   return (
     <div className="flex max-w-md flex-col gap-4">
@@ -57,7 +60,6 @@ export const RegisterForm = () => {
           color={isWrongData ? "failure" : "gray"}
           onChange={(event) => {
             setIsWrongData(false);
-
             setFirstName(event.target.value);
             if (!firstName) {
             }
@@ -94,11 +96,11 @@ export const RegisterForm = () => {
               lastName,
             })
             .then(() => {
-              apiClient.getUserOfCurrentSession().then((response) => {
-                console.log(response.data);
-              });
+              authContext?.setIsLogged(true);
+              navigate("/me");
             })
             .catch((error) => {
+              authContext?.setIsLogged(false);
               if (error.response.status && error.response.status) {
                 console.log(error.response);
               }

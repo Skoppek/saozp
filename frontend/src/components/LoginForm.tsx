@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import apiClient from "../apiClient";
 import { TextInput } from "flowbite-react/components/TextInput";
 import { Label } from "flowbite-react/components/Label";
 import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../pages/Root";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isWrongCredentials, setIsWrongCredentials] = useState<boolean>();
   const navigate = useNavigate();
+
+  const authContext = useContext(AuthContext);
 
   return (
     <div className="flex max-w-md flex-col gap-4">
@@ -53,9 +56,11 @@ export const LoginForm = () => {
               password,
             })
             .then(() => {
+              authContext?.setIsLogged(true);
               navigate("/me");
             })
             .catch((error) => {
+              authContext?.setIsLogged(false);
               if (error.response.status && error.response.status == 401) {
                 setIsWrongCredentials(true);
               }

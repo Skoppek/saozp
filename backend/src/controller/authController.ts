@@ -49,7 +49,10 @@ export default new Elysia()
             // @ts-ignore
             session.set({
                 value: newSession.id,
-                httpOnly: true,
+                expires: newSession?.expiresAt,
+                httpOnly: false,
+                secure: true,
+                sameSite: 'none',
             });
 
             await profileRepository.createProfile({
@@ -108,7 +111,7 @@ export default new Elysia()
             session.set({
                 value: sessionData.id,
                 expires: sessionData?.expiresAt,
-                httpOnly: true,
+                httpOnly: false,
                 secure: true,
                 sameSite: 'none',
             });
@@ -125,10 +128,9 @@ export default new Elysia()
     )
     .put(
         '/logout',
-        async ({ cookie: { session }, set }) => {
+        async ({ cookie: { session } }) => {
             if (!session || !session.value) {
-                set.status = 400;
-                throw new Error('No session id in cookie!');
+                return;
             }
             await sessionRepository.revokeSession(session.value);
 
@@ -164,6 +166,40 @@ export default new Elysia()
             detail: {
                 tags: ['Auth'],
             },
+        },
+    )
+    .get(
+        '/is-logged',
+        async ({ cookie: { session }, set }) => {
+            if (!session || !session.value) {
+                return false;
+            }
+            const sessionData = await sessionRepository.getSessionById(
+                session.value,
+            );
+            if (!sessionData || sessionData.expiresAt < new Date()) {
+                return false;
+            }
+
+            const refreshedSession = await sessionRepository.refreshSession(
+                session.value,
+                15,
+            );
+
+            if (!refreshedSession) {
+                set.status = 500;
+                throw new Error('Refreshed session not found');
+            }
+
+            session.expires = refreshedSession.expiresAt;
+
+            return true;
+        },
+        {
+            detail: {
+                tags: ['Auth'],
+            },
+            response: t.Boolean(),
         },
     )
     .use(

@@ -73,6 +73,10 @@ const logout = () => {
   return axios.put(`api/logout`, axiosConfig);
 };
 
+const isLoggedIn = () => {
+  return axios.get(`api/is-logged`, axiosConfig);
+};
+
 const createProblem = (newProblem: NewProblem) => {
   return axios.post(`api/problem/`, newProblem, axiosConfig);
 };
@@ -120,6 +124,7 @@ export default {
   registerUser,
   loginUser,
   logout,
+  isLoggedIn,
   createProblem,
   getAllProblems,
   getProblemById,

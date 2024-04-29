@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = "http://localhost:3000/api";
+import { TestCase } from "./shared/interfaces";
 
 interface LoginCredentials {
   email: string;
@@ -21,13 +20,8 @@ const enum LanguageId {
   TYPESCRIPT_3_7_4 = 74,
 }
 
-interface TestData {
-  input: string;
-  expected: string;
-}
-
 interface Tests {
-  tests: TestData[];
+  tests: TestCase[];
 }
 
 interface BasicProblemData {
@@ -54,7 +48,7 @@ interface SubmissionQuery {
 
 interface NewSubmission {
   code: string;
-  userTests: TestData[];
+  userTests: TestCase[];
 }
 
 export interface User {

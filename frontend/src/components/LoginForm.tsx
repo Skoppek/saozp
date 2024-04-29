@@ -15,11 +15,10 @@ export const LoginForm = () => {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    console.log(authContext);
     if (authContext?.isLogged) {
       navigate("me");
     }
-  }, []);
+  }, [authContext, navigate]);
 
   return (
     <div className="flex max-w-md flex-col gap-4">

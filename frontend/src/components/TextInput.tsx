@@ -1,0 +1,27 @@
+import { Label } from "flowbite-react/components/Label";
+import { TextInput as FlowBiteTextInput } from "flowbite-react/components/TextInput";
+import { ClassName } from "../shared/interfaces";
+
+interface TextInputProps extends ClassName {
+  label?: string;
+  onChange?: (value: string) => void;
+}
+
+export const TextInput = ({ label, onChange, className }: TextInputProps) => {
+  return (
+    <div className={className}>
+      {label && (
+        <div className="mb-2 block">
+          <Label value={label} />
+        </div>
+      )}
+      <FlowBiteTextInput
+        type="text"
+        required
+        onChange={(event) => {
+          onChange?.(event.target.value);
+        }}
+      />
+    </div>
+  );
+};

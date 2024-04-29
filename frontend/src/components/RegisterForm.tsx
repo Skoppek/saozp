@@ -61,8 +61,6 @@ export const RegisterForm = () => {
           onChange={(event) => {
             setIsWrongData(false);
             setFirstName(event.target.value);
-            if (!firstName) {
-            }
           }}
         />
       </div>
@@ -99,11 +97,8 @@ export const RegisterForm = () => {
               authContext?.setIsLogged(true);
               navigate("/me");
             })
-            .catch((error) => {
+            .catch(() => {
               authContext?.setIsLogged(false);
-              if (error.response.status && error.response.status) {
-                console.log(error.response);
-              }
             });
         }}
       >

@@ -26,13 +26,22 @@ export interface Problem {
   tests: TestCase[];
 }
 
-export type ProblemEntry = Pick<
-  Problem,
-  "problemId" | "name" | "description" | "languageId"
->;
+export interface ProblemEntry
+  extends Pick<Problem, "problemId" | "name" | "description" | "languageId"> {
+  creator: User;
+}
 
 export type NewProblem = Omit<Problem, "problemId" | "creatorId">;
+
 export interface ProblemsFilter {
   name?: string;
   language?: LanguageId;
+  creator?: string;
+  isOwner?: boolean;
+}
+
+export interface User {
+  userId: number;
+  firstName: string;
+  lastName: string;
 }

@@ -3,14 +3,13 @@ import { ProblemEntry, ProblemsFilter } from "../shared/interfaces";
 import apiClient from "../apiClient";
 import { isProblemsEntryArray } from "../shared/typeGuards";
 import { AuthenticatedPage } from "./AuthenticatedPage";
-import { Link } from "react-router-dom";
-import { Button } from "flowbite-react/components/Button";
 import { ProblemsGallery } from "../components/ProblemsGallery";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { TextInput } from "../components/TextInput";
 import { LanguageSelect } from "../components/LanguageSelect";
 import { ALL_LANGUAGES } from "../shared/constansts";
 import { LinkButton } from "../components/LinkButton";
+import { ToggleSwitch } from "flowbite-react";
 
 export const ProblemsPage = () => {
   const [problems, setProblems] = useState<ProblemEntry[]>();
@@ -22,7 +21,7 @@ export const ProblemsPage = () => {
         setProblems(response.data);
       }
     });
-  });
+  }, []);
 
   return (
     <AuthenticatedPage>
@@ -39,6 +38,16 @@ export const ProblemsPage = () => {
             }
             className="w-96"
           />
+          <TextInput
+            label="Twórca"
+            id="creatorFilter"
+            onChange={(value) =>
+              setFilter((prev) => {
+                return { ...prev, creator: value };
+              })
+            }
+            className="w-96"
+          />
           <LanguageSelect
             languages={ALL_LANGUAGES}
             label="Język"
@@ -48,6 +57,17 @@ export const ProblemsPage = () => {
               })
             }
           />
+          <div>
+            <ToggleSwitch
+              checked={!!filter.isOwner}
+              label="Tylko moje"
+              onChange={() =>
+                setFilter((prev) => {
+                  return { ...prev, isOwner: !prev.isOwner };
+                })
+              }
+            />
+          </div>
         </div>
         {problems ? (
           <ProblemsGallery problems={problems} filter={filter} />

@@ -72,10 +72,11 @@ export default new Elysia({ prefix: '/problem' })
         async () => {
             return (await problemRepository.getProblems()).map((problem) => {
                 return {
-                    problemId: problem.id,
-                    name: problem.name,
-                    description: problem.description ?? undefined,
-                    languageId: problem.languageId,
+                    problemId: problem.problems.id,
+                    name: problem.problems.name,
+                    description: problem.problems.description ?? undefined,
+                    languageId: problem.problems.languageId,
+                    creator: problem.profiles ?? undefined,
                 };
             });
         },
@@ -89,6 +90,13 @@ export default new Elysia({ prefix: '/problem' })
                     name: t.String(),
                     description: t.Optional(t.String()),
                     languageId: t.Number(),
+                    creator: t.Optional(
+                        t.Object({
+                            userId: t.Number(),
+                            firstName: t.String(),
+                            lastName: t.String(),
+                        }),
+                    ),
                 }),
             ),
         },

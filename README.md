@@ -12,7 +12,7 @@ System Automatycznego Oceniania Zadań Programistycznych
 bunx drizzle-kit studio
 ```
 
-```bash {"cwd":"./frontend","id":"01HWZEJ5D5R2RRXYX0ESF3XJKT"}
+```bash {"cwd":"./frontend","id":"01HWZEJ5D5R2RRXYX0ESF3XJKT","name":"frontend"}
 bun run dev
 ```
 

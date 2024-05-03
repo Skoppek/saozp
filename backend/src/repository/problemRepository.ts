@@ -1,7 +1,8 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../model/db/db';
 import { NewProblem, Problem, problems } from '../model/schemas/problemSchema';
 import _ from 'lodash';
+import { profiles } from '../model/schemas/profileSchema';
 
 const createProblem = async (
     newProblem: NewProblem,
@@ -9,8 +10,11 @@ const createProblem = async (
     return (await db.insert(problems).values(newProblem).returning()).at(0);
 };
 
-const getProblems = async (): Promise<Problem[]> => {
-    return db.select().from(problems);
+const getProblems = async () => {
+    return db
+        .select()
+        .from(problems)
+        .leftJoin(profiles, eq(problems.creator, profiles.userId));
 };
 
 const getProblemById = async (

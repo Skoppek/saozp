@@ -29,7 +29,7 @@ export const Navigation = () => {
             onClick={() => {
               apiClient.logout().then(() => {
                 authContext.setIsLogged(false);
-                navigate("login");
+                navigate("/");
               });
             }}
           >
@@ -37,10 +37,10 @@ export const Navigation = () => {
           </Button>
         ) : (
           <>
-            <Link to={"login"}>
+            <Link to={"/login"}>
               <Button>Zaloguj się</Button>
             </Link>
-            <Link to={"register"}>
+            <Link to={"/register"}>
               <Button>Zarejestruj się</Button>
             </Link>
           </>

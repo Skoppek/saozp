@@ -47,7 +47,7 @@ const loginUser = (credentials: LoginCredentials) => {
 };
 
 const logout = () => {
-  return axiosInstance.put(`api/logout`, axiosConfig);
+  return axiosInstance.delete(`api/logout`, axiosConfig);
 };
 
 const isLoggedIn = () => {

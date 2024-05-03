@@ -8,7 +8,7 @@ import profileRepository from '../repository/profileRepository';
 export default new Elysia()
     .post(
         '/sign-up',
-        async ({ body, cookie: { session }, set }) => {
+        async ({ body, cookie, set }) => {
             const { email, password, firstName, lastName } = body;
 
             const user = (await userRepository.getUserByEmail(email)).at(0);
@@ -38,7 +38,7 @@ export default new Elysia()
 
             const newSession = await sessionRepository.createSession({
                 userId: newUser.id,
-                expiresAt: new Date(Date.now() + 1000 * 60 * 15),
+                expiresAt: new Date(Date.now() + 1000 * 3600 * 12),
             });
 
             if (!newSession?.id) {
@@ -47,12 +47,15 @@ export default new Elysia()
             }
 
             // @ts-ignore
-            session.set({
-                value: newSession.id,
-                expires: newSession?.expiresAt,
+            cookie.session.set({
                 httpOnly: true,
-                secure: true,
+                maxAge: 3600 * 12,
+                path: '/',
+                priority: 'high',
+                value: newSession.id,
                 sameSite: 'none',
+                expires: newSession?.expiresAt,
+                secure: true,
             });
 
             await profileRepository.createProfile({
@@ -75,7 +78,7 @@ export default new Elysia()
     )
     .post(
         '/sign-in',
-        async ({ body, cookie: { session }, set }) => {
+        async ({ body, cookie, set }) => {
             const { email, password } = body;
 
             const user = (await userRepository.getUserByEmail(email)).at(0);
@@ -107,13 +110,19 @@ export default new Elysia()
                 throw new Error('Failed to create session');
             }
 
-            // @ts-ignore
-            session.set({
-                value: sessionData.id,
-                expires: sessionData?.expiresAt,
+            cookie.inny?.set({
+                value: 'jakas wartosc',
+            });
+
+            cookie.session?.set({
                 httpOnly: true,
-                secure: true,
+                maxAge: 3600 * 12,
+                path: '/api',
+                priority: 'high',
+                value: sessionData.id,
                 sameSite: 'none',
+                expires: sessionData?.expiresAt,
+                secure: true,
             });
         },
         {
@@ -126,15 +135,14 @@ export default new Elysia()
             }),
         },
     )
-    .put(
+    .delete(
         '/logout',
-        async ({ cookie: { session } }) => {
-            if (!session || !session.value) {
-                return;
+        async ({ cookie }) => {
+            if (!cookie.session || !cookie.session.value) {
+                return 'Cookie not found';
             }
-            await sessionRepository.revokeSession(session.value);
-
-            session.remove();
+            await sessionRepository.revokeSession(cookie.session.value);
+            cookie.session.remove();
         },
         {
             detail: {
@@ -142,35 +150,35 @@ export default new Elysia()
             },
         },
     )
-    .put(
-        '/refresh',
-        async ({ cookie: { session }, set }) => {
-            if (!session) {
-                set.status = 401;
-                throw new Error('Session cookie not found');
-            }
+    // .put(
+    //     '/refresh',
+    //     async ({ cookie: { session }, set }) => {
+    //         if (!session) {
+    //             set.status = 401;
+    //             throw new Error('Session cookie not found');
+    //         }
 
-            const refreshedSession = await sessionRepository.refreshSession(
-                session.value,
-                15,
-            );
+    //         const refreshedSession = await sessionRepository.refreshSession(
+    //             session.value,
+    //             15,
+    //         );
 
-            if (!refreshedSession) {
-                set.status = 401;
-                throw new Error('Session not found');
-            }
+    //         if (!refreshedSession) {
+    //             set.status = 401;
+    //             throw new Error('Session not found');
+    //         }
 
-            session.expires = refreshedSession.expiresAt;
-        },
-        {
-            detail: {
-                tags: ['Auth'],
-            },
-        },
-    )
+    //         session.expires = refreshedSession.expiresAt;
+    //     },
+    //     {
+    //         detail: {
+    //             tags: ['Auth'],
+    //         },
+    //     },
+    // )
     .get(
         '/is-logged',
-        async ({ cookie: { session }, set }) => {
+        async ({ cookie: { session } }) => {
             if (!session || !session.value) {
                 return false;
             }
@@ -181,18 +189,6 @@ export default new Elysia()
                 session.remove();
                 return false;
             }
-
-            const refreshedSession = await sessionRepository.refreshSession(
-                session.value,
-                15,
-            );
-
-            if (!refreshedSession) {
-                set.status = 500;
-                throw new Error('Refreshed session not found');
-            }
-
-            session.expires = refreshedSession.expiresAt;
             return true;
         },
         {

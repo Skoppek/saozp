@@ -8,7 +8,13 @@ import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
 import profileController from './controller/profileController';
 
-const app = new Elysia({ prefix: '/api' })
+const app = new Elysia({
+    prefix: '/api',
+    cookie: {
+        secrets: 'The missile knows where it is at all times',
+        sign: ['session'],
+    },
+})
     .use(
         cors({
             origin: true,
@@ -20,6 +26,7 @@ const app = new Elysia({ prefix: '/api' })
                 'Access-Control-Allow-Credentials',
             ],
             credentials: true,
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
         }),
     )
     .use(

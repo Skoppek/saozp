@@ -3,11 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Root } from "./pages/Root";
-import { LoginForm } from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
-import { MePage } from "./pages/MePage";
 import { ProblemsPage } from "./pages/ProblemsPage";
 import { ProblemCreatePage } from "./pages/ProblemCreatePage";
+import { LoginPage } from "./pages/LoginPage";
+import { MePage } from "./pages/MePage";
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/login",
-        element: <LoginForm />,
+        element: <LoginPage />,
       },
       {
         path: "/register",

@@ -1,7 +1,7 @@
 ---
 runme:
-    id: 01HWYZG3GRTRK0CXJKS4JMJE7W
-    version: v3
+  id: 01HWYZG3GRTRK0CXJKS4JMJE7W
+  version: v3
 ---
 
 # saozp
@@ -12,6 +12,10 @@ System Automatycznego Oceniania Zadań Programistycznych
 bunx drizzle-kit studio
 ```
 
-```bash
+```bash {"cwd":"./frontend","id":"01HWZEJ5D5R2RRXYX0ESF3XJKT"}
+bun run dev
+```
+
+```bash {"cwd":"./backend","id":"01HWZEK15FPBBTCPHDQV63KNF3"}
 bun run dev
 ```

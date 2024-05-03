@@ -36,7 +36,7 @@ export const CodeEditor = ({
           }}
         >
           {languages.map((language) => {
-            return <option>{language.name}</option>;
+            return <option key={language.name}>{language.name}</option>;
           })}
         </Select>
         <Editor

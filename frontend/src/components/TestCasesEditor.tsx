@@ -1,4 +1,3 @@
-import { Card } from "flowbite-react/components/Card";
 import { TestCase } from "../shared/interfaces";
 import { TextInput } from "./TextInput";
 import { useState } from "react";
@@ -7,9 +6,13 @@ import { FaPlus } from "react-icons/fa";
 
 interface TestCasesEditorProps {
   testCases?: TestCase[];
+  onChange?: (value: TestCase[]) => void;
 }
 
-export const TestCasesEditor = ({ testCases }: TestCasesEditorProps) => {
+export const TestCasesEditor = ({
+  testCases,
+  onChange,
+}: TestCasesEditorProps) => {
   const [tests, setTests] = useState<TestCase[]>(testCases ?? []);
   const [currentTest, setCurrentTest] = useState<TestCase>({
     input: "",
@@ -17,10 +20,10 @@ export const TestCasesEditor = ({ testCases }: TestCasesEditorProps) => {
   });
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-2xl">Przypadki testowe</p>
       <div className="flex flex-row items-end justify-around gap-4">
         <TextInput
           label="Wejście"
+          id={"test-input"}
           onChange={(value) => {
             setCurrentTest((prev) => {
               return {
@@ -33,6 +36,7 @@ export const TestCasesEditor = ({ testCases }: TestCasesEditorProps) => {
         />
         <TextInput
           label="Wartość oczekiwana"
+          id={"test-expected"}
           onChange={(value) => {
             setCurrentTest((prev) => {
               return {
@@ -48,7 +52,9 @@ export const TestCasesEditor = ({ testCases }: TestCasesEditorProps) => {
           className="flex justify-center"
           onClick={() => {
             setTests((prev) => {
-              return [...prev, currentTest];
+              const newSet = [...prev, currentTest];
+              onChange?.(newSet);
+              return newSet;
             });
           }}
         >

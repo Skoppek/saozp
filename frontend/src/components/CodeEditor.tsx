@@ -3,25 +3,26 @@ import { Card } from "flowbite-react/components/Card";
 import { Editor } from "@monaco-editor/react";
 import { Select } from "flowbite-react/components/Select";
 import { useState } from "react";
-
-interface EditorLanguage {
-  name: string;
-  monacoForm: string;
-}
+import { LanguageId } from "../shared/enums";
+import { Language } from "../shared/interfaces";
 
 interface CodeEditorProps extends ClassName {
-  languages: EditorLanguage[];
+  languages: Language[];
   code?: string;
+  editorHeight?: string;
   onChange?: (value: string) => void;
+  onLanguageChange?: (value: LanguageId) => void;
 }
 
 export const CodeEditor = ({
   languages,
   code,
   onChange,
+  editorHeight,
   className,
 }: CodeEditorProps) => {
   const [chosenLanguage, setChoseLanguage] = useState(languages.at(0));
+
   return (
     <div className={className}>
       <Card>
@@ -39,9 +40,10 @@ export const CodeEditor = ({
           })}
         </Select>
         <Editor
-          height="75vh"
+          height={editorHeight ?? "75vh"}
           theme="vs-dark"
           value={code}
+          defaultLanguage={chosenLanguage?.monacoForm}
           language={chosenLanguage?.monacoForm}
           onChange={(value) => {
             onChange?.(value ?? "");

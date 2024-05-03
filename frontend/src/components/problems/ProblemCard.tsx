@@ -13,10 +13,10 @@ const getLanguageName = (languageId: number) => {
 
 interface ProblemCardProps {
   problem: ProblemEntry;
-  allowModify?: boolean;
+  isOwner?: boolean;
 }
 
-export const ProblemCard = ({ problem, allowModify }: ProblemCardProps) => {
+export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
   return (
     <div className="flex h-56 w-96 flex-col justify-between gap-2 rounded-md bg-sky-500/20 p-4 dark:bg-sky-950">
       <div className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -31,7 +31,7 @@ export const ProblemCard = ({ problem, allowModify }: ProblemCardProps) => {
           <Button color="gray" size="xs">
             Rozwiąż
           </Button>
-          {allowModify && (
+          {isOwner && (
             <LinkButton
               to={`/problems/edit/${problem.problemId}`}
               buttonProps={{ color: "gray", size: "xs" }}

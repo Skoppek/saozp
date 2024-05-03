@@ -3,6 +3,11 @@ import { Language } from "./interfaces";
 
 export const ALL_LANGUAGES: Language[] = [
   {
+    id: LanguageId.UNKNOWN,
+    name: "Dowolny",
+    monacoForm: "plain",
+  },
+  {
     id: LanguageId.PYTHON_3_8_1,
     name: "Python 3.8",
     monacoForm: "python",

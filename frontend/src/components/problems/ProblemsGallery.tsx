@@ -4,6 +4,7 @@ import { ProblemEntry } from "../../shared/interfaces";
 import { ProblemCard } from "./ProblemCard";
 import apiClient from "../../apiClient";
 import { isUser } from "../../shared/typeGuards";
+import { LanguageId } from "../../shared/enums";
 
 interface ProblemsGalleryProps {
   problems: ProblemEntry[];
@@ -41,13 +42,15 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
         )
         .filter(
           (problem) =>
-            !filter.language || problem.languageId === filter.language,
+            !filter.language ||
+            filter.language === LanguageId.UNKNOWN ||
+            problem.languageId === filter.language,
         )
         .map((problem, index) => (
           <ProblemCard
             problem={problem}
             key={`problem${index}`}
-            allowModify={problem.creator.userId === user?.userId}
+            isOwner={problem.creator.userId === user?.userId}
           />
         ))}
     </div>

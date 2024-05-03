@@ -1,4 +1,5 @@
 export const enum LanguageId {
+  UNKNOWN = -1,
   C = 50,
   CPP = 54,
   CS = 51,

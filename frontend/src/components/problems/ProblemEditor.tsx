@@ -6,25 +6,30 @@ import { TestCasesEditor } from "../TestCasesEditor";
 import { Card } from "flowbite-react/components/Card";
 import { Button } from "flowbite-react/components/Button";
 import apiClient from "../../apiClient";
-import { Problem, TestCase } from "../../shared/interfaces";
-import { LanguageId } from "../../shared/enums";
+import { NewProblem, Problem } from "../../shared/interfaces";
 import { ALL_LANGUAGES } from "../../shared/constansts";
+import { useNavigate } from "react-router-dom";
+import { Spinner } from "flowbite-react/components/Spinner";
 
 interface ProblemEditorProps {
   problem?: Problem;
 }
 
 export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
-  const [name, setName] = useState<string>(problem?.name ?? "");
-  const [description, setDescription] = useState<string>(
-    problem?.description ?? "",
+  const [newProblem, setNewProblem] = useState<NewProblem>(
+    problem ?? {
+      name: "",
+      description: "",
+      baseCode: "",
+      prompt: "",
+      tests: [],
+      languageId: ALL_LANGUAGES[0].id,
+    },
   );
-  const [baseCode, setBaseCode] = useState<string>(problem?.baseCode ?? "");
-  const [prompt, setPrompt] = useState<string>(problem?.prompt ?? "");
-  const [tests, setTests] = useState<TestCase[]>(problem?.tests ?? []);
-  const [language, setLanguage] = useState<LanguageId>(
-    problem?.languageId ?? ALL_LANGUAGES[0].id,
-  );
+  const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   return (
     <div className="m-8 flex flex-row gap-4 ">
@@ -34,33 +39,41 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             label="Nazwa zadania"
             id="problem-name"
             onChange={(value) => {
-              setName(value);
+              setNewProblem((prev) => {
+                return { ...prev, name: value };
+              });
             }}
-            value={name}
+            value={newProblem.name}
           />
           <TextInput
             label="Krótki opis"
             id="problem-description"
             onChange={(value) => {
-              setDescription(value);
+              setNewProblem((prev) => {
+                return { ...prev, description: value };
+              });
             }}
-            value={description}
+            value={newProblem.description}
           />
         </Card>
         <Card>
           <MarkdownEditor
             onChange={(value) => {
-              setPrompt(value);
+              setNewProblem((prev) => {
+                return { ...prev, prompt: value };
+              });
             }}
-            markdown={prompt}
+            markdown={newProblem.prompt}
           />
         </Card>
         <Card>
           <TestCasesEditor
             onChange={(value) => {
-              setTests(value);
+              setNewProblem((prev) => {
+                return { ...prev, tests: value };
+              });
             }}
-            testCases={tests}
+            testCases={newProblem.tests}
           />
         </Card>
       </div>
@@ -69,43 +82,66 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           languages={ALL_LANGUAGES}
           editorHeight="60vh"
           onChange={(value) => {
-            setBaseCode(value);
+            setNewProblem((prev) => {
+              return { ...prev, baseCode: value };
+            });
           }}
           onLanguageChange={(value) => {
-            setLanguage(value);
+            setNewProblem((prev) => {
+              return { ...prev, languageId: value };
+            });
           }}
-          code={baseCode}
+          code={newProblem.baseCode}
         />
         <Button
           onClick={() => {
+            setIsCreating(true);
             problem
-              ? apiClient.updateProblemById(problem.problemId, {
-                  name: name,
-                  prompt: prompt,
-                  description: description,
-                  baseCode: baseCode,
-                  languageId: language,
-                  tests: tests,
-                })
-              : apiClient.createProblem({
-                  name: name,
-                  prompt: prompt,
-                  description: description,
-                  baseCode: baseCode,
-                  languageId: language,
-                  tests: tests,
-                });
+              ? apiClient
+                  .updateProblemById(problem.problemId, {
+                    name: newProblem.name,
+                    prompt: newProblem.prompt,
+                    description: newProblem.description,
+                    baseCode: newProblem.baseCode,
+                    languageId: newProblem.languageId,
+                    tests: newProblem.tests,
+                  })
+                  .then(() => {
+                    navigate("/problems");
+                  })
+              : apiClient
+                  .createProblem({
+                    name: newProblem.name,
+                    prompt: newProblem.prompt,
+                    description: newProblem.description,
+                    baseCode: newProblem.baseCode,
+                    languageId: newProblem.languageId,
+                    tests: newProblem.tests,
+                  })
+                  .then(() => {
+                    navigate("/problems");
+                  });
           }}
         >
-          {problem ? "Modyfikuj" : "Dodaj"}
+          {isCreating ? (
+            <Spinner aria-label="Spinner" />
+          ) : problem ? (
+            "Modyfikuj"
+          ) : (
+            "Dodaj"
+          )}
         </Button>
         {problem && (
           <Button
+            color={"failure"}
             onClick={() => {
-              apiClient.deleteProblemByid(problem.problemId);
+              setIsDeleting(true);
+              apiClient.deleteProblemByid(problem.problemId).then(() => {
+                navigate("/problems");
+              });
             }}
           >
-            Usuń
+            {isDeleting ? <Spinner aria-label="Spinner" /> : "Usuń"}
           </Button>
         )}
       </div>

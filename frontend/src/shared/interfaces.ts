@@ -19,7 +19,7 @@ export interface Problem {
   problemId: number;
   creatorId: number;
   name: string;
-  description?: string;
+  description: string;
   languageId: LanguageId;
   prompt: string;
   baseCode: string;

@@ -18,17 +18,21 @@ export const CodeEditor = ({
   languages,
   code,
   onChange,
+  onLanguageChange,
   editorHeight,
   className,
 }: CodeEditorProps) => {
-  const [chosenLanguage, setChoseLanguage] = useState(languages.at(0));
+  const [chosenLanguage, setChosenLanguage] = useState(languages.at(0));
 
   return (
     <div className={className}>
       <Card>
         <LanguageSelect
           languages={languages}
-          onChange={(language) => setChoseLanguage(language)}
+          onChange={(language) => {
+            if (language?.id) onLanguageChange?.(language?.id);
+            setChosenLanguage(language);
+          }}
         />
         <Editor
           height={editorHeight ?? "75vh"}

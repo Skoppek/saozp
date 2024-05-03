@@ -1,6 +1,5 @@
 import axios from "axios";
-import { TestCase } from "./shared/interfaces";
-import { LanguageId } from "./shared/enums";
+import { NewProblem, Problem, TestCase } from "./shared/interfaces";
 
 interface LoginCredentials {
   email: string;
@@ -15,23 +14,6 @@ interface Profile {
 interface Tests {
   tests: TestCase[];
 }
-
-interface BasicProblemData {
-  problemId: number;
-  name: string;
-  description?: string;
-  languageId: LanguageId;
-}
-
-interface ProblemDetails extends BasicProblemData {
-  prompt: string;
-  baseCode: string;
-  creatorId: number;
-}
-
-interface NewProblem
-  extends Omit<ProblemDetails, "problemId" | "creatorId">,
-    Tests {}
 
 interface SubmissionQuery {
   userId?: number;
@@ -53,55 +35,65 @@ const axiosConfig = {
   withCredentials: true,
 };
 
+const axiosInstance = axios;
+axiosInstance.defaults.baseURL = `http://localhost:3000`;
+
 const registerUser = (newUserInfo: LoginCredentials & Profile) => {
-  return axios.post(`api/sign-up`, newUserInfo, axiosConfig);
+  return axiosInstance.post(`api/sign-up`, newUserInfo, axiosConfig);
 };
 
 const loginUser = (credentials: LoginCredentials) => {
-  return axios.post(`api/sign-in`, credentials, axiosConfig);
+  return axiosInstance.post(`api/sign-in`, credentials, axiosConfig);
 };
 
 const logout = () => {
-  return axios.put(`api/logout`, axiosConfig);
+  return axiosInstance.put(`api/logout`, axiosConfig);
 };
 
 const isLoggedIn = () => {
-  return axios.get(`api/is-logged`, axiosConfig);
+  return axiosInstance.get(`api/is-logged`, axiosConfig);
 };
 
 const createProblem = (newProblem: NewProblem) => {
-  return axios.post(`api/problem/`, newProblem, axiosConfig);
+  return axiosInstance.post(`api/problem/`, newProblem, axiosConfig);
 };
 
 const getAllProblems = () => {
-  return axios.get(`api/problem`, axiosConfig);
+  return axiosInstance.get(`api/problem`, axiosConfig);
 };
 
 const getProblemById = (problemId: number) => {
-  return axios.get(`api/problem/${problemId}`, axiosConfig);
+  return axiosInstance.get(`api/problem/${problemId}`, axiosConfig);
 };
 
 const updateProblemById = (
   problemId: number,
-  problemUpdate: Partial<Omit<ProblemDetails, "problemId"> & Tests>,
+  problemUpdate: Partial<Omit<Problem, "problemId"> & Tests>,
 ) => {
-  return axios.put(`api/problem/${problemId}`, problemUpdate, axiosConfig);
+  return axiosInstance.put(
+    `api/problem/${problemId}`,
+    problemUpdate,
+    axiosConfig,
+  );
 };
 
 const deleteProblemByid = (problemId: number) => {
-  return axios.delete(`api/problem/${problemId}`, axiosConfig);
+  return axiosInstance.delete(`api/problem/${problemId}`, axiosConfig);
 };
 
 const getSubmissions = (query: SubmissionQuery) => {
-  return axios.get(`api/submissions`, { ...axiosConfig, params: query });
+  return axiosInstance.get(`api/submissions`, {
+    ...axiosConfig,
+    params: query,
+  });
 };
 
 const getSubmissionById = (submissionId: number) => {
-  return axios.get(`api/submissions/${submissionId}`, axiosConfig);
+  return axiosInstance.get(`api/submissions/${submissionId}`, axiosConfig);
 };
 
 const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
-  return axios.post(
+  return axiosInstance.post(
     `api/problem/${problemId}/submission`,
     newSubmission,
     axiosConfig,
@@ -109,7 +101,7 @@ const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
 };
 
 const getUserOfCurrentSession = () => {
-  return axios.get(`api/me`, axiosConfig);
+  return axiosInstance.get(`api/me`, axiosConfig);
 };
 
 export default {

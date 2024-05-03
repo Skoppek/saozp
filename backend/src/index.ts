@@ -9,7 +9,6 @@ import cors from '@elysiajs/cors';
 import profileController from './controller/profileController';
 
 const app = new Elysia({ prefix: '/api' })
-    .get('/', () => 'Healthcheck!')
     .use(
         cors({
             origin: true,
@@ -59,6 +58,7 @@ const app = new Elysia({ prefix: '/api' })
     .use(problemController)
     .use(submissionController)
     .use(adminsController)
+    .get('/', () => 'Healthcheck!')
     .listen(3000);
 
 export const server = app.server;

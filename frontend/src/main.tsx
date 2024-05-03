@@ -7,7 +7,7 @@ import { LoginForm } from "./components/LoginForm";
 import { RegisterForm } from "./components/RegisterForm";
 import { MePage } from "./pages/MePage";
 import { ProblemsPage } from "./pages/ProblemsPage";
-import { CreateProblemPage } from "./pages/CreateProblemPage";
+import { ProblemCreatePage } from "./pages/ProblemCreatePage";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/problems/create",
-        element: <CreateProblemPage />,
+        element: <ProblemCreatePage />,
       },
       {},
     ],

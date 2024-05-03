@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { LoginForm } from "../components/LoginForm";
+import { LoginForm } from "../components/auth/LoginForm";
 import { AuthContext } from "./Root";
 
 export const LoginPage = () => {

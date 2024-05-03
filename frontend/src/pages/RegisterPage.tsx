@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../apiClient";
-import { RegisterForm } from "../components/RegisterForm";
+import { RegisterForm } from "../components/auth/RegisterForm";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { AuthContext } from "./Root";
 

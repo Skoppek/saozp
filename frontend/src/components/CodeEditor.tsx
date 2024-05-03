@@ -1,10 +1,10 @@
 import { ClassName } from "../shared/interfaces";
 import { Card } from "flowbite-react/components/Card";
 import { Editor } from "@monaco-editor/react";
-import { Select } from "flowbite-react/components/Select";
 import { useState } from "react";
 import { LanguageId } from "../shared/enums";
 import { Language } from "../shared/interfaces";
+import { LanguageSelect } from "./LanguageSelect";
 
 interface CodeEditorProps extends ClassName {
   languages: Language[];
@@ -26,19 +26,10 @@ export const CodeEditor = ({
   return (
     <div className={className}>
       <Card>
-        <Select
-          required
-          onChange={(event) => {
-            const newLang = languages.find((language) => {
-              return language.name === event.target.value;
-            });
-            setChoseLanguage(newLang);
-          }}
-        >
-          {languages.map((language) => {
-            return <option key={language.name}>{language.name}</option>;
-          })}
-        </Select>
+        <LanguageSelect
+          languages={languages}
+          onChange={(language) => setChoseLanguage(language)}
+        />
         <Editor
           height={editorHeight ?? "75vh"}
           theme="vs-dark"

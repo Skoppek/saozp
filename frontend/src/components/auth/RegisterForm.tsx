@@ -2,9 +2,9 @@ import { Button } from "flowbite-react/components/Button";
 import { Label } from "flowbite-react/components/Label";
 import { TextInput } from "flowbite-react/components/TextInput";
 import { useContext, useState } from "react";
-import apiClient from "../apiClient";
+import apiClient from "../../apiClient";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../pages/Root";
+import { AuthContext } from "../../pages/Root";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState<string>();

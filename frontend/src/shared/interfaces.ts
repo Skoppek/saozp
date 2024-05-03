@@ -32,3 +32,7 @@ export type ProblemEntry = Pick<
 >;
 
 export type NewProblem = Omit<Problem, "problemId" | "creatorId">;
+export interface ProblemsFilter {
+  name?: string;
+  language?: LanguageId;
+}

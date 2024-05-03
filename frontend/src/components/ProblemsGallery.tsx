@@ -14,15 +14,13 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    if (filter.isOwner) {
-      apiClient.getUserOfCurrentSession().then((response) => {
-        console.log(response.data);
-        if (isUser(response.data)) {
-          setUser(response.data);
-        }
-      });
-    }
-  }, [filter.isOwner]);
+    apiClient.getUserOfCurrentSession().then((response) => {
+      console.log(response.data);
+      if (isUser(response.data)) {
+        setUser(response.data);
+      }
+    });
+  }, []);
 
   return (
     <div className="flex flex-wrap justify-center gap-2">
@@ -47,7 +45,11 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
             !filter.language || problem.languageId === filter.language,
         )
         .map((problem, index) => (
-          <ProblemCard problem={problem} key={`problem${index}`} />
+          <ProblemCard
+            problem={problem}
+            key={`problem${index}`}
+            allowModify={problem.creator.userId === user?.userId}
+          />
         ))}
     </div>
   );

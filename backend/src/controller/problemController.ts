@@ -54,7 +54,7 @@ export default new Elysia({ prefix: '/problem' })
             },
             body: t.Object({
                 name: t.String(),
-                description: t.Optional(t.String()),
+                description: t.String(),
                 prompt: t.String(),
                 languageId: t.Number(),
                 baseCode: t.String(),
@@ -74,7 +74,7 @@ export default new Elysia({ prefix: '/problem' })
                 return {
                     problemId: problem.problems.id,
                     name: problem.problems.name,
-                    description: problem.problems.description ?? undefined,
+                    description: problem.problems.description,
                     languageId: problem.problems.languageId,
                     creator: problem.profiles ?? undefined,
                 };
@@ -88,7 +88,7 @@ export default new Elysia({ prefix: '/problem' })
                 t.Object({
                     problemId: t.Number(),
                     name: t.String(),
-                    description: t.Optional(t.String()),
+                    description: t.String(),
                     languageId: t.Number(),
                     creator: t.Optional(
                         t.Object({
@@ -130,6 +130,7 @@ export default new Elysia({ prefix: '/problem' })
                             languageId: problem.languageId,
                             baseCode: problem.baseCode,
                             creatorId: problem.creator,
+                            tests: problem.tests,
                         };
                     },
                     {
@@ -139,11 +140,17 @@ export default new Elysia({ prefix: '/problem' })
                         response: t.Object({
                             problemId: t.Number(),
                             name: t.String(),
-                            description: t.Nullable(t.String()),
+                            description: t.String(),
                             prompt: t.String(),
                             languageId: t.Number(),
                             baseCode: t.String(),
                             creatorId: t.Number(),
+                            tests: t.Array(
+                                t.Object({
+                                    input: t.String(),
+                                    expected: t.String(),
+                                }),
+                            ),
                         }),
                     },
                 )

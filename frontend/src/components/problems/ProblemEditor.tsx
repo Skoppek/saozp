@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { TextInput } from "./TextInput";
-import { MarkdownEditor } from "./MarkdownEditor";
-import { CodeEditor } from "./CodeEditor";
-import { TestCasesEditor } from "./TestCasesEditor";
+import { TextInput } from "../TextInput";
+import { MarkdownEditor } from "../MarkdownEditor";
+import { CodeEditor } from "../CodeEditor";
+import { TestCasesEditor } from "../TestCasesEditor";
 import { Card } from "flowbite-react/components/Card";
 import { Button } from "flowbite-react/components/Button";
-import apiClient from "../apiClient";
-import { Problem, TestCase } from "../shared/interfaces";
-import { LanguageId } from "../shared/enums";
-import { ALL_LANGUAGES } from "../shared/constansts";
+import apiClient from "../../apiClient";
+import { Problem, TestCase } from "../../shared/interfaces";
+import { LanguageId } from "../../shared/enums";
+import { ALL_LANGUAGES } from "../../shared/constansts";
 
 interface ProblemEditorProps {
   problem?: Problem;
@@ -36,6 +36,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             onChange={(value) => {
               setName(value);
             }}
+            value={name}
           />
           <TextInput
             label="Krótki opis"
@@ -43,6 +44,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             onChange={(value) => {
               setDescription(value);
             }}
+            value={description}
           />
         </Card>
         <Card>
@@ -50,6 +52,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             onChange={(value) => {
               setPrompt(value);
             }}
+            markdown={prompt}
           />
         </Card>
         <Card>
@@ -57,6 +60,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             onChange={(value) => {
               setTests(value);
             }}
+            testCases={tests}
           />
         </Card>
       </div>
@@ -70,6 +74,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           onLanguageChange={(value) => {
             setLanguage(value);
           }}
+          code={baseCode}
         />
         <Button
           onClick={() => {

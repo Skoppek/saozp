@@ -1,4 +1,4 @@
-import { ProblemEntry, User } from "./interfaces";
+import { Problem, ProblemEntry, TestCase, User } from "./interfaces";
 
 export const isUser = (suspect: object): suspect is User => {
   return (
@@ -29,9 +29,40 @@ export const isProblemEntry = (suspect: object): suspect is ProblemEntry => {
 };
 
 export const isProblemsEntryArray = (
-  response: object,
-): response is ProblemEntry[] => {
+  suspect: object,
+): suspect is ProblemEntry[] => {
   return (
-    Array.isArray(response) && response.every((item) => isProblemEntry(item))
+    Array.isArray(suspect) && suspect.every((item) => isProblemEntry(item))
+  );
+};
+
+export const isTestCase = (suspect: object): suspect is TestCase => {
+  return (
+    "input" in suspect &&
+    typeof suspect.input === "string" &&
+    "expected" in suspect &&
+    typeof suspect.expected === "string"
+  );
+};
+
+export const isProblem = (suspect: object): suspect is Problem => {
+  return (
+    "problemId" in suspect &&
+    typeof suspect.problemId === "number" &&
+    "name" in suspect &&
+    typeof suspect.name === "string" &&
+    "description" in suspect &&
+    typeof suspect.description === "string" &&
+    "prompt" in suspect &&
+    typeof suspect.prompt === "string" &&
+    "languageId" in suspect &&
+    typeof suspect.languageId === "number" &&
+    "baseCode" in suspect &&
+    typeof suspect.baseCode === "string" &&
+    "creatorId" in suspect &&
+    typeof suspect.creatorId === "number" &&
+    "tests" in suspect &&
+    Array.isArray(suspect.tests) &&
+    suspect.tests.every((item) => isTestCase(item))
   );
 };

@@ -5,12 +5,14 @@ import { ClassName } from "../shared/interfaces";
 interface TextInputProps extends ClassName {
   label?: string;
   id: string;
+  value?: string;
   onChange?: (value: string) => void;
 }
 
 export const TextInput = ({
   label,
   id,
+  value,
   onChange,
   className,
 }: TextInputProps) => {
@@ -28,6 +30,7 @@ export const TextInput = ({
         onChange={(event) => {
           onChange?.(event.target.value);
         }}
+        value={value}
       />
     </div>
   );

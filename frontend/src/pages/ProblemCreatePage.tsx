@@ -1,4 +1,4 @@
-import { ProblemEditor } from "../components/ProblemEditor";
+import { ProblemEditor } from "../components/problems/ProblemEditor";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 
 export const ProblemCreatePage = () => {

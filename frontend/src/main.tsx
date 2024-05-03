@@ -8,6 +8,7 @@ import { ProblemsPage } from "./pages/ProblemsPage";
 import { ProblemCreatePage } from "./pages/ProblemCreatePage";
 import { LoginPage } from "./pages/LoginPage";
 import { MePage } from "./pages/MePage";
+import { ProblemEditPage } from "./pages/ProblemEditPage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/problems/create",
         element: <ProblemCreatePage />,
+      },
+      {
+        path: "/problems/edit/:id",
+        element: <ProblemEditPage />,
       },
       {},
     ],

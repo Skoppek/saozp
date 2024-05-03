@@ -1,8 +1,8 @@
-import { ProblemEntry } from "../shared/interfaces";
-import { ALL_LANGUAGES } from "../shared/constansts";
+import { ProblemEntry } from "../../shared/interfaces";
+import { ALL_LANGUAGES } from "../../shared/constansts";
 import { Badge } from "flowbite-react/components/Badge";
 import { Button } from "flowbite-react/components/Button";
-import { LinkButton } from "./LinkButton";
+import { LinkButton } from "../LinkButton";
 
 const getLanguageName = (languageId: number) => {
   return (
@@ -33,7 +33,7 @@ export const ProblemCard = ({ problem, allowModify }: ProblemCardProps) => {
           </Button>
           {allowModify && (
             <LinkButton
-              to="/"
+              to={`/problems/edit/${problem.problemId}`}
               buttonProps={{ color: "gray", size: "xs" }}
               label="Modyfikuj"
             />

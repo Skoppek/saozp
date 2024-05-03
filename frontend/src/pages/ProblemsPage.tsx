@@ -3,7 +3,7 @@ import { ProblemEntry, ProblemsFilter } from "../shared/interfaces";
 import apiClient from "../apiClient";
 import { isProblemsEntryArray } from "../shared/typeGuards";
 import { AuthenticatedPage } from "./AuthenticatedPage";
-import { ProblemsGallery } from "../components/ProblemsGallery";
+import { ProblemsGallery } from "../components/problems/ProblemsGallery";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { TextInput } from "../components/TextInput";
 import { LanguageSelect } from "../components/LanguageSelect";

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { ProblemsFilter, User } from "../shared/interfaces";
-import { ProblemEntry } from "../shared/interfaces";
+import { ProblemsFilter, User } from "../../shared/interfaces";
+import { ProblemEntry } from "../../shared/interfaces";
 import { ProblemCard } from "./ProblemCard";
-import apiClient from "../apiClient";
-import { isUser } from "../shared/typeGuards";
+import apiClient from "../../apiClient";
+import { isUser } from "../../shared/typeGuards";
 
 interface ProblemsGalleryProps {
   problems: ProblemEntry[];
@@ -15,7 +15,6 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
 
   useEffect(() => {
     apiClient.getUserOfCurrentSession().then((response) => {
-      console.log(response.data);
       if (isUser(response.data)) {
         setUser(response.data);
       }

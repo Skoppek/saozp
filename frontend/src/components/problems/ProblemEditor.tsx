@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TextInput } from "../TextInput";
-import { MarkdownEditor } from "../MarkdownEditor";
+import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import { CodeEditor } from "../CodeEditor";
 import { TestCasesEditor } from "../TestCasesEditor";
 import { Card } from "flowbite-react/components/Card";

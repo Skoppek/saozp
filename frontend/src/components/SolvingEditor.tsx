@@ -1,7 +1,7 @@
 import { getLanguageById } from "../shared/constansts";
 import { Problem } from "../shared/interfaces";
 import { CodeEditor } from "./CodeEditor";
-import { MarkdownEditor } from "./MarkdownEditor";
+import { MarkdownEditor } from "./markdown/MarkdownEditor";
 
 interface SolvingEditorProps {
   problem: Problem;

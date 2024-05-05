@@ -1,5 +1,4 @@
 import { ClassName } from "../shared/interfaces";
-import { Card } from "flowbite-react/components/Card";
 import { Editor } from "@monaco-editor/react";
 import { useState } from "react";
 import { LanguageId } from "../shared/enums";
@@ -40,6 +39,7 @@ export const CodeEditor = ({
           <Badge className="w-fit">{languages.name}</Badge>
         )}
         <Editor
+          // eslint-disable-next-line tailwindcss/no-custom-classname
           theme="vs-dark"
           value={code}
           defaultLanguage={chosenLanguage?.monacoForm}

@@ -6,10 +6,12 @@ import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../pages/Root";
 import { User } from "../shared/interfaces";
+import { Spinner } from "flowbite-react/components/Spinner";
 
 export const Navigation = () => {
   const authContext = useContext(AuthContext);
   const [user, setUser] = useState<User | undefined>();
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,17 +40,22 @@ export const Navigation = () => {
           <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
         )}
         {authContext?.isLogged ? (
-          <Button
-            onClick={() => {
-              apiClient.logout().then(() => {
-                authContext.setIsLogged(false);
-                setUser(undefined);
-                navigate("/");
-              });
-            }}
-          >
-            Wyloguj się
-          </Button>
+          !isLoggingOut ? (
+            <Button
+              onClick={() => {
+                setIsLoggingOut(true);
+                apiClient.logout().then(() => {
+                  authContext.setIsLogged(false);
+                  setUser(undefined);
+                  navigate("/");
+                });
+              }}
+            >
+              Wyloguj się
+            </Button>
+          ) : (
+            <Spinner aria-label="Extra large spinner" size="xl" />
+          )
         ) : (
           <>
             <Link to={"/login"}>

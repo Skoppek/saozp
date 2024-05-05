@@ -4,18 +4,20 @@ import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../pages/Root";
 import { TextInput } from "../TextInput";
+import { Spinner } from "flowbite-react/components/Spinner";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isWrongCredentials, setIsWrongCredentials] = useState<boolean>();
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
     if (authContext?.isLogged) {
-      navigate("me");
+      navigate("/problems");
     }
   }, [authContext, navigate]);
 
@@ -45,6 +47,7 @@ export const LoginForm = () => {
       <Button
         type="submit"
         onClick={() => {
+          setIsLoggingIn(true);
           apiClient
             .loginUser({
               email,
@@ -55,6 +58,7 @@ export const LoginForm = () => {
               navigate("/problems");
             })
             .catch((error) => {
+              setIsLoggingIn(false);
               authContext?.setIsLogged(false);
               if (error.response.status && error.response.status == 401) {
                 setIsWrongCredentials(true);
@@ -62,7 +66,11 @@ export const LoginForm = () => {
             });
         }}
       >
-        Zaloguj się
+        {isLoggingIn ? (
+          <Spinner aria-label="Extra large spinner" size="xl" />
+        ) : (
+          "Zaloguj się"
+        )}
       </Button>
     </div>
   );

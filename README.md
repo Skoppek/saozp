@@ -16,6 +16,6 @@ bunx drizzle-kit studio
 bun run dev
 ```
 
-```bash {"cwd":"./backend","id":"01HWZEK15FPBBTCPHDQV63KNF3"}
+```bash {"cwd":"./backend","id":"01HWZEK15FPBBTCPHDQV63KNF3","name":"backend"}
 bun run dev
 ```

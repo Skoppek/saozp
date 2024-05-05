@@ -1,15 +1,7 @@
 import { ProblemEntry } from "../../shared/interfaces";
-import { ALL_LANGUAGES } from "../../shared/constansts";
 import { Badge } from "flowbite-react/components/Badge";
-import { Button } from "flowbite-react/components/Button";
 import { LinkButton } from "../LinkButton";
-
-const getLanguageName = (languageId: number) => {
-  return (
-    ALL_LANGUAGES.find((language) => language.id === languageId)?.name ??
-    "Nieznany język"
-  );
-};
+import { getLanguageById } from "../../shared/constansts";
 
 interface ProblemCardProps {
   problem: ProblemEntry;
@@ -26,11 +18,15 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
         {problem.description}
       </div>
       <div className="flex items-center justify-between">
-        <Badge className="w-fit">{getLanguageName(problem.languageId)}</Badge>
+        <Badge className="w-fit">
+          {getLanguageById(problem.languageId)?.name ?? "Nieznany język"}
+        </Badge>
         <div className="flex">
-          <Button color="gray" size="xs">
-            Rozwiąż
-          </Button>
+          <LinkButton
+            to={`/problems/solve/${problem.problemId}`}
+            buttonProps={{ color: "gray", size: "xs" }}
+            label="Rozwiąż"
+          />
           {isOwner && (
             <LinkButton
               to={`/problems/edit/${problem.problemId}`}

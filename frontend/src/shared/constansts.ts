@@ -1,12 +1,14 @@
 import { LanguageId } from "./enums";
 import { Language } from "./interfaces";
 
+export const UNKNOWN_LANGUAGE: Language = {
+  id: LanguageId.UNKNOWN,
+  name: "Dowolny",
+  monacoForm: "plain",
+};
+
 export const ALL_LANGUAGES: Language[] = [
-  {
-    id: LanguageId.UNKNOWN,
-    name: "Dowolny",
-    monacoForm: "plain",
-  },
+  UNKNOWN_LANGUAGE,
   {
     id: LanguageId.PYTHON_3_8_1,
     name: "Python 3.8",
@@ -43,3 +45,10 @@ export const ALL_LANGUAGES: Language[] = [
     monacoForm: "typescript",
   },
 ];
+
+export const getLanguageById = (languageId: number) => {
+  return (
+    ALL_LANGUAGES.find((language) => language.id === languageId) ??
+    UNKNOWN_LANGUAGE
+  );
+};

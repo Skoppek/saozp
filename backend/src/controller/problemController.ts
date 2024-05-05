@@ -221,7 +221,7 @@ export default new Elysia({ prefix: '/problem' })
                             throw new Error('Submission not created.');
                         }
 
-                        const tests = problem.tests.concat(body.userTests);
+                        const tests = problem.tests;
 
                         tests.forEach(async (test) => {
                             const token = (
@@ -250,12 +250,6 @@ export default new Elysia({ prefix: '/problem' })
                         },
                         body: t.Object({
                             code: t.String(),
-                            userTests: t.Array(
-                                t.Object({
-                                    input: t.String(),
-                                    expected: t.String(),
-                                }),
-                            ),
                         }),
                         response: t.Object({
                             submissionId: t.Number(),

@@ -7,7 +7,7 @@ interface MarkdownCardProps {
 
 export const MarkdownCard = ({ markdown }: MarkdownCardProps) => {
   return (
-    <Card className="overflow-y-auto">
+    <Card className="h-full overflow-y-auto">
       <div className="prose break-words dark:prose-invert">
         <Markdown>{markdown}</Markdown>
       </div>

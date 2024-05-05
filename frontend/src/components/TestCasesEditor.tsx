@@ -61,26 +61,28 @@ export const TestCasesEditor = ({
           <FaPlus className="size-4" />
         </Button>
       </div>
-      <div className="flex flex-col gap-1 rounded-lg bg-gray-300 p-2 dark:bg-slate-700">
-        {tests.map((test) => {
-          return (
-            <div className="flex">
-              <div className="ml-8 flex w-1/2 gap-4">
-                Wejście
-                <Badge color="dark" size="sm">
-                  {test.input}
-                </Badge>
+      {!!tests.length && (
+        <div className="flex flex-col gap-1 rounded-lg bg-gray-300 p-2 dark:bg-slate-700">
+          {tests.map((test) => {
+            return (
+              <div className="flex">
+                <div className="ml-8 flex w-1/2 gap-4">
+                  Wejście
+                  <Badge color="dark" size="sm">
+                    {test.input}
+                  </Badge>
+                </div>
+                <div className="flex gap-4">
+                  Oczekuje
+                  <Badge color="success" size="sm">
+                    {test.expected}
+                  </Badge>
+                </div>
               </div>
-              <div className="flex gap-4">
-                Oczekuje
-                <Badge color="success" size="sm">
-                  {test.expected}
-                </Badge>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

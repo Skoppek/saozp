@@ -9,6 +9,7 @@ import { ProblemCreatePage } from "./pages/ProblemCreatePage";
 import { LoginPage } from "./pages/LoginPage";
 import { MePage } from "./pages/MePage";
 import { ProblemEditPage } from "./pages/ProblemEditPage";
+import { SolvingPage } from "./pages/SolvingPage";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +40,10 @@ const router = createBrowserRouter([
         path: "/problems/edit/:id",
         element: <ProblemEditPage />,
       },
-      {},
+      {
+        path: "/problems/solve/:id",
+        element: <SolvingPage />,
+      },
     ],
   },
 ]);

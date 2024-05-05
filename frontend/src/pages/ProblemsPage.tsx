@@ -16,9 +16,9 @@ export const ProblemsPage = () => {
   const [filter, setFilter] = useState<ProblemsFilter>({});
 
   useEffect(() => {
-    apiClient.getAllProblems().then((response) => {
-      if (isProblemsEntryArray(response.data)) {
-        setProblems(response.data);
+    apiClient.getAllProblems().then((entires) => {
+      if (isProblemsEntryArray(entires)) {
+        setProblems(entires);
       }
     });
   }, []);

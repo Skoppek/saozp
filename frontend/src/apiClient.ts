@@ -1,6 +1,11 @@
 import axios from "axios";
 import { NewProblem, Problem, TestCase } from "./shared/interfaces";
-import { isSubmissionEntryArray, isUser } from "./shared/typeGuards";
+import {
+  isProblem,
+  isProblemsEntryArray,
+  isSubmissionEntryArray,
+  isUser,
+} from "./shared/typeGuards";
 
 interface LoginCredentials {
   email: string;
@@ -53,11 +58,25 @@ const createProblem = (newProblem: NewProblem) => {
 };
 
 const getAllProblems = () => {
-  return axiosInstance.get(`api/problem`, axiosConfig);
+  return axiosInstance.get(`api/problem`, axiosConfig).then((response) => {
+    if (isProblemsEntryArray(response.data)) {
+      return response.data;
+    } else {
+      throw new Error("Wrong response type. Expected: ProblemEntry[]");
+    }
+  });
 };
 
 const getProblemById = (problemId: number) => {
-  return axiosInstance.get(`api/problem/${problemId}`, axiosConfig);
+  return axiosInstance
+    .get(`api/problem/${problemId}`, axiosConfig)
+    .then((response) => {
+      if (isProblem(response.data)) {
+        return response.data;
+      } else {
+        throw new Error("Wrong response type. Expected: Problem[]");
+      }
+    });
 };
 
 const updateProblemById = (

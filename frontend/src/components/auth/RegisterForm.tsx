@@ -1,10 +1,9 @@
 import { Button } from "flowbite-react/components/Button";
-import { Label } from "flowbite-react/components/Label";
-import { TextInput } from "flowbite-react/components/TextInput";
 import { useContext, useState } from "react";
 import apiClient from "../../apiClient";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../pages/Root";
+import { TextInput } from "../TextInput";
 
 export const RegisterForm = () => {
   const [email, setEmail] = useState<string>();
@@ -17,68 +16,46 @@ export const RegisterForm = () => {
   const authContext = useContext(AuthContext);
 
   return (
-    <div className="flex max-w-md flex-col gap-4">
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="email" value="Email" />
-        </div>
-        <TextInput
-          id="email"
-          type="email"
-          placeholder="mail@domain.com"
-          required
-          color={isWrongData ? "failure" : "gray"}
-          onChange={(event) => {
-            setIsWrongData(false);
-            setEmail(event.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="password" value="Hasło" />
-        </div>
-        <TextInput
-          id="password"
-          type="password"
-          required
-          color={isWrongData ? "failure" : "gray"}
-          onChange={(event) => {
-            setIsWrongData(false);
-            setPassword(event.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="name" value="Imię" />
-        </div>
-        <TextInput
-          id="name"
-          type="text"
-          required
-          color={isWrongData ? "failure" : "gray"}
-          onChange={(event) => {
-            setIsWrongData(false);
-            setFirstName(event.target.value);
-          }}
-        />
-      </div>
-      <div>
-        <div className="mb-2 block">
-          <Label htmlFor="surname" value="Nazwisko" />
-        </div>
-        <TextInput
-          id="surname"
-          type="text"
-          required
-          color={isWrongData ? "failure" : "gray"}
-          onChange={(event) => {
-            setIsWrongData(false);
-            setLastName(event.target.value);
-          }}
-        />
-      </div>
+    <div className="flex w-96 max-w-md flex-col gap-4">
+      <TextInput
+        id={"email"}
+        type="email"
+        label="Email"
+        placeholder="user@mail.com"
+        color={isWrongData ? "failure" : "gray"}
+        onChange={(value) => {
+          setIsWrongData(false);
+          setEmail(value);
+        }}
+      />
+      <TextInput
+        id={"password"}
+        type="password"
+        label="Hasło"
+        color={isWrongData ? "failure" : "gray"}
+        onChange={(value) => {
+          setIsWrongData(false);
+          setPassword(value);
+        }}
+      />
+      <TextInput
+        id={"name"}
+        label="Imię"
+        color={isWrongData ? "failure" : "gray"}
+        onChange={(value) => {
+          setIsWrongData(false);
+          setFirstName(value);
+        }}
+      />
+      <TextInput
+        id={"lastname"}
+        label="Nazwisko"
+        color={isWrongData ? "failure" : "gray"}
+        onChange={(value) => {
+          setIsWrongData(false);
+          setLastName(value);
+        }}
+      />
       <Button
         type="submit"
         onClick={() => {

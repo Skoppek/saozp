@@ -6,6 +6,9 @@ interface TextInputProps extends ClassName {
   label?: string;
   id: string;
   value?: string;
+  type?: string;
+  placeholder?: string;
+  color?: string;
   onChange?: (value: string) => void;
 }
 
@@ -13,6 +16,9 @@ export const TextInput = ({
   label,
   id,
   value,
+  type,
+  color,
+  placeholder,
   onChange,
   className,
 }: TextInputProps) => {
@@ -24,9 +30,11 @@ export const TextInput = ({
         </div>
       )}
       <FlowBiteTextInput
-        type="text"
+        type={type ?? "text"}
         required
+        placeholder={placeholder}
         id={id}
+        color={color}
         onChange={(event) => {
           onChange?.(event.target.value);
         }}

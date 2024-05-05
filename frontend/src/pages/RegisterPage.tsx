@@ -23,12 +23,12 @@ export const RegisterPage = () => {
   }, [authContext, navigate]);
 
   return (
-    <>
+    <div className="mt-20 flex justify-center">
       {pageReady ? (
         <RegisterForm />
       ) : (
         <Spinner aria-label="Extra large spinner" size="xl" />
       )}
-    </>
+    </div>
   );
 };

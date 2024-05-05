@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/classnames-order */
 import { Card } from "flowbite-react/components/Card";
 import Markdown from "react-markdown";
 

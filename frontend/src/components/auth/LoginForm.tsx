@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import apiClient from "../../apiClient";
-// import { TextInput } from "flowbite-react/components/TextInput";
-import { Label } from "flowbite-react/components/Label";
 import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../pages/Root";
@@ -54,7 +52,7 @@ export const LoginForm = () => {
             })
             .then(() => {
               authContext?.setIsLogged(true);
-              navigate("/me");
+              navigate("/problems");
             })
             .catch((error) => {
               authContext?.setIsLogged(false);

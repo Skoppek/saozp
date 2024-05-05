@@ -24,8 +24,6 @@ export const SolvingPage = () => {
     });
   }, [id, navigate]);
 
-  console.log(problem);
-
   return (
     <AuthenticatedPage>
       <div>

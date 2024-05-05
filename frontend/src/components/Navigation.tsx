@@ -3,12 +3,25 @@ import { Navbar } from "flowbite-react/components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import apiClient from "../apiClient";
 import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../pages/Root";
+import { User } from "../shared/interfaces";
+import { isUser } from "../shared/typeGuards";
 
 export const Navigation = () => {
   const authContext = useContext(AuthContext);
+  const [user, setUser] = useState<User | undefined>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authContext?.isLogged) {
+      apiClient.getUserOfCurrentSession().then((response) => {
+        if (isUser(response.data)) {
+          setUser(response.data);
+        }
+      });
+    }
+  }, [authContext?.isLogged, user]);
 
   return (
     <Navbar fluid className="bg-sky-600 dark:bg-slate-700 dark:text-white">
@@ -24,6 +37,11 @@ export const Navigation = () => {
         <Link to={"/submissions"}>Moje rozwiązania</Link>
       </Navbar.Collapse>
       <Navbar.Collapse>
+        {user ? (
+          <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
+        ) : (
+          <div>reee</div>
+        )}
         {authContext?.isLogged ? (
           <Button
             onClick={() => {

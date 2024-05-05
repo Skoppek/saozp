@@ -72,7 +72,7 @@ export const RegisterForm = () => {
             })
             .then(() => {
               authContext?.setIsLogged(true);
-              navigate("/me");
+              navigate("/problems");
             })
             .catch(() => {
               authContext?.setIsLogged(false);

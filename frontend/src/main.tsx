@@ -7,7 +7,6 @@ import { RegisterForm } from "./components/auth/RegisterForm";
 import { ProblemsPage } from "./pages/ProblemsPage";
 import { ProblemCreatePage } from "./pages/ProblemCreatePage";
 import { LoginPage } from "./pages/LoginPage";
-import { MePage } from "./pages/MePage";
 import { ProblemEditPage } from "./pages/ProblemEditPage";
 import { SolvingPage } from "./pages/SolvingPage";
 
@@ -23,10 +22,6 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterForm />,
-      },
-      {
-        path: "/me",
-        element: <MePage />,
       },
       {
         path: "/problems",

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { NewProblem, Problem, TestCase } from "./shared/interfaces";
+import { isSubmissionEntryArray, isUser } from "./shared/typeGuards";
 
 interface LoginCredentials {
   email: string;
@@ -22,7 +23,6 @@ interface SubmissionQuery {
 
 interface NewSubmission {
   code: string;
-  userTests: TestCase[];
 }
 
 const axiosConfig = {
@@ -76,10 +76,18 @@ const deleteProblemByid = (problemId: number) => {
 };
 
 const getSubmissions = (query: SubmissionQuery) => {
-  return axiosInstance.get(`api/submissions`, {
-    ...axiosConfig,
-    params: query,
-  });
+  return axiosInstance
+    .get(`api/submissions`, {
+      ...axiosConfig,
+      params: query,
+    })
+    .then((response) => {
+      if (isSubmissionEntryArray(response.data)) {
+        return response.data;
+      } else {
+        throw new Error("Wrong response type. Expected: SubmissionEntry[]");
+      }
+    });
 };
 
 const getSubmissionById = (submissionId: number) => {
@@ -95,7 +103,13 @@ const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
 };
 
 const getUserOfCurrentSession = () => {
-  return axiosInstance.get(`api/me`, axiosConfig);
+  return axiosInstance.get(`api/me`, axiosConfig).then((response) => {
+    if (isUser(response.data)) {
+      return response.data;
+    } else {
+      throw new Error("Wrong response type. Expected: User");
+    }
+  });
 };
 
 export default {

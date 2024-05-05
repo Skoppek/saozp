@@ -1,7 +1,16 @@
-import { Problem, ProblemEntry, TestCase, User } from "./interfaces";
+import {
+  Problem,
+  ProblemEntry,
+  SubmissionEntry,
+  SubmissionStatus,
+  TestCase,
+  User,
+} from "./interfaces";
 
-export const isUser = (suspect: object): suspect is User => {
+export const isUser = (suspect: unknown): suspect is User => {
   return (
+    typeof suspect === "object" &&
+    suspect != null &&
     "userId" in suspect &&
     typeof suspect.userId === "number" &&
     "firstName" in suspect &&
@@ -11,8 +20,10 @@ export const isUser = (suspect: object): suspect is User => {
   );
 };
 
-export const isProblemEntry = (suspect: object): suspect is ProblemEntry => {
+export const isProblemEntry = (suspect: unknown): suspect is ProblemEntry => {
   return (
+    typeof suspect === "object" &&
+    suspect != null &&
     "problemId" in suspect &&
     typeof suspect.problemId === "number" &&
     "name" in suspect &&
@@ -29,15 +40,17 @@ export const isProblemEntry = (suspect: object): suspect is ProblemEntry => {
 };
 
 export const isProblemsEntryArray = (
-  suspect: object,
+  suspect: unknown,
 ): suspect is ProblemEntry[] => {
   return (
     Array.isArray(suspect) && suspect.every((item) => isProblemEntry(item))
   );
 };
 
-export const isTestCase = (suspect: object): suspect is TestCase => {
+export const isTestCase = (suspect: unknown): suspect is TestCase => {
   return (
+    typeof suspect === "object" &&
+    suspect != null &&
     "input" in suspect &&
     typeof suspect.input === "string" &&
     "expected" in suspect &&
@@ -45,8 +58,10 @@ export const isTestCase = (suspect: object): suspect is TestCase => {
   );
 };
 
-export const isProblem = (suspect: object): suspect is Problem => {
+export const isProblem = (suspect: unknown): suspect is Problem => {
   return (
+    typeof suspect === "object" &&
+    suspect != null &&
     "problemId" in suspect &&
     typeof suspect.problemId === "number" &&
     "name" in suspect &&
@@ -64,5 +79,51 @@ export const isProblem = (suspect: object): suspect is Problem => {
     "tests" in suspect &&
     Array.isArray(suspect.tests) &&
     suspect.tests.every((item) => isTestCase(item))
+  );
+};
+
+export const isSubmissionStatus = (
+  suspect: unknown,
+): suspect is SubmissionStatus => {
+  return (
+    typeof suspect === "object" &&
+    suspect != null &&
+    "id" in suspect &&
+    typeof suspect.id === "number" &&
+    "description" in suspect &&
+    typeof suspect.description === "string"
+  );
+};
+
+export const isSubmissionEntry = (
+  suspect: unknown,
+): suspect is SubmissionEntry => {
+  return (
+    typeof suspect === "object" &&
+    suspect != null &&
+    "submissionId" in suspect &&
+    typeof suspect.submissionId === "number" &&
+    "creator" in suspect &&
+    (isUser(suspect.creator) || suspect.creator === null) &&
+    (() => {
+      if ("createdAt" in suspect) {
+        return typeof suspect.createdAt === "string";
+      }
+      return true;
+    })() &&
+    (() => {
+      if ("status" in suspect) {
+        return isSubmissionStatus(suspect.status);
+      }
+      return true;
+    })()
+  );
+};
+
+export const isSubmissionEntryArray = (
+  suspect: unknown,
+): suspect is SubmissionEntry[] => {
+  return (
+    Array.isArray(suspect) && suspect.every((item) => isSubmissionEntry(item))
   );
 };

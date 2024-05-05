@@ -1,4 +1,4 @@
-import { eq, inArray } from 'drizzle-orm/sql';
+import { eq } from 'drizzle-orm/sql';
 import { db } from '../model/db/db';
 import { results } from '../model/schemas/resultSchema';
 import { NewTest, tests } from '../model/schemas/testSchema';

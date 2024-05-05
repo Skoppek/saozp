@@ -3,7 +3,6 @@ import { ProblemsFilter, User } from "../../shared/interfaces";
 import { ProblemEntry } from "../../shared/interfaces";
 import { ProblemCard } from "./ProblemCard";
 import apiClient from "../../apiClient";
-import { isUser } from "../../shared/typeGuards";
 import { LanguageId } from "../../shared/enums";
 
 interface ProblemsGalleryProps {
@@ -15,10 +14,8 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    apiClient.getUserOfCurrentSession().then((response) => {
-      if (isUser(response.data)) {
-        setUser(response.data);
-      }
+    apiClient.getUserOfCurrentSession().then((user) => {
+      setUser(user);
     });
   }, []);
 

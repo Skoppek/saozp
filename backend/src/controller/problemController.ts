@@ -229,7 +229,7 @@ export default new Elysia({ prefix: '/problem' })
                                     languageId: problem.languageId,
                                     code: body.code,
                                     test,
-                                    callbackUrl: `http://172.17.0.1:${server?.port}/judge0/callback`,
+                                    callbackUrl: `http://172.17.0.1:${server?.port}/api/judge0/callback`,
                                 })
                             ).token;
 

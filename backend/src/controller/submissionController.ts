@@ -60,17 +60,18 @@ export default new Elysia({ prefix: '/submissions' })
             );
 
             return await Promise.all(
-                queryResult.map(async (submission) => {
+                queryResult.map(async (result) => {
                     const statusIds = (
                         await testRepository.getTestsWithResultOfSubmission(
-                            submission.id,
+                            result.submissions.id,
                         )
                     ).map((result) => result.statusId);
 
                     return {
-                        submissionId: submission.id,
-                        creator: submission.creator,
-                        createdAt: submission.createdAt,
+                        submissionId: result.submissions.id,
+                        creator: result.profiles,
+                        createdAt:
+                            result.submissions.createdAt?.toLocaleString(),
                         status: reduceToStatus(statusIds),
                     };
                 }),
@@ -87,8 +88,14 @@ export default new Elysia({ prefix: '/submissions' })
             response: t.Array(
                 t.Object({
                     submissionId: t.Number(),
-                    creator: t.String(),
-                    createdAt: t.Nullable(t.Date()),
+                    creator: t.Nullable(
+                        t.Object({
+                            firstName: t.String(),
+                            lastName: t.String(),
+                            userId: t.Number(),
+                        }),
+                    ),
+                    createdAt: t.Optional(t.String()),
                     status: t.Optional(
                         t.Object({
                             id: t.Number(),

@@ -10,7 +10,6 @@ import { Badge } from "flowbite-react/components/Badge";
 interface CodeEditorProps extends ClassName {
   languages: Language[] | Language;
   code?: string;
-  editorHeight?: string;
   onChange?: (value: string) => void;
   onLanguageChange?: (value: LanguageId) => void;
 }
@@ -20,7 +19,6 @@ export const CodeEditor = ({
   code,
   onChange,
   onLanguageChange,
-  editorHeight,
   className,
 }: CodeEditorProps) => {
   const [chosenLanguage, setChosenLanguage] = useState(
@@ -29,7 +27,7 @@ export const CodeEditor = ({
 
   return (
     <div className={className}>
-      <Card>
+      <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 shadow-md dark:border-gray-700 dark:bg-gray-800">
         {Array.isArray(languages) ? (
           <LanguageSelect
             languages={languages}
@@ -42,7 +40,6 @@ export const CodeEditor = ({
           <Badge className="w-fit">{languages.name}</Badge>
         )}
         <Editor
-          height={editorHeight ?? "75vh"}
           theme="vs-dark"
           value={code}
           defaultLanguage={chosenLanguage?.monacoForm}
@@ -51,7 +48,7 @@ export const CodeEditor = ({
             onChange?.(value ?? "");
           }}
         />
-      </Card>
+      </div>
     </div>
   );
 };

@@ -32,8 +32,8 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="m-8 flex flex-row gap-4 ">
-      <div className="flex w-1/2 flex-col gap-2">
+    <div className="m-8 flex h-[75vh] flex-row gap-4">
+      <div className="flex h-full w-1/2 flex-col gap-2">
         <Card>
           <TextInput
             label="Nazwa zadania"
@@ -80,7 +80,6 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
       <div className="flex h-full w-1/2 flex-col justify-between gap-4">
         <CodeEditor
           languages={ALL_LANGUAGES}
-          editorHeight="60vh"
           onChange={(value) => {
             setNewProblem((prev) => {
               return { ...prev, baseCode: value };
@@ -92,6 +91,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             });
           }}
           code={newProblem.baseCode}
+          className="h-full"
         />
         <Button
           onClick={() => {

@@ -45,3 +45,15 @@ export interface User {
   firstName: string;
   lastName: string;
 }
+
+export interface SubmissionStatus {
+  id: number;
+  description: string;
+}
+
+export interface SubmissionEntry {
+  submissionId: number;
+  creator: User | null;
+  createdAt?: string;
+  status?: SubmissionStatus;
+}

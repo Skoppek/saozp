@@ -15,7 +15,7 @@ export const RegisterPage = () => {
       const userIsLogged = response.data;
       authContext?.setIsLogged(userIsLogged);
       if (userIsLogged) {
-        navigate("me");
+        navigate("/problems");
         return;
       }
       setPageReady(true);

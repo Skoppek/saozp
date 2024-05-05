@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '../model/db/db';
 import {
     NewSubmission,
@@ -7,28 +7,15 @@ import {
 } from '../model/schemas/submissionSchema';
 import { profiles } from '../model/schemas/profileSchema';
 
-interface SubmissionListEntry {
-    id: number;
-    creator: string;
-    createdAt: Date | null;
-}
-
 const createSubmission = async (
     newSubmission: NewSubmission,
 ): Promise<Submission[]> => {
     return db.insert(submissions).values(newSubmission).returning();
 };
 
-const getSubmissionsList = async (
-    userId?: number,
-    problemId?: number,
-): Promise<SubmissionListEntry[]> => {
+const getSubmissionsList = async (userId?: number, problemId?: number) => {
     return db
-        .select({
-            id: submissions.id,
-            creator: sql<string>`${profiles.firstName} ${profiles.lastName}`,
-            createdAt: submissions.createdAt,
-        })
+        .select()
         .from(submissions)
         .leftJoin(profiles, eq(submissions.userId, profiles.userId))
         .where(

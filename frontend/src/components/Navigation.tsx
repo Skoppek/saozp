@@ -6,7 +6,6 @@ import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../pages/Root";
 import { User } from "../shared/interfaces";
-import { isUser } from "../shared/typeGuards";
 
 export const Navigation = () => {
   const authContext = useContext(AuthContext);
@@ -14,11 +13,9 @@ export const Navigation = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authContext?.isLogged) {
-      apiClient.getUserOfCurrentSession().then((response) => {
-        if (isUser(response.data)) {
-          setUser(response.data);
-        }
+    if (authContext?.isLogged && !user) {
+      apiClient.getUserOfCurrentSession().then((user) => {
+        setUser(user);
       });
     }
   }, [authContext?.isLogged, user]);
@@ -37,16 +34,15 @@ export const Navigation = () => {
         <Link to={"/submissions"}>Moje rozwiązania</Link>
       </Navbar.Collapse>
       <Navbar.Collapse>
-        {user ? (
+        {!!user && (
           <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
-        ) : (
-          <div>reee</div>
         )}
         {authContext?.isLogged ? (
           <Button
             onClick={() => {
               apiClient.logout().then(() => {
                 authContext.setIsLogged(false);
+                setUser(undefined);
                 navigate("/");
               });
             }}

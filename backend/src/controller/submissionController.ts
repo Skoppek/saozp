@@ -166,7 +166,6 @@ export default new Elysia({ prefix: '/submissions' })
                             statusId: judgeCheck.status.id,
                         },
                     ];
-                    console.log(tests);
                 }
             }
 
@@ -178,6 +177,7 @@ export default new Elysia({ prefix: '/submissions' })
                 result: {
                     tests: tests.map((test) => {
                         return {
+                            statusId: test.statusId ?? 0,
                             token: test.token,
                             input: test.input,
                             expected: test.expected,
@@ -206,6 +206,7 @@ export default new Elysia({ prefix: '/submissions' })
                 result: t.Object({
                     tests: t.Array(
                         t.Object({
+                            statusId: t.Number(),
                             token: t.String(),
                             input: t.String(),
                             expected: t.String(),

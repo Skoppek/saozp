@@ -60,6 +60,8 @@ export interface SubmissionEntry {
 
 export interface TestCaseResult extends TestCase {
   received: string;
+  token: string;
+  statusId: number;
 }
 
 export interface Result {

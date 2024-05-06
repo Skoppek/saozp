@@ -141,7 +141,11 @@ export const isTestCaseResult = (
     "expected" in suspect &&
     typeof suspect.expected === "string" &&
     "received" in suspect &&
-    typeof suspect.received === "string"
+    typeof suspect.received === "string" &&
+    "token" in suspect &&
+    typeof suspect.token === "string" &&
+    "statusId" in suspect &&
+    typeof suspect.statusId === "number"
   );
 };
 
@@ -174,8 +178,6 @@ export const isSubmission = (suspect: unknown): suspect is Submission => {
     typeof suspect.languageId === "number" &&
     "code" in suspect &&
     typeof suspect.code === "string" &&
-    "token" in suspect &&
-    typeof suspect.token === "string" &&
     "result" in suspect &&
     isResult(suspect.result)
   );

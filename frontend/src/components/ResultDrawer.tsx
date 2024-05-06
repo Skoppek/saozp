@@ -31,7 +31,7 @@ export const ResultDrawer = ({
       />
       <Drawer.Items>
         <div className="h-[50vh]">
-          <div>
+          <div className="mx-4 flex flex-col gap-2">
             {submissions.map((submission) => (
               <ResultPanel submission={submission} />
             ))}

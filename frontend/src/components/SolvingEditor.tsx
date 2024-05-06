@@ -58,6 +58,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
               apiClient.submitSolution(problem.problemId, {
                 code: code,
               });
+              if (user) getSubmissions(user);
             }}
           >
             Wyślij

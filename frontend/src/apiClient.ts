@@ -3,7 +3,6 @@ import { NewProblem, Problem, TestCase } from "./shared/interfaces";
 import {
   isProblem,
   isProblemsEntryArray,
-  isResult,
   isSubmission,
   isSubmissionEntryArray,
   isUser,
@@ -115,6 +114,7 @@ const getSubmissionById = (submissionId: number) => {
   return axiosInstance
     .get(`api/submissions/${submissionId}`, axiosConfig)
     .then((response) => {
+      console.log(response.data);
       if (isSubmission(response.data)) {
         return response.data;
       } else {

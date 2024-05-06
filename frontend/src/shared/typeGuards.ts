@@ -174,6 +174,8 @@ export const isSubmission = (suspect: unknown): suspect is Submission => {
     typeof suspect.languageId === "number" &&
     "code" in suspect &&
     typeof suspect.code === "string" &&
+    "token" in suspect &&
+    typeof suspect.token === "string" &&
     "result" in suspect &&
     isResult(suspect.result)
   );

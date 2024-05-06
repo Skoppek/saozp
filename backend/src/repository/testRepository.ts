@@ -26,7 +26,7 @@ const getTestsWithResultOfSubmission = async (submissionId: number) => {
             statusId: results.statusId,
         })
         .from(sq)
-        .innerJoin(results, eq(sq.token, results.token));
+        .leftJoin(results, eq(sq.token, results.token));
 };
 
 export default {

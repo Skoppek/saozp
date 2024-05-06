@@ -92,7 +92,7 @@ const getSubmission = async (
     token: string,
 ): Promise<SubmissionResult | undefined> => {
     const body = (
-        await axios.get(`${judge0Url}/${token}`, {
+        await axios.get(`${judge0Url}/submissions/${token}`, {
             params: { fields: fields.join(',') },
         })
     ).data;

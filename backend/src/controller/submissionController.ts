@@ -7,8 +7,6 @@ import testRepository from '../repository/testRepository';
 import sessionRepository from '../repository/sessionRepository';
 import judge0Client from '../judge/judge0Client';
 
-const NO_LANGUAGE_NAME = 'Unknown language';
-
 const reduceToStatus = (
     statusIds: number[],
 ): { id: number; description: string } | undefined => {
@@ -63,9 +61,32 @@ export default new Elysia({ prefix: '/submissions' })
             return await Promise.all(
                 queryResult.map(async (result) => {
                     const statusIds = (
-                        await testRepository.getTestsWithResultOfSubmission(
-                            result.submissions.id,
-                        )
+                        await testRepository
+                            .getTestsWithResultOfSubmission(
+                                result.submissions.id,
+                            )
+                            .then(async (tests) => {
+                                const firstTest = tests.at(0);
+                                if (firstTest) {
+                                    const judgeCheck =
+                                        await judge0Client.getSubmission(
+                                            firstTest.token,
+                                        );
+
+                                    if (
+                                        judgeCheck &&
+                                        judgeCheck.status.id > 5
+                                    ) {
+                                        return [
+                                            {
+                                                ...firstTest,
+                                                statusId: judgeCheck.status.id,
+                                            },
+                                        ];
+                                    }
+                                }
+                                return tests;
+                            })
                     ).map((result) => result.statusId);
 
                     return {
@@ -73,7 +94,7 @@ export default new Elysia({ prefix: '/submissions' })
                         creator: result.profiles,
                         createdAt:
                             result.submissions.createdAt?.toLocaleString(),
-                        status: reduceToStatus(statusIds),
+                        status: reduceToStatus(statusIds.map((id) => id ?? 0)),
                     };
                 }),
             );
@@ -128,9 +149,26 @@ export default new Elysia({ prefix: '/submissions' })
                 throw new Error('Internal error!');
             }
 
-            const tests = await testRepository.getTestsWithResultOfSubmission(
+            let tests = await testRepository.getTestsWithResultOfSubmission(
                 submission.id,
             );
+
+            const firstTest = tests.at(0);
+            if (firstTest) {
+                const judgeCheck = await judge0Client.getSubmission(
+                    firstTest.token,
+                );
+
+                if (judgeCheck && judgeCheck.status.id > 5) {
+                    tests = [
+                        {
+                            ...firstTest,
+                            statusId: judgeCheck.status.id,
+                        },
+                    ];
+                    console.log(tests);
+                }
+            }
 
             return {
                 languageId:
@@ -138,10 +176,19 @@ export default new Elysia({ prefix: '/submissions' })
                         ?.id ?? 0,
                 code: submission.code,
                 result: {
-                    tests,
-                    averageMemory: getAverage(tests.map((test) => test.memory)),
+                    tests: tests.map((test) => {
+                        return {
+                            token: test.token,
+                            input: test.input,
+                            expected: test.expected,
+                            received: test.received ?? '',
+                        };
+                    }),
+                    averageMemory: getAverage(
+                        tests.map((test) => test.memory ?? 0),
+                    ),
                     averageTime: getAverage(
-                        tests.map((test) => parseFloat(test.time)),
+                        tests.map((test) => parseFloat(test.time ?? '0')),
                     ),
                 },
             };
@@ -159,6 +206,7 @@ export default new Elysia({ prefix: '/submissions' })
                 result: t.Object({
                     tests: t.Array(
                         t.Object({
+                            token: t.String(),
                             input: t.String(),
                             expected: t.String(),
                             received: t.String(),

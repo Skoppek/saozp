@@ -13,8 +13,6 @@ export default new Elysia({ prefix: '/judge0' }).put(
             time: body.time.toString(),
         };
 
-        console.log('yay');
-
         resultRepository.createResult(newResult);
     },
     {

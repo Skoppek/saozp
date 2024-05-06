@@ -1,9 +1,11 @@
 import {
   Problem,
   ProblemEntry,
+  Submission,
   SubmissionEntry,
   SubmissionStatus,
   TestCase,
+  TestCaseResult,
   User,
 } from "./interfaces";
 
@@ -125,5 +127,54 @@ export const isSubmissionEntryArray = (
 ): suspect is SubmissionEntry[] => {
   return (
     Array.isArray(suspect) && suspect.every((item) => isSubmissionEntry(item))
+  );
+};
+
+export const isTestCaseResult = (
+  suspect: unknown,
+): suspect is TestCaseResult => {
+  return (
+    typeof suspect === "object" &&
+    suspect != null &&
+    "input" in suspect &&
+    typeof suspect.input === "string" &&
+    "expected" in suspect &&
+    typeof suspect.expected === "string" &&
+    "received" in suspect &&
+    typeof suspect.received === "string"
+  );
+};
+
+export const isTestCaseResultArray = (
+  suspect: unknown,
+): suspect is TestCaseResult[] => {
+  return (
+    Array.isArray(suspect) && suspect.every((item) => isTestCaseResult(item))
+  );
+};
+
+export const isResult = (suspect: unknown): suspect is TestCaseResult => {
+  return (
+    typeof suspect === "object" &&
+    suspect != null &&
+    "tests" in suspect &&
+    isTestCaseResultArray(suspect.tests) &&
+    "averageMemory" in suspect &&
+    typeof suspect.averageMemory === "number" &&
+    "averageTime" in suspect &&
+    typeof suspect.averageTime === "number"
+  );
+};
+
+export const isSubmission = (suspect: unknown): suspect is Submission => {
+  return (
+    typeof suspect === "object" &&
+    suspect != null &&
+    "languageId" in suspect &&
+    typeof suspect.languageId === "number" &&
+    "code" in suspect &&
+    typeof suspect.code === "string" &&
+    "result" in suspect &&
+    isResult(suspect.result)
   );
 };

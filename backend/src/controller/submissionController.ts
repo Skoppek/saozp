@@ -5,6 +5,7 @@ import problemRepository from '../repository/problemRepository';
 import judge0Service from '../judge/judge0Client';
 import testRepository from '../repository/testRepository';
 import sessionRepository from '../repository/sessionRepository';
+import judge0Client from '../judge/judge0Client';
 
 const NO_LANGUAGE_NAME = 'Unknown language';
 
@@ -132,9 +133,9 @@ export default new Elysia({ prefix: '/submissions' })
             );
 
             return {
-                language:
+                languageId:
                     (await judge0Service.getLanguageById(problem.languageId))
-                        ?.name ?? NO_LANGUAGE_NAME,
+                        ?.id ?? 0,
                 code: submission.code,
                 result: {
                     tests,
@@ -153,14 +154,14 @@ export default new Elysia({ prefix: '/submissions' })
                 submissionId: t.String(),
             }),
             response: t.Object({
-                language: t.String(),
+                languageId: t.Number(),
                 code: t.String(),
                 result: t.Object({
                     tests: t.Array(
                         t.Object({
                             input: t.String(),
                             expected: t.String(),
-                            recieved: t.String(),
+                            received: t.String(),
                         }),
                     ),
                     averageMemory: t.Number(),

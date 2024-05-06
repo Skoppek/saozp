@@ -1,13 +1,11 @@
-import { Drawer } from "flowbite-react/components/Drawer";
 import { getLanguageById } from "../shared/constansts";
 import { Problem, SubmissionEntry, User } from "../shared/interfaces";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useEffect, useState } from "react";
-import { HiBars2, HiSquaresPlus } from "react-icons/hi2";
-import { Accordion, Badge, Button } from "flowbite-react";
+import { Button } from "flowbite-react";
 import apiClient from "../apiClient";
-import { STATUS_NAMES } from "../shared/enums";
+import { ResultDrawer } from "./ResultDrawer";
 
 interface SolvingEditorProps {
   problem: Problem;
@@ -18,8 +16,6 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
   const [code, setCode] = useState(problem.baseCode);
   const [submissions, setSubmissions] = useState<SubmissionEntry[]>([]);
   const [user, setUser] = useState<User>();
-
-  const handleClose = () => setIsOpen(false);
 
   const getSubmissions = useCallback(
     (user: User) => {
@@ -76,39 +72,11 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
           className="h-full w-3/5"
         />
       </div>
-      <Drawer
-        edge
-        open={isOpen}
-        onClose={handleClose}
-        position="bottom"
-        className="p-0"
-      >
-        <Drawer.Header
-          closeIcon={HiBars2}
-          title="Wyniki"
-          titleIcon={HiSquaresPlus}
-          onClick={() => setIsOpen(!isOpen)}
-          className="cursor-pointer px-4 pt-4 hover:bg-gray-50 dark:hover:bg-gray-700"
-        />
-        <Drawer.Items>
-          <div className="h-[50vh]">
-            <Accordion>
-              {submissions.map((submission) => (
-                <Accordion.Panel>
-                  <Accordion.Title>
-                    <div className="flex gap-8">
-                      {submission.createdAt ?? ""}
-                      <Badge size={"sm"}>
-                        {STATUS_NAMES[submission.status?.id ?? 0]}
-                      </Badge>
-                    </div>
-                  </Accordion.Title>
-                </Accordion.Panel>
-              ))}
-            </Accordion>
-          </div>
-        </Drawer.Items>
-      </Drawer>
+      <ResultDrawer
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        submissions={submissions}
+      />
     </div>
   );
 };

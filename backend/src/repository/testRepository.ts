@@ -8,24 +8,25 @@ const createTest = async (newTest: NewTest) => {
 };
 
 const getTestsWithResultOfSubmission = async (submissionId: number) => {
-    const submissionTests = db
-        .$with('submission_tests')
+    const sq = db
+        .$with('sq')
         .as(
             db.select().from(tests).where(eq(tests.submissionId, submissionId)),
         );
 
     return await db
-        .with(submissionTests)
+        .with(sq)
         .select({
-            input: tests.input,
-            expected: tests.expected,
-            recieved: results.stdout,
+            token: sq.token,
+            input: sq.input,
+            expected: sq.expected,
+            received: results.stdout,
             memory: results.memory,
             time: results.time,
             statusId: results.statusId,
         })
-        .from(tests)
-        .innerJoin(results, eq(tests.token, results.token));
+        .from(sq)
+        .innerJoin(results, eq(sq.token, results.token));
 };
 
 export default {

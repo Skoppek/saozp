@@ -17,9 +17,9 @@ export const SolvingPage = () => {
       navigate("/problems");
       return;
     }
-    apiClient.getProblemById(parseInt(id)).then((response) => {
-      if (isProblem(response.data)) {
-        setProblem(response.data);
+    apiClient.getProblemById(parseInt(id)).then((data) => {
+      if (isProblem(data)) {
+        setProblem(data);
       }
     });
   }, [id, navigate]);

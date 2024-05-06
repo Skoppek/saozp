@@ -57,3 +57,19 @@ export interface SubmissionEntry {
   createdAt?: string;
   status?: SubmissionStatus;
 }
+
+export interface TestCaseResult extends TestCase {
+  received: string;
+}
+
+export interface Result {
+  tests: TestCaseResult[];
+  averageMemory: number;
+  averageTime: number;
+}
+
+export interface Submission {
+  languageId: number;
+  code: string;
+  result: Result;
+}

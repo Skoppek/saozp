@@ -3,6 +3,8 @@ import { NewProblem, Problem, TestCase } from "./shared/interfaces";
 import {
   isProblem,
   isProblemsEntryArray,
+  isResult,
+  isSubmission,
   isSubmissionEntryArray,
   isUser,
 } from "./shared/typeGuards";
@@ -110,7 +112,15 @@ const getSubmissions = (query: SubmissionQuery) => {
 };
 
 const getSubmissionById = (submissionId: number) => {
-  return axiosInstance.get(`api/submissions/${submissionId}`, axiosConfig);
+  return axiosInstance
+    .get(`api/submissions/${submissionId}`, axiosConfig)
+    .then((response) => {
+      if (isSubmission(response.data)) {
+        return response.data;
+      } else {
+        throw new Error("Wrong response type. Expected: Submission");
+      }
+    });
 };
 
 const submitSolution = (problemId: number, newSubmission: NewSubmission) => {

@@ -5,7 +5,7 @@ import {
     Problem,
     problemSchema,
 } from '../model/schemas/problemSchema';
-import _ from 'lodash';
+import _, { values } from 'lodash';
 import { profileSchema } from '../model/schemas/profileSchema';
 
 const createProblem = async (
@@ -51,7 +51,12 @@ const updateProblemById = async (
 };
 
 const deleteProblemById = async (problemId: number) => {
-    await db.delete(problemSchema).where(eq(problemSchema.id, problemId));
+    await db
+        .update(problemSchema)
+        .set({
+            isDeactivated: true,
+        })
+        .where(eq(problemSchema.id, problemId));
 };
 
 export default {

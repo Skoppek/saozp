@@ -1,5 +1,5 @@
 {
-  "id": "b64a8736-f203-4569-8ca2-4f33546e7811",
+  "id": "e6520888-75e0-40ac-ac1a-45a7496fcd7b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -55,6 +55,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "deactivated": {
+          "name": "deactivated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

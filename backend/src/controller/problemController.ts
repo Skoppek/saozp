@@ -92,15 +92,17 @@ export default new Elysia({ prefix: '/problem' })
     .get(
         '/',
         async () => {
-            return (await problemRepository.getProblems()).map((problem) => {
-                return {
-                    problemId: problem.problems.id,
-                    name: problem.problems.name,
-                    description: problem.problems.description,
-                    languageId: problem.problems.languageId,
-                    creator: problem.profiles ?? undefined,
-                };
-            });
+            return (await problemRepository.getProblems())
+                .filter((problem) => !problem.problems.isDeactivated)
+                .map((problem) => {
+                    return {
+                        problemId: problem.problems.id,
+                        name: problem.problems.name,
+                        description: problem.problems.description,
+                        languageId: problem.problems.languageId,
+                        creator: problem.profiles ?? undefined,
+                    };
+                });
         },
         {
             detail: {
@@ -135,7 +137,7 @@ export default new Elysia({ prefix: '/problem' })
                 .derive(async ({ params: { problemId }, set }) => {
                     const problem =
                         await problemRepository.getProblemById(+problemId);
-                    if (!problem) {
+                    if (!problem || problem.isDeactivated) {
                         set.status = 404;
                         throw new Error('Problem not found!');
                     }
@@ -258,8 +260,6 @@ export default new Elysia({ prefix: '/problem' })
                             /---(.*?)---/gs,
                             newSubmission.code,
                         );
-
-                        console.log(mergedCode);
 
                         submitTests(
                             problem.tests,

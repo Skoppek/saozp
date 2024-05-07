@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS "problems" (
 	"prompt" text NOT NULL,
 	"language_id" integer NOT NULL,
 	"tests" json NOT NULL,
-	"base_code" text NOT NULL
+	"base_code" text NOT NULL,
+	"deactivated" boolean DEFAULT false NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "profiles" (

@@ -1,4 +1,5 @@
 import {
+    boolean,
     integer,
     json,
     pgTable,
@@ -26,6 +27,7 @@ export const problemSchema = pgTable('problems', {
         >()
         .notNull(),
     baseCode: text('base_code').notNull(),
+    isDeactivated: boolean('deactivated').notNull().default(false),
 });
 
 export type NewProblem = typeof problemSchema.$inferInsert;

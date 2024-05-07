@@ -141,7 +141,7 @@ export const isTestCaseResult = (
     "expected" in suspect &&
     typeof suspect.expected === "string" &&
     "received" in suspect &&
-    typeof suspect.received === "string" &&
+    (typeof suspect.received === "string" || suspect.received == null) &&
     "token" in suspect &&
     typeof suspect.token === "string" &&
     "statusId" in suspect &&

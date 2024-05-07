@@ -20,6 +20,7 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
     if (isOpen && !details) {
       apiClient.getSubmissionById(submission.submissionId).then((data) => {
         setDetails(data);
+        console.log(data);
       });
     }
   }, [details, isOpen, submission.submissionId]);
@@ -45,8 +46,11 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
               <div className="flex flex-col gap-1">
                 {details.result.tests
                   .filter((test) => test.statusId === 4)
-                  .map((test) => (
-                    <div className="flex gap-2 rounded-md bg-sky-500/20 p-2 dark:bg-sky-950">
+                  .map((test, index) => (
+                    <div
+                      key={`test${index}$-{submission.submissionId}`}
+                      className="flex gap-2 rounded-md bg-sky-500/20 p-2 dark:bg-sky-950"
+                    >
                       <div>{`Wejście: ${test.input}`}</div>
                       <div>{`Otrzymano: ${test.received}`}</div>
                       <div>{`Oczekiwano: ${test.expected}`}</div>

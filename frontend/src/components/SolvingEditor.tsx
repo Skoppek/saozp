@@ -3,7 +3,7 @@ import { Problem, SubmissionEntry, User } from "../shared/interfaces";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "flowbite-react";
+import { Button, Spinner } from "flowbite-react";
 import apiClient from "../apiClient";
 import { ResultDrawer } from "./ResultDrawer";
 
@@ -16,6 +16,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
   const [code, setCode] = useState(problem.baseCode);
   const [submissions, setSubmissions] = useState<SubmissionEntry[]>([]);
   const [user, setUser] = useState<User>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const getSubmissions = useCallback(
     (user: User) => {
@@ -55,13 +56,22 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
           />
           <Button
             onClick={() => {
-              apiClient.submitSolution(problem.problemId, {
-                code: code,
-              });
+              setIsSubmitting(true);
+              apiClient
+                .submitSolution(problem.problemId, {
+                  code: code,
+                })
+                .then(() => {
+                  setIsSubmitting(false);
+                });
               if (user) getSubmissions(user);
             }}
           >
-            Wyślij
+            {isSubmitting ? (
+              <Spinner aria-label="Extra large spinner" size="md" />
+            ) : (
+              "Wyślij"
+            )}
           </Button>
         </div>
         <CodeEditor

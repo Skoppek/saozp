@@ -87,7 +87,7 @@ const isStatus = (suspect: unknown): suspect is Status => {
 interface Submission {
     token: string;
     expected_output: string;
-    stdout: string;
+    stdout: string | null;
     stdin: string;
     status: Status;
     time: string;
@@ -113,7 +113,7 @@ const isSubmission = (suspect: unknown): suspect is Submission => {
         'expected_output' in suspect &&
         typeof suspect.expected_output == 'string' &&
         'stdout' in suspect &&
-        typeof suspect.stdout == 'string' &&
+        (typeof suspect.stdout == 'string' || suspect.stdout == null) &&
         'time' in suspect &&
         typeof suspect.time == 'string' &&
         'memory' in suspect &&

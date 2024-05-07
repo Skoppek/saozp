@@ -35,26 +35,30 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
     <div className="m-8 flex h-[75vh] flex-row gap-4">
       <div className="flex h-full w-1/2 flex-col gap-2">
         <Card>
-          <TextInput
-            label="Nazwa zadania"
-            id="problem-name"
-            onChange={(value) => {
-              setNewProblem((prev) => {
-                return { ...prev, name: value };
-              });
-            }}
-            value={newProblem.name}
-          />
-          <TextInput
-            label="Krótki opis"
-            id="problem-description"
-            onChange={(value) => {
-              setNewProblem((prev) => {
-                return { ...prev, description: value };
-              });
-            }}
-            value={newProblem.description}
-          />
+          <div className="flex gap-4">
+            <TextInput
+              className="w-full"
+              label="Nazwa zadania"
+              id="problem-name"
+              onChange={(value) => {
+                setNewProblem((prev) => {
+                  return { ...prev, name: value };
+                });
+              }}
+              value={newProblem.name}
+            />
+            <TextInput
+              className="w-full"
+              label="Krótki opis"
+              id="problem-description"
+              onChange={(value) => {
+                setNewProblem((prev) => {
+                  return { ...prev, description: value };
+                });
+              }}
+              value={newProblem.description}
+            />
+          </div>
         </Card>
         <Card>
           <MarkdownEditor

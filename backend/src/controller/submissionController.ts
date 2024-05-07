@@ -183,7 +183,7 @@ export default new Elysia({ prefix: '/submissions' })
                             token: t.String(),
                             input: t.String(),
                             expected: t.String(),
-                            received: t.String(),
+                            received: t.Nullable(t.String()),
                         }),
                     ),
                     averageMemory: t.Number(),

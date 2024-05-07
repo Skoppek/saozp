@@ -32,9 +32,13 @@ export const ResultDrawer = ({
       <Drawer.Items>
         <div className="h-[50vh]">
           <div className="mx-4 flex flex-col gap-2">
-            {submissions.map((submission) => (
-              <ResultPanel submission={submission} />
-            ))}
+            {submissions
+              .sort((a, b) =>
+                (a.createdAt ?? "") < (b.createdAt ?? "") ? 1 : 0,
+              )
+              .map((submission, key) => (
+                <ResultPanel key={`submission${key}`} submission={submission} />
+              ))}
           </div>
         </div>
       </Drawer.Items>

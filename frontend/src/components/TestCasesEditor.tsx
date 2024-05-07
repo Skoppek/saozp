@@ -1,8 +1,10 @@
 import { TestCase } from "../shared/interfaces";
 import { TextInput } from "./TextInput";
-import { useState } from "react";
-import { Badge, Button } from "flowbite-react";
+import { useMemo, useState } from "react";
+import { Badge, Button, Popover } from "flowbite-react";
 import { FaPlus } from "react-icons/fa";
+import { HiOutlineTrash, HiOutlineArrowRight } from "react-icons/hi";
+import { HiPencilAlt } from "react-icons/hi";
 
 interface TestCasesEditorProps {
   testCases?: TestCase[];
@@ -18,6 +20,16 @@ export const TestCasesEditor = ({
     input: "",
     expected: "",
   });
+  const [isDirty, setIsDirty] = useState<boolean>(false);
+
+  const isInputCorrect = useMemo<boolean>(() => {
+    return (
+      !tests.filter((test) => test.input === currentTest.input).length &&
+      !!currentTest.input.length &&
+      !!currentTest.expected.length
+    );
+  }, [currentTest.expected.length, currentTest.input, tests]);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row items-end justify-around gap-4">
@@ -25,6 +37,7 @@ export const TestCasesEditor = ({
           label="Wejście"
           id={"test-input"}
           onChange={(value) => {
+            setIsDirty(true);
             setCurrentTest((prev) => {
               return {
                 ...prev,
@@ -32,12 +45,14 @@ export const TestCasesEditor = ({
               };
             });
           }}
+          value={currentTest.input}
           className="w-full"
         />
         <TextInput
           label="Wartość oczekiwana"
           id={"test-expected"}
           onChange={(value) => {
+            setIsDirty(true);
             setCurrentTest((prev) => {
               return {
                 ...prev,
@@ -45,38 +60,79 @@ export const TestCasesEditor = ({
               };
             });
           }}
+          value={currentTest.expected}
           className="w-full"
         />
-        <Button
-          size="lg"
-          className="flex justify-center"
-          onClick={() => {
-            setTests((prev) => {
-              const newSet = [...prev, currentTest];
-              onChange?.(newSet);
-              return newSet;
-            });
-          }}
+        <Popover
+          open={isDirty && !isInputCorrect}
+          content={
+            <div className="m-4">
+              <ul>
+                <li>Dane wejściowe nie mogą się powtarzać</li>
+                <li>Żadne z danych nie mogą być puste</li>
+              </ul>
+            </div>
+          }
+          placement="top"
         >
-          <FaPlus className="size-4" />
-        </Button>
+          <Button
+            size="lg"
+            className="flex justify-center"
+            disabled={!isInputCorrect}
+            onClick={() => {
+              setTests((prev) => {
+                const newSet = [...prev, currentTest];
+                onChange?.(newSet);
+                return newSet;
+              });
+            }}
+          >
+            <FaPlus className="size-4" />
+          </Button>
+        </Popover>
       </div>
       {!!tests.length && (
-        <div className="flex flex-col gap-1 rounded-lg bg-gray-300 p-2 dark:bg-slate-700">
+        <div className="flex max-h-[25vh] flex-col gap-1 overflow-y-auto rounded-lg bg-gray-300 p-2 dark:bg-slate-700">
           {tests.map((test) => {
             return (
-              <div className="flex">
-                <div className="ml-8 flex w-1/2 gap-4">
-                  Wejście
-                  <Badge color="dark" size="sm">
-                    {test.input}
-                  </Badge>
-                </div>
+              <div className="ml-4 flex content-center justify-between">
                 <div className="flex gap-4">
-                  Oczekuje
-                  <Badge color="success" size="sm">
-                    {test.expected}
-                  </Badge>
+                  <div className="flex gap-4">
+                    <Badge color="dark" size="sm">
+                      {test.input}
+                    </Badge>
+                  </div>
+                  <HiOutlineArrowRight className="size-6" />
+                  <div className="flex gap-4">
+                    <Badge color="success" size="sm">
+                      {test.expected}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="xs"
+                    outline
+                    color={"normal"}
+                    onClick={() => {
+                      setIsDirty(false);
+                      setCurrentTest(test);
+                    }}
+                  >
+                    <HiPencilAlt />
+                  </Button>
+                  <Button
+                    size="xs"
+                    outline
+                    color={"failure"}
+                    onClick={() => {
+                      setTests((prev) =>
+                        prev.filter((item) => item.input !== test.input),
+                      );
+                    }}
+                  >
+                    <HiOutlineTrash />
+                  </Button>
                 </div>
               </div>
             );

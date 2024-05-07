@@ -7,7 +7,7 @@ import { Card } from "flowbite-react/components/Card";
 import { Button } from "flowbite-react/components/Button";
 import apiClient from "../../apiClient";
 import { NewProblem, Problem } from "../../shared/interfaces";
-import { ALL_LANGUAGES } from "../../shared/constansts";
+import { ALL_LANGUAGES, getLanguageById } from "../../shared/constansts";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
 
@@ -96,6 +96,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           }}
           code={newProblem.baseCode}
           className="h-full"
+          chosenLanguage={getLanguageById(problem?.languageId ?? 0)}
         />
         <Button
           onClick={() => {

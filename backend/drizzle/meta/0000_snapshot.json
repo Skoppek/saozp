@@ -1,5 +1,5 @@
 {
-  "id": "003e7da2-aabc-45cd-8e03-dbc8586b8e53",
+  "id": "b64a8736-f203-4569-8ca2-4f33546e7811",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -340,18 +340,6 @@
         "submission_id": {
           "name": "submission_id",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "input": {
-          "name": "input",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expected": {
-          "name": "expected",
-          "type": "json",
           "primaryKey": false,
           "notNull": true
         }

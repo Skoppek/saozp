@@ -1,4 +1,4 @@
-import { integer, json, pgTable, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, varchar } from 'drizzle-orm/pg-core';
 import { submissionSchema } from './submissionSchema';
 
 export const testSchema = pgTable('tests', {
@@ -6,8 +6,6 @@ export const testSchema = pgTable('tests', {
     submissionId: integer('submission_id')
         .references(() => submissionSchema.id)
         .notNull(),
-    input: json('input').$type<string>().notNull(),
-    expected: json('expected').$type<string>().notNull(),
 });
 
 export type NewTest = typeof testSchema.$inferInsert;

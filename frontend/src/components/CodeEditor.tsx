@@ -11,6 +11,7 @@ interface CodeEditorProps extends ClassName {
   code?: string;
   onChange?: (value: string) => void;
   onLanguageChange?: (value: LanguageId) => void;
+  chosenLanguage?: Language;
 }
 
 export const CodeEditor = ({
@@ -19,9 +20,10 @@ export const CodeEditor = ({
   onChange,
   onLanguageChange,
   className,
+  chosenLanguage,
 }: CodeEditorProps) => {
-  const [chosenLanguage, setChosenLanguage] = useState(
-    Array.isArray(languages) ? languages.at(0) : languages,
+  const [language, setLanguage] = useState(
+    chosenLanguage ?? (Array.isArray(languages) ? languages.at(0) : languages),
   );
 
   return (
@@ -32,8 +34,9 @@ export const CodeEditor = ({
             languages={languages}
             onChange={(language) => {
               if (language?.id) onLanguageChange?.(language?.id);
-              setChosenLanguage(language);
+              setLanguage(language);
             }}
+            chosenLanguage={language}
           />
         ) : (
           <Badge className="w-fit">{languages.name}</Badge>
@@ -42,8 +45,8 @@ export const CodeEditor = ({
           // eslint-disable-next-line tailwindcss/no-custom-classname
           theme="vs-dark"
           value={code}
-          defaultLanguage={chosenLanguage?.monacoForm}
-          language={chosenLanguage?.monacoForm}
+          defaultLanguage={language?.monacoForm}
+          language={language?.monacoForm}
           onChange={(value) => {
             onChange?.(value ?? "");
           }}

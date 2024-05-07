@@ -42,9 +42,7 @@ CREATE TABLE IF NOT EXISTS "admins" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tests" (
 	"token" varchar(40) PRIMARY KEY NOT NULL,
-	"submission_id" integer NOT NULL,
-	"input" json NOT NULL,
-	"expected" json NOT NULL
+	"submission_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_id_idx" ON "profiles" ("user_id");--> statement-breakpoint

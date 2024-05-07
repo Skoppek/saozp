@@ -6,12 +6,14 @@ interface LanguageSelectProps {
   languages: Language[];
   label?: string;
   onChange: (language?: Language) => void;
+  chosenLanguage?: Language;
 }
 
 export const LanguageSelect = ({
   languages,
   label,
   onChange,
+  chosenLanguage,
 }: LanguageSelectProps) => {
   return (
     <div>
@@ -29,6 +31,7 @@ export const LanguageSelect = ({
           });
           onChange(newLang);
         }}
+        value={chosenLanguage?.name}
       >
         {languages.map((language) => {
           return <option key={language.name}>{language.name}</option>;

@@ -1,25 +1,55 @@
----
-runme:
-    id: 01HWYZG3GRTRK0CXJKS4JMJE7W
-    version: v3
----
+# SAOZP
 
-# saozp
+**_System Automatycznego Oceniania Zadań Programistycznych_**
 
-System Automatycznego Oceniania Zadań Programistycznych
+## Backend
 
-```bash {"cwd":"./backend","id":"01HWYZG3GRTRK0CXJKS3YR5SVT","name":"Drizzle Studio"}
+```bash
+cd ./backend
+bun i
+```
+
+Część serwerowa korzysta z:
+
+-   ElysiaJS - serwer HTTP
+-   DrizzleORM - zarządzanie bazą danych
+
+Bazę danych można obejrzeć przez przeglądarkę korzystając z narzędzia **Drizzle Studio**
+
+```bash
 bunx drizzle-kit studio
 ```
 
-```bash {"cwd":"./frontend","id":"01HWZEJ5D5R2RRXYX0ESF3XJKT","name":"frontend"}
+Uruchomienie serwera ElysiaJS
+
+```bash
 bun run dev
 ```
 
-```bash {"cwd":"./backend","id":"01HWZEK15FPBBTCPHDQV63KNF3","name":"backend"}
+Wykonanie migracji bazy danych
+
+```bash
+bunx drizzle-kit generate:pg
+...
+bunx drizzle-kit push:pg
+```
+
+## Frontend
+
+```bash
+cd ./frontend
+bun i
+```
+
+Część frontendowa korzysta z Reacta.
+
+```bash
 bun run dev
 ```
 
+Ikony
 https://react-icons.github.io/react-icons/icons/hi/
 
 ## TODO
+
+-   usuwanie starych testów własnych użytkownika (max 1 na problem, pozostałe powinny być tylko oficjalne próby)

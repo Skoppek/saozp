@@ -13,7 +13,6 @@ export default {
     schema: [
         `${SCHEMAS_PATH}/problemSchema.ts`,
         `${SCHEMAS_PATH}/profileSchema.ts`,
-        `${SCHEMAS_PATH}/resultSchema.ts`,
         `${SCHEMAS_PATH}/sessionSchema.ts`,
         `${SCHEMAS_PATH}/submissionSchema.ts`,
         `${SCHEMAS_PATH}/userSchema.ts`,

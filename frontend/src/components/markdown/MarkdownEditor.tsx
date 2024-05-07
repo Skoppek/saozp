@@ -42,7 +42,6 @@ export const MarkdownEditor = ({
             required
             rows={12}
             value={value}
-            maxLength={512}
             onChange={(event) => {
               setMarkdown(event.target.value);
               onChange?.(event.target.value);

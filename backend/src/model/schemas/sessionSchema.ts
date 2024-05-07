@@ -1,17 +1,17 @@
 import { index, integer, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { users } from './userSchema';
+import { userSchema } from './userSchema';
 
-export const sessions = pgTable(
+export const sessionSchema = pgTable(
     'sessions',
     {
         id: uuid('id').defaultRandom().primaryKey(),
-        userId: integer('user_id').references(() => users.id),
+        userId: integer('user_id').references(() => userSchema.id),
         expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
     },
-    (sessions) => ({
-        sessionIdIdx: index('session_id_idx').on(sessions.id),
+    (sessionSchema) => ({
+        sessionIdIdx: index('session_id_idx').on(sessionSchema.id),
     }),
 );
 
-export type NewSession = typeof sessions.$inferInsert;
-export type Session = typeof sessions.$inferSelect;
+export type NewSession = typeof sessionSchema.$inferInsert;
+export type Session = typeof sessionSchema.$inferSelect;

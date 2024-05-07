@@ -2,7 +2,6 @@ import { Elysia } from 'elysia';
 import { swagger } from '@elysiajs/swagger';
 import problemController from './controller/problemController';
 import submissionController from './controller/submissionController';
-import judge0Controller from './controller/judge0Controller';
 import authController from './controller/authController';
 import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
@@ -59,7 +58,6 @@ const app = new Elysia({
             },
         }),
     )
-    .use(judge0Controller)
     .use(authController)
     .use(profileController)
     .use(problemController)

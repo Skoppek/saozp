@@ -1,19 +1,17 @@
-import { admins } from '../schemas/adminSchema';
-import { problems } from '../schemas/problemSchema';
-import { profiles } from '../schemas/profileSchema';
-import { results } from '../schemas/resultSchema';
-import { sessions } from '../schemas/sessionSchema';
-import { submissions } from '../schemas/submissionSchema';
-import { tests } from '../schemas/testSchema';
-import { users } from '../schemas/userSchema';
+import { adminSchema } from '../schemas/adminSchema';
+import { problemSchema } from '../schemas/problemSchema';
+import { profileSchema } from '../schemas/profileSchema';
+import { sessionSchema } from '../schemas/sessionSchema';
+import { submissionSchema } from '../schemas/submissionSchema';
+import { testSchema } from '../schemas/testSchema';
+import { userSchema } from '../schemas/userSchema';
 
 export default {
-    profiles,
-    sessions,
-    users,
-    problems,
-    results,
-    submissions,
-    tests,
-    admins,
+    profileSchema,
+    sessionSchema,
+    userSchema,
+    problemSchema,
+    submissionSchema,
+    testSchema,
+    adminSchema,
 };

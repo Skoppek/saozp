@@ -1,5 +1,5 @@
 {
-  "id": "0b90cf47-7303-4539-9c74-a59a8e0f94ca",
+  "id": "003e7da2-aabc-45cd-8e03-dbc8586b8e53",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -30,7 +30,7 @@
           "name": "description",
           "type": "varchar(512)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "prompt": {
           "name": "prompt",
@@ -123,46 +123,6 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "results": {
-      "name": "results",
-      "schema": "",
-      "columns": {
-        "token": {
-          "name": "token",
-          "type": "varchar(40)",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "stdout": {
-          "name": "stdout",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status_id": {
-          "name": "status_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "memory": {
-          "name": "memory",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "time": {
-          "name": "time",
-          "type": "numeric(6, 3)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

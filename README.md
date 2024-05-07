@@ -1,7 +1,7 @@
 ---
 runme:
-  id: 01HWYZG3GRTRK0CXJKS4JMJE7W
-  version: v3
+    id: 01HWYZG3GRTRK0CXJKS4JMJE7W
+    version: v3
 ---
 
 # saozp
@@ -19,3 +19,11 @@ bun run dev
 ```bash {"cwd":"./backend","id":"01HWZEK15FPBBTCPHDQV63KNF3","name":"backend"}
 bun run dev
 ```
+
+## TODO
+
+### Edytor zadań
+
+-   lista języków jest źle inicjowana przy edycji zadania
+-   przypadki testowe powinno móc się edytować i usuwać
+-   przypadki testowe powinny być unikalne pod względem wejścia

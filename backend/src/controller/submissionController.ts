@@ -53,48 +53,29 @@ export default new Elysia({ prefix: '/submissions' })
     .get(
         '/',
         async ({ query }) => {
-            const queryResult = await submissionRepository.getSubmissionsList(
+            const submissions = await submissionRepository.getSubmissionsList(
                 query.userId ? parseInt(query.userId) : undefined,
                 query.problemId ? parseInt(query.problemId) : undefined,
             );
 
             return await Promise.all(
-                queryResult.map(async (result) => {
-                    const statusIds = (
-                        await testRepository
-                            .getTestsWithResultOfSubmission(
-                                result.submissions.id,
-                            )
-                            .then(async (tests) => {
-                                const firstTest = tests.at(0);
-                                if (firstTest) {
-                                    const judgeCheck =
-                                        await judge0Client.getSubmission(
-                                            firstTest.token,
-                                        );
-
-                                    if (
-                                        judgeCheck &&
-                                        judgeCheck.status.id > 5
-                                    ) {
-                                        return [
-                                            {
-                                                ...firstTest,
-                                                statusId: judgeCheck.status.id,
-                                            },
-                                        ];
-                                    }
-                                }
-                                return tests;
-                            })
-                    ).map((result) => result.statusId);
+                submissions.map(async (submission) => {
+                    const tests = await testRepository.getTestsOfSubmission(
+                        submission.id,
+                    );
+                    const results = (
+                        await judge0Client.getSubmissionBatch(
+                            tests.map((test) => test.token),
+                        )
+                    ).submissions;
 
                     return {
-                        submissionId: result.submissions.id,
-                        creator: result.profiles,
-                        createdAt:
-                            result.submissions.createdAt?.toLocaleString(),
-                        status: reduceToStatus(statusIds.map((id) => id ?? 0)),
+                        submissionId: submission.id,
+                        creator: submission.creator,
+                        createdAt: submission.createdAt?.toLocaleString(),
+                        status: reduceToStatus(
+                            results.map((result) => result.status.id),
+                        ),
                     };
                 }),
             );
@@ -146,28 +127,20 @@ export default new Elysia({ prefix: '/submissions' })
 
             if (!problem) {
                 set.status = 500;
-                throw new Error('Internal error!');
+                throw new Error('Internal error! Problem was not found.');
             }
 
-            let tests = await testRepository.getTestsWithResultOfSubmission(
+            const tests = await testRepository.getTestsOfSubmission(
                 submission.id,
             );
 
-            const firstTest = tests.at(0);
-            if (firstTest) {
-                const judgeCheck = await judge0Client.getSubmission(
-                    firstTest.token,
-                );
+            const results = (
+                await judge0Client.getSubmissionBatch(
+                    tests.map((test) => test.token),
+                )
+            ).submissions;
 
-                if (judgeCheck && judgeCheck.status.id > 5) {
-                    tests = [
-                        {
-                            ...firstTest,
-                            statusId: judgeCheck.status.id,
-                        },
-                    ];
-                }
-            }
+            console.log(results);
 
             return {
                 languageId:
@@ -175,20 +148,20 @@ export default new Elysia({ prefix: '/submissions' })
                         ?.id ?? 0,
                 code: submission.code,
                 result: {
-                    tests: tests.map((test) => {
+                    tests: results.map((result) => {
                         return {
-                            statusId: test.statusId ?? 0,
-                            token: test.token,
-                            input: test.input,
-                            expected: test.expected,
-                            received: test.received ?? '',
+                            statusId: result.status.id,
+                            token: result.token,
+                            input: result.stdin,
+                            expected: result.expected_output,
+                            received: result.stdout,
                         };
                     }),
                     averageMemory: getAverage(
-                        tests.map((test) => test.memory ?? 0),
+                        results.map((result) => result.memory),
                     ),
                     averageTime: getAverage(
-                        tests.map((test) => parseFloat(test.time ?? '0')),
+                        results.map((result) => parseFloat(result.time)),
                     ),
                 },
             };

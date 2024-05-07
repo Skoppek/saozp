@@ -1,11 +1,11 @@
 import { index, integer, pgTable, varchar } from 'drizzle-orm/pg-core';
-import { users } from './userSchema';
+import { userSchema } from './userSchema';
 
-export const profiles = pgTable(
+export const profileSchema = pgTable(
     'profiles',
     {
         userId: integer('user_id')
-            .references(() => users.id)
+            .references(() => userSchema.id)
             .primaryKey(),
         firstName: varchar('first_name', { length: 32 }).notNull(),
         lastName: varchar('last_name', { length: 32 }).notNull(),
@@ -15,5 +15,5 @@ export const profiles = pgTable(
     }),
 );
 
-export type NewProfile = typeof profiles.$inferInsert;
-export type Profile = typeof profiles.$inferSelect;
+export type NewProfile = typeof profileSchema.$inferInsert;
+export type Profile = typeof profileSchema.$inferSelect;

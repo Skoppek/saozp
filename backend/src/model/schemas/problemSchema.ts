@@ -6,12 +6,12 @@ import {
     text,
     varchar,
 } from 'drizzle-orm/pg-core';
-import { users } from './userSchema';
+import { userSchema } from './userSchema';
 
-export const problems = pgTable('problems', {
+export const problemSchema = pgTable('problems', {
     id: serial('id').primaryKey(),
     creator: integer('creator_id')
-        .references(() => users.id)
+        .references(() => userSchema.id)
         .notNull(),
     name: varchar('name', { length: 128 }).notNull(),
     description: varchar('description', { length: 512 }).notNull(),
@@ -28,5 +28,5 @@ export const problems = pgTable('problems', {
     baseCode: text('base_code').notNull(),
 });
 
-export type NewProblem = typeof problems.$inferInsert;
-export type Problem = typeof problems.$inferSelect;
+export type NewProblem = typeof problemSchema.$inferInsert;
+export type Problem = typeof problemSchema.$inferSelect;

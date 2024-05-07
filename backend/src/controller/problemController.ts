@@ -1,10 +1,32 @@
 import { Elysia, t } from 'elysia';
-import { server } from '..';
 import submissionRepository from '../repository/submissionRepository';
 import problemRepository from '../repository/problemRepository';
 import judge0Client from '../judge/judge0Client';
 import sessionRepository from '../repository/sessionRepository';
 import testRepository from '../repository/testRepository';
+
+const submitTests = (
+    tests: { input: string; expected: string }[],
+    submissionId: number,
+    languageId: number,
+    code: string,
+) => {
+    tests.forEach(async (test) => {
+        const token = (
+            await judge0Client.submit({
+                languageId: languageId,
+                code: code,
+                test,
+            })
+        ).token;
+
+        testRepository.createTest({
+            token,
+            submissionId,
+            ...test,
+        });
+    });
+};
 
 export default new Elysia({ prefix: '/problem' })
     .derive(async ({ cookie: { session }, set }) => {
@@ -221,24 +243,12 @@ export default new Elysia({ prefix: '/problem' })
                             throw new Error('Submission not created.');
                         }
 
-                        const tests = problem.tests;
-
-                        tests.forEach(async (test) => {
-                            const token = (
-                                await judge0Client.submit({
-                                    languageId: problem.languageId,
-                                    code: body.code,
-                                    test,
-                                    callbackUrl: `http://172.17.0.1:${server?.port}/api/judge0/callback`,
-                                })
-                            ).token;
-
-                            testRepository.createTest({
-                                token,
-                                submissionId: newSubmission.id,
-                                ...test,
-                            });
-                        });
+                        submitTests(
+                            problem.tests,
+                            newSubmission.id,
+                            problem.languageId,
+                            newSubmission.code,
+                        );
 
                         return {
                             submissionId: newSubmission.id,

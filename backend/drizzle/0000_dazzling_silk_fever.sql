@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "problems" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"creator_id" integer NOT NULL,
 	"name" varchar(128) NOT NULL,
-	"description" varchar(512),
+	"description" varchar(512) NOT NULL,
 	"prompt" text NOT NULL,
 	"language_id" integer NOT NULL,
 	"tests" json NOT NULL,
@@ -13,14 +13,6 @@ CREATE TABLE IF NOT EXISTS "profiles" (
 	"user_id" integer PRIMARY KEY NOT NULL,
 	"first_name" varchar(32) NOT NULL,
 	"last_name" varchar(32) NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "results" (
-	"token" varchar(40) PRIMARY KEY NOT NULL,
-	"stdout" json NOT NULL,
-	"status_id" integer NOT NULL,
-	"memory" integer NOT NULL,
-	"time" numeric(6, 3) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (

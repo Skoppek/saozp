@@ -3,25 +3,34 @@ import { db } from '../model/db/db';
 import {
     NewSubmission,
     Submission,
-    submissions,
+    submissionSchema,
 } from '../model/schemas/submissionSchema';
-import { profiles } from '../model/schemas/profileSchema';
+import { profileSchema } from '../model/schemas/profileSchema';
 
 const createSubmission = async (
     newSubmission: NewSubmission,
 ): Promise<Submission[]> => {
-    return db.insert(submissions).values(newSubmission).returning();
+    return db.insert(submissionSchema).values(newSubmission).returning();
 };
 
 const getSubmissionsList = async (userId?: number, problemId?: number) => {
     return db
-        .select()
-        .from(submissions)
-        .leftJoin(profiles, eq(submissions.userId, profiles.userId))
+        .select({
+            id: submissionSchema.id,
+            creator: profileSchema,
+            createdAt: submissionSchema.createdAt,
+        })
+        .from(submissionSchema)
+        .leftJoin(
+            profileSchema,
+            eq(submissionSchema.userId, profileSchema.userId),
+        )
         .where(
             and(
-                userId ? eq(submissions.userId, userId) : undefined,
-                problemId ? eq(submissions.problemId, problemId) : undefined,
+                userId ? eq(submissionSchema.userId, userId) : undefined,
+                problemId
+                    ? eq(submissionSchema.problemId, problemId)
+                    : undefined,
             ),
         );
 };
@@ -30,7 +39,10 @@ const getSubmissionById = async (
     id: number,
 ): Promise<Submission | undefined> => {
     return (
-        await db.select().from(submissions).where(eq(submissions.id, id))
+        await db
+            .select()
+            .from(submissionSchema)
+            .where(eq(submissionSchema.id, id))
     ).at(0);
 };
 

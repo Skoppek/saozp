@@ -1,26 +1,34 @@
 import { desc, eq, lt } from 'drizzle-orm';
-import { NewSession, Session, sessions } from '../model/schemas/sessionSchema';
+import {
+    NewSession,
+    Session,
+    sessionSchema,
+} from '../model/schemas/sessionSchema';
 import { db } from '../model/db/db';
 
 const createSession = async (
     session: NewSession,
 ): Promise<NewSession | undefined> => {
-    return (await db.insert(sessions).values(session).returning()).at(0);
+    return (await db.insert(sessionSchema).values(session).returning()).at(0);
 };
 
 const revokeSession = async (sessionId: string) => {
     return await db
-        .update(sessions)
+        .update(sessionSchema)
         .set({ expiresAt: new Date(0) })
-        .where(eq(sessions.id, sessionId));
+        .where(eq(sessionSchema.id, sessionId));
 };
 
 const getSessionById = async (id: string): Promise<Session | undefined> => {
-    return (await db.select().from(sessions).where(eq(sessions.id, id))).at(0);
+    return (
+        await db.select().from(sessionSchema).where(eq(sessionSchema.id, id))
+    ).at(0);
 };
 
 const deleteExpiredSessions = async () => {
-    await db.delete(sessions).where(lt(sessions.expiresAt, new Date()));
+    await db
+        .delete(sessionSchema)
+        .where(lt(sessionSchema.expiresAt, new Date()));
 };
 
 const getLatestSessionOfUser = async (
@@ -29,9 +37,9 @@ const getLatestSessionOfUser = async (
     return (
         await db
             .select()
-            .from(sessions)
-            .where(eq(sessions.userId, userId))
-            .orderBy(desc(sessions.expiresAt))
+            .from(sessionSchema)
+            .where(eq(sessionSchema.userId, userId))
+            .orderBy(desc(sessionSchema.expiresAt))
             .limit(1)
     ).at(0);
 };
@@ -42,11 +50,11 @@ const refreshSession = async (
 ): Promise<Session | undefined> => {
     return (
         await db
-            .update(sessions)
+            .update(sessionSchema)
             .set({
                 expiresAt: new Date(Date.now() + 1000 * 60 * forMinutes),
             })
-            .where(eq(sessions.id, id))
+            .where(eq(sessionSchema.id, id))
             .returning()
     ).at(0);
 };

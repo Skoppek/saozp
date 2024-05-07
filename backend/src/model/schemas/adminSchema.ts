@@ -1,11 +1,11 @@
 import { integer, pgTable } from 'drizzle-orm/pg-core';
-import { users } from './userSchema';
+import { userSchema } from './userSchema';
 
-export const admins = pgTable('admins', {
+export const adminSchema = pgTable('admins', {
     id: integer('id')
-        .references(() => users.id)
+        .references(() => userSchema.id)
         .primaryKey(),
 });
 
-export type NewAdmin = typeof admins.$inferInsert;
-export type Admin = typeof admins.$inferSelect;
+export type NewAdmin = typeof adminSchema.$inferInsert;
+export type Admin = typeof adminSchema.$inferSelect;

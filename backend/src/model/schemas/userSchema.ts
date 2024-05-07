@@ -1,8 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { serial, pgTable, varchar, index } from 'drizzle-orm/pg-core';
-import { profiles } from './profileSchema';
+import { profileSchema } from './profileSchema';
 
-export const users = pgTable(
+export const userSchema = pgTable(
     'users',
     {
         id: serial('id').primaryKey(),
@@ -14,12 +14,12 @@ export const users = pgTable(
     }),
 );
 
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
+export type User = typeof userSchema.$inferSelect;
+export type NewUser = typeof userSchema.$inferInsert;
 
-export const userRelations = relations(users, ({ one }) => ({
-    profile: one(profiles, {
-        fields: [users.id],
-        references: [profiles.userId],
+export const userRelations = relations(userSchema, ({ one }) => ({
+    profile: one(profileSchema, {
+        fields: [userSchema.id],
+        references: [profileSchema.userId],
     }),
 }));

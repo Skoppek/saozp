@@ -22,7 +22,12 @@ export const ProblemEditPage = () => {
         setProblem(data);
       }
     });
-  }, [id, navigate]);
+    apiClient.getUserOfCurrentSession().then((user) => {
+      if (problem?.creatorId != user.userId) {
+        navigate("/problems");
+      }
+    });
+  }, [id, navigate, problem?.creatorId]);
 
   return (
     <AuthenticatedPage>

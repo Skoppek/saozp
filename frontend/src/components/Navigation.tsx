@@ -33,7 +33,6 @@ export const Navigation = () => {
       </Navbar.Brand>
       <Navbar.Collapse>
         <Link to={"/problems"}>Zadania</Link>
-        <Link to={"/submissions"}>Moje rozwiązania</Link>
       </Navbar.Collapse>
       <Navbar.Collapse>
         {!!user && (

@@ -21,7 +21,7 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
         <Badge className="w-fit">
           {getLanguageById(problem.languageId)?.name ?? "Nieznany język"}
         </Badge>
-        <div className="flex">
+        <div className="flex gap-2">
           <LinkButton
             to={`/problems/solve/${problem.problemId}`}
             buttonProps={{ color: "gray", size: "xs" }}

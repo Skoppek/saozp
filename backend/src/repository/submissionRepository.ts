@@ -19,6 +19,7 @@ const getSubmissionsList = async (userId?: number, problemId?: number) => {
             id: submissionSchema.id,
             creator: profileSchema,
             createdAt: submissionSchema.createdAt,
+            isCommit: submissionSchema.isCommit,
         })
         .from(submissionSchema)
         .leftJoin(

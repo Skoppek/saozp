@@ -44,6 +44,22 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
     }
   }, [getSubmissions, user]);
 
+  const sendCode = useCallback(
+    (isTest: boolean) => {
+      setIsSubmitting(true);
+      apiClient
+        .submitSolution(problem.problemId, {
+          code: code,
+          userTests: isTest ? userTests : undefined,
+        })
+        .then(() => {
+          setIsSubmitting(false);
+        });
+      if (user) getSubmissions(user);
+    },
+    [code, getSubmissions, problem.problemId, user, userTests],
+  );
+
   return (
     <div className="mx-8 h-full">
       <div className="m-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -60,26 +76,27 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
             testCases={userTests}
             onChange={(tests) => setUserTests(tests)}
           />
-          <Button
-            onClick={() => {
-              setIsSubmitting(true);
-              apiClient
-                .submitSolution(problem.problemId, {
-                  code: code,
-                  userTests: userTests,
-                })
-                .then(() => {
-                  setIsSubmitting(false);
-                });
-              if (user) getSubmissions(user);
-            }}
-          >
-            {isSubmitting ? (
-              <Spinner aria-label="Extra large spinner" size="md" />
-            ) : (
-              "Wyślij"
-            )}
-          </Button>
+          <div className="flex w-full gap-4">
+            <Button className="w-full" onClick={() => sendCode(false)}>
+              {isSubmitting ? (
+                <Spinner aria-label="Extra large spinner" size="md" />
+              ) : (
+                "Wyślij"
+              )}
+            </Button>
+            <Button
+              className="w-full"
+              color="warning"
+              outline
+              onClick={() => sendCode(true)}
+            >
+              {isSubmitting ? (
+                <Spinner aria-label="Extra large spinner" size="md" />
+              ) : (
+                "Przetestuj"
+              )}
+            </Button>
+          </div>
         </div>
         <div className="w-3/5">
           <CodeEditor

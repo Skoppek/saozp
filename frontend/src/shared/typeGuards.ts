@@ -105,6 +105,8 @@ export const isSubmissionEntry = (
     suspect != null &&
     "submissionId" in suspect &&
     typeof suspect.submissionId === "number" &&
+    "isCommit" in suspect &&
+    typeof suspect.isCommit === "boolean" &&
     "creator" in suspect &&
     (isUser(suspect.creator) || suspect.creator === null) &&
     (() => {

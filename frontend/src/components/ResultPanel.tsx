@@ -7,6 +7,7 @@ import { Badge } from "flowbite-react/components/Badge";
 import { STATUS_NAMES } from "../shared/enums";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
+import { HiFlag } from "react-icons/hi";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
@@ -28,12 +29,17 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
   return (
     <Accordion collapseAll onClick={() => setOpen((prev) => !prev)}>
       <Accordion.Panel>
-        <Accordion.Title>
+        <Accordion.Title
+          className={`${submission.isCommit ? "bg-teal-800/30 dark:bg-teal-800/50" : ""}`}
+        >
           <div className="flex gap-8">
             {submission.createdAt ?? ""}
             <Badge size={"sm"}>
               {STATUS_NAMES[submission.status?.id ?? 0]}
             </Badge>
+            {!!submission.isCommit && (
+              <HiFlag className="size-6 text-orange-400" />
+            )}
           </div>
         </Accordion.Title>
         <AccordionContent>

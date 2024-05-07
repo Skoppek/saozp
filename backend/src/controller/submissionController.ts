@@ -76,6 +76,7 @@ export default new Elysia({ prefix: '/submissions' })
                         status: reduceToStatus(
                             results.map((result) => result.status.id),
                         ),
+                        isCommit: submission.isCommit,
                     };
                 }),
             );
@@ -105,6 +106,7 @@ export default new Elysia({ prefix: '/submissions' })
                             description: t.String(),
                         }),
                     ),
+                    isCommit: t.Boolean(),
                 }),
             ),
         },
@@ -139,8 +141,6 @@ export default new Elysia({ prefix: '/submissions' })
                     tests.map((test) => test.token),
                 )
             ).submissions;
-
-            console.log(results);
 
             return {
                 languageId:

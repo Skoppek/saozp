@@ -160,6 +160,9 @@ const getSubmissionBatch = async (tokens: string[]) => {
                     'Received object has wrong fields. Expected: SubmissionBatch',
                 );
             }
+        })
+        .catch(() => {
+            return { submissions: [] };
         });
 };
 

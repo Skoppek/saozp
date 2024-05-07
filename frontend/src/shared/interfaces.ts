@@ -56,6 +56,7 @@ export interface SubmissionEntry {
   creator: User | null;
   createdAt?: string;
   status?: SubmissionStatus;
+  isCommit: boolean;
 }
 
 export interface TestCaseResult extends TestCase {

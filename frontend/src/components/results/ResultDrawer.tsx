@@ -36,7 +36,9 @@ export const ResultDrawer = ({
           <div className="mx-4 flex flex-col gap-2">
             {submissions
               .sort((a, b) =>
-                (a.createdAt ?? "") < (b.createdAt ?? "") ? 1 : 0,
+                new Date(a.createdAt ?? "") < new Date(b.createdAt ?? "")
+                  ? 1
+                  : 0,
               )
               .map((submission, key) => (
                 <ResultPanel

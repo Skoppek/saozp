@@ -17,17 +17,20 @@ export const ProblemEditPage = () => {
       navigate("/problems");
       return;
     }
-    apiClient.getProblemById(parseInt(id)).then((data) => {
-      if (isProblem(data)) {
-        setProblem(data);
-      }
-    });
-    // apiClient.getUserOfCurrentSession().then((user) => {
-    //   if (problem?.creatorId != user.userId) {
-    //     navigate("/problems");
-    //   }
-    // });
-  }, [id, navigate, problem?.creatorId]);
+    if (problem) {
+      apiClient.getUserOfCurrentSession().then((user) => {
+        if (problem?.creatorId != user.userId) {
+          navigate("/problems");
+        }
+      });
+    } else {
+      apiClient.getProblemById(parseInt(id)).then((data) => {
+        if (isProblem(data)) {
+          setProblem(data);
+        }
+      });
+    }
+  }, [id, navigate, problem, problem?.creatorId]);
 
   return (
     <AuthenticatedPage>

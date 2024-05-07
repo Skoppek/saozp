@@ -48,7 +48,7 @@ services:
         <<: *default-logging
         restart: always
 
-    api-db:
+    apidb:
         image: postgres:latest
         restart: always
         ports:
@@ -57,23 +57,23 @@ services:
             - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=postgres
         volumes:
-            - db:/var/lib/postgresql/data
+            - apidb:/var/lib/postgresql/data
         networks:
             - mynet
 
-    api:
-        build: ./backend
-        image: saozp-api
-        depends_on:
-            - db
-        networks:
-            - mynet
-        ports:
-            - '80:3000'
-        links:
-            - db
-        environment:
-            DB_CONNECTION_STRING: postgres://postgres:postgres@localhost:5432/postgres
+    # api:
+    #     build: ./backend
+    #     image: saozp-api
+    #     depends_on:
+    #         - db
+    #     networks:
+    #         - mynet
+    #     ports:
+    #         - '80:3000'
+    #     links:
+    #         - db
+    #     environment:
+    #         DB_CONNECTION_STRING: postgres://postgres:postgres@localhost:5432/postgres
 
 networks:
     mynet:

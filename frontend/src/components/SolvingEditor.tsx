@@ -5,7 +5,7 @@ import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Spinner } from "flowbite-react";
 import apiClient from "../apiClient";
-import { ResultDrawer } from "./ResultDrawer";
+import { ResultDrawer } from "./results/ResultDrawer";
 import { TestCasesEditor } from "./TestCasesEditor";
 
 interface SolvingEditorProps {

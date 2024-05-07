@@ -1,6 +1,6 @@
 import { Drawer } from "flowbite-react/components/Drawer";
 import { HiBars2, HiSquaresPlus } from "react-icons/hi2";
-import { Submission, SubmissionEntry } from "../shared/interfaces";
+import { Submission, SubmissionEntry } from "../../shared/interfaces";
 import { ResultPanel } from "./ResultPanel";
 
 interface ResultDrawerProps {

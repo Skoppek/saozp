@@ -2,11 +2,11 @@ import {
   Accordion,
   AccordionContent,
 } from "flowbite-react/components/Accordion";
-import { Submission, SubmissionEntry } from "../shared/interfaces";
+import { Submission, SubmissionEntry } from "../../shared/interfaces";
 import { Badge } from "flowbite-react/components/Badge";
-import { STATUS_NAMES } from "../shared/enums";
+import { STATUS_NAMES } from "../../shared/enums";
 import { useEffect, useState } from "react";
-import apiClient from "../apiClient";
+import apiClient from "../../apiClient";
 import { HiFlag } from "react-icons/hi";
 import { Button } from "flowbite-react/components/Button";
 

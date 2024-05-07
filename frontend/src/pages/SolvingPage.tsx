@@ -17,7 +17,7 @@ export const SolvingPage = () => {
       navigate("/problems");
       return;
     }
-    apiClient.getProblemById(parseInt(id)).then((data) => {
+    apiClient.getProblemById(parseInt(id), true).then((data) => {
       if (isProblem(data)) {
         setProblem(data);
       }

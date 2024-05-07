@@ -143,14 +143,22 @@ export default new Elysia({ prefix: '/problem' })
                 })
                 .get(
                     '/',
-                    async ({ problem }) => {
+                    async ({ problem, query: { solve } }) => {
                         return {
                             problemId: problem.id,
                             name: problem.name,
                             description: problem.description,
                             prompt: problem.prompt,
                             languageId: problem.languageId,
-                            baseCode: problem.baseCode,
+                            baseCode:
+                                // query params don't work with other types than string :(
+                                solve === 'true'
+                                    ? problem.baseCode
+                                          .match(/---(.*?)---/gs)
+                                          ?.at(0)
+                                          ?.split('---')
+                                          .join('') ?? problem.baseCode
+                                    : problem.baseCode,
                             creatorId: problem.creator,
                             tests: problem.tests,
                         };
@@ -173,6 +181,9 @@ export default new Elysia({ prefix: '/problem' })
                                     expected: t.String(),
                                 }),
                             ),
+                        }),
+                        query: t.Object({
+                            solve: t.Optional(t.String()),
                         }),
                     },
                 )
@@ -243,11 +254,18 @@ export default new Elysia({ prefix: '/problem' })
                             throw new Error('Submission not created.');
                         }
 
+                        const mergedCode = problem.baseCode.replace(
+                            /---(.*?)---/gs,
+                            newSubmission.code,
+                        );
+
+                        console.log(mergedCode);
+
                         submitTests(
                             problem.tests,
                             newSubmission.id,
                             problem.languageId,
-                            newSubmission.code,
+                            mergedCode,
                         );
 
                         return {

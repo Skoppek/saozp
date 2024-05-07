@@ -68,9 +68,14 @@ const getAllProblems = () => {
   });
 };
 
-const getProblemById = (problemId: number) => {
+const getProblemById = (problemId: number, solve?: boolean) => {
   return axiosInstance
-    .get(`api/problem/${problemId}`, axiosConfig)
+    .get(`api/problem/${problemId}`, {
+      ...axiosConfig,
+      params: {
+        solve: solve,
+      },
+    })
     .then((response) => {
       if (isProblem(response.data)) {
         return response.data;

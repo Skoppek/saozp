@@ -1,18 +1,20 @@
 import { Drawer } from "flowbite-react/components/Drawer";
 import { HiBars2, HiSquaresPlus } from "react-icons/hi2";
-import { SubmissionEntry } from "../shared/interfaces";
+import { Submission, SubmissionEntry } from "../shared/interfaces";
 import { ResultPanel } from "./ResultPanel";
 
 interface ResultDrawerProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   submissions: SubmissionEntry[];
+  onCheckCode: (submission: Submission) => void;
 }
 
 export const ResultDrawer = ({
   isOpen,
   setIsOpen,
   submissions,
+  onCheckCode,
 }: ResultDrawerProps) => {
   return (
     <Drawer
@@ -37,7 +39,11 @@ export const ResultDrawer = ({
                 (a.createdAt ?? "") < (b.createdAt ?? "") ? 1 : 0,
               )
               .map((submission, key) => (
-                <ResultPanel key={`submission${key}`} submission={submission} />
+                <ResultPanel
+                  key={`submission${key}`}
+                  submission={submission}
+                  onCheckCode={onCheckCode}
+                />
               ))}
           </div>
         </div>

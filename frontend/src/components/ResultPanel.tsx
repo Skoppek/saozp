@@ -8,12 +8,14 @@ import { STATUS_NAMES } from "../shared/enums";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
 import { HiFlag } from "react-icons/hi";
+import { Button } from "flowbite-react/components/Button";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
+  onCheckCode: (submission: Submission) => void;
 }
 
-export const ResultPanel = ({ submission }: ResultPanelProps) => {
+export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
   const [isOpen, setOpen] = useState(false);
   const [details, setDetails] = useState<Submission>();
 
@@ -21,7 +23,6 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
     if (isOpen && !details) {
       apiClient.getSubmissionById(submission.submissionId).then((data) => {
         setDetails(data);
-        console.log(data);
       });
     }
   }, [details, isOpen, submission.submissionId]);
@@ -45,9 +46,12 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
         <AccordionContent>
           {details && (
             <div className="flex flex-col gap-2">
-              <div className="flex gap-4">
+              <div className="flex items-center gap-4">
                 <Badge className="w-fit">{`Średnia pamięć: ${(details?.result.averageMemory / 1024).toFixed(2)} MB`}</Badge>
                 <Badge className="w-fit">{`Średni czas: ${(details?.result.averageTime * 1000).toFixed(0)} ms`}</Badge>
+                <Button size="xs" onClick={() => onCheckCode(details)}>
+                  Zobacz
+                </Button>
               </div>
               <div className="flex flex-col gap-1">
                 {details.result.tests

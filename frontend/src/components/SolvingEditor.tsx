@@ -113,6 +113,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         submissions={submissions}
+        onCheckCode={(submission) => setCode(submission.code)}
       />
     </div>
   );

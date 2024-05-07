@@ -30,7 +30,9 @@ export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
       {pageReady ? (
         <>{children}</>
       ) : (
-        <Spinner aria-label="Extra large spinner" size="xl" />
+        <div className="grid h-screen w-screen place-content-center">
+          <Spinner aria-label="Extra large spinner" size="xl" />
+        </div>
       )}
     </>
   );

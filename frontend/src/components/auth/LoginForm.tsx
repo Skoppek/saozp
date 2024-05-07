@@ -67,7 +67,7 @@ export const LoginForm = () => {
         }}
       >
         {isLoggingIn ? (
-          <Spinner aria-label="Extra large spinner" size="xl" />
+          <Spinner aria-label="Extra large spinner" size="md" />
         ) : (
           "Zaloguj się"
         )}

@@ -16,7 +16,7 @@ export const RegisterForm = () => {
   const authContext = useContext(AuthContext);
 
   return (
-    <div className="flex w-96 max-w-md flex-col gap-4">
+    <div className="mx-auto my-[80px] flex w-96 flex-col gap-4">
       <TextInput
         id={"email"}
         type="email"

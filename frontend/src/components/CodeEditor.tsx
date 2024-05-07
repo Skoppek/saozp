@@ -5,6 +5,8 @@ import { LanguageId } from "../shared/enums";
 import { Language } from "../shared/interfaces";
 import { LanguageSelect } from "./LanguageSelect";
 import { Badge } from "flowbite-react/components/Badge";
+import { HiOutlineInformationCircle } from "react-icons/hi";
+import { Tooltip } from "flowbite-react";
 
 interface CodeEditorProps extends ClassName {
   languages: Language[] | Language;
@@ -29,18 +31,25 @@ export const CodeEditor = ({
   return (
     <div className={className}>
       <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 shadow-md dark:border-gray-700 dark:bg-gray-800">
-        {Array.isArray(languages) ? (
-          <LanguageSelect
-            languages={languages}
-            onChange={(language) => {
-              if (language?.id) onLanguageChange?.(language?.id);
-              setLanguage(language);
-            }}
-            chosenLanguage={language}
-          />
-        ) : (
-          <Badge className="w-fit">{languages.name}</Badge>
-        )}
+        <div className="flex w-full items-center justify-between gap-4">
+          {Array.isArray(languages) ? (
+            <LanguageSelect
+              languages={languages}
+              onChange={(language) => {
+                if (language?.id) onLanguageChange?.(language?.id);
+                setLanguage(language);
+              }}
+              chosenLanguage={language}
+            />
+          ) : (
+            <Badge className="w-fit">{languages.name}</Badge>
+          )}
+          <div>
+            <Tooltip content="Kod pomiędzy znakami '---' będzie widoczny dla rozwiązującego.">
+              <HiOutlineInformationCircle size="30" />
+            </Tooltip>
+          </div>
+        </div>
         <Editor
           // eslint-disable-next-line tailwindcss/no-custom-classname
           theme="vs-dark"

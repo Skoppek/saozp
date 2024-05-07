@@ -60,26 +60,22 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             />
           </div>
         </Card>
-        <Card>
-          <MarkdownEditor
-            onChange={(value) => {
-              setNewProblem((prev) => {
-                return { ...prev, prompt: value };
-              });
-            }}
-            markdown={newProblem.prompt}
-          />
-        </Card>
-        <Card>
-          <TestCasesEditor
-            onChange={(value) => {
-              setNewProblem((prev) => {
-                return { ...prev, tests: value };
-              });
-            }}
-            testCases={newProblem.tests}
-          />
-        </Card>
+        <MarkdownEditor
+          onChange={(value) => {
+            setNewProblem((prev) => {
+              return { ...prev, prompt: value };
+            });
+          }}
+          markdown={newProblem.prompt}
+        />
+        <TestCasesEditor
+          onChange={(value) => {
+            setNewProblem((prev) => {
+              return { ...prev, tests: value };
+            });
+          }}
+          testCases={newProblem.tests}
+        />
       </div>
       <div className="flex h-full w-1/2 flex-col justify-between gap-4">
         <CodeEditor

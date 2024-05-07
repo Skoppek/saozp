@@ -1,5 +1,5 @@
 {
-  "id": "e6520888-75e0-40ac-ac1a-45a7496fcd7b",
+  "id": "a20dbd02-90e3-4427-85d8-681d0a8a6f25",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -218,6 +218,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "is_commit": {
+          "name": "is_commit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {

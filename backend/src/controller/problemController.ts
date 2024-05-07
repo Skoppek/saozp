@@ -248,6 +248,7 @@ export default new Elysia({ prefix: '/problem' })
                                 problemId: problem.id,
                                 userId,
                                 code: body.code,
+                                isCommit: !body.userTests,
                             })
                         ).at(0);
 
@@ -262,7 +263,7 @@ export default new Elysia({ prefix: '/problem' })
                         );
 
                         submitTests(
-                            problem.tests,
+                            !!body.userTests ? body.userTests : problem.tests,
                             newSubmission.id,
                             problem.languageId,
                             mergedCode,
@@ -278,6 +279,14 @@ export default new Elysia({ prefix: '/problem' })
                         },
                         body: t.Object({
                             code: t.String(),
+                            userTests: t.Optional(
+                                t.Array(
+                                    t.Object({
+                                        input: t.String(),
+                                        expected: t.String(),
+                                    }),
+                                ),
+                            ),
                         }),
                         response: t.Object({
                             submissionId: t.Number(),

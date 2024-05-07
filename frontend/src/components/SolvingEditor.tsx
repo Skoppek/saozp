@@ -1,11 +1,12 @@
 import { getLanguageById } from "../shared/constansts";
-import { Problem, SubmissionEntry, User } from "../shared/interfaces";
+import { Problem, SubmissionEntry, TestCase, User } from "../shared/interfaces";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Spinner } from "flowbite-react";
 import apiClient from "../apiClient";
 import { ResultDrawer } from "./ResultDrawer";
+import { TestCasesEditor } from "./TestCasesEditor";
 
 interface SolvingEditorProps {
   problem: Problem;
@@ -17,6 +18,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
   const [submissions, setSubmissions] = useState<SubmissionEntry[]>([]);
   const [user, setUser] = useState<User>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [userTests, setUserTests] = useState<TestCase[]>([]);
 
   const getSubmissions = useCallback(
     (user: User) => {
@@ -54,12 +56,17 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
             displayOnly
             className="h-full"
           />
+          <TestCasesEditor
+            testCases={userTests}
+            onChange={(tests) => setUserTests(tests)}
+          />
           <Button
             onClick={() => {
               setIsSubmitting(true);
               apiClient
                 .submitSolution(problem.problemId, {
                   code: code,
+                  userTests: userTests,
                 })
                 .then(() => {
                   setIsSubmitting(false);
@@ -74,14 +81,16 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
             )}
           </Button>
         </div>
-        <CodeEditor
-          languages={getLanguageById(problem.languageId)}
-          code={code}
-          onChange={(value) => {
-            setCode(value);
-          }}
-          className="h-full w-3/5"
-        />
+        <div className="w-3/5">
+          <CodeEditor
+            languages={getLanguageById(problem.languageId)}
+            code={code}
+            onChange={(value) => {
+              setCode(value);
+            }}
+            className="size-full"
+          />
+        </div>
       </div>
       <ResultDrawer
         isOpen={isOpen}

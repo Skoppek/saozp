@@ -15,12 +15,11 @@ export const MarkdownEditor = ({
   onChange,
   markdown,
   displayOnly,
-  className,
 }: MarkdownEditorProps) => {
   const [showPreview, setShowPreview] = useState(false);
   const [value, setMarkdown] = useState<string>(markdown ?? "");
   return (
-    <div className={className}>
+    <div className="flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800">
       {!displayOnly && (
         <div className="mb-2 flex flex-row justify-between">
           <Label value="Treść zadania" />

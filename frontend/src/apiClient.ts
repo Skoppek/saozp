@@ -7,6 +7,7 @@ import {
   isSubmissionEntryArray,
   isUser,
 } from "./shared/typeGuards";
+import { NewSubmission } from "./shared/interfaces";
 
 interface LoginCredentials {
   email: string;
@@ -25,10 +26,6 @@ interface Tests {
 interface SubmissionQuery {
   userId?: number;
   problemId?: number;
-}
-
-interface NewSubmission {
-  code: string;
 }
 
 const axiosConfig = {

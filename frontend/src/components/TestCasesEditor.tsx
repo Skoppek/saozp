@@ -31,7 +31,7 @@ export const TestCasesEditor = ({
   }, [currentTest.expected.length, currentTest.input, tests]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 shadow-md dark:border-gray-700 dark:bg-gray-800">
       <div className="flex flex-row items-end justify-around gap-4">
         <TextInput
           label="Wejście"
@@ -80,6 +80,7 @@ export const TestCasesEditor = ({
             className="flex justify-center"
             disabled={!isInputCorrect}
             onClick={() => {
+              setCurrentTest({ input: "", expected: "" });
               setTests((prev) => {
                 const newSet = [...prev, currentTest];
                 onChange?.(newSet);
@@ -92,7 +93,7 @@ export const TestCasesEditor = ({
         </Popover>
       </div>
       {!!tests.length && (
-        <div className="flex max-h-[25vh] flex-col gap-1 overflow-y-auto rounded-lg bg-gray-300 p-2 dark:bg-slate-700">
+        <div className="flex max-h-[20vh] flex-col gap-1 overflow-y-auto rounded-lg bg-gray-300 p-2 dark:bg-slate-700">
           {tests.map((test) => {
             return (
               <div className="ml-4 flex content-center justify-between">

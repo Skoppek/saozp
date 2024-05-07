@@ -75,3 +75,8 @@ export interface Submission {
   code: string;
   result: Result;
 }
+
+export interface NewSubmission {
+  code: string;
+  userTests?: TestCase[];
+}

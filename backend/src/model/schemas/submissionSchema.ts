@@ -1,4 +1,5 @@
 import {
+    boolean,
     index,
     integer,
     pgTable,
@@ -21,6 +22,7 @@ export const submissionSchema = pgTable(
             .notNull(),
         code: text('code').notNull(),
         createdAt: timestamp('created_at').defaultNow(),
+        isCommit: boolean('is_commit').notNull().default(false),
     },
     (submissionSchema) => ({
         userIdIdx: index('submission_user_id_idx').on(submissionSchema.userId),

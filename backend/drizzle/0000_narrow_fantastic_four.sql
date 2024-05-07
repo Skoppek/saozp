@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS "submissions" (
 	"problemId" integer NOT NULL,
 	"userId" integer NOT NULL,
 	"code" text NOT NULL,
-	"created_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now(),
+	"is_commit" boolean DEFAULT false NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (

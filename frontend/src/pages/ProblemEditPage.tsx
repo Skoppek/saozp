@@ -22,11 +22,11 @@ export const ProblemEditPage = () => {
         setProblem(data);
       }
     });
-    apiClient.getUserOfCurrentSession().then((user) => {
-      if (problem?.creatorId != user.userId) {
-        navigate("/problems");
-      }
-    });
+    // apiClient.getUserOfCurrentSession().then((user) => {
+    //   if (problem?.creatorId != user.userId) {
+    //     navigate("/problems");
+    //   }
+    // });
   }, [id, navigate, problem?.creatorId]);
 
   return (

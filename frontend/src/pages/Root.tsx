@@ -28,7 +28,7 @@ export const Root = () => {
     <>
       <AuthContext.Provider value={{ isLogged, setIsLogged: setLogged }}>
         <Navigation />
-        <div className="h-screen w-screen text-black dark:text-slate-50">
+        <div className="text-black dark:text-slate-50">
           <Outlet />
         </div>
       </AuthContext.Provider>

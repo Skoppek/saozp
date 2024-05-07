@@ -28,11 +28,18 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
             label="Rozwiąż"
           />
           {isOwner && (
-            <LinkButton
-              to={`/problems/edit/${problem.problemId}`}
-              buttonProps={{ color: "gray", size: "xs" }}
-              label="Modyfikuj"
-            />
+            <>
+              <LinkButton
+                to={`/problems/edit/${problem.problemId}`}
+                buttonProps={{ color: "gray", size: "xs" }}
+                label="Modyfikuj"
+              />
+              <LinkButton
+                to={`/problems/stats/${problem.problemId}`}
+                buttonProps={{ color: "gray", size: "xs" }}
+                label="Wyniki"
+              />
+            </>
           )}
         </div>
         <div className="italic">{`${problem.creator.firstName} ${problem.creator.lastName}`}</div>

@@ -9,6 +9,7 @@ import { ProblemCreatePage } from "./pages/ProblemCreatePage";
 import { LoginPage } from "./pages/LoginPage";
 import { ProblemEditPage } from "./pages/ProblemEditPage";
 import { SolvingPage } from "./pages/SolvingPage";
+import { ProblemStatsPage } from "./pages/ProblemsStatsPage";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "/problems/edit/:id",
         element: <ProblemEditPage />,
+      },
+      {
+        path: "/problems/stats/:id",
+        element: <ProblemStatsPage />,
       },
       {
         path: "/problems/solve/:id",

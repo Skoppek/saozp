@@ -3,11 +3,8 @@ import {
   AccordionContent,
 } from "flowbite-react/components/Accordion";
 import { Submission, SubmissionEntry } from "../../shared/interfaces";
-import { Badge } from "flowbite-react/components/Badge";
-import { STATUS_COLORS, STATUS_NAMES } from "../../shared/enums";
 import { useEffect, useState } from "react";
 import apiClient from "../../apiClient";
-import { HiFlag } from "react-icons/hi";
 import { Button } from "flowbite-react/components/Button";
 import { TestPanelStats } from "../TestPanelStats";
 import { TestResultList } from "../TestResultList";

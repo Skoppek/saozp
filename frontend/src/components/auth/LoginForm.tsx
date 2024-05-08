@@ -1,15 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import apiClient from "../../apiClient";
 import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../pages/Root";
 import { TextInput } from "../TextInput";
 import { Spinner } from "flowbite-react/components/Spinner";
+import { Popover } from "flowbite-react";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [isWrongCredentials, setIsWrongCredentials] = useState<boolean>();
+  const [isWrongCredentials, setIsWrongCredentials] = useState<boolean>(false);
   const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -21,6 +22,28 @@ export const LoginForm = () => {
     }
   }, [authContext, navigate]);
 
+  const handleLogin = useCallback(() => {
+    if (!email.length || !password.length) {
+      setIsWrongCredentials(true);
+      return;
+    }
+    setIsLoggingIn(true);
+    apiClient
+      .loginUser({
+        email,
+        password,
+      })
+      .then(() => {
+        authContext?.setIsLogged(true);
+        navigate("/problems");
+      })
+      .catch(() => {
+        setIsLoggingIn(false);
+        authContext?.setIsLogged(false);
+        setIsWrongCredentials(true);
+      });
+  }, [authContext, email, navigate, password]);
+
   return (
     <div className="flex w-96 max-w-md flex-col gap-4">
       <TextInput
@@ -28,7 +51,6 @@ export const LoginForm = () => {
         type="email"
         label="Email"
         placeholder="user@mail.com"
-        color={isWrongCredentials ? "failure" : "gray"}
         onChange={(value) => {
           setIsWrongCredentials(false);
           setEmail(value);
@@ -38,40 +60,23 @@ export const LoginForm = () => {
         id={"password"}
         type="password"
         label="Hasło"
-        color={isWrongCredentials ? "failure" : "gray"}
         onChange={(value) => {
           setIsWrongCredentials(false);
           setPassword(value);
         }}
       />
-      <Button
-        type="submit"
-        onClick={() => {
-          setIsLoggingIn(true);
-          apiClient
-            .loginUser({
-              email,
-              password,
-            })
-            .then(() => {
-              authContext?.setIsLogged(true);
-              navigate("/problems");
-            })
-            .catch((error) => {
-              setIsLoggingIn(false);
-              authContext?.setIsLogged(false);
-              if (error.response.status && error.response.status == 401) {
-                setIsWrongCredentials(true);
-              }
-            });
-        }}
+      <Popover
+        content={<div className="m-4">Email lub hasło są niepoprawne</div>}
+        open={isWrongCredentials}
       >
-        {isLoggingIn ? (
-          <Spinner aria-label="Extra large spinner" size="md" />
-        ) : (
-          "Zaloguj się"
-        )}
-      </Button>
+        <Button type="submit" onClick={handleLogin} disabled={isLoggingIn}>
+          {isLoggingIn ? (
+            <Spinner aria-label="Extra large spinner" size="md" />
+          ) : (
+            "Zaloguj się"
+          )}
+        </Button>
+      </Popover>
     </div>
   );
 };

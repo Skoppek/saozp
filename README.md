@@ -11,8 +11,8 @@ bun i
 
 Część serwerowa korzysta z:
 
--   ElysiaJS - serwer HTTP
--   DrizzleORM - zarządzanie bazą danych
+- ElysiaJS - serwer HTTP
+- DrizzleORM - zarządzanie bazą danych
 
 Bazę danych można obejrzeć przez przeglądarkę korzystając z narzędzia **Drizzle Studio**
 
@@ -47,9 +47,8 @@ Część frontendowa korzysta z Reacta.
 bun run dev
 ```
 
-Ikony
-https://react-icons.github.io/react-icons/icons/hi/
+[Ikony do strony](https://react-icons.github.io/react-icons/icons/hi/)
 
 ## TODO
 
--   usuwanie starych testów własnych użytkownika (max 1 na problem, pozostałe powinny być tylko oficjalne próby)
+- usuwanie starych testów własnych użytkownika (max 1 na problem, pozostałe powinny być tylko oficjalne próby)

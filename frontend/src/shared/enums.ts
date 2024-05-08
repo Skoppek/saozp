@@ -9,12 +9,32 @@ export const enum LanguageId {
   JAVASCRIPT_NODE_12_14 = 63,
 }
 
-export const STATUS_NAMES: Record<number, string> = {
-  0: "Nieznany",
-  1: "W kolejce",
-  2: "Wykonywanie",
-  3: "Zaakceptowano",
-  4: "Błędna odpowiedź",
-  5: "Przekroczono czas",
-  6: "Błąd",
+export const enum TestStatus {
+  UNKNOWN = 0,
+  IN_QUEUE = 1,
+  PROCESSING = 2,
+  ACCEPTED = 3,
+  WRONG_ANSWER = 4,
+  TIME_LIMIT_EXCEEDED = 5,
+  ERROR = 6,
+}
+
+export const STATUS_NAMES: Record<TestStatus, string> = {
+  [TestStatus.UNKNOWN]: "Nieznany",
+  [TestStatus.IN_QUEUE]: "W kolejce",
+  [TestStatus.PROCESSING]: "Wykonywanie",
+  [TestStatus.ACCEPTED]: "Zaakceptowano",
+  [TestStatus.WRONG_ANSWER]: "Błędna odpowiedź",
+  [TestStatus.TIME_LIMIT_EXCEEDED]: "Przekroczono czas",
+  [TestStatus.ERROR]: "Błąd",
+};
+
+export const STATUS_COLORS: Record<TestStatus, string> = {
+  [TestStatus.UNKNOWN]: "neutral",
+  [TestStatus.IN_QUEUE]: "indigo",
+  [TestStatus.PROCESSING]: "purple",
+  [TestStatus.ACCEPTED]: "success",
+  [TestStatus.WRONG_ANSWER]: "failure",
+  [TestStatus.TIME_LIMIT_EXCEEDED]: "warning",
+  [TestStatus.ERROR]: "failure",
 };

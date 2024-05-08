@@ -2,23 +2,20 @@ import {
   Accordion,
   AccordionContent,
 } from "flowbite-react/components/Accordion";
-import { Submission, SubmissionEntry } from "../../shared/interfaces";
-import { Badge } from "flowbite-react/components/Badge";
-import { STATUS_COLORS, STATUS_NAMES } from "../../shared/enums";
+import { Submission, SubmissionEntry } from "../shared/interfaces";
 import { useEffect, useState } from "react";
-import apiClient from "../../apiClient";
-import { HiFlag } from "react-icons/hi";
-import { Button } from "flowbite-react/components/Button";
-import { TestPanelStats } from "../TestPanelStats";
-import { TestResultList } from "../TestResultList";
-import { ResultPanelTitle } from "./ResultPanelTitle";
+import apiClient from "../apiClient";
+import { CodeEditor } from "./CodeEditor";
+import { getLanguageById } from "../shared/constansts";
+import { TestPanelStats } from "./TestPanelStats";
+import { TestResultList } from "./TestResultList";
+import { ResultPanelTitle } from "./results/ResultPanelTitle";
 
-interface ResultPanelProps {
+interface StatsAccordionProps {
   submission: SubmissionEntry;
-  onCheckCode: (submission: Submission) => void;
 }
 
-export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
+export const StatsAccordion = ({ submission }: StatsAccordionProps) => {
   const [isOpen, setOpen] = useState(false);
   const [details, setDetails] = useState<Submission>();
 
@@ -36,16 +33,22 @@ export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
         <Accordion.Title
           className={`${submission.isCommit ? "bg-teal-800/10 dark:bg-teal-800/50" : ""}`}
         >
-          <ResultPanelTitle submission={submission} showCommitFlag={true} />
+          <ResultPanelTitle submission={submission} showAuthor={true} />
         </Accordion.Title>
         <AccordionContent>
           {details && (
             <div className="flex flex-col gap-2">
               <TestPanelStats submission={details} />
-              <Button size="xs" onClick={() => onCheckCode(details)}>
-                Zobacz
-              </Button>
-              <TestResultList tests={details.result.tests} />
+              <div className="flex gap-4">
+                <TestResultList tests={details.result.tests} />
+                <div className="h-[40vh] w-1/2">
+                  <CodeEditor
+                    languages={getLanguageById(details.languageId)}
+                    code={details.code}
+                    className="size-full"
+                  />
+                </div>
+              </div>
             </div>
           )}
         </AccordionContent>

@@ -1,4 +1,4 @@
-import { LanguageId } from "./enums";
+import { LanguageId, TestStatus } from "./enums";
 
 export interface ClassName {
   className?: string | undefined;
@@ -47,7 +47,7 @@ export interface User {
 }
 
 export interface SubmissionStatus {
-  id: number;
+  id: TestStatus;
   description: string;
 }
 

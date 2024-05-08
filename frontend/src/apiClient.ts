@@ -26,6 +26,7 @@ interface Tests {
 interface SubmissionQuery {
   userId?: number;
   problemId?: number;
+  commitsOnly?: boolean;
 }
 
 const axiosConfig = {

@@ -13,7 +13,11 @@ const createSubmission = async (
     return db.insert(submissionSchema).values(newSubmission).returning();
 };
 
-const getSubmissionsList = async (userId?: number, problemId?: number) => {
+const getSubmissionsList = async (
+    userId?: number,
+    problemId?: number,
+    commitsOnly?: boolean,
+) => {
     return db
         .select({
             id: submissionSchema.id,
@@ -31,6 +35,9 @@ const getSubmissionsList = async (userId?: number, problemId?: number) => {
                 userId ? eq(submissionSchema.userId, userId) : undefined,
                 problemId
                     ? eq(submissionSchema.problemId, problemId)
+                    : undefined,
+                commitsOnly
+                    ? eq(submissionSchema.isCommit, commitsOnly)
                     : undefined,
             ),
         );

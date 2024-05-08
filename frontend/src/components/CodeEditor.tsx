@@ -14,6 +14,7 @@ interface CodeEditorProps extends ClassName {
   onChange?: (value: string) => void;
   onLanguageChange?: (value: LanguageId) => void;
   chosenLanguage?: Language;
+  showEditTips?: boolean;
 }
 
 export const CodeEditor = ({
@@ -23,6 +24,7 @@ export const CodeEditor = ({
   onLanguageChange,
   className,
   chosenLanguage,
+  showEditTips,
 }: CodeEditorProps) => {
   const [language, setLanguage] = useState(
     chosenLanguage ?? (Array.isArray(languages) ? languages.at(0) : languages),
@@ -30,7 +32,7 @@ export const CodeEditor = ({
 
   return (
     <div className={className}>
-      <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 shadow-md dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
         <div className="flex w-full items-center justify-between gap-4">
           {Array.isArray(languages) ? (
             <LanguageSelect
@@ -44,11 +46,11 @@ export const CodeEditor = ({
           ) : (
             <Badge className="w-fit">{languages.name}</Badge>
           )}
-          <div>
+          {showEditTips && (
             <Tooltip content="Kod pomiędzy znakami '---' będzie widoczny dla rozwiązującego.">
               <HiOutlineInformationCircle size="30" />
             </Tooltip>
-          </div>
+          )}
         </div>
         <Editor
           // eslint-disable-next-line tailwindcss/no-custom-classname

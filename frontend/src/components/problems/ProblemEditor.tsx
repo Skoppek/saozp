@@ -93,6 +93,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           code={newProblem.baseCode}
           className="h-full"
           chosenLanguage={getLanguageById(problem?.languageId ?? 0)}
+          showEditTips={true}
         />
         <Button
           onClick={() => {

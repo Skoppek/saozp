@@ -56,6 +56,7 @@ export default new Elysia({ prefix: '/submissions' })
             const submissions = await submissionRepository.getSubmissionsList(
                 query.userId ? parseInt(query.userId) : undefined,
                 query.problemId ? parseInt(query.problemId) : undefined,
+                query.commitsOnly ? query.commitsOnly == 'true' : undefined,
             );
 
             return await Promise.all(
@@ -88,6 +89,7 @@ export default new Elysia({ prefix: '/submissions' })
             query: t.Object({
                 userId: t.Optional(t.String()),
                 problemId: t.Optional(t.String()),
+                commitsOnly: t.Optional(t.String()),
             }),
             response: t.Array(
                 t.Object({

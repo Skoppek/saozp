@@ -33,7 +33,8 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
         .filter(
           (problem) =>
             !filter.creator ||
-            `${problem.creator.firstName} ${problem.creator.lastName}`
+            [problem.creator.firstName, problem.creator.lastName]
+              .join(" ")
               .toLowerCase()
               .includes(filter.creator),
         )

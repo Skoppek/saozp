@@ -9,6 +9,9 @@ import { Button } from "flowbite-react/components/Button";
 import { TestPanelStats } from "../TestPanelStats";
 import { TestResultList } from "../TestResultList";
 import { ResultPanelTitle } from "./ResultPanelTitle";
+import { CodeEditor } from "../CodeEditor";
+import { getLanguageById } from "../../shared/constansts";
+import { Spinner } from "flowbite-react/components/Spinner";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
@@ -36,13 +39,28 @@ export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
           <ResultPanelTitle submission={submission} showCommitFlag={true} />
         </Accordion.Title>
         <AccordionContent>
-          {details && (
+          {details ? (
             <div className="flex flex-col gap-2">
-              <TestPanelStats submission={details} />
-              <Button size="xs" onClick={() => onCheckCode(details)}>
-                Zobacz
-              </Button>
-              <TestResultList tests={details.result.tests} />
+              <div className="flex justify-between">
+                <TestPanelStats submission={details} />
+                <Button size="xs" onClick={() => onCheckCode(details)}>
+                  Wklej rozwiązanie
+                </Button>
+              </div>
+              <div className="flex gap-4">
+                <TestResultList tests={details.result.tests} />
+                <div className="h-[40vh] w-1/2">
+                  <CodeEditor
+                    languages={getLanguageById(details.languageId)}
+                    code={details.code}
+                    className="size-full"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex w-screen justify-center">
+              <Spinner aria-label="Extra large spinner" size="xl" />
             </div>
           )}
         </AccordionContent>

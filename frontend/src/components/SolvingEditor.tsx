@@ -54,8 +54,8 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
         })
         .then(() => {
           setIsSubmitting(false);
+          if (user) getSubmissions(user);
         });
-      if (user) getSubmissions(user);
     },
     [code, getSubmissions, problem.problemId, user, userTests],
   );

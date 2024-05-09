@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
-import { isProblem } from "../shared/typeGuards";
 import { Problem } from "../shared/interfaces";
 import { SolvingEditor } from "../components/SolvingEditor";
 import { Spinner } from "flowbite-react/components/Spinner";
@@ -18,9 +17,7 @@ export const SolvingPage = () => {
       return;
     }
     apiClient.getProblemById(parseInt(id), true).then((data) => {
-      if (isProblem(data)) {
-        setProblem(data);
-      }
+      setProblem(data);
     });
   }, [id, navigate]);
 

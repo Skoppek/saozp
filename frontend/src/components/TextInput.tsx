@@ -1,6 +1,7 @@
 import { Label } from "flowbite-react/components/Label";
 import { TextInput as FlowBiteTextInput } from "flowbite-react/components/TextInput";
 import { ClassName } from "../shared/interfaces";
+import { ReactNode } from "react";
 
 interface TextInputProps extends ClassName {
   label?: string;
@@ -9,6 +10,7 @@ interface TextInputProps extends ClassName {
   type?: string;
   placeholder?: string;
   color?: string;
+  helperText?: ReactNode;
   onChange?: (value: string) => void;
 }
 
@@ -18,6 +20,7 @@ export const TextInput = ({
   value,
   type,
   color,
+  helperText,
   placeholder,
   onChange,
   className,
@@ -39,6 +42,7 @@ export const TextInput = ({
           onChange?.(event.target.value);
         }}
         value={value}
+        helperText={helperText}
       />
     </div>
   );

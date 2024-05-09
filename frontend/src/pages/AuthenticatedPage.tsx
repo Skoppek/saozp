@@ -18,7 +18,7 @@ export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
       const userIsLogged = response.data;
       authContext?.setIsLogged(userIsLogged);
       if (!userIsLogged) {
-        navigate("/login");
+        navigate("/");
         return;
       }
       setPageReady(true);

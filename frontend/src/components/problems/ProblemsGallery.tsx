@@ -20,7 +20,7 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-center gap-2">
+    <div className="mx-[20vw] flex flex-wrap justify-center gap-2">
       {problems
         .filter(
           (problem) =>

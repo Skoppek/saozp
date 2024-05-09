@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProblemEntry, ProblemsFilter } from "../shared/interfaces";
 import apiClient from "../apiClient";
-import { isProblemsEntryArray } from "../shared/typeGuards";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { ProblemsGallery } from "../components/problems/ProblemsGallery";
 import { Spinner } from "flowbite-react/components/Spinner";
@@ -17,9 +16,7 @@ export const ProblemsPage = () => {
 
   useEffect(() => {
     apiClient.getAllProblems().then((entires) => {
-      if (isProblemsEntryArray(entires)) {
-        setProblems(entires);
-      }
+      setProblems(entires);
     });
   }, []);
 

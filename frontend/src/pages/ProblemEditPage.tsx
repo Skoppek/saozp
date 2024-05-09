@@ -4,7 +4,6 @@ import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
 import { Problem } from "../shared/interfaces";
-import { isProblem } from "../shared/typeGuards";
 import { Spinner } from "flowbite-react/components/Spinner";
 
 export const ProblemEditPage = () => {
@@ -20,14 +19,12 @@ export const ProblemEditPage = () => {
     if (problem) {
       apiClient.getUserOfCurrentSession().then((user) => {
         if (problem?.creatorId != user.userId) {
-          navigate("/problems");
+          navigate("/");
         }
       });
     } else {
       apiClient.getProblemById(parseInt(id)).then((data) => {
-        if (isProblem(data)) {
-          setProblem(data);
-        }
+        setProblem(data);
       });
     }
   }, [id, navigate, problem, problem?.creatorId]);

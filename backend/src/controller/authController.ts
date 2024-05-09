@@ -38,7 +38,7 @@ export default new Elysia()
 
             const newSession = await sessionRepository.createSession({
                 userId: newUser.id,
-                expiresAt: new Date(Date.now() + 1000 * 3600 * 12),
+                expiresAt: new Date(Date.now() + 1000 * 3600 * 2),
             });
 
             if (!newSession?.id) {
@@ -49,7 +49,7 @@ export default new Elysia()
             // @ts-ignore
             cookie.session.set({
                 httpOnly: true,
-                maxAge: 3600 * 12,
+                maxAge: 3600 * 2,
                 path: '/',
                 priority: 'high',
                 value: newSession.id,
@@ -58,7 +58,7 @@ export default new Elysia()
                 secure: true,
             });
 
-            await profileRepository.createProfile({
+            return await profileRepository.createProfile({
                 userId: newUser.id,
                 firstName: firstName,
                 lastName: lastName,
@@ -110,13 +110,9 @@ export default new Elysia()
                 throw new Error('Failed to create session');
             }
 
-            cookie.inny?.set({
-                value: 'jakas wartosc',
-            });
-
             cookie.session?.set({
                 httpOnly: true,
-                maxAge: 3600 * 12,
+                maxAge: 3600 * 2,
                 path: '/api',
                 priority: 'high',
                 value: sessionData.id,
@@ -150,32 +146,32 @@ export default new Elysia()
             },
         },
     )
-    // .put(
-    //     '/refresh',
-    //     async ({ cookie: { session }, set }) => {
-    //         if (!session) {
-    //             set.status = 401;
-    //             throw new Error('Session cookie not found');
-    //         }
+    .put(
+        '/refresh',
+        async ({ cookie: { session }, set }) => {
+            if (!session) {
+                set.status = 401;
+                throw new Error('Session cookie not found');
+            }
 
-    //         const refreshedSession = await sessionRepository.refreshSession(
-    //             session.value,
-    //             15,
-    //         );
+            const refreshedSession = await sessionRepository.refreshSession(
+                session.value,
+                120,
+            );
 
-    //         if (!refreshedSession) {
-    //             set.status = 401;
-    //             throw new Error('Session not found');
-    //         }
+            if (!refreshedSession) {
+                set.status = 401;
+                throw new Error('Session not found');
+            }
 
-    //         session.expires = refreshedSession.expiresAt;
-    //     },
-    //     {
-    //         detail: {
-    //             tags: ['Auth'],
-    //         },
-    //     },
-    // )
+            session.expires = refreshedSession.expiresAt;
+        },
+        {
+            detail: {
+                tags: ['Auth'],
+            },
+        },
+    )
     .get(
         '/is-logged',
         async ({ cookie: { session } }) => {

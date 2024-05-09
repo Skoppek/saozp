@@ -1,28 +1,27 @@
 config:
-  target: "http://localhost:2358"
-  phases:
-    - duration: 1
-      arrivalRate: 1
-  processor: "./functions.js"
+ target: 'http://localhost:2358'
+ phases:
+  - duration: 10
+    arrivalRate: 1000
+ processor: './functions.js'
 scenarios:
-  - flow:
-      - post:
-          url: "/submissions"
-          headers:
-            Content-Type: "application/json"
-          json:
-            source_code: "print('Thank you for your cooperation.')"
-            language_id: 71
+ - flow:
+    - post:
+       url: '/submissions'
+       headers:
+        Content-Type: 'application/json'
+       json:
+        source_code: "print('Thank you for your cooperation.')"
+        language_id: 71
+       capture:
+        json: '$.token'
+        as: 'token'
+    - loop:
+       - get:
+          url: '/submissions/{{ token }}'
           capture:
-            json: "$.token"
-            as: "token"
-          afterResponse: "f"
-      - loop:
-          - get:
-              url: "/submissions/{{ token }}"
-              capture:
-                - json: $.status.id
-                  as: statusId
-                - json: $.stdout
-                  as: stdout
-        whileTrue: "isNotDone"
+           - json: $.status.id
+             as: statusId
+           - json: $.stdout
+             as: stdout
+      whileTrue: 'isNotDone'

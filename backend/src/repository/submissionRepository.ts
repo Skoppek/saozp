@@ -54,8 +54,31 @@ const getSubmissionById = async (
     ).at(0);
 };
 
+const deleteSubmissionById = async (id: number) => {
+    db.delete(submissionSchema).where(eq(submissionSchema.id, id));
+};
+
+const deleteNonCommitSubmissoins = async (
+    userId: number,
+    problemId: number,
+) => {
+    const x = await db
+        .delete(submissionSchema)
+        .where(
+            and(
+                eq(submissionSchema.userId, userId),
+                eq(submissionSchema.problemId, problemId),
+                eq(submissionSchema.isCommit, false),
+            ),
+        )
+        .returning();
+    console.log(x);
+};
+
 export default {
     createSubmission,
     getSubmissionsList,
     getSubmissionById,
+    deleteSubmissionById,
+    deleteNonCommitSubmissoins,
 };

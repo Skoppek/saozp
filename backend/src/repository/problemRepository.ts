@@ -5,7 +5,7 @@ import {
     Problem,
     problemSchema,
 } from '../model/schemas/problemSchema';
-import _, { values } from 'lodash';
+import _ from 'lodash';
 import { profileSchema } from '../model/schemas/profileSchema';
 
 const createProblem = async (

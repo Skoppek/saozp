@@ -243,6 +243,13 @@ export default new Elysia({ prefix: '/problem' })
                 .post(
                     '/submission',
                     async ({ problem, userId, body, set }) => {
+                        if (body.userTests?.length) {
+                            await submissionRepository.deleteNonCommitSubmissoins(
+                                userId,
+                                problem.id,
+                            );
+                        }
+
                         const newSubmission = (
                             await submissionRepository.createSubmission({
                                 problemId: problem.id,

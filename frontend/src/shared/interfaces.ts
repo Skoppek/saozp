@@ -80,4 +80,5 @@ export interface Submission {
 export interface NewSubmission {
   code: string;
   userTests?: TestCase[];
+  isCommit: boolean;
 }

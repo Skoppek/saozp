@@ -243,7 +243,7 @@ export default new Elysia({ prefix: '/problem' })
                 .post(
                     '/submission',
                     async ({ problem, userId, body, set }) => {
-                        if (body.userTests?.length) {
+                        if (!body.isCommit) {
                             await submissionRepository.deleteNonCommitSubmissoins(
                                 userId,
                                 problem.id,
@@ -255,7 +255,7 @@ export default new Elysia({ prefix: '/problem' })
                                 problemId: problem.id,
                                 userId,
                                 code: body.code,
-                                isCommit: !body.userTests,
+                                isCommit: body.isCommit,
                             })
                         ).at(0);
 
@@ -294,6 +294,7 @@ export default new Elysia({ prefix: '/problem' })
                                     }),
                                 ),
                             ),
+                            isCommit: t.Boolean(),
                         }),
                         response: t.Object({
                             submissionId: t.Number(),

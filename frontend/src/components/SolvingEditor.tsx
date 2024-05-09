@@ -50,14 +50,15 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
       apiClient
         .submitSolution(problem.problemId, {
           code: code,
-          userTests: isTest ? userTests : undefined,
+          userTests: undefined,
+          isCommit: !isTest,
         })
         .then(() => {
           setIsSubmitting(false);
           if (user) getSubmissions(user);
         });
     },
-    [code, getSubmissions, problem.problemId, user, userTests],
+    [code, getSubmissions, problem.problemId, user],
   );
 
   return (
@@ -89,6 +90,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
               color="warning"
               outline
               onClick={() => sendCode(true)}
+              disabled={!userTests.length}
             >
               {isSubmitting ? (
                 <Spinner aria-label="Extra large spinner" size="md" />

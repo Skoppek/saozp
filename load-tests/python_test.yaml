@@ -4,12 +4,15 @@ config:
   - name: warmup
     duration: 120
     arrivalRate: 1
+    maxVusers: 50
   - name: testing_phase
     duration: 1800
     arrivalRate: 5
+    maxVusers: 50
   - name: submitting
     duration: 300
     arrivalRate: 2
+    maxVusers: 50
  processor: './functions.js'
 scenarios:
  - flow:

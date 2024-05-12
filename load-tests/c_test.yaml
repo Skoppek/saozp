@@ -26,11 +26,13 @@ scenarios:
         json: '$.token'
         as: 'token'
     - loop:
-       - get:
-          url: '/submissions/{{ token }}'
-          capture:
-           - json: $.status.id
-             as: statusId
-           - json: $.stdout
-             as: stdout
+       - afterResponse: 'logStatus'
+         flow:
+          - get:
+             url: '/submissions/{{ token }}'
+             capture:
+              - json: $.status.id
+                as: statusId
+              - json: $.stdout
+                as: stdout
       whileTrue: 'isNotDone'

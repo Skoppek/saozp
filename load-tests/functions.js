@@ -4,6 +4,14 @@ function isNotDone(context, next) {
  return next(isStillProcessing);
 }
 
+function logStatus(context, events) {
+ const status = context.vars.statusId;
+ if (status > 2) {
+  events.emit('status', status);
+ }
+}
+
 module.exports = {
  isNotDone: isNotDone,
+ logStatus: logStatus,
 };

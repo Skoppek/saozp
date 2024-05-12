@@ -2,7 +2,7 @@ import { integer, pgTable } from 'drizzle-orm/pg-core';
 import { userSchema } from './userSchema';
 
 export const adminSchema = pgTable('admins', {
-    id: integer('id')
+    id: integer('user_id')
         .references(() => userSchema.id)
         .primaryKey(),
 });

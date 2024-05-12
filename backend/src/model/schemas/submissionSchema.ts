@@ -14,10 +14,10 @@ export const submissionSchema = pgTable(
     'submissions',
     {
         id: serial('id').primaryKey(),
-        problemId: integer('problemId')
+        problemId: integer('problem_id')
             .references(() => problemSchema.id)
             .notNull(),
-        userId: integer('userId')
+        userId: integer('user_id')
             .references(() => userSchema.id)
             .notNull(),
         code: text('code').notNull(),

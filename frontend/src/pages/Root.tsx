@@ -30,8 +30,22 @@ export const Root = () => {
       <AuthContext.Provider value={{ isLogged, setIsLogged: setLogged }}>
         <Navigation />
         {url.pathname === "/" && (
-          <div className="mt-[20vh] flex flex-col items-center">
-            <div className="font-sans text-9xl dark:text-zinc-50/80">SAOZP</div>
+          <div className="mt-[20vh] flex flex-col items-center gap-8">
+            <div className="font-sans text-2xl dark:text-zinc-50/80">
+              <pre>
+                <code>
+                  {[
+                    " ▒▓███████▓▒░  ▒▓██████▓▒░  ▒▓██████▓▒  ▒▓████████▓▒ ▒▓███████▓▒░",
+                    "░▒▓█▓▒░       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░       ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░ ",
+                    "░▒▓█▓▒░       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓   ▒▓██▓▒      ▓█▓▒░░  ▓█▓▒  ▒▓█▓▒░",
+                    " ░▒▓██████▓▒░ ▒▓████████▓▒ ▒▓█▓▒  ▒▓█▓▒░    ▒▓██▓▒░  ▒▓███████▓▒░",
+                    "       ░▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  ▒▓██▓▒░     ▓█▓▒░",
+                    "       ░▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░ ▓█▓▒        ▒▓█▓▒░",
+                    "░▒▓███████▓▒░ ▒▓█▓▒  ▒▓█▓▒ ░▒▓██████▓▒░ ▒▓████████▓▒ ▒▓█▓▒░",
+                  ].join("\n")}
+                </code>
+              </pre>
+            </div>
             <div className="text-2xl dark:text-zinc-50/30">
               System Automatycznej Oceny Zadań Programistycznych
             </div>

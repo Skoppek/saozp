@@ -1,8 +1,15 @@
 config:
  target: 'http://localhost:2358'
  phases:
-  - duration: 10
-    arrivalRate: 1000
+  - name: warmup
+    duration: 120
+    arrivalRate: 1
+  - name: testing_phase
+    duration: 1800
+    arrivalRate: 5
+  - name: submitting
+    duration: 300
+    arrivalRate: 2
  processor: './functions.js'
 scenarios:
  - flow:
@@ -11,7 +18,7 @@ scenarios:
        headers:
         Content-Type: 'application/json'
        json:
-        source_code: "print('Thank you for your cooperation.')"
+        source_code: "i=0\r\nfor x in range(1000000)\r\n\ti = i + x"
         language_id: 71
        capture:
         json: '$.token'

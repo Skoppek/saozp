@@ -10,7 +10,7 @@ function getRandomNumber(min, max) {
 
 function generateTestCase(context, events, done) {
  let randomNumbers = [];
- const numberOfRandomNumbers = 1_000;
+ const numberOfRandomNumbers = 1000;
  const minRandomNumber = 1;
  const maxRandomNumber = 100;
 
@@ -27,14 +27,14 @@ function generateTestCase(context, events, done) {
  return done();
 }
 
-function logStatus(context, events, done) {
- const status = context.vars.statusId;
- events.emit('status', status);
- return done();
-}
+// function logStatus(context, events, done) {
+//  const status = context.vars.statusId;
+//  events.emit('status', status);
+//  return done();
+// }
 
 module.exports = {
  isNotDone: isNotDone,
  generateTestCase,
- logStatus,
+ //  logStatus,
 };

@@ -49,6 +49,8 @@ bun run dev
 
 [Ikony do strony](https://react-icons.github.io/react-icons/icons/hi/)
 
-## TODO
+```bash
+docker-compose up -d --build --remove-orphans
+```
 
-- usuwanie starych testów własnych użytkownika (max 1 na problem, pozostałe powinny być tylko oficjalne próby)
+## TODO

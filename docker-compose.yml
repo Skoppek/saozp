@@ -1,86 +1,86 @@
 version: '3'
 
 x-logging: &default-logging
-    logging:
-        driver: json-file
-        options:
-            max-size: 100m
+ logging:
+  driver: json-file
+  options:
+   max-size: 100m
 
 services:
-    server:
-        image: judge0/judge0:1.13.0
-        volumes:
-            - ./judge0/judge0.conf:/judge0.conf:ro
-        ports:
-            - '2358:2358'
-        privileged: true
-        <<: *default-logging
-        restart: always
+ server:
+  image: judge0/judge0:1.13.0
+  volumes:
+   - ./judge0/judge0.conf:/judge0.conf:ro
+  ports:
+   - '2358:2358'
+  privileged: true
+  <<: *default-logging
+  restart: always
 
-    workers:
-        image: judge0/judge0:1.13.0
-        command: ['./scripts/workers']
-        volumes:
-            - ./judge0/judge0.conf:/judge0.conf:ro
-        privileged: true
-        <<: *default-logging
-        restart: always
+ workers:
+  image: judge0/judge0:1.13.0
+  command: ['./scripts/workers']
+  volumes:
+   - ./judge0/judge0.conf:/judge0.conf:ro
+  privileged: true
+  <<: *default-logging
+  restart: always
 
-    db:
-        image: postgres:13.0
-        env_file: ./judge0/judge0.conf
-        volumes:
-            - postgres-data:/var/lib/postgresql/data/
-        <<: *default-logging
-        restart: always
+ db:
+  image: postgres:13.0
+  env_file: ./judge0/judge0.conf
+  volumes:
+   - postgres-data:/var/lib/postgresql/data/
+  <<: *default-logging
+  restart: always
 
-    redis:
-        image: redis:6.0
-        command:
-            [
-                'bash',
-                '-c',
-                'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
-            ]
-        env_file: ./judge0/judge0.conf
-        volumes:
-            - redis-data:/data
-        <<: *default-logging
-        restart: always
+ redis:
+  image: redis:6.0
+  command:
+   [
+    'bash',
+    '-c',
+    'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
+   ]
+  env_file: ./judge0/judge0.conf
+  volumes:
+   - redis-data:/data
+  <<: *default-logging
+  restart: always
 
-    apidb:
-        image: postgres:latest
-        restart: always
-        ports:
-            - 5432:5432
-        environment:
-            - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=postgres
-        volumes:
-            - apidb:/var/lib/postgresql/data
-        networks:
-            - mynet
+ apidb:
+  image: postgres:latest
+  restart: always
+  ports:
+   - 5432:5432
+  environment:
+   - POSTGRES_USER=postgres
+   - POSTGRES_PASSWORD=postgres
+  volumes:
+   - apidb:/var/lib/postgresql/data
+  networks:
+   - mynet
 
-    # api:
-    #     build: ./backend
-    #     image: saozp-api
-    #     depends_on:
-    #         - db
-    #     networks:
-    #         - mynet
-    #     ports:
-    #         - '80:3000'
-    #     links:
-    #         - db
-    #     environment:
-    #         DB_CONNECTION_STRING: postgres://postgres:postgres@localhost:5432/postgres
+ api:
+  build: ./backend
+  image: saozp-api
+  depends_on:
+   - db
+  networks:
+   - mynet
+  ports:
+   - '80:3000'
+  links:
+   - db
+  environment:
+   DB_CONNECTION_STRING: postgres://postgres:postgres@172.19.0.2:5432/postgres
 
 networks:
-    mynet:
-        driver: bridge
+ mynet:
+  driver: bridge
 
 volumes:
-    postgres-data:
-    redis-data:
-    apidb:
-        driver: local
+ postgres-data:
+ redis-data:
+ apidb:
+  driver: local

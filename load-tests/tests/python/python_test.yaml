@@ -1,0 +1,37 @@
+config:
+ target: 'http://localhost:2358'
+ phases:
+  - name: warmup
+    duration: 120
+    arrivalRate: 1
+    maxVusers: 50
+  - name: testing_phase
+    duration: 1800
+    arrivalRate: 5
+    maxVusers: 50
+  - name: submitting
+    duration: 300
+    arrivalRate: 2
+    maxVusers: 50
+ processor: './functions.js'
+scenarios:
+ - flow:
+    - post:
+       url: '/submissions'
+       headers:
+        Content-Type: 'application/json'
+       json:
+        source_code: "i=0\r\nfor x in range(1000000)\r\n\ti = i + x"
+        language_id: 71
+       capture:
+        json: '$.token'
+        as: 'token'
+    - loop:
+       - get:
+          url: '/submissions/{{ token }}'
+          capture:
+           - json: $.status.id
+             as: statusId
+           - json: $.stdout
+             as: stdout
+      whileTrue: 'isNotDone'

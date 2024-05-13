@@ -4,14 +4,37 @@ function isNotDone(context, next) {
  return next(isStillProcessing);
 }
 
-function logStatus(context, events) {
- const status = context.vars.statusId;
- if (status > 2) {
-  events.emit('status', status);
+function getRandomNumber(min, max) {
+ return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function generateTestCase(context, events, done) {
+ let randomNumbers = [];
+ const numberOfRandomNumbers = 1_000;
+ const minRandomNumber = 1;
+ const maxRandomNumber = 100;
+
+ for (let i = 0; i < numberOfRandomNumbers; i++) {
+  let randomNumber = getRandomNumber(minRandomNumber, maxRandomNumber);
+  randomNumbers.push(randomNumber);
  }
+
+ context.vars['input'] = randomNumbers.join(' ');
+ context.vars['expected_output'] = randomNumbers
+  .sort((a, b) => a - b)
+  .join(' ');
+
+ return done();
+}
+
+function logStatus(context, events, done) {
+ const status = context.vars.statusId;
+ events.emit('status', status);
+ return done();
 }
 
 module.exports = {
  isNotDone: isNotDone,
- logStatus: logStatus,
+ generateTestCase,
+ logStatus,
 };

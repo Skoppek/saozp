@@ -6,8 +6,6 @@ import authController from './controller/authController';
 import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
 import profileController from './controller/profileController';
-import errorHandling from './controller/errorHandling';
-import cron from '@elysiajs/cron';
 
 const app = new Elysia({
     prefix: '/api',
@@ -16,7 +14,13 @@ const app = new Elysia({
         sign: ['session'],
     },
 })
-    .use(errorHandling)
+    .onError(({ code, set }) => {
+        if (code === 'NOT_FOUND') {
+            set.status = 404;
+
+            return 'Not Found :(';
+        }
+    })
     .use(
         cors({
             origin: true,

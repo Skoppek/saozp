@@ -56,24 +56,33 @@ services:
   environment:
    - POSTGRES_USER=postgres
    - POSTGRES_PASSWORD=postgres
+  healthcheck:
+   test: ['CMD-SHELL', 'pg_isready -U postgres']
+   interval: 1s
+   timeout: 5s
+   retries: 10
   volumes:
    - apidb:/var/lib/postgresql/data
+  expose:
+   - 5432
   networks:
    - mynet
 
  api:
   build: ./backend
   image: saozp-api
+  restart: always
   depends_on:
-   - db
+   apidb:
+    condition: service_healthy
   networks:
    - mynet
   ports:
-   - '80:3000'
+   - '127.0.0.1:3000:3000'
   links:
    - db
   environment:
-   DB_CONNECTION_STRING: postgres://postgres:postgres@172.19.0.2:5432/postgres
+   DB_CONNECTION_STRING: postgres://postgres:postgres@apidb:5432/postgres
 
 networks:
  mynet:

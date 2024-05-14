@@ -4,4 +4,8 @@ import { db, queryClient } from './db';
 
 await migrate(db, { migrationsFolder: './drizzle' });
 
-await queryClient.end();
+await queryClient
+    .end()
+    .catch(() =>
+        console.error('Exception thrown when closing migration connection'),
+    );

@@ -6,6 +6,8 @@ import authController from './controller/authController';
 import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
 import profileController from './controller/profileController';
+import errorHandling from './controller/errorHandling';
+import cron from '@elysiajs/cron';
 
 const app = new Elysia({
     prefix: '/api',
@@ -14,6 +16,7 @@ const app = new Elysia({
         sign: ['session'],
     },
 })
+    .use(errorHandling)
     .use(
         cors({
             origin: true,
@@ -25,7 +28,7 @@ const app = new Elysia({
                 'Access-Control-Allow-Credentials',
             ],
             credentials: true,
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            methods: ['GET', 'POST', 'DELETE'],
         }),
     )
     .use(
@@ -63,7 +66,6 @@ const app = new Elysia({
     .use(problemController)
     .use(submissionController)
     .use(adminsController)
-    .get('/', () => 'Healthcheck!')
     .listen(3000);
 
 export const server = app.server;

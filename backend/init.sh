@@ -1,5 +1,5 @@
 #! /bin/sh
 
-bunx drizzle-kit push:pg
+bunx drizzle-kit push
 
 bun src/index.ts

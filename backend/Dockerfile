@@ -1,4 +1,4 @@
-FROM imbios/bun-node:1.0.30-20-debian
+FROM imbios/bun-node
 
 WORKDIR /app
 

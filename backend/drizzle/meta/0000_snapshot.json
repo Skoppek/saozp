@@ -1,5 +1,5 @@
 {
-  "id": "a25a7ef4-9581-410f-982c-787ae6a86b21",
+  "id": "2425b66a-8c55-4b5b-9dd3-24b2d905ee0a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -194,14 +194,14 @@
           "primaryKey": true,
           "notNull": true
         },
-        "problemId": {
-          "name": "problemId",
+        "problem_id": {
+          "name": "problem_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "userId": {
-          "name": "userId",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -231,18 +231,18 @@
         "submission_user_id_idx": {
           "name": "submission_user_id_idx",
           "columns": [
-            "userId"
+            "user_id"
           ],
           "isUnique": false
         }
       },
       "foreignKeys": {
-        "submissions_problemId_problems_id_fk": {
-          "name": "submissions_problemId_problems_id_fk",
+        "submissions_problem_id_problems_id_fk": {
+          "name": "submissions_problem_id_problems_id_fk",
           "tableFrom": "submissions",
           "tableTo": "problems",
           "columnsFrom": [
-            "problemId"
+            "problem_id"
           ],
           "columnsTo": [
             "id"
@@ -250,12 +250,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "submissions_userId_users_id_fk": {
-          "name": "submissions_userId_users_id_fk",
+        "submissions_user_id_users_id_fk": {
+          "name": "submissions_user_id_users_id_fk",
           "tableFrom": "submissions",
           "tableTo": "users",
           "columnsFrom": [
-            "userId"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -315,8 +315,8 @@
       "name": "admins",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
+        "user_id": {
+          "name": "user_id",
           "type": "integer",
           "primaryKey": true,
           "notNull": true
@@ -324,12 +324,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "admins_id_users_id_fk": {
-          "name": "admins_id_users_id_fk",
+        "admins_user_id_users_id_fk": {
+          "name": "admins_user_id_users_id_fk",
           "tableFrom": "admins",
           "tableTo": "users",
           "columnsFrom": [
-            "id"
+            "user_id"
           ],
           "columnsTo": [
             "id"

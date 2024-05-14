@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1715285869939,
-      "tag": "0000_nasty_ma_gnuci",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1715531505383,
-      "tag": "0001_majestic_dark_phoenix",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1715531618754,
-      "tag": "0002_nostalgic_vindicator",
+      "when": 1715687930895,
+      "tag": "0000_purple_metal_master",
       "breakpoints": true
     }
   ]

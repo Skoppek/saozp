@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "submissions" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"problemId" integer NOT NULL,
-	"userId" integer NOT NULL,
+	"problem_id" integer NOT NULL,
+	"user_id" integer NOT NULL,
 	"code" text NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"is_commit" boolean DEFAULT false NOT NULL
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "admins" (
-	"id" integer PRIMARY KEY NOT NULL
+	"user_id" integer PRIMARY KEY NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tests" (
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS "tests" (
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_id_idx" ON "profiles" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "session_id_idx" ON "sessions" ("id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "submission_user_id_idx" ON "submissions" ("userId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "submission_user_id_idx" ON "submissions" ("user_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "email_idx" ON "users" ("email");--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "problems" ADD CONSTRAINT "problems_creator_id_users_id_fk" FOREIGN KEY ("creator_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
@@ -70,19 +70,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "submissions" ADD CONSTRAINT "submissions_problemId_problems_id_fk" FOREIGN KEY ("problemId") REFERENCES "problems"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "submissions" ADD CONSTRAINT "submissions_problem_id_problems_id_fk" FOREIGN KEY ("problem_id") REFERENCES "problems"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "submissions" ADD CONSTRAINT "submissions_userId_users_id_fk" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "submissions" ADD CONSTRAINT "submissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "admins" ADD CONSTRAINT "admins_id_users_id_fk" FOREIGN KEY ("id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "admins" ADD CONSTRAINT "admins_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -20,8 +20,8 @@ export default {
         `${SCHEMAS_PATH}/testSchema.ts`,
     ],
     out: './drizzle',
-    driver: 'pg',
+    dialect: 'postgresql',
     dbCredentials: {
-        connectionString: DB_CONNECTION_STRING,
+        url: DB_CONNECTION_STRING,
     },
 } satisfies Config;

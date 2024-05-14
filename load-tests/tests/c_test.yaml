@@ -4,7 +4,7 @@ config:
   expect: {}
  phases:
   - name: warmup
-    duration: 30
+    duration: 1000
     arrivalRate: 2
     maxVusers: 50
   # - name: testing_phase
@@ -16,11 +16,10 @@ config:
  variables:
   count:
    - 50
- processor: './functions.js'
+ processor: '../functions.js'
 scenarios:
  - flow:
     - function: 'generateTestCase'
-    # - log: '{{input}} -> {{expected_output}}'
     - post:
        url: '/submissions'
        headers:

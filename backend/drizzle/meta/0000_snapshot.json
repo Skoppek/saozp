@@ -1,10 +1,10 @@
 {
-  "id": "2425b66a-8c55-4b5b-9dd3-24b2d905ee0a",
+  "id": "cf71d884-eba0-4850-be17-8bf2447df41a",
   "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "problems": {
+    "public.problems": {
       "name": "problems",
       "schema": "",
       "columns": {
@@ -83,7 +83,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "profiles": {
+    "public.profiles": {
       "name": "profiles",
       "schema": "",
       "columns": {
@@ -133,7 +133,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "sessions": {
+    "public.sessions": {
       "name": "sessions",
       "schema": "",
       "columns": {
@@ -184,7 +184,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "submissions": {
+    "public.submissions": {
       "name": "submissions",
       "schema": "",
       "columns": {
@@ -267,7 +267,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -311,7 +311,7 @@
         }
       }
     },
-    "admins": {
+    "public.admins": {
       "name": "admins",
       "schema": "",
       "columns": {
@@ -341,7 +341,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "tests": {
+    "public.tests": {
       "name": "tests",
       "schema": "",
       "columns": {

@@ -14,6 +14,7 @@ const app = new Elysia({
         sign: ['session'],
     },
 })
+    .get('/', () => 0)
     .onError(({ code, set }) => {
         if (code === 'NOT_FOUND') {
             set.status = 404;
@@ -32,7 +33,7 @@ const app = new Elysia({
                 'Access-Control-Allow-Credentials',
             ],
             credentials: true,
-            methods: ['GET', 'POST', 'DELETE'],
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
         }),
     )
     .use(

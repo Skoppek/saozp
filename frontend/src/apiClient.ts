@@ -34,7 +34,8 @@ const axiosConfig = {
 };
 
 const axiosInstance = axios;
-axiosInstance.defaults.baseURL = `http://localhost:80`;
+axiosInstance.defaults.baseURL =
+  process.env.SAOZP_BACKEND_URL ?? "http://localhost:3000";
 
 const registerUser = (newUserInfo: LoginCredentials & Profile) => {
   return axiosInstance.post(`api/sign-up`, newUserInfo, axiosConfig);

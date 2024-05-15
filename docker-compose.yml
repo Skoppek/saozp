@@ -75,6 +75,12 @@ services:
   depends_on:
    apidb:
     condition: service_healthy
+  healthcheck:
+   test: curl --fail http://localhost:3000/api || exit 1
+   interval: 30s
+   timeout: 30s
+   start_period: 5s
+   retries: 3
   networks:
    - mynet
   ports:
@@ -83,6 +89,22 @@ services:
    - db
   environment:
    DB_CONNECTION_STRING: postgres://postgres:postgres@apidb:5432/postgres
+
+ frontend:
+  build: ./frontend
+  image: saozp-app
+  restart: always
+  depends_on:
+   api:
+    condition: service_healthy
+  networks:
+   - mynet
+  ports:
+   - '127.0.0.1:3001:5173'
+  links:
+   - api
+  environment:
+   SAOZP_BACKEND_URL: api
 
 networks:
  mynet:

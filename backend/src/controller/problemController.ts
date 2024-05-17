@@ -101,6 +101,8 @@ export default new Elysia({ prefix: '/problem' })
                         description: problem.problems.description,
                         languageId: problem.problems.languageId,
                         creator: problem.profiles ?? undefined,
+                        activeAfter: problem.problems.activeAfter,
+                        isDeactivated: problem.problems.isDeactivated,
                     };
                 });
         },
@@ -121,6 +123,8 @@ export default new Elysia({ prefix: '/problem' })
                             lastName: t.String(),
                         }),
                     ),
+                    activeAfter: t.Date(),
+                    isDeactivated: t.Boolean(),
                 }),
             ),
         },

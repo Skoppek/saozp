@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { db } from '../model/db/db';
 import {
     NewProblem,
@@ -23,7 +23,8 @@ const getProblems = async () => {
         .leftJoin(
             profileSchema,
             eq(problemSchema.creator, profileSchema.userId),
-        );
+        )
+        .where(eq(problemSchema.isDeactivated, false));
 };
 
 const getProblemById = async (
@@ -33,7 +34,12 @@ const getProblemById = async (
         await db
             .select()
             .from(problemSchema)
-            .where(eq(problemSchema.id, problemId))
+            .where(
+                and(
+                    eq(problemSchema.id, problemId),
+                    eq(problemSchema.isDeactivated, false),
+                ),
+            )
     ).at(0);
 };
 

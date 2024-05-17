@@ -1,4 +1,4 @@
-FROM oven/bun
+FROM imbios/bun-node
 
 WORKDIR /app
 
@@ -19,6 +19,6 @@ ENV NODE_ENV production
 
 RUN bun run build
 
-CMD ["bun", "run", "preview"]
+CMD ["bun", "run", "preview", "--host"]
 
 EXPOSE 5173

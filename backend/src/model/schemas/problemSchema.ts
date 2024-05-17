@@ -1,12 +1,13 @@
+import { pgTable } from 'drizzle-orm/pg-core/table';
 import {
     boolean,
     integer,
     json,
-    pgTable,
     serial,
     text,
+    timestamp,
     varchar,
-} from 'drizzle-orm/pg-core';
+} from 'drizzle-orm/pg-core/columns';
 import { userSchema } from './userSchema';
 
 export const problemSchema = pgTable('problems', {
@@ -27,6 +28,7 @@ export const problemSchema = pgTable('problems', {
         >()
         .notNull(),
     baseCode: text('base_code').notNull(),
+    activeAfter: timestamp('unlockAfter').notNull().defaultNow(),
     isDeactivated: boolean('deactivated').notNull().default(false),
 });
 

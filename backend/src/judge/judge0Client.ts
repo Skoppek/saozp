@@ -1,9 +1,13 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
-const judge0Url = `${Bun.env.JUDGE0_HOST}:${Bun.env.JUDGE0_PORT}`;
+const judge0Url = `http://${Bun.env.JUDGE0_HOST}:${Bun.env.JUDGE0_PORT}`;
+
+const axiosConfig = {
+    proxy: false,
+} satisfies AxiosRequestConfig;
 
 const getAbout = async () => {
-    return await axios.get(`${judge0Url}/about`);
+    return await axios.get(`${judge0Url}/about`, axiosConfig);
 };
 
 const submit = async ({
@@ -28,9 +32,13 @@ const submit = async ({
         callback_url: callbackUrl,
     };
 
-    const res = await axios.post(`${judge0Url}/submissions`, {
-        ...submission,
-    });
+    const res = await axios.post(
+        `${judge0Url}/submissions`,
+        {
+            ...submission,
+        },
+        axiosConfig,
+    );
 
     if (!res.data || !('token' in res.data)) {
         throw new Error('Submission failure. Token not received.');
@@ -58,7 +66,8 @@ const isLanguageDetail = (suspect: unknown): suspect is LanguageDetail => {
 const getLanguageById = async (
     id: number,
 ): Promise<LanguageDetail | undefined> => {
-    const body = (await axios.get(`${judge0Url}/languages/${id}`)).data;
+    const body = (await axios.get(`${judge0Url}/languages/${id}`, axiosConfig))
+        .data;
 
     return isLanguageDetail(body)
         ? {
@@ -147,6 +156,7 @@ const isSubmissionBatch = (suspect: unknown): suspect is SubmissionBatch => {
 const getSubmissionBatch = async (tokens: string[]) => {
     return await axios
         .get(`${judge0Url}/submissions/batch`, {
+            ...axiosConfig,
             params: {
                 tokens: tokens.join(','),
                 fields: fields.join(','),
@@ -161,7 +171,12 @@ const getSubmissionBatch = async (tokens: string[]) => {
                 );
             }
         })
-        .catch(() => {
+        .catch((error) => {
+            if (!error.response) {
+                console.log('Error: Network Error');
+            } else {
+                console.log(error.response.data.message);
+            }
             return { submissions: [] };
         });
 };

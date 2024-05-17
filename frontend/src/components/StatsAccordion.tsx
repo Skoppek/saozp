@@ -21,9 +21,13 @@ export const StatsAccordion = ({ submission }: StatsAccordionProps) => {
 
   useEffect(() => {
     if (isOpen && !details) {
-      apiClient.getSubmissionById(submission.submissionId).then((data) => {
-        setDetails(data);
-      });
+      console.log("deeee");
+      apiClient
+        .getSubmissionById(submission.submissionId)
+        .then((data) => {
+          setDetails(data);
+        })
+        .catch(() => console.log("co do kurwy"));
     }
   }, [details, isOpen, submission.submissionId]);
 

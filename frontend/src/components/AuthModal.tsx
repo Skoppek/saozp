@@ -78,8 +78,8 @@ export const AuthModal = ({
         setHasAccount(true);
       })
       .catch((error) => {
-        const status = error.response.status;
-        if (status === 409) setIsEmailTaken(true);
+        if (error.response.status ?? error.response.status === 409)
+          setIsEmailTaken(true);
         setIsWaiting(false);
       });
   }, [email, firstName, lastName, password]);

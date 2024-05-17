@@ -35,7 +35,7 @@ const axiosConfig = {
 
 const axiosInstance = axios;
 axiosInstance.defaults.baseURL =
-  process.env.SAOZP_BACKEND_URL ?? "http://localhost:3000";
+  import.meta.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000";
 
 const registerUser = (newUserInfo: LoginCredentials & Profile) => {
   return axiosInstance.post(`api/sign-up`, newUserInfo, axiosConfig);
@@ -118,7 +118,6 @@ const getSubmissionById = (submissionId: number) => {
   return axiosInstance
     .get(`api/submissions/${submissionId}`, axiosConfig)
     .then((response) => {
-      console.log(response.data);
       if (isSubmission(response.data)) {
         return response.data;
       } else {

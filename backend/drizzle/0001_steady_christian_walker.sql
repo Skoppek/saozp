@@ -1,0 +1,1 @@
+ALTER TABLE "problems" ADD COLUMN "unlockAfter" timestamp DEFAULT now() NOT NULL;

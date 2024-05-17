@@ -37,7 +37,9 @@ export const isProblemEntry = (suspect: unknown): suspect is ProblemEntry => {
     suspect.creator !== null &&
     isUser(suspect.creator) &&
     "description" in suspect &&
-    typeof suspect.description === "string"
+    typeof suspect.description === "string" &&
+    "activeAfter" in suspect &&
+    typeof suspect.activeAfter === "string"
   );
 };
 
@@ -76,6 +78,8 @@ export const isProblem = (suspect: unknown): suspect is Problem => {
     typeof suspect.languageId === "number" &&
     "baseCode" in suspect &&
     typeof suspect.baseCode === "string" &&
+    "activeAfter" in suspect &&
+    typeof suspect.activeAfter === "string" &&
     "creatorId" in suspect &&
     typeof suspect.creatorId === "number" &&
     "tests" in suspect &&

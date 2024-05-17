@@ -64,6 +64,7 @@ export default new Elysia({ prefix: '/problem' })
                 languageId: body.languageId,
                 tests: body.tests,
                 baseCode: body.baseCode,
+                activeAfter: body.activeAfter,
             });
             if (!newProblem) {
                 set.status = 500;
@@ -86,6 +87,7 @@ export default new Elysia({ prefix: '/problem' })
                         expected: t.String(),
                     }),
                 ),
+                activeAfter: t.Date(),
             }),
         },
     )
@@ -102,7 +104,6 @@ export default new Elysia({ prefix: '/problem' })
                         languageId: problem.problems.languageId,
                         creator: problem.profiles ?? undefined,
                         activeAfter: problem.problems.activeAfter,
-                        isDeactivated: problem.problems.isDeactivated,
                     };
                 });
         },
@@ -124,7 +125,6 @@ export default new Elysia({ prefix: '/problem' })
                         }),
                     ),
                     activeAfter: t.Date(),
-                    isDeactivated: t.Boolean(),
                 }),
             ),
         },
@@ -167,6 +167,7 @@ export default new Elysia({ prefix: '/problem' })
                                     : problem.baseCode,
                             creatorId: problem.creator,
                             tests: problem.tests,
+                            activeAfter: problem.activeAfter,
                         };
                     },
                     {
@@ -187,6 +188,7 @@ export default new Elysia({ prefix: '/problem' })
                                     expected: t.String(),
                                 }),
                             ),
+                            activeAfter: t.Date(),
                         }),
                         query: t.Object({
                             solve: t.Optional(t.String()),

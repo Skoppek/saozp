@@ -10,6 +10,7 @@ import { NewProblem, Problem } from "../../shared/interfaces";
 import { ALL_LANGUAGES, getLanguageById } from "../../shared/constansts";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
+import { Datepicker } from "flowbite-react";
 
 interface ProblemEditorProps {
   problem?: Problem;
@@ -24,6 +25,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
       prompt: "",
       tests: [],
       languageId: ALL_LANGUAGES[0].id,
+      activeAfter: new Date(),
     },
   );
   const [isCreating, setIsCreating] = useState<boolean>(false);
@@ -95,44 +97,60 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           chosenLanguage={getLanguageById(problem?.languageId ?? 0)}
           showEditTips={true}
         />
-        <Button
-          onClick={() => {
-            setIsCreating(true);
-            problem
-              ? apiClient
-                  .updateProblemById(problem.problemId, {
-                    name: newProblem.name,
-                    prompt: newProblem.prompt,
-                    description: newProblem.description,
-                    baseCode: newProblem.baseCode,
-                    languageId: newProblem.languageId,
-                    tests: newProblem.tests,
-                  })
-                  .then(() => {
-                    navigate("/problems");
-                  })
-              : apiClient
-                  .createProblem({
-                    name: newProblem.name,
-                    prompt: newProblem.prompt,
-                    description: newProblem.description,
-                    baseCode: newProblem.baseCode,
-                    languageId: newProblem.languageId,
-                    tests: newProblem.tests,
-                  })
-                  .then(() => {
-                    navigate("/problems");
-                  });
-          }}
-        >
-          {isCreating ? (
-            <Spinner aria-label="Spinner" />
-          ) : problem ? (
-            "Modyfikuj"
-          ) : (
-            "Dodaj"
-          )}
-        </Button>
+        <div className="flex w-full gap-2">
+          <Button
+            className="w-1/2"
+            onClick={() => {
+              setIsCreating(true);
+              problem
+                ? apiClient
+                    .updateProblemById(problem.problemId, {
+                      name: newProblem.name,
+                      prompt: newProblem.prompt,
+                      description: newProblem.description,
+                      baseCode: newProblem.baseCode,
+                      languageId: newProblem.languageId,
+                      tests: newProblem.tests,
+                    })
+                    .then(() => {
+                      navigate("/problems");
+                    })
+                : apiClient
+                    .createProblem({
+                      name: newProblem.name,
+                      prompt: newProblem.prompt,
+                      description: newProblem.description,
+                      baseCode: newProblem.baseCode,
+                      languageId: newProblem.languageId,
+                      tests: newProblem.tests,
+                      activeAfter: newProblem.activeAfter,
+                    })
+                    .then(() => {
+                      navigate("/problems");
+                    });
+            }}
+          >
+            {isCreating ? (
+              <Spinner aria-label="Spinner" />
+            ) : problem ? (
+              "Modyfikuj"
+            ) : (
+              "Dodaj"
+            )}
+          </Button>
+          <Datepicker
+            id={"activeAfter"}
+            onSelectedDateChanged={(date) =>
+              setNewProblem((prev) => {
+                return { ...prev, activeAfter: date };
+              })
+            }
+            language="pl-pl"
+            showTodayButton={false}
+            labelClearButton="Dzisiaj"
+            className="w-1/2"
+          />
+        </div>
         {problem && (
           <Button
             color={"failure"}

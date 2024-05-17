@@ -24,10 +24,14 @@ export interface Problem {
   prompt: string;
   baseCode: string;
   tests: TestCase[];
+  activeAfter: Date;
 }
 
 export interface ProblemEntry
-  extends Pick<Problem, "problemId" | "name" | "description" | "languageId"> {
+  extends Pick<
+    Problem,
+    "problemId" | "name" | "description" | "languageId" | "activeAfter"
+  > {
   creator: User;
 }
 

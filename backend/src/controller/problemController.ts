@@ -207,6 +207,7 @@ export default new Elysia({ prefix: '/problem' })
                                     languageId: body.languageId,
                                     baseCode: body.baseCode,
                                     tests: body.tests,
+                                    activeAfter: body.activeAfter,
                                 },
                             );
                         if (!updatedProblem) {
@@ -232,6 +233,7 @@ export default new Elysia({ prefix: '/problem' })
                                     }),
                                 ),
                             ),
+                            activeAfter: t.Date(),
                         }),
                     },
                 )

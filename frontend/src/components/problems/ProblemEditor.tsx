@@ -111,6 +111,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
                       baseCode: newProblem.baseCode,
                       languageId: newProblem.languageId,
                       tests: newProblem.tests,
+                      activeAfter: newProblem.activeAfter,
                     })
                     .then(() => {
                       navigate("/problems");
@@ -149,6 +150,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             showTodayButton={false}
             labelClearButton="Dzisiaj"
             className="w-1/2"
+            defaultDate={new Date(newProblem.activeAfter)}
           />
         </div>
         {problem && (

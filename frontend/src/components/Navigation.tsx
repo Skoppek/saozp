@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from "react";
 import { User } from "../shared/interfaces/User";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { AuthModal } from "./AuthModal";
+import { FaBoltLightning } from "react-icons/fa6";
 
 export const Navigation = () => {
   const [user, setUser] = useState<User | undefined>();
@@ -56,7 +57,14 @@ export const Navigation = () => {
         </Navbar.Collapse>
         <Navbar.Collapse>
           {!!user && (
-            <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
+            <div className="flex gap-2">
+              <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
+              {user.isAdmin && (
+                <div className="place-content-center text-2xl text-amber-400">
+                  <FaBoltLightning />
+                </div>
+              )}
+            </div>
           )}
           {user ? (
             !isLoggingOut ? (

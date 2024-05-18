@@ -2,6 +2,7 @@ export interface User {
   userId: number;
   firstName: string;
   lastName: string;
+  isAdmin?: true;
 }
 
 export const isUser = (suspect: unknown): suspect is User => {

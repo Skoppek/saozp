@@ -2,10 +2,12 @@ import { Elysia } from 'elysia';
 import { swagger } from '@elysiajs/swagger';
 import problemController from './controller/problemController';
 import submissionController from './controller/submissionController';
-import authController from './controller/authController';
+import authController, { registerUser } from './controller/authController';
 import adminsController from './controller/adminsController';
 import cors from '@elysiajs/cors';
 import profileController from './controller/profileController';
+import userRepository from './repository/userRepository';
+import profileRepository from './repository/profileRepository';
 
 const app = new Elysia({
     prefix: '/api',
@@ -74,6 +76,50 @@ const app = new Elysia({
 
 export const server = app.server;
 
-app.listen(3000);
+const initAdmin = async () => {
+    const adminCredentials = {
+        login: Bun.env.ADMIN_LOGIN as string,
+        password: Bun.env.ADMIN_PASSWORD as string,
+        firstName: Bun.env.ADMIN_FIRST_NAME as string,
+        lastName: Bun.env.ADMIN_LAST_NAME as string,
+    };
 
-console.log(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+    if (Object.values(adminCredentials).find((value) => value === undefined)) {
+        throw new Error('Admin credentials not complete in env variables!');
+    }
+
+    const adminAccount = await userRepository.getUserByLogin(
+        adminCredentials.login,
+    );
+
+    if (adminAccount) return;
+
+    console.log('Admin user not registered. Creating ...');
+
+    const adminUser = await registerUser(
+        adminCredentials.login,
+        adminCredentials.password,
+    );
+
+    if (!adminUser?.id) {
+        throw new Error('Admin creation fail! Aborting.');
+    }
+
+    await profileRepository.createProfile({
+        userId: adminUser.id,
+        firstName: adminCredentials.firstName,
+        lastName: adminCredentials.lastName,
+    });
+
+    console.log(
+        `Admin ${adminCredentials.firstName} ${adminCredentials.lastName} created`,
+    );
+};
+
+try {
+    await initAdmin();
+    app.listen(3000);
+    console.log(
+        `Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+    );
+} catch (error) {}

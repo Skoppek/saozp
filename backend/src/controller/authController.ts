@@ -4,6 +4,15 @@ import userRepository from '../repository/userRepository';
 import sessionRepository from '../repository/sessionRepository';
 import profileRepository from '../repository/profileRepository';
 
+export const registerUser = async (login: string, password: string) => {
+    const passwordHash = Bun.password.hashSync(password);
+
+    return await userRepository.createUser({
+        login,
+        password: passwordHash,
+    });
+};
+
 export default new Elysia()
     .post(
         '/sign-up',
@@ -16,12 +25,7 @@ export default new Elysia()
                 throw new Error('User with this email already exists!');
             }
 
-            const passwordHash = Bun.password.hashSync(password);
-
-            const newUser = await userRepository.createUser({
-                login,
-                password: passwordHash,
-            });
+            const newUser = await registerUser(login, password);
 
             if (!newUser || !newUser.id) {
                 set.status = 500;

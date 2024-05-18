@@ -4,12 +4,16 @@ import userRepository from '../repository/userRepository';
 import sessionRepository from '../repository/sessionRepository';
 import profileRepository from '../repository/profileRepository';
 
+const getSaltedPassword = (password: string) => {
+    return password + Bun.env.PASSWORD_SALT ?? '';
+};
+
 export const registerUser = async (login: string, password: string) => {
-    const passwordHash = Bun.password.hashSync(password);
+    const hash = Bun.password.hashSync(getSaltedPassword(password));
 
     return await userRepository.createUser({
         login,
-        password: passwordHash,
+        password: hash,
     });
 };
 
@@ -83,7 +87,12 @@ export default new Elysia()
                 throw new Error('User not found!');
             }
 
-            if (!Bun.password.verifySync(password, user.password)) {
+            if (
+                !Bun.password.verifySync(
+                    getSaltedPassword(password),
+                    user.password,
+                )
+            ) {
                 set.status = 401;
                 throw new Error('Unauthenticated');
             }

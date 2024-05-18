@@ -1,5 +1,8 @@
 import { getLanguageById } from "../shared/constansts";
-import { Problem, SubmissionEntry, TestCase, User } from "../shared/interfaces";
+import { TestCase } from "../shared/interfaces/TestCase";
+import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
+import { User } from "../shared/interfaces/User";
+import { Problem } from "../shared/interfaces/Problem";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useEffect, useState } from "react";

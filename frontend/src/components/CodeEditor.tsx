@@ -1,8 +1,8 @@
-import { ClassName } from "../shared/interfaces";
+import { ClassName } from "../shared/interfaces/ClassName";
 import { Editor } from "@monaco-editor/react";
 import { useState } from "react";
 import { LanguageId } from "../shared/enums";
-import { Language } from "../shared/interfaces";
+import { Language } from "../shared/interfaces/Language";
 import { LanguageSelect } from "./LanguageSelect";
 import { Badge } from "flowbite-react/components/Badge";
 import { HiOutlineInformationCircle } from "react-icons/hi";

@@ -1,5 +1,5 @@
 import { LanguageId } from "./enums";
-import { Language } from "./interfaces";
+import { Language } from "./interfaces/Language";
 
 export const UNKNOWN_LANGUAGE: Language = {
   id: LanguageId.UNKNOWN,
@@ -24,26 +24,26 @@ export const ALL_LANGUAGES: Language[] = [
     name: "C++",
     monacoForm: "cpp",
   },
-  {
-    id: LanguageId.CS,
-    name: "C#",
-    monacoForm: "cs",
-  },
+  // {
+  //   id: LanguageId.CS,
+  //   name: "C#",
+  //   monacoForm: "cs",
+  // },
   {
     id: LanguageId.JAVA_13,
     name: "Java 13",
     monacoForm: "java",
   },
-  {
-    id: LanguageId.JAVASCRIPT_NODE_12_14,
-    name: "JavaScript",
-    monacoForm: "javascript",
-  },
-  {
-    id: LanguageId.TYPESCRIPT_3_7_4,
-    name: "TypeScript 3.7",
-    monacoForm: "typescript",
-  },
+  // {
+  //   id: LanguageId.JAVASCRIPT_NODE_12_14,
+  //   name: "JavaScript",
+  //   monacoForm: "javascript",
+  // },
+  // {
+  //   id: LanguageId.TYPESCRIPT_3_7_4,
+  //   name: "TypeScript 3.7",
+  //   monacoForm: "typescript",
+  // },
 ];
 
 export const getLanguageById = (languageId: number) => {

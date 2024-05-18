@@ -1,4 +1,4 @@
-import { ProblemEntry } from "../../shared/interfaces";
+import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { Badge } from "flowbite-react/components/Badge";
 import { LinkButton } from "../LinkButton";
 import { getLanguageById } from "../../shared/constansts";

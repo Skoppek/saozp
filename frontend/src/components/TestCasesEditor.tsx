@@ -1,4 +1,4 @@
-import { TestCase } from "../shared/interfaces";
+import { TestCase } from "../shared/interfaces/TestCase";
 import { TextInput } from "./TextInput";
 import { useMemo, useState } from "react";
 import { Badge, Button, Popover } from "flowbite-react";

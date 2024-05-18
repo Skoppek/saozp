@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { ProblemsFilter, User } from "../../shared/interfaces";
-import { ProblemEntry } from "../../shared/interfaces";
+import { ProblemFilter } from "../../shared/interfaces/Problem";
+import { User } from "../../shared/interfaces/User";
+import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { ProblemCard } from "./ProblemCard";
 import apiClient from "../../apiClient";
 import { LanguageId } from "../../shared/enums";
 
 interface ProblemsGalleryProps {
   problems: ProblemEntry[];
-  filter: ProblemsFilter;
+  filter: ProblemFilter;
 }
 
 export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {

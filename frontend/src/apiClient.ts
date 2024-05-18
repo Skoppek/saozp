@@ -1,13 +1,12 @@
 import axios from "axios";
-import { NewProblem, Problem, TestCase } from "./shared/interfaces";
-import {
-  isProblem,
-  isProblemsEntryArray,
-  isSubmission,
-  isSubmissionEntryArray,
-  isUser,
-} from "./shared/typeGuards";
-import { NewSubmission } from "./shared/interfaces";
+import { NewProblem } from "./shared/interfaces/Problem";
+import { TestCase } from "./shared/interfaces/TestCase";
+import { Problem } from "./shared/interfaces/Problem";
+import { isProblemsEntryArray } from "./shared/interfaces/ProblemEntry";
+import { isSubmissionEntryArray } from "./shared/interfaces/SubmissionEntry";
+import { isSubmission } from "./shared/interfaces/Submission";
+import { isUser } from "./shared/interfaces/User";
+import { isProblem } from "./shared/interfaces/Problem";
 
 interface LoginCredentials {
   email: string;
@@ -125,6 +124,12 @@ const getSubmissionById = (submissionId: number) => {
       }
     });
 };
+
+interface NewSubmission {
+  code: string;
+  userTests?: TestCase[];
+  isCommit: boolean;
+}
 
 const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
   return axiosInstance.post(

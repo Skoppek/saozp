@@ -1,4 +1,4 @@
-import { TestCaseResult } from "../shared/interfaces";
+import { TestCaseResult } from "../shared/interfaces/TestCaseResult";
 import { TestResultLine } from "./TestResultLine";
 
 interface TestResultListProps {

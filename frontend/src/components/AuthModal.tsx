@@ -5,7 +5,7 @@ import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { User } from "../shared/interfaces";
+import { User } from "../shared/interfaces/User";
 
 interface AuthModalProps {
   onLogin: (user?: User) => void;

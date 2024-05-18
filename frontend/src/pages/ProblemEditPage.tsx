@@ -3,7 +3,7 @@ import { ProblemEditor } from "../components/problems/ProblemEditor";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
-import { Problem } from "../shared/interfaces";
+import { Problem } from "../shared/interfaces/Problem";
 import { Spinner } from "flowbite-react/components/Spinner";
 
 export const ProblemEditPage = () => {

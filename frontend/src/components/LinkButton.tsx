@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from "flowbite-react/components/Button";
 import { Link } from "react-router-dom";
-import { ClassName } from "../shared/interfaces";
+import { ClassName } from "../shared/interfaces/ClassName";
 
 interface LinkButtonProps extends ClassName {
   to: string;

@@ -1,5 +1,5 @@
 import { Select } from "flowbite-react/components/Select";
-import { Language } from "../shared/interfaces";
+import { Language } from "../shared/interfaces/Language";
 import { Label } from "flowbite-react/components/Label";
 
 interface LanguageSelectProps {

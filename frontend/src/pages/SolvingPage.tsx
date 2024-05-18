@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
-import { Problem } from "../shared/interfaces";
+import { Problem } from "../shared/interfaces/Problem";
 import { SolvingEditor } from "../components/SolvingEditor";
 import { Spinner } from "flowbite-react/components/Spinner";
 

@@ -1,5 +1,5 @@
 import { Badge } from "flowbite-react/components/Badge";
-import { SubmissionEntry } from "../../shared/interfaces";
+import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { STATUS_COLORS, STATUS_NAMES, TestStatus } from "../../shared/enums";
 import { HiFlag } from "react-icons/hi";
 

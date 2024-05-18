@@ -1,6 +1,6 @@
 import { Label } from "flowbite-react/components/Label";
 import { TextInput as FlowBiteTextInput } from "flowbite-react/components/TextInput";
-import { ClassName } from "../shared/interfaces";
+import { ClassName } from "../shared/interfaces/ClassName";
 import { ReactNode } from "react";
 
 interface TextInputProps extends ClassName {

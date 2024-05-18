@@ -3,7 +3,7 @@ import { Button } from "flowbite-react/components/Button";
 import { Label } from "flowbite-react/components/Label";
 import { MarkdownCard } from "./MarkdownCard";
 import { Textarea } from "flowbite-react/components/Textarea";
-import { ClassName } from "../../shared/interfaces";
+import { ClassName } from "../../shared/interfaces/ClassName";
 
 interface MarkdownEditorProps extends ClassName {
   markdown?: string;

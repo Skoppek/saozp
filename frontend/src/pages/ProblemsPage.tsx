@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { ProblemEntry, ProblemsFilter } from "../shared/interfaces";
+import { ProblemFilter } from "../shared/interfaces/Problem";
+import { ProblemEntry } from "../shared/interfaces/ProblemEntry";
 import apiClient from "../apiClient";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { ProblemsGallery } from "../components/problems/ProblemsGallery";
@@ -12,7 +13,7 @@ import { ToggleSwitch } from "flowbite-react";
 
 export const ProblemsPage = () => {
   const [problems, setProblems] = useState<ProblemEntry[]>();
-  const [filter, setFilter] = useState<ProblemsFilter>({});
+  const [filter, setFilter] = useState<ProblemFilter>({});
 
   useEffect(() => {
     apiClient.getAllProblems().then((entires) => {

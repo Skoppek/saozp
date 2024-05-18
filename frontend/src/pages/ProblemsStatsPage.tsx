@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Problem, ProblemsFilter, SubmissionEntry } from "../shared/interfaces";
+import { ProblemFilter } from "../shared/interfaces/Problem";
+import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
+import { Problem } from "../shared/interfaces/Problem";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import apiClient from "../apiClient";
 import { useNavigate, useParams } from "react-router-dom";
@@ -13,7 +15,7 @@ export const ProblemStatsPage = () => {
   const [submissions, setSubmissions] = useState<SubmissionEntry[]>([]);
   const [problem, setProblem] = useState<Problem>();
   const navigate = useNavigate();
-  const [filter, setFilter] = useState<ProblemsFilter>({});
+  const [filter, setFilter] = useState<ProblemFilter>({});
   const [fromDate, setFromDate] = useState<Date>();
   const [toDate, setToDate] = useState<Date>(new Date());
 

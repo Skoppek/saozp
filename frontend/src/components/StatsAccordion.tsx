@@ -2,7 +2,8 @@ import {
   Accordion,
   AccordionContent,
 } from "flowbite-react/components/Accordion";
-import { Submission, SubmissionEntry } from "../shared/interfaces";
+import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
+import { Submission } from "../shared/interfaces/Submission";
 import { useEffect, useState } from "react";
 import apiClient from "../apiClient";
 import { CodeEditor } from "./CodeEditor";

@@ -8,6 +8,7 @@ import cors from '@elysiajs/cors';
 import profileController from './controller/profileController';
 import userRepository from './repository/userRepository';
 import profileRepository from './repository/profileRepository';
+import adminRepository from './repository/adminRepository';
 
 const app = new Elysia({
     prefix: '/api',
@@ -104,6 +105,8 @@ const initAdmin = async () => {
     if (!adminUser?.id) {
         throw new Error('Admin creation fail! Aborting.');
     }
+
+    adminRepository.addToAdmins(adminUser.id);
 
     await profileRepository.createProfile({
         userId: adminUser.id,

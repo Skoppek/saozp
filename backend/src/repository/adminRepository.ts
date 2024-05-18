@@ -8,12 +8,12 @@ const addToAdmins = async (userId: number): Promise<NewAdmin | undefined> => {
     );
 };
 
-const isAdmin = async (userId: number): Promise<boolean> => {
+const isAdmin = async (userId: number) => {
     return (
         await db.select().from(adminSchema).where(eq(adminSchema.id, userId))
     ).length
         ? true
-        : false;
+        : undefined;
 };
 
 const revokeAdmin = async (userId: number) => {

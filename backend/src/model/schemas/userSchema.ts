@@ -6,11 +6,11 @@ export const userSchema = pgTable(
     'users',
     {
         id: serial('id').primaryKey(),
-        email: varchar('email', { length: 256 }).unique().notNull(),
+        login: varchar('login', { length: 256 }).unique().notNull(),
         password: varchar('password', { length: 128 }).notNull(),
     },
     (users) => ({
-        emailIdx: index('email_idx').on(users.email),
+        emailIdx: index('login_idx').on(users.login),
     }),
 );
 

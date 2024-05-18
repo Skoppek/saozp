@@ -9,7 +9,7 @@ import { isUser } from "./shared/interfaces/User";
 import { isProblem } from "./shared/interfaces/Problem";
 
 interface LoginCredentials {
-  email: string;
+  login: string;
   password: string;
 }
 
@@ -36,11 +36,11 @@ const axiosInstance = axios;
 axiosInstance.defaults.baseURL =
   import.meta.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000";
 
-const registerUser = (newUserInfo: LoginCredentials & Profile) => {
+const signUp = (newUserInfo: LoginCredentials & Profile) => {
   return axiosInstance.post(`api/sign-up`, newUserInfo, axiosConfig);
 };
 
-const loginUser = (credentials: LoginCredentials) => {
+const signIn = (credentials: LoginCredentials) => {
   return axiosInstance.post(`api/sign-in`, credentials, axiosConfig);
 };
 
@@ -150,8 +150,8 @@ const getUserOfCurrentSession = () => {
 };
 
 export default {
-  registerUser,
-  loginUser,
+  signUp,
+  signIn,
   logout,
   isLoggedIn,
   createProblem,

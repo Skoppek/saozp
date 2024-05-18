@@ -1,6 +1,5 @@
 import { Elysia, t } from 'elysia';
 import { cron } from '@elysiajs/cron';
-import * as EmailValidator from 'email-validator';
 import userRepository from '../repository/userRepository';
 import sessionRepository from '../repository/sessionRepository';
 import profileRepository from '../repository/profileRepository';
@@ -9,24 +8,19 @@ export default new Elysia()
     .post(
         '/sign-up',
         async ({ body, cookie, set }) => {
-            const { email, password, firstName, lastName } = body;
+            const { login, password, firstName, lastName } = body;
 
-            const user = (await userRepository.getUserByEmail(email)).at(0);
+            const user = (await userRepository.getUserByEmail(login)).at(0);
             if (user) {
                 set.status = 409;
                 throw new Error('User with this email already exists!');
-            }
-
-            if (!EmailValidator.validate(email)) {
-                set.status = 400;
-                throw new Error('Invalid email!');
             }
 
             const passwordHash = Bun.password.hashSync(password);
 
             const newUser = (
                 await userRepository.createUser({
-                    email,
+                    login,
                     password: passwordHash,
                 })
             ).at(0);
@@ -69,7 +63,7 @@ export default new Elysia()
                 tags: ['Auth'],
             },
             body: t.Object({
-                email: t.String({ format: 'email' }),
+                login: t.String(),
                 password: t.String(),
                 firstName: t.String(),
                 lastName: t.String(),
@@ -79,9 +73,9 @@ export default new Elysia()
     .post(
         '/sign-in',
         async ({ body, cookie, set }) => {
-            const { email, password } = body;
+            const { login, password } = body;
 
-            const user = (await userRepository.getUserByEmail(email)).at(0);
+            const user = (await userRepository.getUserByEmail(login)).at(0);
             if (!user) {
                 set.status = 400;
                 throw new Error('User not found!');
@@ -126,7 +120,7 @@ export default new Elysia()
                 tags: ['Auth'],
             },
             body: t.Object({
-                email: t.String(),
+                login: t.String(),
                 password: t.String(),
             }),
         },

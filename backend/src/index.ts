@@ -70,9 +70,10 @@ const app = new Elysia({
     .use(profileController)
     .use(problemController)
     .use(submissionController)
-    .use(adminsController)
-    .listen(3000);
+    .use(adminsController);
 
 export const server = app.server;
+
+app.listen(3000);
 
 console.log(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`);

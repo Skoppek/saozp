@@ -15,6 +15,13 @@
       "when": 1715982071058,
       "tag": "0001_steady_christian_walker",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1716037203871,
+      "tag": "0002_modern_tenebrous",
+      "breakpoints": true
     }
   ]
 }

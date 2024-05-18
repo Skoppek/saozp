@@ -6,7 +6,7 @@ const getUserByEmail = async (email: string): Promise<User[]> => {
     return await db
         .select()
         .from(userSchema)
-        .where(eq(userSchema.email, email));
+        .where(eq(userSchema.login, email));
 };
 
 const getUserById = async (id: number): Promise<User[]> => {

@@ -35,28 +35,20 @@ export default new Elysia({ prefix: '/admin' })
     })
     .guard({
         body: t.Object({ userId: t.Number() }),
+        detail: {
+            tags: ['Auth'],
+        },
     })
-    .post(
-        '/',
-        async ({ body }) => {
-            const newAdmin = await adminRepository.addToAdmins(body.userId);
-            return newAdmin ? 'Admin added' : 'Admin already added';
-        },
-        {
-            detail: {
-                tags: ['Auth'],
-            },
-        },
-    )
+    .post('/', async ({ body }) => {
+        const newAdmin = await adminRepository.addToAdmins(body.userId);
+        return newAdmin ? 'Admin added' : 'Admin already added';
+    })
     .delete(
         '/:userId',
         ({ params: { userId } }) => {
             adminRepository.revokeAdmin(userId);
         },
         {
-            detail: {
-                tags: ['Auth'],
-            },
             params: t.Object({
                 userId: t.Number(),
             }),

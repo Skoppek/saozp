@@ -21,8 +21,8 @@ export const AuthModal = ({
   isLogin,
 }: AuthModalProps) => {
   const [hasAccount, setHasAccount] = useState<boolean>(isLogin ?? false);
-  const [email, setEmail] = useState<string>("");
-  const [isEmailTaken, setIsEmailTaken] = useState<boolean>(false);
+  const [login, setLogin] = useState<string>("");
+  const [isLoginTaken, setIsLoginTaken] = useState<boolean>(false);
   const [isLoginFail, setIsLoginFail] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -32,11 +32,11 @@ export const AuthModal = ({
 
   // Maybe looks awful but I dodn't have a better idea
   const resetStates = useCallback(() => {
-    setEmail("");
+    setLogin("");
     setPassword("");
     setFirstName("");
     setLastName("");
-    setIsEmailTaken(false);
+    setIsLoginTaken(false);
     setIsLoginFail(false);
     setIsWaiting(false);
     setShowWarnings(false);
@@ -45,13 +45,8 @@ export const AuthModal = ({
   const navigate = useNavigate();
 
   const isEmailCorrect = useMemo<boolean>(() => {
-    return (
-      email.length > 0 &&
-      new RegExp(/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/).test(email) &&
-      !isEmailTaken &&
-      !isLoginFail
-    );
-  }, [email, isEmailTaken, isLoginFail]);
+    return login.length > 0 && !isLoginTaken && !isLoginFail;
+  }, [login, isLoginTaken, isLoginFail]);
 
   const isPasswordCorrect = useMemo<boolean>(() => {
     return password.length > 0 && !isLoginFail;
@@ -67,8 +62,8 @@ export const AuthModal = ({
 
   const handleRegister = useCallback(() => {
     apiClient
-      .registerUser({
-        email,
+      .signUp({
+        login: login,
         password,
         firstName,
         lastName,
@@ -79,15 +74,15 @@ export const AuthModal = ({
       })
       .catch((error) => {
         if (error.response.status ?? error.response.status === 409)
-          setIsEmailTaken(true);
+          setIsLoginTaken(true);
         setIsWaiting(false);
       });
-  }, [email, firstName, lastName, password]);
+  }, [login, firstName, lastName, password]);
 
   const handleLogin = useCallback(() => {
     apiClient
-      .loginUser({
-        email,
+      .signIn({
+        login: login,
         password,
       })
       .then(() => {
@@ -100,7 +95,7 @@ export const AuthModal = ({
         setIsLoginFail(true);
         setIsWaiting(false);
       });
-  }, [email, navigate, onClose, onLogin, password]);
+  }, [login, navigate, onClose, onLogin, password]);
 
   const submit = useCallback(() => {
     if (
@@ -139,20 +134,19 @@ export const AuthModal = ({
       <Modal.Body>
         <div className="flex flex-col gap-4">
           <TextInput
-            id={"email"}
-            type="email"
-            label="Email"
-            placeholder="user@mail.com"
+            id={"login"}
+            type="text"
+            label="Login"
             color={showWarnings && !isEmailCorrect ? "failure" : "gray"}
             onChange={(value) => {
-              setIsEmailTaken(false);
+              setIsLoginTaken(false);
               setShowWarnings(false);
               setIsLoginFail(false);
-              setEmail(value);
+              setLogin(value);
             }}
             helperText={
               <>
-                {isEmailTaken && (
+                {isLoginTaken && (
                   <span>Użytkownik z tym adresem już istnieje</span>
                 )}
               </>

@@ -10,7 +10,7 @@ export default new Elysia()
         async ({ body, cookie, set }) => {
             const { login, password, firstName, lastName } = body;
 
-            const user = (await userRepository.getUserByEmail(login)).at(0);
+            const user = await userRepository.getUserByLogin(login);
             if (user) {
                 set.status = 409;
                 throw new Error('User with this email already exists!');
@@ -18,12 +18,10 @@ export default new Elysia()
 
             const passwordHash = Bun.password.hashSync(password);
 
-            const newUser = (
-                await userRepository.createUser({
-                    login,
-                    password: passwordHash,
-                })
-            ).at(0);
+            const newUser = await userRepository.createUser({
+                login,
+                password: passwordHash,
+            });
 
             if (!newUser || !newUser.id) {
                 set.status = 500;
@@ -75,7 +73,7 @@ export default new Elysia()
         async ({ body, cookie, set }) => {
             const { login, password } = body;
 
-            const user = (await userRepository.getUserByEmail(login)).at(0);
+            const user = await userRepository.getUserByLogin(login);
             if (!user) {
                 set.status = 400;
                 throw new Error('User not found!');

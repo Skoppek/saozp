@@ -2,23 +2,17 @@ import { eq } from 'drizzle-orm';
 import { NewUser, User, userSchema } from '../model/schemas/userSchema';
 import { db } from '../model/db/db';
 
-const getUserByEmail = async (email: string): Promise<User[]> => {
-    return await db
-        .select()
-        .from(userSchema)
-        .where(eq(userSchema.login, email));
+const getUserByLogin = async (login: string): Promise<User | undefined> => {
+    return (
+        await db.select().from(userSchema).where(eq(userSchema.login, login))
+    ).at(0);
 };
 
-const getUserById = async (id: number): Promise<User[]> => {
-    return await db.select().from(userSchema).where(eq(userSchema.id, id));
-};
-
-const createUser = async (user: NewUser): Promise<NewUser[]> => {
-    return await db.insert(userSchema).values(user).returning();
+const createUser = async (user: NewUser): Promise<NewUser | undefined> => {
+    return (await db.insert(userSchema).values(user).returning()).at(0);
 };
 
 export default {
-    getUserByEmail,
-    getUserById,
+    getUserByLogin,
     createUser,
 };

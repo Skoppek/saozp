@@ -10,6 +10,7 @@ import { Button, Spinner } from "flowbite-react";
 import apiClient from "../apiClient";
 import { ResultDrawer } from "./results/ResultDrawer";
 import { TestCasesEditor } from "./TestCasesEditor";
+import { useNavigate } from "react-router-dom";
 
 interface SolvingEditorProps {
   problem: Problem;
@@ -22,6 +23,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
   const [user, setUser] = useState<User>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [userTests, setUserTests] = useState<TestCase[]>([]);
+  const navigate = useNavigate();
 
   const getSubmissions = useCallback(
     (user: User) => {
@@ -41,11 +43,16 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
     if (user) {
       getSubmissions(user);
     } else {
-      apiClient.getUserOfCurrentSession().then((user) => {
-        setUser(user);
-      });
+      apiClient
+        .getUserOfCurrentSession()
+        .then((user) => {
+          setUser(user);
+        })
+        .catch(() => {
+          navigate("/");
+        });
     }
-  }, [getSubmissions, user]);
+  }, [getSubmissions, navigate, user]);
 
   const sendCode = useCallback(
     (isTest: boolean) => {

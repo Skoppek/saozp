@@ -17,11 +17,16 @@ export const ProblemEditPage = () => {
       return;
     }
     if (problem) {
-      apiClient.getUserOfCurrentSession().then((user) => {
-        if (problem?.creatorId != user.userId) {
+      apiClient
+        .getUserOfCurrentSession()
+        .then((user) => {
+          if (problem?.creatorId != user.userId) {
+            throw new Error("Signed-in user is not the owner of this problem.");
+          }
+        })
+        .catch(() => {
           navigate("/");
-        }
-      });
+        });
     } else {
       apiClient.getProblemById(parseInt(id)).then((data) => {
         setProblem(data);

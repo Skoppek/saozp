@@ -5,6 +5,7 @@ import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { ProblemCard } from "./ProblemCard";
 import apiClient from "../../apiClient";
 import { LanguageId } from "../../shared/enums";
+import { useNavigate } from "react-router-dom";
 
 interface ProblemsGalleryProps {
   problems: ProblemEntry[];
@@ -13,11 +14,17 @@ interface ProblemsGalleryProps {
 
 export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
   const [user, setUser] = useState<User>();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    apiClient.getUserOfCurrentSession().then((user) => {
-      setUser(user);
-    });
+    apiClient
+      .getUserOfCurrentSession()
+      .then((user) => {
+        setUser(user);
+      })
+      .catch(() => {
+        navigate("/");
+      });
   }, []);
 
   return (

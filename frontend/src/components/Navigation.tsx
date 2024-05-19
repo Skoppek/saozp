@@ -61,7 +61,9 @@ export const Navigation = () => {
               <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
               {user.isAdmin && (
                 <div className="place-content-center text-2xl text-amber-400">
-                  <FaBoltLightning />
+                  <Link to="/admin">
+                    <FaBoltLightning />
+                  </Link>
                 </div>
               )}
             </div>

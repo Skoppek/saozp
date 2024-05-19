@@ -34,6 +34,10 @@ const router = createBrowserRouter([
         path: "/problems/solve/:id",
         element: <SolvingPage />,
       },
+      {
+        path: "/admin",
+        element: <div>Admin page</div>,
+      },
     ],
   },
 ]);

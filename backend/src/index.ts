@@ -125,4 +125,6 @@ try {
     console.log(
         `Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
     );
-} catch (error) {}
+} catch (error) {
+    console.error(error);
+}

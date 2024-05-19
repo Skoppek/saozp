@@ -1,6 +1,7 @@
 import { Elysia, t } from 'elysia';
 import sessionRepository from '../repository/sessionRepository';
 import adminRepository from '../repository/adminRepository';
+import userRepository from '../repository/userRepository';
 
 export default new Elysia({ prefix: '/admin' })
     .derive(async ({ cookie: { session }, set }) => {
@@ -52,5 +53,32 @@ export default new Elysia({ prefix: '/admin' })
             params: t.Object({
                 userId: t.Number(),
             }),
+        },
+    )
+    .get(
+        '/users',
+        async () => {
+            const data = await adminRepository.getUsersAdminView();
+            return data.map((item) => {
+                return {
+                    ...item,
+                    isAdmin: item.adminId ? true : undefined,
+                    sessionId: item.sessionId ?? undefined,
+                    sessionExpiryDate: item.sessionExpiryDate ?? undefined,
+                };
+            });
+        },
+        {
+            response: t.Array(
+                t.Object({
+                    userId: t.Number(),
+                    login: t.String(),
+                    firstName: t.String(),
+                    lastName: t.String(),
+                    isAdmin: t.Optional(t.Boolean()),
+                    sessionId: t.Optional(t.String()),
+                    sessionExpiryDate: t.Optional(t.Date()),
+                }),
+            ),
         },
     );

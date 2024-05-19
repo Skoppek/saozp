@@ -8,6 +8,8 @@ import { ProblemCreatePage } from "./pages/ProblemCreatePage";
 import { ProblemEditPage } from "./pages/ProblemEditPage";
 import { SolvingPage } from "./pages/SolvingPage";
 import { ProblemStatsPage } from "./pages/ProblemsStatsPage";
+import { AdminAuthenticatedPage } from "./pages/AdminAuthenticatedPage";
+import { AdminPage } from "./pages/AdminPage";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +38,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin",
-        element: <div>Admin page</div>,
+        element: (
+          <AdminAuthenticatedPage>
+            <AdminPage />
+          </AdminAuthenticatedPage>
+        ),
       },
     ],
   },

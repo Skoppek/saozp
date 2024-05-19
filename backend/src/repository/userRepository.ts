@@ -1,11 +1,19 @@
 import { eq } from 'drizzle-orm';
 import { NewUser, User, userSchema } from '../model/schemas/userSchema';
 import { db } from '../model/db/db';
+import { profileSchema } from '../model/schemas/profileSchema';
+import { adminSchema } from '../model/schemas/adminSchema';
 
 const getUserByLogin = async (login: string): Promise<User | undefined> => {
     return (
         await db.select().from(userSchema).where(eq(userSchema.login, login))
     ).at(0);
+};
+
+const getUserById = async (id: number): Promise<User | undefined> => {
+    return (await db.select().from(userSchema).where(eq(userSchema.id, id))).at(
+        0,
+    );
 };
 
 const createUser = async (user: NewUser): Promise<NewUser | undefined> => {
@@ -14,5 +22,6 @@ const createUser = async (user: NewUser): Promise<NewUser | undefined> => {
 
 export default {
     getUserByLogin,
+    getUserById,
     createUser,
 };

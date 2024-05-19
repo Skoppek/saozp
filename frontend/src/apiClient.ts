@@ -7,6 +7,7 @@ import { isSubmissionEntryArray } from "./shared/interfaces/SubmissionEntry";
 import { isSubmission } from "./shared/interfaces/Submission";
 import { isUser } from "./shared/interfaces/User";
 import { isProblem } from "./shared/interfaces/Problem";
+import { isUserAdminDataArray } from "./shared/interfaces/UserAdminData";
 
 interface LoginCredentials {
   login: string;
@@ -149,6 +150,16 @@ const getUserOfCurrentSession = () => {
   });
 };
 
+const getUsersWithProfiles = () => {
+  return axiosInstance.get(`api/admin/users`, axiosConfig).then((response) => {
+    if (isUserAdminDataArray(response.data)) {
+      return response.data;
+    } else {
+      throw new Error("Wrong response type. Expected: UserAdminData[]");
+    }
+  });
+};
+
 export default {
   signUp,
   signIn,
@@ -163,4 +174,5 @@ export default {
   getSubmissionById,
   submitSolution,
   getUserOfCurrentSession,
+  getUsersWithProfiles,
 };

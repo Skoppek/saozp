@@ -2,6 +2,7 @@ import Elysia, { t } from 'elysia';
 import sessionRepository from '../repository/sessionRepository';
 import profileRepository from '../repository/profileRepository';
 import adminRepository from '../repository/adminRepository';
+import userRepository from '../repository/userRepository';
 
 export default new Elysia()
     .derive(async ({ cookie: { session }, set }) => {
@@ -32,16 +33,18 @@ export default new Elysia()
         '/me',
         async ({ userId, set }) => {
             const profile = await profileRepository.getProfileByUserId(userId);
+            const user = await userRepository.getUserById(userId);
 
-            if (!profile) {
+            if (!profile || !user) {
                 set.status = 500;
-                throw new Error('No profile found for existing user!');
+                throw new Error('No profile or user found for logged user!');
             }
 
             const isAdmin = await adminRepository.isAdmin(userId);
 
             return {
                 userId,
+                login: user.login,
                 firstName: profile.firstName,
                 lastName: profile.lastName,
                 isAdmin,
@@ -53,6 +56,7 @@ export default new Elysia()
             },
             response: t.Object({
                 userId: t.Number(),
+                login: t.String(),
                 firstName: t.String(),
                 lastName: t.String(),
                 isAdmin: t.Optional(t.Boolean()),

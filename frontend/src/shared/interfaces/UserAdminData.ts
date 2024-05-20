@@ -35,3 +35,12 @@ export const isUserAdminDataArray = (
     Array.isArray(suspect) && suspect.every((item) => isUserAdminData(item))
   );
 };
+
+export interface UserAdminDataFilter {
+  id: string;
+  login: string;
+  firstName: string;
+  lastName: string;
+  isAdmin?: boolean;
+  hasSession?: boolean;
+}

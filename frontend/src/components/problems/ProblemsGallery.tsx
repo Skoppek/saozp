@@ -25,7 +25,7 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
       .catch(() => {
         navigate("/");
       });
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="mx-[20vw] flex flex-wrap justify-center gap-2">

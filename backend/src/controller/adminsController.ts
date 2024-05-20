@@ -1,7 +1,6 @@
 import { Elysia, t } from 'elysia';
 import sessionRepository from '../repository/sessionRepository';
 import adminRepository from '../repository/adminRepository';
-import userRepository from '../repository/userRepository';
 
 export default new Elysia({ prefix: '/admin' })
     .derive(async ({ cookie: { session }, set }) => {

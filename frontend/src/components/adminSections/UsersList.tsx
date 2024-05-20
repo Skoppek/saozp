@@ -1,11 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import apiClient from "../../apiClient";
 import { Button, Spinner, Table } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
-import { UserAdminData } from "../../shared/interfaces/UserAdminData";
+import {
+  UserAdminData,
+  UserAdminDataFilter,
+} from "../../shared/interfaces/UserAdminData";
 import { HiDotsVertical } from "react-icons/hi";
 
-export const UsersList = () => {
+interface UsersListProps {
+  filter: UserAdminDataFilter;
+}
+
+export const UsersList = ({ filter }: UsersListProps) => {
   const [users, setUsers] = useState<UserAdminData[]>();
 
   const isSessionActive = useCallback(
@@ -30,6 +37,27 @@ export const UsersList = () => {
       });
   }, []);
 
+  const filteredUsers = useMemo<UserAdminData[]>(() => {
+    if (!users) return [];
+    return users.filter(
+      (user) =>
+        user.userId.toString().toLowerCase().includes(filter.id) &&
+        user.login.toLowerCase().includes(filter.login) &&
+        user.firstName.toLowerCase().includes(filter.firstName) &&
+        user.lastName.toLowerCase().includes(filter.lastName) &&
+        (filter.isAdmin ? user.isAdmin : true) &&
+        (filter.hasSession ? !!user.sessionId : true),
+    );
+  }, [
+    filter.firstName,
+    filter.hasSession,
+    filter.id,
+    filter.isAdmin,
+    filter.lastName,
+    filter.login,
+    users,
+  ]);
+
   return (
     <>
       {users ? (
@@ -47,7 +75,7 @@ export const UsersList = () => {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <Table.Row>
                 <Table.Cell>{user.userId}</Table.Cell>
                 <Table.Cell>{user.login}</Table.Cell>

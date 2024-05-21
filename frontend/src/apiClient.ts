@@ -160,6 +160,24 @@ const getUsersWithProfiles = () => {
   });
 };
 
+const revokeSession = (sessionId: string) => {
+  return axiosInstance.delete(`api/admin/session/${sessionId}`, axiosConfig);
+};
+
+const promoteToAdmin = (userId: number) => {
+  return axiosInstance.post(
+    "api/admin/",
+    {
+      userId,
+    },
+    axiosConfig,
+  );
+};
+
+const revokeAdmin = (userId: number) => {
+  return axiosInstance.delete(`api/admin/${userId}`, axiosConfig);
+};
+
 export default {
   signUp,
   signIn,
@@ -175,4 +193,7 @@ export default {
   submitSolution,
   getUserOfCurrentSession,
   getUsersWithProfiles,
+  revokeSession,
+  promoteToAdmin,
+  revokeAdmin,
 };

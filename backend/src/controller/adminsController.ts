@@ -33,25 +33,56 @@ export default new Elysia({ prefix: '/admin' })
             throw new Error('Unauthorized');
         }
     })
-    .guard({
-        body: t.Object({ userId: t.Number() }),
-        detail: {
-            tags: ['Auth'],
+    .post(
+        '/',
+        async ({ body }) => {
+            const newAdmin = await adminRepository.addToAdmins(body.userId);
+            return newAdmin ? 'Admin added' : 'Admin already added';
         },
-    })
-    .post('/', async ({ body }) => {
-        const newAdmin = await adminRepository.addToAdmins(body.userId);
-        return newAdmin ? 'Admin added' : 'Admin already added';
-    })
+        {
+            body: t.Object({ userId: t.Number() }),
+            detail: {
+                tags: ['Auth'],
+            },
+        },
+    )
     .delete(
         '/:userId',
-        ({ params: { userId } }) => {
+        ({ params: { userId }, user, set }) => {
+            if (userId === user.userId) {
+                set.status = 400;
+                throw new Error('You cannot revoke your own role!');
+            }
             adminRepository.revokeAdmin(userId);
         },
         {
             params: t.Object({
                 userId: t.Number(),
             }),
+            detail: {
+                tags: ['Auth'],
+            },
+        },
+    )
+    .delete(
+        '/session/:id',
+        async ({ params: { id }, user, set }) => {
+            const session = await sessionRepository.getSessionById(id);
+            if (session?.userId === user.userId) {
+                set.status = 400;
+                throw new Error(
+                    'You cannot revoke your own session! Please logout if you want to do so.',
+                );
+            }
+            await sessionRepository.revokeSession(id);
+        },
+        {
+            params: t.Object({
+                id: t.String(),
+            }),
+            detail: {
+                tags: ['Auth'],
+            },
         },
     )
     .get(
@@ -79,5 +110,8 @@ export default new Elysia({ prefix: '/admin' })
                     sessionExpiryDate: t.Optional(t.Date()),
                 }),
             ),
+            detail: {
+                tags: ['Auth'],
+            },
         },
     );

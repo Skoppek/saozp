@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import apiClient from "../../apiClient";
-import { Button, Spinner, Table } from "flowbite-react";
+import { Button, Modal, Spinner, Table } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import {
   UserAdminData,
@@ -14,6 +14,8 @@ interface UsersListProps {
 
 export const UsersList = ({ filter }: UsersListProps) => {
   const [users, setUsers] = useState<UserAdminData[]>();
+  const [selectedUser, setSelectedUser] = useState<UserAdminData | undefined>();
+  const [errorMsg, setErrorMsg] = useState<string | undefined>();
 
   const isSessionActive = useCallback(
     (sessionId?: string, sessionExpiryDate?: string) => {
@@ -60,6 +62,66 @@ export const UsersList = ({ filter }: UsersListProps) => {
 
   return (
     <>
+      <Modal
+        show={!!selectedUser}
+        onClose={() => {
+          setSelectedUser(undefined);
+          setErrorMsg(undefined);
+        }}
+      >
+        <Modal.Header>Kontrola użytkownika</Modal.Header>
+        <Modal.Body>
+          {selectedUser && (
+            <div className="flex flex-col gap-2">
+              {selectedUser.sessionId && (
+                <Button
+                  onClick={() => {
+                    if (selectedUser.sessionId) {
+                      apiClient
+                        .revokeSession(selectedUser.sessionId)
+                        .catch((error) => {
+                          if (error.response.status === 400) {
+                            setErrorMsg(
+                              "Nie możesz zakończyć swojej sesji. Aby to zrobić, wyloguj się.",
+                            );
+                            setTimeout(() => setErrorMsg(undefined), 5000);
+                          }
+                        });
+                    }
+                  }}
+                >
+                  Zakończ sesję
+                </Button>
+              )}
+              <Button
+                onClick={() => {
+                  if (selectedUser.sessionId) {
+                    if (selectedUser.isAdmin) {
+                      apiClient
+                        .revokeAdmin(selectedUser.userId)
+                        .catch((error) => {
+                          if (error.response.status === 400) {
+                            setErrorMsg(
+                              "Nie odebrać sobie roli administratora.",
+                            );
+                            setTimeout(() => setErrorMsg(undefined), 5000);
+                          }
+                        });
+                    } else {
+                      apiClient.promoteToAdmin(selectedUser.userId);
+                    }
+                  }
+                }}
+              >
+                {selectedUser.isAdmin ? "Odbierz" : "Nadaj"} rolę administratora
+              </Button>
+              {errorMsg && (
+                <div className="text-base text-rose-500">{errorMsg}</div>
+              )}
+            </div>
+          )}
+        </Modal.Body>
+      </Modal>
       {users ? (
         <Table>
           <Table.Head>
@@ -75,8 +137,8 @@ export const UsersList = ({ filter }: UsersListProps) => {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {filteredUsers.map((user) => (
-              <Table.Row>
+            {filteredUsers.map((user, index) => (
+              <Table.Row id={`${index}userRow`}>
                 <Table.Cell>{user.userId}</Table.Cell>
                 <Table.Cell>{user.login}</Table.Cell>
                 <Table.Cell>{user.firstName}</Table.Cell>
@@ -91,7 +153,11 @@ export const UsersList = ({ filter }: UsersListProps) => {
                     `${new Date(user.sessionExpiryDate).toLocaleDateString()} ${new Date(user.sessionExpiryDate).toLocaleTimeString()}`}
                 </Table.Cell>
                 <Table.Cell>
-                  <Button size={"sm"} outline>
+                  <Button
+                    size={"sm"}
+                    outline
+                    onClick={() => setSelectedUser(user)}
+                  >
                     <HiDotsVertical size={20} />
                   </Button>
                 </Table.Cell>

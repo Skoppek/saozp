@@ -1,8 +1,7 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { AuthContext } from "./Root";
 
 interface AdminAuthenticatedPageProps {
   children: ReactNode;
@@ -13,7 +12,6 @@ export const AdminAuthenticatedPage = ({
 }: AdminAuthenticatedPageProps) => {
   const navigate = useNavigate();
   const [pageReady, setPageReady] = useState<boolean>();
-  const authContext = useContext(AuthContext);
 
   useEffect(() => {
     apiClient.getUserOfCurrentSession().then((response) => {
@@ -23,7 +21,7 @@ export const AdminAuthenticatedPage = ({
       }
       setPageReady(true);
     });
-  }, [authContext, navigate]);
+  }, [navigate]);
 
   return (
     <>

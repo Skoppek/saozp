@@ -102,7 +102,13 @@ export default new Elysia({ prefix: '/problem' })
                         name: problem.problems.name,
                         description: problem.problems.description,
                         languageId: problem.problems.languageId,
-                        creator: problem.profiles ?? undefined,
+                        creator:
+                            {
+                                userId: problem.users?.id ?? -1,
+                                login: problem.users?.login ?? '',
+                                firstName: problem.profiles?.firstName ?? '',
+                                lastName: problem.profiles?.lastName ?? '',
+                            } ?? undefined,
                         activeAfter: problem.problems.activeAfter,
                     };
                 });
@@ -120,6 +126,7 @@ export default new Elysia({ prefix: '/problem' })
                     creator: t.Optional(
                         t.Object({
                             userId: t.Number(),
+                            login: t.String(),
                             firstName: t.String(),
                             lastName: t.String(),
                         }),

@@ -95,21 +95,17 @@ export const UsersList = ({ filter }: UsersListProps) => {
               )}
               <Button
                 onClick={() => {
-                  if (selectedUser.sessionId) {
-                    if (selectedUser.isAdmin) {
-                      apiClient
-                        .revokeAdmin(selectedUser.userId)
-                        .catch((error) => {
-                          if (error.response.status === 400) {
-                            setErrorMsg(
-                              "Nie odebrać sobie roli administratora.",
-                            );
-                            setTimeout(() => setErrorMsg(undefined), 5000);
-                          }
-                        });
-                    } else {
-                      apiClient.promoteToAdmin(selectedUser.userId);
-                    }
+                  if (selectedUser.isAdmin) {
+                    apiClient
+                      .revokeAdmin(selectedUser.userId)
+                      .catch((error) => {
+                        if (error.response.status === 400) {
+                          setErrorMsg("Nie odebrać sobie roli administratora.");
+                          setTimeout(() => setErrorMsg(undefined), 5000);
+                        }
+                      });
+                  } else {
+                    apiClient.promoteToAdmin(selectedUser.userId);
                   }
                 }}
               >

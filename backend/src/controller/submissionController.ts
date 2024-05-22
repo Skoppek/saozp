@@ -72,7 +72,12 @@ export default new Elysia({ prefix: '/submissions' })
 
                     return {
                         submissionId: submission.id,
-                        creator: submission.creator,
+                        creator: {
+                            login: '',
+                            userId: submission.creator?.userId ?? -1,
+                            firstName: submission.creator?.firstName ?? '',
+                            lastName: submission.creator?.lastName ?? '',
+                        },
                         createdAt: submission.createdAt?.toLocaleString(),
                         status: reduceToStatus(
                             results.map((result) => result.status.id),
@@ -97,6 +102,7 @@ export default new Elysia({ prefix: '/submissions' })
                     creator: t.Nullable(
                         t.Object({
                             firstName: t.String(),
+                            login: t.String(),
                             lastName: t.String(),
                             userId: t.Number(),
                         }),

@@ -7,6 +7,7 @@ import {
 } from '../model/schemas/problemSchema';
 import _ from 'lodash';
 import { profileSchema } from '../model/schemas/profileSchema';
+import { userSchema } from '../model/schemas/userSchema';
 
 const createProblem = async (
     newProblem: NewProblem,
@@ -24,6 +25,7 @@ const getProblems = async () => {
             profileSchema,
             eq(problemSchema.creator, profileSchema.userId),
         )
+        .leftJoin(userSchema, eq(problemSchema.creator, userSchema.id))
         .where(eq(problemSchema.isDeactivated, false));
 };
 

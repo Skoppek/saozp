@@ -49,15 +49,16 @@ export default new Elysia({ prefix: '/admin' })
     .delete(
         '/:userId',
         ({ params: { userId }, user, set }) => {
-            if (userId === user.userId) {
+            const id = parseInt(userId);
+            if (id === user.userId) {
                 set.status = 400;
                 throw new Error('You cannot revoke your own role!');
             }
-            adminRepository.revokeAdmin(userId);
+            adminRepository.revokeAdmin(id);
         },
         {
             params: t.Object({
-                userId: t.Number(),
+                userId: t.String(),
             }),
             detail: {
                 tags: ['Auth'],

@@ -284,8 +284,12 @@ export default new Elysia({ prefix: '/problem' })
                             newSubmission.code,
                         );
 
+                        console.log();
+
                         submitTests(
-                            !!body.userTests ? body.userTests : problem.tests,
+                            !!body.isCommit
+                                ? problem.tests
+                                : body.userTests ?? [],
                             newSubmission.id,
                             problem.languageId,
                             mergedCode,

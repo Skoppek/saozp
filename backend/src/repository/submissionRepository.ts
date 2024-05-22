@@ -62,7 +62,7 @@ const deleteNonCommitSubmissoins = async (
     userId: number,
     problemId: number,
 ) => {
-    const x = await db
+    await db
         .delete(submissionSchema)
         .where(
             and(
@@ -72,7 +72,6 @@ const deleteNonCommitSubmissoins = async (
             ),
         )
         .returning();
-    console.log(x);
 };
 
 export default {

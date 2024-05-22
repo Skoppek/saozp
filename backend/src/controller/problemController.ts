@@ -284,8 +284,6 @@ export default new Elysia({ prefix: '/problem' })
                             newSubmission.code,
                         );
 
-                        console.log();
-
                         submitTests(
                             !!body.isCommit
                                 ? problem.tests

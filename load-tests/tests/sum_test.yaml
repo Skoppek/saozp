@@ -1,0 +1,100 @@
+config:
+ target: 'http://localhost:2358'
+ plugins:
+  expect: {}
+ environments:
+  python:
+   variables:
+    language_code: 71
+    code:
+     - |
+      n = int(input())
+      sum = 0
+
+      for i in range(1, n + 1):
+          sum += i
+
+      print(sum)
+  c:
+   variables:
+    language_code: 50
+    code:
+     - |
+      #include <stdio.h>
+      int main() {
+       int n, sum = 0;
+       scanf("%d", &n);
+
+       for (int i = 1; i <= n; i++) {
+        sum += i;
+       }
+
+       printf("%d", sum);
+       return 0;
+      }
+  java:
+   variables:
+    language_code: 62
+    code:
+     - |
+      import java.util.Scanner;
+
+      public class Main {
+       public static void main(String[] args) {
+        int n, sum = 0;
+        Scanner scanner = new Scanner(System.in);
+         n = scanner.nextInt();
+
+         for (int i = 1; i <= n; i++) {
+         sum += i;
+        }
+        System.out.print(sum);
+       }
+      }
+ phases:
+  - name: warmup
+    duration: 20
+    arrivalRate: 2
+    maxVusers: 10
+  # - name: testing_phase
+  #   duration: 1800
+  #   arrivalRate: 5
+  # - name: submitting
+  #   duration: 300
+  #   arrivalRate: 2
+ variables:
+  count:
+   - 100
+  sum:
+   - 5050
+ processor: '../functions.js'
+scenarios:
+ - flow:
+    - post:
+       url: '/submissions'
+       headers:
+        Content-Type: 'application/json'
+       json:
+        source_code: '{{ code }}'
+        language_id: '{{ language_code }}'
+        stdin: '{{ count }}'
+        expected_output: '{{ sum }}'
+       capture:
+        json: '$.token'
+        as: 'token'
+    - loop:
+       # Aby uniknąć zalania sprawdzeniami o status
+       # dodano 1s przerwy reprezentującą akceptowalny dla użytkownika czas czekania
+       - think: 1
+       - get:
+          url: '/submissions/{{ token }}'
+          capture:
+           - json: $.status.id
+             as: statusId
+           - json: $.stdout
+             as: stdout
+          expect:
+           - equals:
+              - '3'
+              - '{{statusId}}'
+      whileTrue: 'isNotDone'

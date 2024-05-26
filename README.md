@@ -63,4 +63,25 @@ docker run \
 -d postgres
 ```
 
+# Testy obciążeniowe
+
+Testy obciążeniowe znajdują się w katalogu `load-tests`.
+Dostępny jest jeden test polegający na wysłaniu kodu sumującego liczby od 1 do podanej w konfiguracji w sekcji `variables`.
+Wynik jest sprawdzany względem ustawionej wartości `sum`.
+
+Aby uruchomić testy należy użyć poniższej komendy:
+
+```bash
+artillery run -q -e <środwisko> -o <wynik>.json tests/sum_test.yaml
+```
+
+gdzie należy wskazać w jakim języku wysyłać zadania [c, java, python] w polu `środowisko`.
+Wyniki testów zostaną zapisane w pliku `wynik`.json.
+
+Aby usyskać raport w pliku html należy użyć poniższej komendy.
+
+```bash
+artillery report <wynik>.json
+```
+
 ## TODO

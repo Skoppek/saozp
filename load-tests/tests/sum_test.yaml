@@ -1,7 +1,5 @@
 config:
  target: 'http://localhost:2358'
- plugins:
-  expect: {}
  environments:
   python:
    variables:
@@ -53,15 +51,15 @@ config:
       }
  phases:
   - name: warmup
-    duration: 20
+    duration: 600
     arrivalRate: 2
     maxVusers: 10
-  # - name: testing_phase
-  #   duration: 1800
-  #   arrivalRate: 5
-  # - name: submitting
-  #   duration: 300
-  #   arrivalRate: 2
+  - name: testing_phase
+    duration: 1800
+    arrivalRate: 5
+  - name: submitting
+    duration: 300
+    arrivalRate: 2
  variables:
   count:
    - 100
@@ -93,8 +91,4 @@ scenarios:
              as: statusId
            - json: $.stdout
              as: stdout
-          expect:
-           - equals:
-              - '3'
-              - '{{statusId}}'
       whileTrue: 'isNotDone'

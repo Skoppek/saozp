@@ -51,20 +51,22 @@ config:
       }
  phases:
   - name: warmup
-    duration: 600
+    duration: 60
     arrivalRate: 2
-    maxVusers: 10
+    maxVusers: 30
   - name: testing_phase
-    duration: 1800
+    duration: 480
     arrivalRate: 5
+    maxVusers: 100
   - name: submitting
-    duration: 300
+    duration: 60
     arrivalRate: 2
+    maxVusers: 50
  variables:
   count:
-   - 100
+   - 1000000
   sum:
-   - 5050
+   - 500000500000
  processor: '../functions.js'
 scenarios:
  - flow:

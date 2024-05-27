@@ -85,3 +85,6 @@ artillery report <wynik>.json
 ```
 
 ## TODO
+
+- ładowanie testów plikami
+- reset hasła przez admina

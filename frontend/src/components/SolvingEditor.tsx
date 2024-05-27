@@ -60,7 +60,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
       apiClient
         .submitSolution(problem.problemId, {
           code: code,
-          userTests: undefined,
+          userTests: userTests,
           isCommit: !isTest,
         })
         .then(() => {
@@ -68,7 +68,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
           if (user) getSubmissions(user);
         });
     },
-    [code, getSubmissions, problem.problemId, user],
+    [code, getSubmissions, problem.problemId, user, userTests],
   );
 
   return (

@@ -1,8 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { NewUser, User, userSchema } from '../model/schemas/userSchema';
 import { db } from '../model/db/db';
-import { profileSchema } from '../model/schemas/profileSchema';
-import { adminSchema } from '../model/schemas/adminSchema';
 
 const getUserByLogin = async (login: string): Promise<User | undefined> => {
     return (

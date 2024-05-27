@@ -124,9 +124,9 @@ const isSubmission = (suspect: unknown): suspect is Submission => {
         'stdout' in suspect &&
         (typeof suspect.stdout == 'string' || suspect.stdout == null) &&
         'time' in suspect &&
-        typeof suspect.time == 'string' &&
+        (typeof suspect.time == 'string' || suspect.time === null) &&
         'memory' in suspect &&
-        typeof suspect.memory == 'number' &&
+        (typeof suspect.memory == 'number' || suspect.memory === null) &&
         'token' in suspect &&
         typeof suspect.token == 'string' &&
         'status' in suspect &&
@@ -154,6 +154,7 @@ const isSubmissionBatch = (suspect: unknown): suspect is SubmissionBatch => {
 };
 
 const getSubmissionBatch = async (tokens: string[]) => {
+    if (!tokens.length) return { submissions: [] };
     return await axios
         .get(`${judge0Url}/submissions/batch`, {
             ...axiosConfig,
@@ -170,14 +171,6 @@ const getSubmissionBatch = async (tokens: string[]) => {
                     'Received object has wrong fields. Expected: SubmissionBatch',
                 );
             }
-        })
-        .catch((error) => {
-            if (!error.response) {
-                console.log('Error: Network Error');
-            } else {
-                console.log(error.response.data.message);
-            }
-            return { submissions: [] };
         });
 };
 

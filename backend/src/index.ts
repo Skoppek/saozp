@@ -17,14 +17,6 @@ const app = new Elysia({
         sign: ['session'],
     },
 })
-    .get('/', () => 0)
-    .onError(({ code, set }) => {
-        if (code === 'NOT_FOUND') {
-            set.status = 404;
-
-            return 'Not Found :(';
-        }
-    })
     .use(
         cors({
             origin: true,

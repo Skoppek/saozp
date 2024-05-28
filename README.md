@@ -88,3 +88,8 @@ artillery report <wynik>.json
 
 - ładowanie testów plikami
 - reset hasła przez admina
+- tworzenie grup zajęciowych
+- grupowanie problemów w konkursy
+- przypisanie użytkowników do konkursów
+- statystyka wyników
+- ponowne uruchamianie testów na rozwiązaniach

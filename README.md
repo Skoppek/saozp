@@ -63,7 +63,7 @@ docker run \
 -d postgres
 ```
 
-# Testy obciążeniowe
+## Testy obciążeniowe
 
 Testy obciążeniowe znajdują się w katalogu `load-tests`.
 Dostępny jest jeden test polegający na wysłaniu kodu sumującego liczby od 1 do podanej w konfiguracji w sekcji `variables`.

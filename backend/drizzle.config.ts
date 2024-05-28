@@ -2,6 +2,7 @@ import 'dotenv/config';
 import type { Config } from 'drizzle-kit';
 
 const SCHEMAS_PATH = './src/model/schemas';
+const INTERMADIETE_SCHEMAS_PATH = SCHEMAS_PATH + '/intermediates';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
@@ -18,6 +19,8 @@ export default {
         `${SCHEMAS_PATH}/userSchema.ts`,
         `${SCHEMAS_PATH}/adminSchema.ts`,
         `${SCHEMAS_PATH}/testSchema.ts`,
+        `${SCHEMAS_PATH}/userGroupSchema.ts`,
+        `${INTERMADIETE_SCHEMAS_PATH}/usersToUserGroupSchema.ts`,
     ],
     out: './drizzle',
     dialect: 'postgresql',

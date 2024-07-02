@@ -26,11 +26,17 @@ Uruchomienie serwera ElysiaJS
 bun run dev
 ```
 
-Wykonanie migracji bazy danych
+#### Wykonanie migracji bazy danych
+
+Wygenerowanie plików migracji
 
 ```bash
-bunx drizzle-kit generate:pg
-...
+bunx drizzle-kit generate
+```
+
+Wprowadzenie migracji do bazy danych
+
+```bash
 bunx drizzle-kit push:pg
 ```
 

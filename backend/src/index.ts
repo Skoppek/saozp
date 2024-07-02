@@ -11,7 +11,6 @@ import profileRepository from './repository/profileRepository';
 import adminRepository from './repository/adminRepository';
 
 const app = new Elysia({
-    prefix: '/api',
     cookie: {
         secrets: 'The missile knows where it is at all times',
         sign: ['session'],
@@ -39,7 +38,7 @@ const app = new Elysia({
                     {
                         name: 'Auth',
                         description:
-                            'Authentication and autorization endpoints',
+                            'Authentication and authorization endpoints',
                     },
                     {
                         name: 'Profiles',
@@ -69,21 +68,54 @@ const app = new Elysia({
 
 export const server = app.server;
 
+interface AdminCredentials {
+    login: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+}
+
+const isAdminCredentials = (suspect: unknown): suspect is AdminCredentials => {
+    return (
+        typeof suspect === 'object' &&
+        !!suspect &&
+        'login' in suspect &&
+        typeof suspect.login === 'string' &&
+        'password' in suspect &&
+        typeof suspect.password === 'string' &&
+        'firstName' in suspect &&
+        typeof suspect.firstName === 'string' &&
+        'lastName' in suspect &&
+        typeof suspect.lastName === 'string'
+    );
+};
+
 const initAdmin = async () => {
     const adminCredentials = {
-        login: Bun.env.ADMIN_LOGIN as string,
-        password: Bun.env.ADMIN_PASSWORD as string,
-        firstName: Bun.env.ADMIN_FIRST_NAME as string,
-        lastName: Bun.env.ADMIN_LAST_NAME as string,
+        login: Bun.env.ADMIN_LOGIN,
+        password: Bun.env.ADMIN_PASSWORD,
+        firstName: Bun.env.ADMIN_FIRST_NAME,
+        lastName: Bun.env.ADMIN_LAST_NAME,
     };
 
-    if (Object.values(adminCredentials).find((value) => value === undefined)) {
-        throw new Error('Admin credentials not complete in env variables!');
+    if (!isAdminCredentials(adminCredentials)) {
+        throw new Error(
+            'Admin credentials in env variables are not complete. Aborting...',
+        );
     }
 
     const adminAccount = await userRepository.getUserByLogin(
         adminCredentials.login,
     );
+
+    if (
+        adminAccount?.id &&
+        !(await adminRepository.isAdmin(adminAccount?.id))
+    ) {
+        throw new Error(
+            'Admin credentials in env variables belong to existing user but they are not an admin. Aborting...',
+        );
+    }
 
     if (adminAccount) return;
 
@@ -95,10 +127,10 @@ const initAdmin = async () => {
     );
 
     if (!adminUser?.id) {
-        throw new Error('Admin creation fail! Aborting.');
+        throw new Error('Unknown admin creation failure! Aborting...');
     }
 
-    adminRepository.addToAdmins(adminUser.id);
+    await adminRepository.addToAdmins(adminUser.id);
 
     await profileRepository.createProfile({
         userId: adminUser.id,
@@ -118,5 +150,8 @@ try {
         `Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
     );
 } catch (error) {
-    console.error(error);
+    let message = 'Unknown Error';
+    if (error instanceof Error) message = error.message;
+    // we'll proceed, but let's report it
+    console.error(message);
 }

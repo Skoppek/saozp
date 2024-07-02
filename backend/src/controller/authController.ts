@@ -9,11 +9,12 @@ const getSaltedPassword = (password: string) => {
 };
 
 export const registerUser = async (login: string, password: string) => {
-    const hash = Bun.password.hashSync(getSaltedPassword(password));
+    const saltedPassword = getSaltedPassword(password);
+    const hashedPassword = await Bun.password.hash(saltedPassword);
 
     return await userRepository.createUser({
         login,
-        password: hash,
+        password: hashedPassword,
     });
 };
 

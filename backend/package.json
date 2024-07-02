@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.6",
+    "@types/pg": "^8.11.6",
     "bun-types": "latest",
     "prettier": "^3.3.2"
   },

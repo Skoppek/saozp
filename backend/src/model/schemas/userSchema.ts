@@ -10,7 +10,7 @@ export const userSchema = pgTable(
         password: varchar('password', { length: 128 }).notNull(),
     },
     (users) => ({
-        emailIdx: index('login_idx').on(users.login),
+        loginIdx: index('login_idx').on(users.login),
     }),
 );
 

@@ -7,9 +7,9 @@ export default defineConfig({
   server: {
     // host: true,
     port: 5173,
-    proxy: {
-      "/api": process.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
-    },
+    // proxy: {
+    //   "/api": process.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
+    // },
   },
   build: {
     rollupOptions: {

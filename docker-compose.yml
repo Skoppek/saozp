@@ -1,121 +1,121 @@
 version: '3'
 
-x-logging: &default-logging
- logging:
-  driver: json-file
-  options:
-   max-size: 100m
+#x-logging: &default-logging
+#  logging:
+#    driver: json-file
+#    options:
+#      max-size: 100m
 
 services:
- #  server:
- #   image: judge0/judge0:1.13.0
- #   volumes:
- #    - ./judge0/judge0.conf:/judge0.conf:ro
- #   ports:
- #    - '2358:2358'
- #   privileged: true
- #   <<: *default-logging
- #   restart: always
+  server:
+    image: judge0/judge0:1.13.0
+    volumes:
+      - ./judge0/judge0.conf:/judge0.conf:ro
+    ports:
+      - '2358:2358'
+    privileged: true
+#    <<: *default-logging
+    restart: always
 
- #  workers:
- #   image: judge0/judge0:1.13.0
- #   command: ['./scripts/workers']
- #   volumes:
- #    - ./judge0/judge0.conf:/judge0.conf:ro
- #   privileged: true
- #   <<: *default-logging
- #   restart: always
+  workers:
+    image: judge0/judge0:1.13.0
+    command: ['./scripts/workers']
+    volumes:
+      - ./judge0/judge0.conf:/judge0.conf:ro
+    privileged: true
+#    <<: *default-logging
+    restart: always
 
- #  db:
- #   image: postgres:13.0
- #   env_file: ./judge0/judge0.conf
- #   volumes:
- #    - postgres-data:/var/lib/postgresql/data/
- #   <<: *default-logging
- #   restart: always
+  db:
+    image: postgres:13.0
+    env_file: ./judge0/judge0.conf
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+#    <<: *default-logging
+    restart: always
 
- #  redis:
- #   image: redis:6.0
- #   command:
- #    [
- #     'bash',
- #     '-c',
- #     'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
- #    ]
- #   env_file: ./judge0/judge0.conf
- #   volumes:
- #    - redis-data:/data
- #   <<: *default-logging
- #   restart: always
+  redis:
+    image: redis:6.0
+    command:
+      [
+        'bash',
+        '-c',
+        'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
+      ]
+    env_file: ./judge0/judge0.conf
+    volumes:
+      - redis-data:/data
+#    <<: *default-logging
+    restart: always
 
- apidb:
-  image: postgres:latest
-  restart: always
-  ports:
-   - 5432:5432
-  environment:
-   - POSTGRES_USER=postgres
-   - POSTGRES_PASSWORD=postgres
-  healthcheck:
-   test: ['CMD-SHELL', 'pg_isready -U postgres']
-   interval: 1s
-   timeout: 5s
-   retries: 10
-  volumes:
-   - apidb:/var/lib/postgresql/data
-  expose:
-   - 5432
-  networks:
-   - mynet
+  apidb:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - apidb:/var/lib/postgresql/data
+    expose:
+      - 5432
+    networks:
+      - mynet
 
- api:
-  build: ./backend
-  image: saozp-api
-  restart: always
-  depends_on:
-   apidb:
-    condition: service_healthy
-  #  server:
-  #   condition: service_started
-  healthcheck:
-   test: curl --fail http://localhost:3000/api || exit 1
-   interval: 30s
-   timeout: 30s
-   start_period: 5s
-   retries: 3
-  networks:
-   - mynet
-  ports:
-   - '3000:3000'
-  # links:
-  #  - apidb
-  environment:
-   - DB_CONNECTION_STRING=postgres://postgres:postgres@apidb:5432/postgres
-   - JUDGE0_HOST=server
-   - JUDGE0_PORT=2358
+  api:
+    build: ./backend
+    image: saozp-api
+    restart: always
+    depends_on:
+      apidb:
+        condition: service_healthy
+    #  server:
+    #   condition: service_started
+    healthcheck:
+      test: curl --fail http://localhost:3000 || exit 1
+      interval: 30s
+      timeout: 30s
+#      start_period: 5s
+      retries: 3
+    networks:
+      - mynet
+    ports:
+      - '3000:3000'
+    # links:
+    #  - apidb
+    environment:
+      - DB_CONNECTION_STRING=postgres://postgres:postgres@apidb:5432/postgres
+      - JUDGE0_HOST=server
+      - JUDGE0_PORT=2358
 
- frontend:
-  build: ./frontend
-  image: saozp-app
-  restart: always
-  depends_on:
-   api:
-    condition: service_healthy
-  networks:
-   - mynet
-  ports:
-   - '3001:5173'
-  links:
-   - api
-  environment:
-   - VITE_SAOZP_BACKEND_URL=api
+  frontend:
+    build: ./frontend
+    image: saozp-app
+    restart: always
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - mynet
+    ports:
+      - '3001:5173'
+    links:
+      - api
+    environment:
+      - VITE_SAOZP_BACKEND_URL=api
 
 networks:
- mynet:
-  driver: bridge
+  mynet:
+    driver: bridge
 
 volumes:
- postgres-data:
- redis-data:
- apidb:
-  driver: local
+  postgres-data:
+  redis-data:
+  apidb:
+    driver: local

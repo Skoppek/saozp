@@ -38,27 +38,27 @@ axiosInstance.defaults.baseURL =
   import.meta.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000";
 
 const signUp = (newUserInfo: LoginCredentials & Profile) => {
-  return axiosInstance.post(`api/sign-up`, newUserInfo, axiosConfig);
+  return axiosInstance.post(`/sign-up`, newUserInfo, axiosConfig);
 };
 
 const signIn = (credentials: LoginCredentials) => {
-  return axiosInstance.post(`api/sign-in`, credentials, axiosConfig);
+  return axiosInstance.post(`/sign-in`, credentials, axiosConfig);
 };
 
 const logout = () => {
-  return axiosInstance.delete(`api/logout`, axiosConfig);
+  return axiosInstance.delete(`/logout`, axiosConfig);
 };
 
 const isLoggedIn = () => {
-  return axiosInstance.get(`api/is-logged`, axiosConfig);
+  return axiosInstance.get(`/is-logged`, axiosConfig);
 };
 
 const createProblem = (newProblem: NewProblem) => {
-  return axiosInstance.post(`api/problem/`, newProblem, axiosConfig);
+  return axiosInstance.post(`/problem/`, newProblem, axiosConfig);
 };
 
 const getAllProblems = () => {
-  return axiosInstance.get(`api/problem`, axiosConfig).then((response) => {
+  return axiosInstance.get(`/problem`, axiosConfig).then((response) => {
     if (isProblemsEntryArray(response.data)) {
       return response.data;
     } else {
@@ -69,7 +69,7 @@ const getAllProblems = () => {
 
 const getProblemById = (problemId: number, solve?: boolean) => {
   return axiosInstance
-    .get(`api/problem/${problemId}`, {
+    .get(`/problem/${problemId}`, {
       ...axiosConfig,
       params: {
         solve: solve,
@@ -88,20 +88,16 @@ const updateProblemById = (
   problemId: number,
   problemUpdate: Partial<Omit<Problem, "problemId"> & Tests>,
 ) => {
-  return axiosInstance.put(
-    `api/problem/${problemId}`,
-    problemUpdate,
-    axiosConfig,
-  );
+  return axiosInstance.put(`/problem/${problemId}`, problemUpdate, axiosConfig);
 };
 
 const deleteProblemByid = (problemId: number) => {
-  return axiosInstance.delete(`api/problem/${problemId}`, axiosConfig);
+  return axiosInstance.delete(`/problem/${problemId}`, axiosConfig);
 };
 
 const getSubmissions = (query: SubmissionQuery) => {
   return axiosInstance
-    .get(`api/submissions`, {
+    .get(`/submissions`, {
       ...axiosConfig,
       params: query,
     })
@@ -116,7 +112,7 @@ const getSubmissions = (query: SubmissionQuery) => {
 
 const getSubmissionById = (submissionId: number) => {
   return axiosInstance
-    .get(`api/submissions/${submissionId}`, axiosConfig)
+    .get(`/submissions/${submissionId}`, axiosConfig)
     .then((response) => {
       if (isSubmission(response.data)) {
         return response.data;
@@ -134,14 +130,14 @@ interface NewSubmission {
 
 const submitSolution = (problemId: number, newSubmission: NewSubmission) => {
   return axiosInstance.post(
-    `api/problem/${problemId}/submission`,
+    `/problem/${problemId}/submission`,
     newSubmission,
     axiosConfig,
   );
 };
 
 const getUserOfCurrentSession = () => {
-  return axiosInstance.get(`api/me`, axiosConfig).then((response) => {
+  return axiosInstance.get(`/me`, axiosConfig).then((response) => {
     if (isUser(response.data)) {
       return response.data;
     } else {
@@ -151,7 +147,7 @@ const getUserOfCurrentSession = () => {
 };
 
 const getUsersWithProfiles = () => {
-  return axiosInstance.get(`api/admin/users`, axiosConfig).then((response) => {
+  return axiosInstance.get(`/admin/users`, axiosConfig).then((response) => {
     if (isUserAdminDataArray(response.data)) {
       return response.data;
     } else {
@@ -161,12 +157,12 @@ const getUsersWithProfiles = () => {
 };
 
 const revokeSession = (sessionId: string) => {
-  return axiosInstance.delete(`api/admin/session/${sessionId}`, axiosConfig);
+  return axiosInstance.delete(`/admin/session/${sessionId}`, axiosConfig);
 };
 
 const promoteToAdmin = (userId: number) => {
   return axiosInstance.post(
-    "api/admin/",
+    "/admin/",
     {
       userId,
     },
@@ -175,7 +171,7 @@ const promoteToAdmin = (userId: number) => {
 };
 
 const revokeAdmin = (userId: number) => {
-  return axiosInstance.delete(`api/admin/${userId}`, axiosConfig);
+  return axiosInstance.delete(`/admin/${userId}`, axiosConfig);
 };
 
 export default {

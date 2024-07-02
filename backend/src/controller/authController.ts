@@ -119,7 +119,7 @@ export default new Elysia()
             cookie.session?.set({
                 httpOnly: true,
                 maxAge: 3600 * 2,
-                path: '/api',
+                path: '/',
                 priority: 'high',
                 value: sessionData.id,
                 sameSite: 'none',

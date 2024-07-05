@@ -14,15 +14,19 @@ export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    apiClient.isLoggedIn().then((response) => {
-      const userIsLogged = response.data;
-      authContext?.setIsLogged(userIsLogged);
-      if (!userIsLogged) {
+    apiClient
+      .isLoggedIn()
+      .then((response) => {
+        const userIsLogged = response.data;
+        authContext?.setIsLogged(userIsLogged);
+        if (!userIsLogged) {
+          throw new Error("User not authenticated.");
+        }
+        setPageReady(true);
+      })
+      .catch(() => {
         navigate("/");
-        return;
-      }
-      setPageReady(true);
-    });
+      });
   }, [authContext, navigate]);
 
   return (

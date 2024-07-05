@@ -20,9 +20,12 @@ export const Root = () => {
   }, []);
 
   useEffect(() => {
-    apiClient.isLoggedIn().then((response) => {
-      setIsLogged(response.data);
-    });
+    apiClient
+      .isLoggedIn()
+      .then((response) => {
+        setIsLogged(response.data);
+      })
+      .catch(() => setIsLogged(false));
   }, []);
 
   return (

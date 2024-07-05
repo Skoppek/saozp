@@ -6,7 +6,7 @@ import { InternalError } from '../errorHandlers/generalErrors';
 
 class UserWithSessionNotFoundError extends Error {
     constructor() {
-        super('User with valid session not found.');
+        super('User with valid session not found. Logging out...');
     }
 }
 
@@ -22,12 +22,13 @@ export const authenticatedUser = new Elysia()
                 return error;
         }
     })
-    .derive({ as: 'global' }, async ({ userId }) => {
-        if (!userId) {
+    .derive({ as: 'global' }, async ({ userId, sessionCookie }) => {
+        if (!userId || !sessionCookie) {
             throw new InternalError();
         }
         const user = await userRepository.getUserById(userId);
         if (!user) {
+            sessionCookie.remove();
             throw UserWithSessionNotFoundError;
         }
 

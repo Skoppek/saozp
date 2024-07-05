@@ -3,6 +3,7 @@ import { cron } from '@elysiajs/cron';
 import userRepository from '../repository/userRepository';
 import sessionRepository from '../repository/sessionRepository';
 import profileRepository from '../repository/profileRepository';
+import { authenticatedUser } from '../plugins/authenticatedUser';
 
 const getSaltedPassword = (password: string) => {
     return password + Bun.env.PASSWORD_SALT ?? '';
@@ -178,27 +179,10 @@ export default new Elysia()
             },
         },
     )
-    .get(
-        '/is-logged',
-        async ({ cookie: { session } }) => {
-            if (!session || !session.value) {
-                return false;
-            }
-            const sessionData = await sessionRepository.getSessionById(
-                session.value,
-            );
-            if (!sessionData || sessionData.expiresAt < new Date()) {
-                session.remove();
-                return false;
-            }
-            return true;
-        },
-        {
-            detail: {
-                tags: ['Auth'],
-            },
-            response: t.Boolean(),
-        },
+    .group('/is-logged', (app) =>
+        app.use(authenticatedUser).get('/', ({ user }) => {
+            return !!user;
+        }),
     )
     .use(
         cron({

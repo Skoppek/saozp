@@ -51,6 +51,7 @@ export const sessionCookie = new Elysia()
         }
         return {
             userId: sessionData.userId,
+            sessionCookie: session,
         };
     })
     .propagate();

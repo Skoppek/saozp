@@ -5,7 +5,9 @@ export const sessionSchema = pgTable(
     'sessions',
     {
         id: uuid('id').defaultRandom().primaryKey(),
-        userId: integer('user_id').references(() => userSchema.id),
+        userId: integer('user_id')
+            .references(() => userSchema.id)
+            .notNull(),
         expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
     },
     (sessionSchema) => ({

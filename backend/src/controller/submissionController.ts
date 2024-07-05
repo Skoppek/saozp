@@ -4,8 +4,9 @@ import judge0Statuses from '../shared/judge0Statuses';
 import problemRepository from '../repository/problemRepository';
 import judge0Service from '../judge/judge0Client';
 import testRepository from '../repository/testRepository';
-import sessionRepository from '../repository/sessionRepository';
 import judge0Client from '../judge/judge0Client';
+
+import { sessionCookie } from '../plugins/sessionCookie';
 
 const reduceToStatus = (
     statusIds: number[],
@@ -33,23 +34,7 @@ const getAverage = (array: number[]) => {
 };
 
 export default new Elysia({ prefix: '/submissions' })
-    .onBeforeHandle(async ({ cookie: { session }, set }) => {
-        if (!session || !session.value) {
-            set.status = 401;
-            throw new Error('Session cookie not found');
-        }
-        const sessionData = await sessionRepository.getSessionById(
-            session.value,
-        );
-        if (!sessionData) {
-            set.status = 401;
-            throw new Error('Session not found');
-        }
-        if (sessionData.expiresAt < new Date()) {
-            set.status = 401;
-            throw new Error('Session expired');
-        }
-    })
+    .use(sessionCookie)
     .get(
         '/',
         async ({ query }) => {

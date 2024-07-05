@@ -9,6 +9,7 @@ import profileController from './controller/profileController';
 import userRepository from './repository/userRepository';
 import profileRepository from './repository/profileRepository';
 import adminRepository from './repository/adminRepository';
+import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 
 const app = new Elysia({
     cookie: {
@@ -16,6 +17,7 @@ const app = new Elysia({
         sign: ['session'],
     },
 })
+    .use(generalErrorHandler)
     .use(
         cors({
             origin: true,

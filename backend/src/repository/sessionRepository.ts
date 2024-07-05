@@ -13,7 +13,7 @@ const createSession = async (
 };
 
 const revokeSession = async (sessionId: string) => {
-    return await db
+    return db
         .update(sessionSchema)
         .set({ expiresAt: new Date(0) })
         .where(eq(sessionSchema.id, sessionId));

@@ -2,8 +2,8 @@ import { Elysia, t } from 'elysia';
 import submissionRepository from '../repository/submissionRepository';
 import problemRepository from '../repository/problemRepository';
 import judge0Client from '../judge/judge0Client';
-import sessionRepository from '../repository/sessionRepository';
 import testRepository from '../repository/testRepository';
+import { sessionCookie } from '../plugins/sessionCookie';
 
 const submitTests = (
     tests: { input: string; expected: string }[],
@@ -29,30 +29,7 @@ const submitTests = (
 };
 
 export default new Elysia({ prefix: '/problem' })
-    .derive(async ({ cookie: { session }, set }) => {
-        if (!session || !session.value) {
-            set.status = 401;
-            throw new Error('Session cookie not found');
-        }
-        const sessionData = await sessionRepository.getSessionById(
-            session.value,
-        );
-        if (!sessionData) {
-            set.status = 401;
-            throw new Error(session.value);
-        }
-        if (sessionData.expiresAt < new Date()) {
-            set.status = 401;
-            throw new Error('Session expired');
-        }
-        if (!sessionData.userId) {
-            set.status = 500;
-            throw new Error('User not found for session!');
-        }
-        return {
-            userId: sessionData.userId,
-        };
-    })
+    .use(sessionCookie)
     .post(
         '/',
         ({ body, userId, set }) => {

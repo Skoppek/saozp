@@ -1,7 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { cron } from '@elysiajs/cron';
 import sessionRepository from '../repository/sessionRepository';
-import { authenticatedUser } from '../plugins/authenticatedUser';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
 import { SessionService } from '../services/SessionService';
@@ -97,37 +96,6 @@ export default new Elysia()
                 tags: ['Auth'],
             },
         },
-    )
-    .put(
-        '/refresh',
-        async ({ cookie: { session }, set }) => {
-            if (!session) {
-                set.status = 401;
-                throw new Error('Session cookie not found');
-            }
-
-            const refreshedSession = await sessionRepository.refreshSession(
-                session.value,
-                120,
-            );
-
-            if (!refreshedSession) {
-                set.status = 401;
-                throw new Error('Session not found');
-            }
-
-            session.expires = refreshedSession.expiresAt;
-        },
-        {
-            detail: {
-                tags: ['Auth'],
-            },
-        },
-    )
-    .group('/is-logged', (app) =>
-        app.use(authenticatedUser).get('/', ({ user }) => {
-            return !!user;
-        }),
     )
     .use(
         cron({

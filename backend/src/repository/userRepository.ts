@@ -14,7 +14,7 @@ const getUserById = async (id: number): Promise<User | undefined> => {
     );
 };
 
-const createUser = async (user: NewUser): Promise<NewUser | undefined> => {
+const createUser = async (user: NewUser): Promise<User | undefined> => {
     return (await db.insert(userSchema).values(user).returning()).at(0);
 };
 

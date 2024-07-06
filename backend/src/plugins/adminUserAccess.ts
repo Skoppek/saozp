@@ -19,8 +19,8 @@ export const adminUserAccess = new Elysia()
                 return error;
         }
     })
-    .onBeforeHandle(({ user: { isAdmin } }) => {
-        if (!isAdmin) {
+    .onBeforeHandle({ as: 'local' }, ({ user }) => {
+        if (!user.isAdmin) {
             throw new UnauthorizedError();
         }
-    });
+    }).propagate();

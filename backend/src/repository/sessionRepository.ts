@@ -8,7 +8,7 @@ import { db } from '../model/db/db';
 
 const createSession = async (
     session: NewSession,
-): Promise<NewSession | undefined> => {
+): Promise<Session | undefined> => {
     return (await db.insert(sessionSchema).values(session).returning()).at(0);
 };
 

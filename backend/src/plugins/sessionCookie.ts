@@ -1,40 +1,18 @@
 import { Elysia } from 'elysia';
 import sessionRepository from '../repository/sessionRepository';
-
-class SessionCookieNotFoundError extends Error {
-    constructor() {
-        super('Session cookie not found');
-    }
-}
-
-class SessionExpiredError extends Error {
-    constructor() {
-        super('Session expired');
-    }
-}
-
-class SessionNotFound extends Error {
-    constructor() {
-        super('Session not found.');
-    }
-}
+import {
+    SessionCookieNotFoundError,
+    SessionExpiredError,
+    SessionNotFoundError,
+} from '../errors/sessionErrors';
+import { sessionErrorHandler } from '../errorHandlers/sessionErrorHandler';
+import { sessionCookieDto } from '../shared/dtos';
 
 export const sessionCookie = new Elysia()
-    .error({
-        SessionCookieNotFoundError,
-        SessionExpiredError,
-        SessionNotFound,
-    })
-    .onError(({ code, error, set }) => {
-        switch (code) {
-            case 'SessionCookieNotFoundError':
-            case 'SessionExpiredError':
-            case 'SessionNotFound':
-                set.status = 401;
-                return error;
-        }
-    })
-    .derive({ as: 'local' }, async ({ cookie: { session } }) => {
+    .use(sessionErrorHandler)
+    .use(sessionCookieDto)
+    .guard({ cookie: 'sessionCookieDto' })
+    .derive({ as: 'scoped' }, async ({ cookie: { session } }) => {
         if (!session || !session.value) {
             throw new SessionCookieNotFoundError();
         }
@@ -43,7 +21,7 @@ export const sessionCookie = new Elysia()
         );
         if (!sessionData) {
             session.remove();
-            throw new SessionNotFound();
+            throw new SessionNotFoundError();
         }
         if (sessionData.expiresAt < new Date()) {
             session.remove();
@@ -53,5 +31,4 @@ export const sessionCookie = new Elysia()
             userId: sessionData.userId,
             sessionCookie: session,
         };
-    })
-    .propagate();
+    });

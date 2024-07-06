@@ -1,39 +1,33 @@
-import Elysia, { t } from 'elysia';
+import Elysia from 'elysia';
 import profileRepository from '../repository/profileRepository';
-import adminRepository from '../repository/adminRepository';
-
 import { authenticatedUser } from '../plugins/authenticatedUser';
+import { profileErrorHandler } from '../errorHandlers/profileErrorHandler';
+import { ProfileNotFoundError } from '../errors/profileErrors';
+import { profileResponse } from '../responses/profileResponse';
 
-export default new Elysia().use(authenticatedUser).get(
-    '/me',
-    async ({ user: { id, login }, set }) => {
-        const profile = await profileRepository.getProfileByUserId(id);
+export default new Elysia()
+    .use(authenticatedUser)
+    .use(profileErrorHandler)
+    .use(profileResponse)
+    .get(
+        '/me',
+        async ({ user: { id, login, isAdmin } }) => {
+            const profile = await profileRepository.getProfileByUserId(id);
 
-        if (!profile) {
-            set.status = 500;
-            throw new Error('No profile found for logged user!');
-        }
+            if (!profile) {
+                throw new ProfileNotFoundError();
+            }
 
-        const isAdmin = await adminRepository.isAdmin(id);
-
-        return {
-            userId: id,
-            login,
-            firstName: profile.firstName,
-            lastName: profile.lastName,
-            isAdmin,
-        };
-    },
-    {
-        detail: {
-            tags: ['Profiles'],
+            return {
+                ...profile,
+                login,
+                isAdmin,
+            };
         },
-        response: t.Object({
-            userId: t.Number(),
-            login: t.String(),
-            firstName: t.String(),
-            lastName: t.String(),
-            isAdmin: t.Optional(t.Boolean()),
-        }),
-    },
-);
+        {
+            detail: {
+                tags: ['Profiles'],
+            },
+            response: 'profileResponse',
+        },
+    );

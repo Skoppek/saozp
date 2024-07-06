@@ -1,55 +1,34 @@
 import { Elysia, t } from 'elysia';
 import { cron } from '@elysiajs/cron';
-import userRepository from '../repository/userRepository';
 import sessionRepository from '../repository/sessionRepository';
-import profileRepository from '../repository/profileRepository';
 import { authenticatedUser } from '../plugins/authenticatedUser';
-
-const getSaltedPassword = (password: string) => {
-    return password + Bun.env.PASSWORD_SALT ?? '';
-};
-
-export const registerUser = async (login: string, password: string) => {
-    const saltedPassword = getSaltedPassword(password);
-    const hashedPassword = await Bun.password.hash(saltedPassword);
-
-    return await userRepository.createUser({
-        login,
-        password: hashedPassword,
-    });
-};
+import { AuthService } from '../services/AuthService';
+import { ProfileService } from '../services/ProfileService';
+import { SessionService } from '../services/SessionService';
+import { sessionCookieDto } from '../shared/dtos';
 
 export default new Elysia()
+    .decorate({
+        authService: new AuthService(),
+        profileService: new ProfileService(),
+        sessionService: new SessionService(),
+    })
+    .use(sessionCookieDto)
     .post(
         '/sign-up',
-        async ({ body, cookie, set }) => {
-            const { login, password, firstName, lastName } = body;
-
-            const user = await userRepository.getUserByLogin(login);
-            if (user) {
-                set.status = 409;
-                throw new Error('User with this email already exists!');
-            }
-
-            const newUser = await registerUser(login, password);
-
-            if (!newUser || !newUser.id) {
-                set.status = 500;
-                throw new Error('User creation failure!');
-            }
-
-            const newSession = await sessionRepository.createSession({
-                userId: newUser.id,
-                expiresAt: new Date(Date.now() + 1000 * 3600 * 2),
-            });
-
-            if (!newSession?.id) {
-                set.status = 500;
-                throw new Error('Failed to create session');
-            }
+        async ({
+            authService,
+            profileService,
+            sessionService,
+            body: { login, password, lastName, firstName },
+            cookie: { session },
+        }) => {
+            const newUser = await authService.signUp(login, password);
+            await profileService.createProfile(newUser.id, firstName, lastName);
+            const newSession = await sessionService.createSession(newUser.id);
 
             // @ts-ignore
-            cookie.session.set({
+            session.set({
                 httpOnly: true,
                 maxAge: 3600 * 2,
                 path: '/',
@@ -58,12 +37,6 @@ export default new Elysia()
                 sameSite: 'none',
                 expires: newSession?.expiresAt,
                 secure: true,
-            });
-
-            return await profileRepository.createProfile({
-                userId: newUser.id,
-                firstName: firstName,
-                lastName: lastName,
             });
         },
         {
@@ -80,51 +53,23 @@ export default new Elysia()
     )
     .post(
         '/sign-in',
-        async ({ body, cookie, set }) => {
-            const { login, password } = body;
+        async ({
+            authService,
+            sessionService,
+            body: { login, password },
+            cookie: { session },
+        }) => {
+            const userId = await authService.signIn(login, password);
+            const newSession = await sessionService.createSession(userId);
 
-            const user = await userRepository.getUserByLogin(login);
-            if (!user) {
-                set.status = 400;
-                throw new Error('User not found!');
-            }
-
-            if (
-                !Bun.password.verifySync(
-                    getSaltedPassword(password),
-                    user.password,
-                )
-            ) {
-                set.status = 401;
-                throw new Error('Unauthenticated');
-            }
-
-            const existingSession =
-                await sessionRepository.getLatestSessionOfUser(user.id);
-
-            const sessionData =
-                existingSession && existingSession.expiresAt > new Date()
-                    ? await sessionRepository.refreshSession(
-                          existingSession.id,
-                          60 * 2,
-                      )
-                    : await sessionRepository.createSession({
-                          userId: user.id,
-                          expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
-                      });
-
-            if (!sessionData?.id) {
-                throw new Error('Failed to create session');
-            }
-
-            cookie.session?.set({
+            session?.set({
                 httpOnly: true,
                 maxAge: 3600 * 2,
                 path: '/',
                 priority: 'high',
-                value: sessionData.id,
+                value: newSession.id,
                 sameSite: 'none',
-                expires: sessionData?.expiresAt,
+                expires: newSession.expiresAt,
                 secure: true,
             });
         },

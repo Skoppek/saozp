@@ -2,7 +2,7 @@ import { Elysia } from 'elysia';
 import { sessionCookie } from './sessionCookie';
 import userRepository from '../repository/userRepository';
 import adminRepository from '../repository/adminRepository';
-import { InternalError } from '../errorHandlers/generalErrors';
+import { InternalError } from '../errors/generalErrors';
 
 class UserWithSessionNotFoundError extends Error {
     constructor() {
@@ -22,7 +22,7 @@ export const authenticatedUser = new Elysia()
                 return error;
         }
     })
-    .derive({ as: 'global' }, async ({ userId, sessionCookie }) => {
+    .derive({ as: 'scoped' }, async ({ userId, sessionCookie }) => {
         if (!userId || !sessionCookie) {
             throw new InternalError();
         }

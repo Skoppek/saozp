@@ -37,5 +37,6 @@ export const authenticatedUser = new Elysia()
                 ...user,
                 isAdmin: await adminRepository.isAdmin(user.id),
             },
+            sessionCookie,
         };
     });

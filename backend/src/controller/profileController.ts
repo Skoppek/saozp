@@ -1,25 +1,21 @@
 import Elysia from 'elysia';
-import profileRepository from '../repository/profileRepository';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import { profileErrorHandler } from '../errorHandlers/profileErrorHandler';
-import { ProfileNotFoundError } from '../errors/profileErrors';
 import { profileResponse } from '../responses/profileResponse';
+import { ProfileService } from '../services/ProfileService';
 
 export default new Elysia()
     .use(authenticatedUser)
     .use(profileErrorHandler)
     .use(profileResponse)
+    .decorate({
+        profileService: new ProfileService(),
+    })
     .get(
         '/me',
-        async ({ user: { id, login, isAdmin } }) => {
-            const profile = await profileRepository.getProfileByUserId(id);
-
-            if (!profile) {
-                throw new ProfileNotFoundError();
-            }
-
+        async ({ profileService, user: { id, login, isAdmin } }) => {
             return {
-                ...profile,
+                ...(await profileService.getProfileByUserId(id)),
                 login,
                 isAdmin,
             };

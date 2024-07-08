@@ -5,7 +5,7 @@ export class AuthService {
         return password + Bun.env.PASSWORD_SALT ?? '';
     }
 
-    private static async registerUser(login: string, password: string) {
+    static async registerUser(login: string, password: string) {
         const saltedPassword = AuthService.getSaltedPassword(password);
         const hashedPassword = await Bun.password.hash(saltedPassword);
 

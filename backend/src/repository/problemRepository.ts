@@ -23,9 +23,9 @@ const getProblems = async () => {
         .from(problemSchema)
         .leftJoin(
             profileSchema,
-            eq(problemSchema.creator, profileSchema.userId),
+            eq(problemSchema.creatorId, profileSchema.userId),
         )
-        .leftJoin(userSchema, eq(problemSchema.creator, userSchema.id))
+        .leftJoin(userSchema, eq(problemSchema.creatorId, userSchema.id))
         .where(eq(problemSchema.isDeactivated, false));
 };
 

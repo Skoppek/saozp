@@ -1,10 +1,10 @@
 import { Elysia, t } from 'elysia';
-import { cron } from '@elysiajs/cron';
 import sessionRepository from '../repository/sessionRepository';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
 import { SessionService } from '../services/SessionService';
 import { sessionCookieDto } from '../shared/dtos';
+import { authenticatedUser } from '../plugins/authenticatedUser';
 
 export default new Elysia()
     .decorate({
@@ -82,27 +82,16 @@ export default new Elysia()
             }),
         },
     )
+    .use(authenticatedUser)
     .delete(
         '/logout',
-        async ({ cookie }) => {
-            if (!cookie.session || !cookie.session.value) {
-                return 'Cookie not found';
-            }
-            await sessionRepository.revokeSession(cookie.session.value);
-            cookie.session.remove();
+        async ({ sessionCookie }) => {
+            await sessionRepository.revokeSession(sessionCookie.value);
+            sessionCookie.remove();
         },
         {
             detail: {
                 tags: ['Auth'],
             },
         },
-    )
-    .use(
-        cron({
-            name: 'delete-expired-sessions',
-            pattern: '* * */1 * * *',
-            run() {
-                sessionRepository.deleteExpiredSessions();
-            },
-        }),
     );

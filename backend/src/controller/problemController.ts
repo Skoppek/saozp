@@ -1,9 +1,13 @@
 import { Elysia, t } from 'elysia';
 import submissionRepository from '../repository/submissionRepository';
-import problemRepository from '../repository/problemRepository';
 import judge0Client from '../judge/judge0Client';
 import testRepository from '../repository/testRepository';
-import { sessionCookie } from '../plugins/sessionCookie';
+import { problemRequests } from '../requests/problemRequests';
+import { problemResponses } from '../responses/problemResponses';
+import { withProblem } from '../plugins/withProblem';
+import { ProblemService } from '../services/ProblemService';
+import { authenticatedUser } from '../plugins/authenticatedUser';
+import { problemErrorHandler } from '../errorHandlers/problemErrorHandler';
 
 const submitTests = (
     tests: { input: string; expected: string }[],
@@ -20,7 +24,7 @@ const submitTests = (
             })
         ).token;
 
-        testRepository.createTest({
+        await testRepository.createTest({
             token,
             submissionId,
             ...test,
@@ -29,90 +33,31 @@ const submitTests = (
 };
 
 export default new Elysia({ prefix: '/problem' })
-    .use(sessionCookie)
+    .use(authenticatedUser)
+    .use(problemRequests)
+    .use(problemResponses)
+    .use(problemErrorHandler)
+    .decorate({
+        problemService: new ProblemService(),
+    })
     .post(
         '/',
-        ({ body, userId, set }) => {
-            const newProblem = problemRepository.createProblem({
-                name: body.name,
-                description: body.description,
-                creator: userId,
-                prompt: body.prompt,
-                languageId: body.languageId,
-                tests: body.tests,
-                baseCode: body.baseCode,
-                activeAfter: body.activeAfter,
-            });
-            if (!newProblem) {
-                set.status = 500;
-                throw new Error('Problem creation failure');
-            }
+        async ({ problemService, body, user }) => {
+            await problemService.createProblem(body, user.id);
         },
         {
             detail: {
                 tags: ['Problems'],
             },
-            body: t.Object({
-                name: t.String(),
-                description: t.String(),
-                prompt: t.String(),
-                languageId: t.Number(),
-                baseCode: t.String(),
-                tests: t.Array(
-                    t.Object({
-                        input: t.String(),
-                        expected: t.String(),
-                    }),
-                ),
-                activeAfter: t.Date(),
-            }),
+            body: 'createProblemRequest',
         },
     )
-    .get(
-        '/',
-        async () => {
-            return (await problemRepository.getProblems())
-                .filter((problem) => !problem.problems.isDeactivated)
-                .map((problem) => {
-                    return {
-                        problemId: problem.problems.id,
-                        name: problem.problems.name,
-                        description: problem.problems.description,
-                        languageId: problem.problems.languageId,
-                        creator:
-                            {
-                                userId: problem.users?.id ?? -1,
-                                login: problem.users?.login ?? '',
-                                firstName: problem.profiles?.firstName ?? '',
-                                lastName: problem.profiles?.lastName ?? '',
-                            } ?? undefined,
-                        activeAfter: problem.problems.activeAfter,
-                    };
-                });
+    .get('/', async ({ problemService }) => problemService.getProblemList(), {
+        detail: {
+            tags: ['Problems'],
         },
-        {
-            detail: {
-                tags: ['Problems'],
-            },
-            response: t.Array(
-                t.Object({
-                    problemId: t.Number(),
-                    name: t.String(),
-                    description: t.String(),
-                    languageId: t.Number(),
-                    creator: t.Optional(
-                        t.Object({
-                            userId: t.Number(),
-                            login: t.String(),
-                            firstName: t.String(),
-                            lastName: t.String(),
-                        }),
-                    ),
-                    activeAfter: t.Date(),
-                }),
-            ),
-        },
-    )
+        response: 'problemListResponse',
+    })
     .group(
         '/:problemId',
         {
@@ -122,58 +67,19 @@ export default new Elysia({ prefix: '/problem' })
         },
         (app) => {
             return app
-                .derive(async ({ params: { problemId }, set }) => {
-                    const problem =
-                        await problemRepository.getProblemById(+problemId);
-                    if (!problem || problem.isDeactivated) {
-                        set.status = 404;
-                        throw new Error('Problem not found!');
-                    }
-                    return { problem };
-                })
+                .use(withProblem)
                 .get(
                     '/',
-                    async ({ problem, query: { solve } }) => {
-                        return {
-                            problemId: problem.id,
-                            name: problem.name,
-                            description: problem.description,
-                            prompt: problem.prompt,
-                            languageId: problem.languageId,
-                            baseCode:
-                                // query params don't work with other types than string :(
-                                solve === 'true'
-                                    ? problem.baseCode
-                                          .match(/---(.*?)---/gs)
-                                          ?.at(0)
-                                          ?.split('---')
-                                          .join('') ?? problem.baseCode
-                                    : problem.baseCode,
-                            creatorId: problem.creator,
-                            tests: problem.tests,
-                            activeAfter: problem.activeAfter,
-                        };
-                    },
+                    async ({ problemService, problem, query: { solve } }) =>
+                        problemService.getProblemDetails(
+                            problem,
+                            solve === 'true',
+                        ),
                     {
                         detail: {
                             tags: ['Problems'],
                         },
-                        response: t.Object({
-                            problemId: t.Number(),
-                            name: t.String(),
-                            description: t.String(),
-                            prompt: t.String(),
-                            languageId: t.Number(),
-                            baseCode: t.String(),
-                            creatorId: t.Number(),
-                            tests: t.Array(
-                                t.Object({
-                                    input: t.String(),
-                                    expected: t.String(),
-                                }),
-                            ),
-                            activeAfter: t.Date(),
-                        }),
+                        response: 'problemDetailsResponse',
                         query: t.Object({
                             solve: t.Optional(t.String()),
                         }),
@@ -181,51 +87,19 @@ export default new Elysia({ prefix: '/problem' })
                 )
                 .put(
                     '/',
-                    async ({ problem, body, set }) => {
-                        const updatedProblem =
-                            await problemRepository.updateProblemById(
-                                problem.id,
-                                {
-                                    name: body.name,
-                                    prompt: body.prompt,
-                                    languageId: body.languageId,
-                                    baseCode: body.baseCode,
-                                    tests: body.tests,
-                                    activeAfter: body.activeAfter,
-                                },
-                            );
-                        if (!updatedProblem) {
-                            set.status = 404;
-                            throw new Error('Resource not found');
-                        }
-                    },
+                    async ({ problemService, problem, body }) =>
+                        await problemService.updateProblem(problem.id, body),
                     {
                         detail: {
                             tags: ['Problems'],
                         },
-                        body: t.Object({
-                            name: t.Optional(t.String()),
-                            description: t.Optional(t.String()),
-                            prompt: t.Optional(t.String()),
-                            languageId: t.Optional(t.Number()),
-                            baseCode: t.Optional(t.String()),
-                            tests: t.Optional(
-                                t.Array(
-                                    t.Object({
-                                        input: t.String(),
-                                        expected: t.String(),
-                                    }),
-                                ),
-                            ),
-                            activeAfter: t.Date(),
-                        }),
+                        body: 'updateProblemRequest',
                     },
                 )
                 .delete(
                     '/',
-                    async ({ problem }) => {
-                        problemRepository.deleteProblemById(problem.id);
-                    },
+                    async ({ problemService, problem }) =>
+                        await problemService.deleteProblem(problem.id),
                     {
                         detail: {
                             tags: ['Problems'],
@@ -234,10 +108,10 @@ export default new Elysia({ prefix: '/problem' })
                 )
                 .post(
                     '/submission',
-                    async ({ problem, userId, body, set }) => {
+                    async ({ problem, user, body, set }) => {
                         if (!body.isCommit) {
                             await submissionRepository.deleteNonCommitSubmissoins(
-                                userId,
+                                user.id,
                                 problem.id,
                             );
                         }
@@ -245,7 +119,7 @@ export default new Elysia({ prefix: '/problem' })
                         const newSubmission = (
                             await submissionRepository.createSubmission({
                                 problemId: problem.id,
-                                userId,
+                                userId: user.id,
                                 code: body.code,
                                 isCommit: body.isCommit,
                             })

@@ -1,15 +1,14 @@
 import { Elysia } from 'elysia';
-import { swagger } from '@elysiajs/swagger';
-import problemController from './controller/problemController';
-import submissionController from './controller/submissionController';
-import authController, { registerUser } from './controller/authController';
-import adminsController from './controller/adminsController';
-import cors from '@elysiajs/cors';
-import profileController from './controller/profileController';
 import userRepository from './repository/userRepository';
 import profileRepository from './repository/profileRepository';
 import adminRepository from './repository/adminRepository';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
+import { sessionCleaner } from './plugins/sessionCleaner';
+import { swaggerDocs } from './plugins/swaggerDocs';
+import { corsSettings } from './plugins/corsSettings';
+import { AuthService } from './services/AuthService';
+import { isSignUpCredentials } from './shared/SignUpCredentials';
+import { controller } from './controller/controller';
 
 const app = new Elysia({
     cookie: {
@@ -18,79 +17,10 @@ const app = new Elysia({
     },
 })
     .use(generalErrorHandler)
-    .use(
-        cors({
-            origin: true,
-            allowedHeaders: [
-                'Authorization',
-                'Content-Type',
-                'Cookie',
-                'Set-Cookie',
-                'Access-Control-Allow-Credentials',
-            ],
-            credentials: true,
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        }),
-    )
-    .use(
-        // @ts-ignore
-        swagger({
-            documentation: {
-                tags: [
-                    {
-                        name: 'Auth',
-                        description:
-                            'Authentication and authorization endpoints',
-                    },
-                    {
-                        name: 'Profiles',
-                        description: 'Getting user profile information',
-                    },
-                    {
-                        name: 'Problems',
-                        description: 'Problems management',
-                    },
-                    {
-                        name: 'Submissions',
-                        description: 'Submissions management',
-                    },
-                    {
-                        name: 'Judge0',
-                        description: 'Judge0 feature endpoints',
-                    },
-                ],
-            },
-        }),
-    )
-    .use(authController)
-    .use(profileController)
-    .use(problemController)
-    .use(submissionController)
-    .use(adminsController);
-
-export const server = app.server;
-
-interface AdminCredentials {
-    login: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-}
-
-const isAdminCredentials = (suspect: unknown): suspect is AdminCredentials => {
-    return (
-        typeof suspect === 'object' &&
-        !!suspect &&
-        'login' in suspect &&
-        typeof suspect.login === 'string' &&
-        'password' in suspect &&
-        typeof suspect.password === 'string' &&
-        'firstName' in suspect &&
-        typeof suspect.firstName === 'string' &&
-        'lastName' in suspect &&
-        typeof suspect.lastName === 'string'
-    );
-};
+    .use(corsSettings)
+    .use(swaggerDocs)
+    .use(sessionCleaner)
+    .use(controller);
 
 const initAdmin = async () => {
     const adminCredentials = {
@@ -100,7 +30,7 @@ const initAdmin = async () => {
         lastName: Bun.env.ADMIN_LAST_NAME,
     };
 
-    if (!isAdminCredentials(adminCredentials)) {
+    if (!isSignUpCredentials(adminCredentials)) {
         throw new Error(
             'Admin credentials in env variables are not complete. Aborting...',
         );
@@ -123,7 +53,7 @@ const initAdmin = async () => {
 
     console.log('Admin user not registered. Creating ...');
 
-    const adminUser = await registerUser(
+    const adminUser = await AuthService.registerUser(
         adminCredentials.login,
         adminCredentials.password,
     );

@@ -12,7 +12,7 @@ import { userSchema } from './userSchema';
 
 export const problemSchema = pgTable('problems', {
     id: serial('id').primaryKey(),
-    creator: integer('creator_id')
+    creatorId: integer('creator_id')
         .references(() => userSchema.id)
         .notNull(),
     name: varchar('name', { length: 128 }).notNull(),

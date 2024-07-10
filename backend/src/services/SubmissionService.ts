@@ -6,6 +6,8 @@ import {
     parseSubmissionListQuery,
     SubmissionListQuery,
 } from '../queryParsers/submissionQueries';
+import problemRepository from '../repository/problemRepository';
+import judge0Service from '../judge/judge0Client';
 
 export class SubmissionService {
     private static reduceToStatus(
@@ -29,9 +31,9 @@ export class SubmissionService {
         return judge0Statuses.wrongAnswer;
     }
 
-    // private static getAverage(array: number[]) {
-    //     return array.reduce((avg, element) => avg + element / array.length, 0);
-    // }
+    private static getAverage(array: number[]) {
+        return array.reduce((avg, element) => avg + element / array.length, 0);
+    }
 
     async getSubmissionsList(query: SubmissionListQuery) {
         const { userId, problemId, commitsOnly } =
@@ -70,5 +72,55 @@ export class SubmissionService {
                 };
             }),
         );
+    }
+
+    async getSubmissionDetails(submissionId: number) {
+        const submission =
+            await submissionRepository.getSubmissionById(submissionId);
+
+        if (!submission) {
+            throw new Error('Internal error! Submission was not found.');
+        }
+
+        const problem = await problemRepository.getProblemById(
+            submission.problemId,
+        );
+
+        if (!problem) {
+            // set.status = 500;
+            throw new Error('Internal error! Problem was not found.');
+        }
+
+        const tests = await testRepository.getTestsOfSubmission(submissionId);
+
+        const results = (
+            await judge0Client.getSubmissionBatch(
+                tests.map((test) => test.token),
+            )
+        ).submissions;
+
+        return {
+            languageId:
+                (await judge0Service.getLanguageById(problem.languageId))?.id ??
+                0,
+            code: submission.code,
+            result: {
+                tests: results.map((result) => {
+                    return {
+                        statusId: result.status.id,
+                        token: result.token,
+                        input: result.stdin,
+                        expected: result.expected_output,
+                        received: result.stdout,
+                    };
+                }),
+                averageMemory: SubmissionService.getAverage(
+                    results.map((result) => result.memory),
+                ),
+                averageTime: SubmissionService.getAverage(
+                    results.map((result) => parseFloat(result.time)),
+                ),
+            },
+        };
     }
 }

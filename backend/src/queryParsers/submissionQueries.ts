@@ -1,4 +1,4 @@
-import { Static, t } from 'elysia';
+import { Elysia, Static, t } from 'elysia';
 
 const submissionListQuery = t.Object({
     userId: t.Optional(t.String()),
@@ -6,7 +6,7 @@ const submissionListQuery = t.Object({
     commitsOnly: t.Optional(t.String()),
 });
 
-type SubmissionListQuery = Static<typeof submissionListQuery>;
+export type SubmissionListQuery = Static<typeof submissionListQuery>;
 
 export const parseSubmissionListQuery = (query: SubmissionListQuery) => {
     return {
@@ -17,3 +17,7 @@ export const parseSubmissionListQuery = (query: SubmissionListQuery) => {
             : undefined,
     };
 };
+
+export const submissionQuery = new Elysia().model({
+    submissionListQuery,
+});

@@ -8,7 +8,7 @@ import { authenticatedUser } from '../plugins/authenticatedUser';
 import { SubmissionService } from '../services/SubmissionService';
 import { submissionResponses } from '../responses/submissionResponses';
 import { withSubmission } from '../plugins/withSubmission';
-import { parseSubmissionListQuery } from '../queryParsers/submissionQueries';
+import { submissionQuery } from '../queryParsers/submissionQueries';
 
 const getAverage = (array: number[]) => {
     return array.reduce((avg, element) => avg + element / array.length, 0);
@@ -18,24 +18,19 @@ export default new Elysia({ prefix: '/submissions' })
     .use(sessionCookie)
     .use(authenticatedUser)
     .use(submissionResponses)
+    .use(submissionQuery)
     .decorate({
         submissionService: new SubmissionService(),
     })
     .get(
         '/',
         async ({ submissionService, query }) =>
-            await submissionService.getSubmissionsList(
-                parseSubmissionListQuery(query),
-            ),
+            await submissionService.getSubmissionsList(query),
         {
             detail: {
                 tags: ['Submissions'],
             },
-            query: t.Object({
-                userId: t.Optional(t.String()),
-                problemId: t.Optional(t.String()),
-                commitsOnly: t.Optional(t.String()),
-            }),
+            query: 'submissionListQuery',
             response: 'getSubmissionListResponse',
         },
     )

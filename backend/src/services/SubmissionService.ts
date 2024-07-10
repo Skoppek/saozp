@@ -2,6 +2,10 @@ import submissionRepository from '../repository/submissionRepository';
 import testRepository from '../repository/testRepository';
 import judge0Client from '../judge/judge0Client';
 import judge0Statuses from '../shared/judge0Statuses';
+import {
+    parseSubmissionListQuery,
+    SubmissionListQuery,
+} from '../queryParsers/submissionQueries';
 
 export class SubmissionService {
     private static reduceToStatus(
@@ -29,15 +33,10 @@ export class SubmissionService {
     //     return array.reduce((avg, element) => avg + element / array.length, 0);
     // }
 
-    async getSubmissionsList({
-        userId,
-        problemId,
-        commitsOnly,
-    }: {
-        userId?: number;
-        problemId?: number;
-        commitsOnly?: boolean;
-    }) {
+    async getSubmissionsList(query: SubmissionListQuery) {
+        const { userId, problemId, commitsOnly } =
+            parseSubmissionListQuery(query);
+
         const submissions = await submissionRepository.getSubmissionsList(
             userId,
             problemId,

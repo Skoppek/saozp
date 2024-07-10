@@ -68,12 +68,11 @@ export default new Elysia({
                         problemService,
                         params: { problemId },
                         query: { solve },
-                    }) => {
-                        return await problemService.getProblemDetails(
+                    }) =>
+                        await problemService.getProblemDetails(
                             problemId,
                             solve === 'true',
-                        );
-                    },
+                        ),
                     {
                         response: 'problemDetailsResponse',
                         query: t.Object({

@@ -25,15 +25,19 @@ export class SubmissionService {
         return judge0Statuses.wrongAnswer;
     }
 
-    private static getAverage(array: number[]) {
-        return array.reduce((avg, element) => avg + element / array.length, 0);
-    }
+    // private static getAverage(array: number[]) {
+    //     return array.reduce((avg, element) => avg + element / array.length, 0);
+    // }
 
-    async getSubmissionsList(
-        userId?: number,
-        problemId?: number,
-        commitsOnly?: boolean,
-    ) {
+    async getSubmissionsList({
+        userId,
+        problemId,
+        commitsOnly,
+    }: {
+        userId?: number;
+        problemId?: number;
+        commitsOnly?: boolean;
+    }) {
         const submissions = await submissionRepository.getSubmissionsList(
             userId,
             problemId,

@@ -1,4 +1,3 @@
-import { Problem } from '../model/schemas/problemSchema';
 import {
     CreateProblemRequest,
     UpdateProblemRequest,
@@ -8,10 +7,19 @@ import { User } from '../model/schemas/userSchema';
 import { Profile } from '../model/schemas/profileSchema';
 import {
     ProblemCreationError,
+    ProblemNotFoundError,
     ProblemUpdateError,
 } from '../errors/problemErrors';
 
 export class ProblemService {
+    private static async fetchProblem(problemId: number) {
+        const problem = await problemRepository.getProblemById(+problemId);
+        if (!problem || problem.isDeactivated) {
+            throw new ProblemNotFoundError(problemId);
+        }
+        return problem;
+    }
+
     private static hideCreatorCode(code: string) {
         return (
             code
@@ -67,7 +75,9 @@ export class ProblemService {
             });
     }
 
-    getProblemDetails(problem: Problem, isForSolving: boolean) {
+    async getProblemDetails(problemId: number, isForSolving: boolean) {
+        const problem = await ProblemService.fetchProblem(problemId);
+
         return {
             problemId: problem.id,
             name: problem.name,

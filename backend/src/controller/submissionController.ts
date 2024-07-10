@@ -1,33 +1,13 @@
 import { Elysia, t } from 'elysia';
-import submissionRepository from '../repository/submissionRepository';
-import judge0Statuses from '../shared/judge0Statuses';
 import problemRepository from '../repository/problemRepository';
 import judge0Service from '../judge/judge0Client';
 import testRepository from '../repository/testRepository';
 import judge0Client from '../judge/judge0Client';
-
 import { sessionCookie } from '../plugins/sessionCookie';
-
-const reduceToStatus = (
-    statusIds: number[],
-): { id: number; description: string } | undefined => {
-    if (statusIds.includes(1)) {
-        return judge0Statuses.inQueue;
-    }
-    if (statusIds.includes(2)) {
-        return judge0Statuses.processing;
-    }
-    if (statusIds.some((status) => status == 5)) {
-        return judge0Statuses.timeLimitExceeded;
-    }
-    if (statusIds.some((status) => status > 5)) {
-        return judge0Statuses.error;
-    }
-    if (statusIds.every((status) => status == 3)) {
-        return judge0Statuses.accepted;
-    }
-    return judge0Statuses.wrongAnswer;
-};
+import { authenticatedUser } from '../plugins/authenticatedUser';
+import { SubmissionService } from '../services/SubmissionService';
+import { submissionResponses } from '../responses/submissionResponses';
+import { withSubmission } from '../plugins/withSubmission';
 
 const getAverage = (array: number[]) => {
     return array.reduce((avg, element) => avg + element / array.length, 0);
@@ -35,43 +15,19 @@ const getAverage = (array: number[]) => {
 
 export default new Elysia({ prefix: '/submissions' })
     .use(sessionCookie)
+    .use(authenticatedUser)
+    .use(submissionResponses)
+    .decorate({
+        submissionService: new SubmissionService(),
+    })
     .get(
         '/',
-        async ({ query }) => {
-            const submissions = await submissionRepository.getSubmissionsList(
+        async ({ submissionService, query }) =>
+            await submissionService.getSubmissionsList(
                 query.userId ? parseInt(query.userId) : undefined,
                 query.problemId ? parseInt(query.problemId) : undefined,
                 query.commitsOnly ? query.commitsOnly == 'true' : undefined,
-            );
-
-            return await Promise.all(
-                submissions.map(async (submission) => {
-                    const tests = await testRepository.getTestsOfSubmission(
-                        submission.id,
-                    );
-                    const results = (
-                        await judge0Client.getSubmissionBatch(
-                            tests.map((test) => test.token),
-                        )
-                    ).submissions;
-
-                    return {
-                        submissionId: submission.id,
-                        creator: {
-                            login: '',
-                            userId: submission.creator?.userId ?? -1,
-                            firstName: submission.creator?.firstName ?? '',
-                            lastName: submission.creator?.lastName ?? '',
-                        },
-                        createdAt: submission.createdAt?.toLocaleString(),
-                        status: reduceToStatus(
-                            results.map((result) => result.status.id),
-                        ),
-                        isCommit: submission.isCommit,
-                    };
-                }),
-            );
-        },
+            ),
         {
             detail: {
                 tags: ['Submissions'],
@@ -81,41 +37,13 @@ export default new Elysia({ prefix: '/submissions' })
                 problemId: t.Optional(t.String()),
                 commitsOnly: t.Optional(t.String()),
             }),
-            response: t.Array(
-                t.Object({
-                    submissionId: t.Number(),
-                    creator: t.Nullable(
-                        t.Object({
-                            firstName: t.String(),
-                            login: t.String(),
-                            lastName: t.String(),
-                            userId: t.Number(),
-                        }),
-                    ),
-                    createdAt: t.Optional(t.String()),
-                    status: t.Optional(
-                        t.Object({
-                            id: t.Number(),
-                            description: t.String(),
-                        }),
-                    ),
-                    isCommit: t.Boolean(),
-                }),
-            ),
+            response: 'getSubmissionListResponse',
         },
     )
+    .use(withSubmission)
     .get(
         '/:submissionId',
-        async ({ params, set }) => {
-            const submission = await submissionRepository.getSubmissionById(
-                parseInt(params.submissionId),
-            );
-
-            if (!submission) {
-                set.status = 404;
-                throw new Error('Submission not found!');
-            }
-
+        async ({ submission, set }) => {
             const problem = await problemRepository.getProblemById(
                 submission.problemId,
             );
@@ -166,22 +94,6 @@ export default new Elysia({ prefix: '/submissions' })
             params: t.Object({
                 submissionId: t.String(),
             }),
-            response: t.Object({
-                languageId: t.Number(),
-                code: t.String(),
-                result: t.Object({
-                    tests: t.Array(
-                        t.Object({
-                            statusId: t.Number(),
-                            token: t.String(),
-                            input: t.String(),
-                            expected: t.String(),
-                            received: t.Nullable(t.String()),
-                        }),
-                    ),
-                    averageMemory: t.Number(),
-                    averageTime: t.Number(),
-                }),
-            }),
+            response: 'getSubmissionDetailsResponse',
         },
     );

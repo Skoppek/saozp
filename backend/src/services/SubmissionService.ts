@@ -8,6 +8,7 @@ import {
 } from '../queryParsers/submissionQueries';
 import problemRepository from '../repository/problemRepository';
 import judge0Service from '../judge/judge0Client';
+import { SubmissionNotFoundError } from '../errors/submissionErrors';
 
 export class SubmissionService {
     private static reduceToStatus(
@@ -79,7 +80,7 @@ export class SubmissionService {
             await submissionRepository.getSubmissionById(submissionId);
 
         if (!submission) {
-            throw new Error('Internal error! Submission was not found.');
+            throw new SubmissionNotFoundError(submissionId);
         }
 
         const problem = await problemRepository.getProblemById(
@@ -91,7 +92,7 @@ export class SubmissionService {
             throw new Error('Internal error! Problem was not found.');
         }
 
-        const tests = await testRepository.getTestsOfSubmission(submissionId);
+        const tests = await testRepository.getTestsOfSubmission(submission.id);
 
         const results = (
             await judge0Client.getSubmissionBatch(

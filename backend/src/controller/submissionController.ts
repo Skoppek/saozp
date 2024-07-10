@@ -4,6 +4,7 @@ import { authenticatedUser } from '../plugins/authenticatedUser';
 import { SubmissionService } from '../services/SubmissionService';
 import { submissionResponses } from '../responses/submissionResponses';
 import { submissionQuery } from '../queryParsers/submissionQueries';
+import { submissionErrorHandler } from '../errorHandlers/submissionErrorHandler';
 
 export default new Elysia({
     prefix: '/submissions',
@@ -13,6 +14,7 @@ export default new Elysia({
 })
     .use(sessionCookie)
     .use(authenticatedUser)
+    .use(submissionErrorHandler)
     .use(submissionResponses)
     .use(submissionQuery)
     .decorate({

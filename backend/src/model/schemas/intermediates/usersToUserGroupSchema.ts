@@ -5,9 +5,9 @@ import { userGroupSchema } from '../userGroupSchema';
 
 export const usersToUserGroupSchema = pgTable('users_to_user_groups', {
     userId: integer('user_id')
-        .notNull()
-        .references(() => userSchema.id),
+        .references(() => userSchema.id)
+        .notNull(),
     groupId: integer('group_id')
-        .notNull()
-        .references(() => userGroupSchema.id),
+        .references(() => userGroupSchema.id)
+        .notNull(),
 });

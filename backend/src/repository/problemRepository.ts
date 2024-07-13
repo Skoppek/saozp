@@ -9,13 +9,8 @@ import _ from 'lodash';
 import { profileSchema } from '../model/schemas/profileSchema';
 import { userSchema } from '../model/schemas/userSchema';
 
-const createProblem = async (
-    newProblem: NewProblem,
-): Promise<NewProblem | undefined> => {
-    return (await db.insert(problemSchema).values(newProblem).returning()).at(
-        0,
-    );
-};
+const createProblem = async (newProblem: NewProblem) =>
+    (await db.insert(problemSchema).values(newProblem).returning()).at(0);
 
 const getProblems = async () => {
     return db

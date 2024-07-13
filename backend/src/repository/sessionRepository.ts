@@ -31,10 +31,8 @@ const deleteExpiredSessions = async () => {
         .where(lt(sessionSchema.expiresAt, new Date()));
 };
 
-const getLatestSessionOfUser = async (
-    userId: number,
-): Promise<Session | undefined> => {
-    return (
+const getLatestSessionOfUser = async (userId: number) =>
+    (
         await db
             .select()
             .from(sessionSchema)
@@ -42,7 +40,6 @@ const getLatestSessionOfUser = async (
             .orderBy(desc(sessionSchema.expiresAt))
             .limit(1)
     ).at(0);
-};
 
 const refreshSession = async (
     id: string,

@@ -76,5 +76,5 @@ export default {
     getSubmissionsList,
     getSubmissionById,
     deleteSubmissionById,
-    deleteNonCommitSubmissoins: deleteNonCommitSubmissions,
+    deleteNonCommitSubmissions,
 };

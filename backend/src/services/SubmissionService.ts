@@ -75,7 +75,7 @@ export class SubmissionService {
         }
 
         if (!isCommit) {
-            await submissionRepository.deleteNonCommitSubmissoins(
+            await submissionRepository.deleteNonCommitSubmissions(
                 userId,
                 problemId,
             );

@@ -8,7 +8,12 @@ import {
 } from '../queryParsers/submissionQueries';
 import problemRepository from '../repository/problemRepository';
 import judge0Service from '../judge/judge0Client';
-import { SubmissionNotFoundError } from '../errors/submissionErrors';
+import {
+    SubmissionCreationError,
+    SubmissionNotFoundError,
+} from '../errors/submissionErrors';
+import { CreateSubmissionRequestBody } from '../requests/submissionRequests';
+import { ProblemNotFoundError } from '../errors/problemErrors';
 
 export class SubmissionService {
     private static reduceToStatus(
@@ -34,6 +39,76 @@ export class SubmissionService {
 
     private static getAverage(array: number[]) {
         return array.reduce((avg, element) => avg + element / array.length, 0);
+    }
+
+    private static submitTests(
+        tests: { input: string; expected: string }[],
+        submissionId: number,
+        languageId: number,
+        code: string,
+    ) {
+        tests.forEach(async (test) => {
+            const token = (
+                await judge0Client.submit({
+                    languageId: languageId,
+                    code: code,
+                    test,
+                })
+            ).token;
+
+            await testRepository.createTest({
+                token,
+                submissionId,
+                ...test,
+            });
+        });
+    }
+
+    async createSubmission(
+        { problemId, isCommit, code, userTests }: CreateSubmissionRequestBody,
+        userId: number,
+    ) {
+        const problem = await problemRepository.getProblemById(problemId);
+
+        if (!problem) {
+            throw new ProblemNotFoundError(problemId);
+        }
+
+        if (!isCommit) {
+            await submissionRepository.deleteNonCommitSubmissoins(
+                userId,
+                problemId,
+            );
+        }
+
+        const newSubmission = (
+            await submissionRepository.createSubmission({
+                problemId,
+                userId,
+                code,
+                isCommit,
+            })
+        ).at(0);
+
+        if (!newSubmission) {
+            throw new SubmissionCreationError();
+        }
+
+        const mergedCode = problem.baseCode.replace(
+            /---(.*?)---/gs,
+            newSubmission.code,
+        );
+
+        SubmissionService.submitTests(
+            !!isCommit ? problem.tests : userTests ?? [],
+            newSubmission.id,
+            problem.languageId,
+            mergedCode,
+        );
+
+        return {
+            submissionId: newSubmission.id,
+        };
     }
 
     async getSubmissionsList(query: SubmissionListQuery) {

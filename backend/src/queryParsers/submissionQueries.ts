@@ -18,6 +18,6 @@ export const parseSubmissionListQuery = (query: SubmissionListQuery) => {
     };
 };
 
-export const submissionQuery = new Elysia().model({
+export const submissionQueries = new Elysia().model({
     submissionListQuery,
 });

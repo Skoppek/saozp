@@ -7,11 +7,8 @@ import {
 } from '../model/schemas/submissionSchema';
 import { profileSchema } from '../model/schemas/profileSchema';
 
-const createSubmission = async (
-    newSubmission: NewSubmission,
-): Promise<Submission[]> => {
-    return db.insert(submissionSchema).values(newSubmission).returning();
-};
+const createSubmission = async (newSubmission: NewSubmission) =>
+    await db.insert(submissionSchema).values(newSubmission).returning();
 
 const getSubmissionsList = async (
     userId?: number,
@@ -58,7 +55,7 @@ const deleteSubmissionById = async (id: number) => {
     db.delete(submissionSchema).where(eq(submissionSchema.id, id));
 };
 
-const deleteNonCommitSubmissoins = async (
+const deleteNonCommitSubmissions = async (
     userId: number,
     problemId: number,
 ) => {
@@ -79,5 +76,5 @@ export default {
     getSubmissionsList,
     getSubmissionById,
     deleteSubmissionById,
-    deleteNonCommitSubmissoins,
+    deleteNonCommitSubmissoins: deleteNonCommitSubmissions,
 };

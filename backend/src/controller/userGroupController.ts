@@ -36,9 +36,8 @@ export default new Elysia({ prefix: 'user_group' })
             .use(userGroupIdParam)
             .get(
                 '/',
-                ({ groupId }) => {
-                    throw new NotImplementedError();
-                },
+                async ({ userGroupService, groupId }) =>
+                    await userGroupService.getUserGroup(groupId),
                 {
                     response: 'getUserGroupResponse',
                 },

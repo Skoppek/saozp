@@ -60,10 +60,27 @@ const getUserGroupList = async () =>
         return { ...entry.user_groups, owner: entry.profiles };
     });
 
+const getUserGroup = async (groupId: number) =>
+    (
+        await db
+            .select()
+            .from(userGroupSchema)
+            .innerJoin(
+                profileSchema,
+                eq(profileSchema.userId, userGroupSchema.owner),
+            )
+            .where(eq(userGroupSchema.id, groupId))
+    )
+        .map((entry) => {
+            return { ...entry.user_groups, owner: entry.profiles };
+        })
+        .at(0);
+
 export default {
     createUserGroup,
     addUserToGroup,
     removeUserFromGroup,
     getProfilesOfGroup,
     getUserGroupList,
+    getUserGroup,
 };

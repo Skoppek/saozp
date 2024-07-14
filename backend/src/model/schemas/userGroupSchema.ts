@@ -5,10 +5,9 @@ import { userSchema } from './userSchema';
 export const userGroupSchema = pgTable('user_groups', {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 128 }).notNull(),
-    owner: integer('creator_id')
+    owner: integer('owner_id')
         .references(() => userSchema.id)
         .notNull(),
 });
 
 export type NewUserGroup = typeof userGroupSchema.$inferInsert;
-export type UserGroup = typeof userGroupSchema.$inferSelect;

@@ -8,19 +8,58 @@ import { and } from 'drizzle-orm';
 import { eq } from 'drizzle-orm/sql';
 import { profileSchema } from '../model/schemas/profileSchema';
 
-const createUserGroup = async (newUserGroup: NewUserGroup) =>
-    (await db.insert(userGroupSchema).values(newUserGroup).returning()).at(0);
+const createUserGroup = async (newUserGroup: NewUserGroup) => {
+    const result = await db
+        .insert(userGroupSchema)
+        .values(newUserGroup)
+        .returning();
+    return result.at(0);
+};
 
-const addUserToGroup = async (groupId: number, userId: number) =>
-    (
-        await db
-            .insert(usersToUserGroupSchema)
-            .values({
-                userId,
-                groupId,
-            })
-            .returning()
-    ).at(0);
+const getUserGroup = async (groupId: number) => {
+    const result = await db
+        .select()
+        .from(userGroupSchema)
+        .innerJoin(
+            profileSchema,
+            eq(profileSchema.userId, userGroupSchema.owner),
+        )
+        .where(eq(userGroupSchema.id, groupId));
+
+    return result
+        .map((entry) => {
+            return { ...entry.user_groups, owner: entry.profiles };
+        })
+        .at(0);
+};
+
+const updateUserGroup = async (
+    data: Partial<NewUserGroup>,
+    groupId: number,
+) => {
+    const result = await db
+        .update(userGroupSchema)
+        .set(data)
+        .where(eq(userGroupSchema.id, groupId))
+        .returning();
+
+    return result.at(0);
+};
+
+const deleteUserGroup = async (groupId: number) =>
+    await db.delete(userGroupSchema).where(eq(userGroupSchema.id, groupId));
+
+const addUserToGroup = async (groupId: number, userId: number) => {
+    const result = await db
+        .insert(usersToUserGroupSchema)
+        .values({
+            userId,
+            groupId,
+        })
+        .returning();
+
+    return result.at(0);
+};
 
 const removeUserFromGroup = async (groupId: number, userId: number) => {
     await db
@@ -33,60 +72,32 @@ const removeUserFromGroup = async (groupId: number, userId: number) => {
         );
 };
 
-const getProfilesOfGroup = async (groupId: number) =>
-    (
-        await db
-            .select()
-            .from(profileSchema)
-            .innerJoin(
-                usersToUserGroupSchema,
-                eq(profileSchema.userId, usersToUserGroupSchema.groupId),
-            )
-            .where(eq(usersToUserGroupSchema.groupId, groupId))
-    )
-        .map((entry) => entry.profiles)
-        .filter((user) => !!user);
+const getProfilesOfGroup = async (groupId: number) => {
+    const result = await db
+        .select()
+        .from(profileSchema)
+        .innerJoin(
+            usersToUserGroupSchema,
+            eq(profileSchema.userId, usersToUserGroupSchema.groupId),
+        )
+        .where(eq(usersToUserGroupSchema.groupId, groupId));
 
-const getUserGroupList = async () =>
-    (
-        await db
-            .select()
-            .from(userGroupSchema)
-            .innerJoin(
-                profileSchema,
-                eq(profileSchema.userId, userGroupSchema.owner),
-            )
-    ).map((entry) => {
+    return result.map((entry) => entry.profiles).filter((user) => !!user);
+};
+
+const getUserGroupList = async () => {
+    const result = await db
+        .select()
+        .from(userGroupSchema)
+        .innerJoin(
+            profileSchema,
+            eq(profileSchema.userId, userGroupSchema.owner),
+        );
+
+    return result.map((entry) => {
         return { ...entry.user_groups, owner: entry.profiles };
     });
-
-const getUserGroup = async (groupId: number) =>
-    (
-        await db
-            .select()
-            .from(userGroupSchema)
-            .innerJoin(
-                profileSchema,
-                eq(profileSchema.userId, userGroupSchema.owner),
-            )
-            .where(eq(userGroupSchema.id, groupId))
-    )
-        .map((entry) => {
-            return { ...entry.user_groups, owner: entry.profiles };
-        })
-        .at(0);
-
-const updateUserGroup = async (data: Partial<NewUserGroup>, groupId: number) =>
-    (
-        await db
-            .update(userGroupSchema)
-            .set(data)
-            .where(eq(userGroupSchema.id, groupId))
-            .returning()
-    ).at(0);
-
-const deleteUserGroup = async (groupId: number) =>
-    await db.delete(userGroupSchema).where(eq(userGroupSchema.id, groupId));
+};
 
 export default {
     createUserGroup,

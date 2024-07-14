@@ -1,4 +1,7 @@
-import { CreateUserGroupRequestBody } from '../requests/userGroupRequests';
+import {
+    CreateUserGroupRequestBody,
+    UpdateUserGroupRequestBody,
+} from '../requests/userGroupRequests';
 import userGroupRepository from '../repository/userGroupRepository';
 import {
     UserGroupCreationError,
@@ -37,5 +40,16 @@ export class UserGroupService {
             ...group,
             users,
         };
+    }
+
+    async updateUserGroup(data: UpdateUserGroupRequestBody, groupId: number) {
+        const updatedGroup = await userGroupRepository.updateUserGroup(
+            data,
+            groupId,
+        );
+
+        if (!updatedGroup) {
+            throw new UserGroupNotFoundError(groupId);
+        }
     }
 }

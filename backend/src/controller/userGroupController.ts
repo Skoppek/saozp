@@ -44,9 +44,8 @@ export default new Elysia({ prefix: 'user_group' })
             )
             .put(
                 '/',
-                ({ groupId }) => {
-                    throw new NotImplementedError();
-                },
+                async ({ userGroupService, body, groupId }) =>
+                    await userGroupService.updateUserGroup(body, groupId),
                 {
                     body: 'updateUserGroupRequestBody',
                 },

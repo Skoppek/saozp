@@ -76,6 +76,15 @@ const getUserGroup = async (groupId: number) =>
         })
         .at(0);
 
+const updateUserGroup = async (data: Partial<NewUserGroup>, groupId: number) =>
+    (
+        await db
+            .update(userGroupSchema)
+            .set(data)
+            .where(eq(userGroupSchema.id, groupId))
+            .returning()
+    ).at(0);
+
 export default {
     createUserGroup,
     addUserToGroup,
@@ -83,4 +92,5 @@ export default {
     getProfilesOfGroup,
     getUserGroupList,
     getUserGroup,
+    updateUserGroup,
 };

@@ -4,6 +4,10 @@ const createUserGroupRequestBody = t.Object({
     name: t.String(),
 });
 
+export type CreateUserGroupRequestBody = Static<
+    typeof createUserGroupRequestBody
+>;
+
 const userIds = t.Object({
     userIds: t.Array(t.Number()),
 });
@@ -15,8 +19,8 @@ const updateUserGroupRequestBody = t.Partial(
     }),
 );
 
-export type CreateUserGroupRequestBody = Static<
-    typeof createUserGroupRequestBody
+export type UpdateUserGroupRequestBody = Static<
+    typeof updateUserGroupRequestBody
 >;
 
 export const userGroupRequestBodies = new Elysia().model({

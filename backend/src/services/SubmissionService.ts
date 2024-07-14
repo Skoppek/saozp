@@ -1,4 +1,3 @@
-import testRepository from '../repository/testRepository';
 import judge0Client from '../judge/judge0Client';
 import judge0Statuses from '../shared/judge0Statuses';
 import {
@@ -14,10 +13,12 @@ import { CreateSubmissionRequestBody } from '../bodies/submissionRequests';
 import { ProblemNotFoundError } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
+import { TestRepository } from '../repository/TestRepository';
 
 export class SubmissionService {
     private problemRepository = new ProblemRepository();
     private submissionRepository = new SubmissionRepository();
+    private testRepository = new TestRepository();
 
     private reduceToStatus(
         statusIds: number[],
@@ -59,7 +60,7 @@ export class SubmissionService {
                 })
             ).token;
 
-            await testRepository.createTest({
+            await this.testRepository.createTest({
                 token,
                 submissionId,
                 ...test,
@@ -124,7 +125,7 @@ export class SubmissionService {
 
         return await Promise.all(
             submissions.map(async (submission) => {
-                const tests = await testRepository.getTestsOfSubmission(
+                const tests = await this.testRepository.getTestsOfSubmission(
                     submission.id,
                 );
                 const results = (
@@ -164,11 +165,12 @@ export class SubmissionService {
         );
 
         if (!problem) {
-            // set.status = 500;
-            throw new Error('Internal error! Problem was not found.');
+            throw new ProblemNotFoundError(submission.problemId);
         }
 
-        const tests = await testRepository.getTestsOfSubmission(submission.id);
+        const tests = await this.testRepository.getTestsOfSubmission(
+            submission.id,
+        );
 
         const results = (
             await judge0Client.getSubmissionBatch(

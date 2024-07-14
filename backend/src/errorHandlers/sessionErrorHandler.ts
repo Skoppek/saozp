@@ -4,6 +4,7 @@ import {
     SessionExpiredError,
     SessionNotFoundError,
 } from '../errors/sessionErrors';
+import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const sessionErrorHandler = new Elysia()
     .error({
@@ -11,12 +12,13 @@ export const sessionErrorHandler = new Elysia()
         SessionExpiredError,
         SessionNotFoundError,
     })
-    .onError(({ code, error, set }) => {
+    .use(HttpStatusCode())
+    .onError(({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'SessionCookieNotFoundError':
             case 'SessionNotFoundError':
             case 'SessionExpiredError':
-                set.status = 401;
+                set.status = httpStatus.HTTP_401_UNAUTHORIZED;
                 return error;
         }
     });

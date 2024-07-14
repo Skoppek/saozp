@@ -1,14 +1,16 @@
 import { Elysia } from 'elysia';
 import { InternalError } from '../errors/generalErrors';
+import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const generalErrorHandler = new Elysia()
     .error({
         InternalError,
     })
-    .onError({ as: 'scoped' }, ({ code, error, set }) => {
+    .use(HttpStatusCode())
+    .onError(({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'InternalError':
-                set.status = 500;
+                set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
                 return error;
         }
     });

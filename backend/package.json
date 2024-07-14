@@ -18,6 +18,7 @@
     "drizzle-kit": "^0.22.8",
     "drizzle-orm": "^0.31.2",
     "elysia": "^1.0.27",
+    "elysia-http-status-code": "^1.0.9",
     "lodash": "^4.17.21",
     "pg": "^8.12.0"
   },

@@ -3,19 +3,21 @@ import {
     SubmissionCreationError,
     SubmissionNotFoundError,
 } from '../errors/submissionErrors';
+import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const submissionErrorHandler = new Elysia()
     .error({
         SubmissionNotFoundError,
         SubmissionCreationError,
     })
-    .onError(({ code, error, set }) => {
+    .use(HttpStatusCode())
+    .onError(({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'SubmissionNotFoundError':
-                set.status = 404;
+                set.status = httpStatus.HTTP_404_NOT_FOUND;
                 return error;
             case 'SubmissionCreationError':
-                set.status = 500;
+                set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
                 return error;
         }
     });

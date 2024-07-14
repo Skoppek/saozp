@@ -4,16 +4,19 @@ import { NotImplementedError } from '../errors/generalErrors';
 import { userGroupRequestBodies } from '../requests/userGroupRequests';
 import { userGroupResponses } from '../responses/userGroupResponses';
 import { userGroupIdParam } from '../plugins/userGroupIdParam';
+import { UserGroupService } from '../services/UserGroupService';
 
 export default new Elysia({ prefix: 'user_group' })
     .use(authenticatedUser)
     .use(userGroupRequestBodies)
     .use(userGroupResponses)
+    .decorate({
+        userGroupService: new UserGroupService(),
+    })
     .post(
         '/',
-        () => {
-            throw new NotImplementedError();
-        },
+        async ({ userGroupService, user, body }) =>
+            await userGroupService.createUserGroup(body, user.id),
         {
             body: 'createUserGroupRequestBody',
         },

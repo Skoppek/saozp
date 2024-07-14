@@ -1,4 +1,4 @@
-import { Elysia, t } from 'elysia';
+import { Elysia, Static, t } from 'elysia';
 
 const createUserGroupRequestBody = t.Object({
     name: t.String(),
@@ -11,9 +11,13 @@ const userIds = t.Object({
 const updateUserGroupRequestBody = t.Partial(
     t.Object({
         name: t.String(),
-        creatorId: t.Number(),
+        ownerId: t.Number(),
     }),
 );
+
+export type CreateUserGroupRequestBody = Static<
+    typeof createUserGroupRequestBody
+>;
 
 export const userGroupRequestBodies = new Elysia().model({
     createUserGroupRequestBody,

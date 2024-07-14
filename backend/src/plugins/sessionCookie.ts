@@ -6,7 +6,7 @@ import {
     SessionNotFoundError,
 } from '../errors/sessionErrors';
 import { sessionErrorHandler } from '../errorHandlers/sessionErrorHandler';
-import { sessionCookieDto } from '../shared/dtos';
+import sessionCookieDto from '../shared/sessionCookieDto';
 
 export const sessionCookie = new Elysia()
     .use(sessionErrorHandler)

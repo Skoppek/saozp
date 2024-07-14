@@ -3,8 +3,8 @@ import sessionRepository from '../repository/sessionRepository';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
 import { SessionService } from '../services/SessionService';
-import { sessionCookieDto } from '../shared/dtos';
 import { authenticatedUser } from '../plugins/authenticatedUser';
+import sessionCookieDto from '../shared/sessionCookieDto';
 
 export default new Elysia()
     .decorate({

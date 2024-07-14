@@ -1,6 +1,5 @@
 import { Elysia } from 'elysia';
 import { authenticatedUser } from '../plugins/authenticatedUser';
-import { NotImplementedError } from '../errors/generalErrors';
 import { userGroupRequestBodies } from '../requests/userGroupRequests';
 import { userGroupResponses } from '../responses/userGroupResponses';
 import { userGroupIdParam } from '../plugins/userGroupIdParam';
@@ -62,11 +61,21 @@ export default new Elysia({ prefix: 'user_group' })
                 },
                 (app) =>
                     app
-                        .put('/', ({ groupId }) => {
-                            throw new NotImplementedError();
-                        })
-                        .delete('/', ({ groupId }) => {
-                            throw new NotImplementedError();
-                        }),
+                        .put(
+                            '/',
+                            async ({ userGroupService, groupId, body }) =>
+                                await userGroupService.addUsersToGroup(
+                                    groupId,
+                                    body.userIds,
+                                ),
+                        )
+                        .delete(
+                            '/',
+                            async ({ userGroupService, groupId, body }) =>
+                                await userGroupService.removeUsersFromGroup(
+                                    groupId,
+                                    body.userIds,
+                                ),
+                        ),
             ),
     );

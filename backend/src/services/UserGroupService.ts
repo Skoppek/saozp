@@ -56,4 +56,28 @@ export class UserGroupService {
     async deleteUserGroup(groupId: number) {
         await userGroupRepository.deleteUserGroup(groupId);
     }
+
+    async addUsersToGroup(groupId: number, userIds: number[]) {
+        if (!(await userGroupRepository.getUserGroup(groupId))) {
+            throw new UserGroupNotFoundError(groupId);
+        }
+
+        await Promise.all(
+            userIds.map((id) =>
+                userGroupRepository.addUserToGroup(groupId, id),
+            ),
+        );
+    }
+
+    async removeUsersFromGroup(groupId: number, userIds: number[]) {
+        if (!(await userGroupRepository.getUserGroup(groupId))) {
+            throw new UserGroupNotFoundError(groupId);
+        }
+
+        await Promise.all(
+            userIds.map((id) =>
+                userGroupRepository.removeUserFromGroup(groupId, id),
+            ),
+        );
+    }
 }

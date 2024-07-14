@@ -1,4 +1,3 @@
-import submissionRepository from '../repository/submissionRepository';
 import testRepository from '../repository/testRepository';
 import judge0Client from '../judge/judge0Client';
 import judge0Statuses from '../shared/judge0Statuses';
@@ -14,9 +13,11 @@ import {
 import { CreateSubmissionRequestBody } from '../bodies/submissionRequests';
 import { ProblemNotFoundError } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
+import { SubmissionRepository } from '../repository/SubmissionRepository';
 
 export class SubmissionService {
     private problemRepository = new ProblemRepository();
+    private submissionRepository = new SubmissionRepository();
 
     private reduceToStatus(
         statusIds: number[],
@@ -77,20 +78,18 @@ export class SubmissionService {
         }
 
         if (!isCommit) {
-            await submissionRepository.deleteNonCommitSubmissions(
+            await this.submissionRepository.deleteNonCommitSubmissions(
                 userId,
                 problemId,
             );
         }
 
-        const newSubmission = (
-            await submissionRepository.createSubmission({
-                problemId,
-                userId,
-                code,
-                isCommit,
-            })
-        ).at(0);
+        const newSubmission = await this.submissionRepository.createSubmission({
+            problemId,
+            userId,
+            code,
+            isCommit,
+        });
 
         if (!newSubmission) {
             throw new SubmissionCreationError();
@@ -117,7 +116,7 @@ export class SubmissionService {
         const { userId, problemId, commitsOnly } =
             parseSubmissionListQuery(query);
 
-        const submissions = await submissionRepository.getSubmissionsList(
+        const submissions = await this.submissionRepository.getSubmissionsList(
             userId,
             problemId,
             commitsOnly,
@@ -154,7 +153,7 @@ export class SubmissionService {
 
     async getSubmissionDetails(submissionId: number) {
         const submission =
-            await submissionRepository.getSubmissionById(submissionId);
+            await this.submissionRepository.getSubmissionById(submissionId);
 
         if (!submission) {
             throw new SubmissionNotFoundError(submissionId);

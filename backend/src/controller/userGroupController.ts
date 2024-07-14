@@ -50,9 +50,11 @@ export default new Elysia({ prefix: 'user_group' })
                     body: 'updateUserGroupRequestBody',
                 },
             )
-            .delete('/', ({ groupId }) => {
-                throw new NotImplementedError();
-            })
+            .delete(
+                '/',
+                async ({ userGroupService, groupId }) =>
+                    await userGroupService.deleteUserGroup(groupId),
+            )
             .group(
                 '/users',
                 {

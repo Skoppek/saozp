@@ -52,4 +52,8 @@ export class UserGroupService {
             throw new UserGroupNotFoundError(groupId);
         }
     }
+
+    async deleteUserGroup(groupId: number) {
+        await userGroupRepository.deleteUserGroup(groupId);
+    }
 }

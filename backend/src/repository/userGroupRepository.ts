@@ -85,6 +85,9 @@ const updateUserGroup = async (data: Partial<NewUserGroup>, groupId: number) =>
             .returning()
     ).at(0);
 
+const deleteUserGroup = async (groupId: number) =>
+    await db.delete(userGroupSchema).where(eq(userGroupSchema.id, groupId));
+
 export default {
     createUserGroup,
     addUserToGroup,
@@ -93,4 +96,5 @@ export default {
     getUserGroupList,
     getUserGroup,
     updateUserGroup,
+    deleteUserGroup,
 };

@@ -3,23 +3,25 @@ import sessionRepository from '../repository/sessionRepository';
 import adminRepository from '../repository/adminRepository';
 import { adminUserAccess } from '../plugins/adminUserAccess';
 
-export default new Elysia({ prefix: '/admin' })
+export default new Elysia({
+    prefix: 'admin',
+    detail: {
+        tags: ['Auth'],
+    },
+})
     .use(adminUserAccess)
     .post(
-        '/',
+        '',
         async ({ body }) => {
             const newAdmin = await adminRepository.addToAdmins(body.userId);
             return newAdmin ? 'Admin added' : 'Admin already added';
         },
         {
             body: t.Object({ userId: t.Number() }),
-            detail: {
-                tags: ['Auth'],
-            },
         },
     )
     .delete(
-        '/:userId',
+        ':userId',
         ({ params: { userId }, user, set }) => {
             const id = parseInt(userId);
             if (id === user.id) {
@@ -32,13 +34,10 @@ export default new Elysia({ prefix: '/admin' })
             params: t.Object({
                 userId: t.String(),
             }),
-            detail: {
-                tags: ['Auth'],
-            },
         },
     )
     .delete(
-        '/session/:id',
+        'session/:id',
         async ({ params: { id }, user, set }) => {
             const session = await sessionRepository.getSessionById(id);
             if (session?.userId === user.id) {
@@ -53,13 +52,10 @@ export default new Elysia({ prefix: '/admin' })
             params: t.Object({
                 id: t.String(),
             }),
-            detail: {
-                tags: ['Auth'],
-            },
         },
     )
     .get(
-        '/users',
+        'users',
         async () => {
             const data = await adminRepository.getUsersAdminView();
             return data.map((item) => {
@@ -83,8 +79,5 @@ export default new Elysia({ prefix: '/admin' })
                     sessionExpiryDate: t.Optional(t.Date()),
                 }),
             ),
-            detail: {
-                tags: ['Auth'],
-            },
         },
     );

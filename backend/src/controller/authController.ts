@@ -14,7 +14,7 @@ export default new Elysia()
     })
     .use(sessionCookieDto)
     .post(
-        '/sign-up',
+        'sign-up',
         async ({
             authService,
             profileService,

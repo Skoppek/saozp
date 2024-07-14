@@ -6,7 +6,12 @@ import { userGroupIdParam } from '../plugins/userGroupIdParam';
 import { UserGroupService } from '../services/UserGroupService';
 import { userGroupErrorHandler } from '../errorHandlers/userGroupErrorHandler';
 
-export default new Elysia({ prefix: 'user_group' })
+export default new Elysia({
+    prefix: 'user_group',
+    detail: {
+        tags: ['Groups'],
+    },
+})
     .use(authenticatedUser)
     .use(userGroupErrorHandler)
     .use(userGroupRequestBodies)
@@ -15,7 +20,7 @@ export default new Elysia({ prefix: 'user_group' })
         userGroupService: new UserGroupService(),
     })
     .post(
-        '/',
+        '',
         async ({ userGroupService, user, body }) =>
             await userGroupService.createUserGroup(body, user.id),
         {
@@ -23,18 +28,18 @@ export default new Elysia({ prefix: 'user_group' })
         },
     )
     .get(
-        '/',
+        '',
         async ({ userGroupService }) =>
             await userGroupService.getUserGroupList(),
         {
             response: 'getUserGroupListResponse',
         },
     )
-    .group('/:groupId', (app) =>
+    .group(':groupId', (app) =>
         app
             .use(userGroupIdParam)
             .get(
-                '/',
+                '',
                 async ({ userGroupService, groupId }) =>
                     await userGroupService.getUserGroup(groupId),
                 {
@@ -42,7 +47,7 @@ export default new Elysia({ prefix: 'user_group' })
                 },
             )
             .put(
-                '/',
+                '',
                 async ({ userGroupService, body, groupId }) =>
                     await userGroupService.updateUserGroup(body, groupId),
                 {
@@ -50,19 +55,19 @@ export default new Elysia({ prefix: 'user_group' })
                 },
             )
             .delete(
-                '/',
+                '',
                 async ({ userGroupService, groupId }) =>
                     await userGroupService.deleteUserGroup(groupId),
             )
             .group(
-                '/users',
+                'users',
                 {
                     body: 'userIds',
                 },
                 (app) =>
                     app
                         .put(
-                            '/',
+                            '',
                             async ({ userGroupService, groupId, body }) =>
                                 await userGroupService.addUsersToGroup(
                                     groupId,
@@ -70,7 +75,7 @@ export default new Elysia({ prefix: 'user_group' })
                                 ),
                         )
                         .delete(
-                            '/',
+                            '',
                             async ({ userGroupService, groupId, body }) =>
                                 await userGroupService.removeUsersFromGroup(
                                     groupId,

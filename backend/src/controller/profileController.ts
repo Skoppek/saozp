@@ -12,7 +12,7 @@ export default new Elysia()
         profileService: new ProfileService(),
     })
     .get(
-        '/me',
+        'me',
         async ({ profileService, user: { id, login, isAdmin } }) => {
             return {
                 ...(await profileService.getProfileByUserId(id)),

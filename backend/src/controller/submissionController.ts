@@ -8,7 +8,7 @@ import { submissionErrorHandler } from '../errorHandlers/submissionErrorHandler'
 import { submissionRequestBodies } from '../requests/submissionRequests';
 
 export default new Elysia({
-    prefix: '/submission',
+    prefix: 'submission',
     detail: {
         tags: ['Submissions'],
     },
@@ -23,7 +23,7 @@ export default new Elysia({
         submissionService: new SubmissionService(),
     })
     .post(
-        '/submission',
+        '',
         async ({ submissionService, userId, body }) =>
             await submissionService.createSubmission(body, userId),
         {
@@ -31,7 +31,7 @@ export default new Elysia({
         },
     )
     .get(
-        '/',
+        '',
         async ({ submissionService, query }) =>
             await submissionService.getSubmissionsList(query),
         {
@@ -40,7 +40,7 @@ export default new Elysia({
         },
     )
     .get(
-        '/:submissionId',
+        ':submissionId',
         async ({ submissionService, params: { submissionId } }) =>
             await submissionService.getSubmissionDetails(submissionId),
         {

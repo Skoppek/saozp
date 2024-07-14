@@ -1,10 +1,11 @@
 import { Elysia } from 'elysia';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 import { sessionCleaner } from './plugins/sessionCleaner';
-import { swaggerDocs } from './plugins/swaggerDocs';
 import { corsSettings } from './plugins/corsSettings';
 import { controller } from './controller/controller';
 import { initAdmin } from './shared/init';
+import { swagger } from '@elysiajs/swagger';
+import swaggerConfig from './plugins/swaggerConfig';
 
 const app = new Elysia({
     cookie: {
@@ -14,7 +15,7 @@ const app = new Elysia({
 })
     .use(generalErrorHandler)
     .use(corsSettings)
-    .use(swaggerDocs)
+    .use(swagger(swaggerConfig))
     .use(sessionCleaner)
     .use(controller);
 

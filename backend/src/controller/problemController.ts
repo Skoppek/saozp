@@ -6,7 +6,7 @@ import { authenticatedUser } from '../plugins/authenticatedUser';
 import { problemErrorHandler } from '../errorHandlers/problemErrorHandler';
 
 export default new Elysia({
-    prefix: '/problem',
+    prefix: 'problem',
     detail: {
         tags: ['Problems'],
     },
@@ -19,7 +19,7 @@ export default new Elysia({
         problemService: new ProblemService(),
     })
     .post(
-        '/',
+        '',
         async ({ problemService, body, user }) => {
             await problemService.createProblem(body, user.id);
         },
@@ -27,7 +27,7 @@ export default new Elysia({
             body: 'createProblemRequest',
         },
     )
-    .get('/', async ({ problemService }) => problemService.getProblemList(), {
+    .get('', async ({ problemService }) => problemService.getProblemList(), {
         response: 'problemListResponse',
     })
     .group(
@@ -40,7 +40,7 @@ export default new Elysia({
         (app) =>
             app
                 .get(
-                    '/',
+                    '',
                     async ({
                         problemService,
                         params: { problemId },
@@ -58,7 +58,7 @@ export default new Elysia({
                     },
                 )
                 .put(
-                    '/',
+                    '',
                     async ({ problemService, params: { problemId }, body }) =>
                         await problemService.updateProblem(problemId, body),
                     {
@@ -66,7 +66,7 @@ export default new Elysia({
                     },
                 )
                 .delete(
-                    '/',
+                    '',
                     async ({ problemService, params: { problemId } }) =>
                         await problemService.deleteProblem(problemId),
                     {},

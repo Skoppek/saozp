@@ -28,9 +28,6 @@ export default new Elysia({
             await submissionService.createSubmission(body, userId),
         {
             body: 'createSubmissionRequestBody',
-            response: t.Object({
-                submissionId: t.Number(),
-            }),
         },
     )
     .get(

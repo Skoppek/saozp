@@ -2,12 +2,14 @@ import {
     CreateUserGroupBody,
     UpdateUserGroupBody,
 } from '../bodies/userGroupRequests';
-import groupRepository from '../repository/groupRepository';
 import { GroupCreationError, GroupNotFoundError } from '../errors/groupErrors';
+import GroupRepository from '../repository/GroupRepository';
 
 export class GroupService {
+    groupRepository = new GroupRepository();
+
     async createUserGroup({ name }: CreateUserGroupBody, ownerId: number) {
-        const newGroup = await groupRepository.createGroup({
+        const newGroup = await this.groupRepository.createGroup({
             name,
             owner: ownerId,
         });
@@ -18,17 +20,17 @@ export class GroupService {
     }
 
     async getUserGroupList() {
-        return await groupRepository.getGroupList();
+        return await this.groupRepository.getGroupList();
     }
 
     async getUserGroup(groupId: number) {
-        const group = await groupRepository.getGroup(groupId);
+        const group = await this.groupRepository.getGroup(groupId);
 
         if (!group) {
             throw new GroupNotFoundError(groupId);
         }
 
-        const users = await groupRepository.getProfilesOfGroup(groupId);
+        const users = await this.groupRepository.getProfilesOfGroup(groupId);
 
         return {
             ...group,
@@ -37,7 +39,10 @@ export class GroupService {
     }
 
     async updateUserGroup(data: UpdateUserGroupBody, groupId: number) {
-        const updatedGroup = await groupRepository.updateGroup(data, groupId);
+        const updatedGroup = await this.groupRepository.updateGroup(
+            data,
+            groupId,
+        );
 
         if (!updatedGroup) {
             throw new GroupNotFoundError(groupId);
@@ -45,27 +50,29 @@ export class GroupService {
     }
 
     async deleteUserGroup(groupId: number) {
-        await groupRepository.deleteGroup(groupId);
+        await this.groupRepository.deleteGroup(groupId);
     }
 
     async addUsersToGroup(groupId: number, userIds: number[]) {
-        if (!(await groupRepository.getGroup(groupId))) {
-            throw new GroupNotFoundError(groupId);
-        }
-
-        await Promise.all(
-            userIds.map((id) => groupRepository.addUserToGroup(groupId, id)),
-        );
-    }
-
-    async removeUsersFromGroup(groupId: number, userIds: number[]) {
-        if (!(await groupRepository.getGroup(groupId))) {
+        if (!(await this.groupRepository.getGroup(groupId))) {
             throw new GroupNotFoundError(groupId);
         }
 
         await Promise.all(
             userIds.map((id) =>
-                groupRepository.removeUserFromGroup(groupId, id),
+                this.groupRepository.addUserToGroup(groupId, id),
+            ),
+        );
+    }
+
+    async removeUsersFromGroup(groupId: number, userIds: number[]) {
+        if (!(await this.groupRepository.getGroup(groupId))) {
+            throw new GroupNotFoundError(groupId);
+        }
+
+        await Promise.all(
+            userIds.map((id) =>
+                this.groupRepository.removeUserFromGroup(groupId, id),
             ),
         );
     }

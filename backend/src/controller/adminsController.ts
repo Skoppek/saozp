@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 import sessionRepository from '../repository/sessionRepository';
-import AdminRepository from '../repository/adminRepository';
+import AdminRepository from '../repository/AdminRepository';
 import { adminUserAccess } from '../plugins/adminUserAccess';
 
 export default new Elysia({

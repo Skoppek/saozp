@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 import { sessionCookie } from './sessionCookie';
 import userRepository from '../repository/userRepository';
-import adminRepository from '../repository/adminRepository';
+import adminRepository from '../repository/AdminRepository';
 import { InternalError } from '../errors/generalErrors';
 
 class UserWithSessionNotFoundError extends Error {

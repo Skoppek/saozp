@@ -1,6 +1,6 @@
 import { isSignUpCredentials } from './SignUpCredentials';
 import userRepository from '../repository/userRepository';
-import adminRepository from '../repository/adminRepository';
+import adminRepository from '../repository/AdminRepository';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
 

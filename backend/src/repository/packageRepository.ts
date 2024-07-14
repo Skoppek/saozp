@@ -1,56 +1,51 @@
-import {
-    NewProblemPackage,
-    problemPackageSchema,
-} from '../model/schemas/problemPackageSchema';
+import { NewPackage, packageSchema } from '../model/schemas/packageSchema';
 import { db } from '../model/db/db';
 import { eq } from 'drizzle-orm/sql';
 import { and } from 'drizzle-orm';
 import { profileSchema } from '../model/schemas/profileSchema';
-import { problemsToProblemPackageSchema } from '../model/schemas/intermediates/problemsToProblemPackageSchema';
+import { problemsToPackageSchema } from '../model/schemas/intermediates/problemsToPackageSchema';
 import { problemSchema } from '../model/schemas/problemSchema';
 
-const createProblemPackage = async (newPackage: NewProblemPackage) => {
+const createPackage = async (newPackage: NewPackage) => {
     const result = await db
-        .insert(problemPackageSchema)
+        .insert(packageSchema)
         .values(newPackage)
         .returning();
     return result.at(0);
 };
 
-const getProblemPackageList = async () => {
+const getPackageList = async () => {
     const result = await db
         .select()
-        .from(problemPackageSchema)
+        .from(packageSchema)
         .innerJoin(
             profileSchema,
-            eq(profileSchema.userId, problemPackageSchema.owner),
+            eq(profileSchema.userId, packageSchema.owner),
         );
 
     return result.map((entry) => {
-        return { ...entry.problem_package, owner: entry.profiles };
+        return { ...entry.package, owner: entry.profiles };
     });
 };
 
 const updateProblemPackage = async (
     packageId: number,
-    data: Partial<NewProblemPackage>,
+    data: Partial<NewPackage>,
 ) => {
     const result = await db
-        .update(problemPackageSchema)
+        .update(packageSchema)
         .set(data)
-        .where(eq(problemPackageSchema.id, packageId))
+        .where(eq(packageSchema.id, packageId))
         .returning();
     return result.at(0);
 };
 
 const deleteProblemPackage = async (packageId: number) =>
-    await db
-        .delete(problemPackageSchema)
-        .where(eq(problemPackageSchema.id, packageId));
+    await db.delete(packageSchema).where(eq(packageSchema.id, packageId));
 
 const addProblemToPackage = async (packageId: number, problemId: number) => {
     const result = await db
-        .insert(problemsToProblemPackageSchema)
+        .insert(problemsToPackageSchema)
         .values({
             packageId,
             problemId,
@@ -65,11 +60,11 @@ const removeProblemFromPackage = async (
     problemId: number,
 ) => {
     await db
-        .delete(problemsToProblemPackageSchema)
+        .delete(problemsToPackageSchema)
         .where(
             and(
-                eq(problemsToProblemPackageSchema.packageId, packageId),
-                eq(problemsToProblemPackageSchema.problemId, problemId),
+                eq(problemsToPackageSchema.packageId, packageId),
+                eq(problemsToPackageSchema.problemId, problemId),
             ),
         );
 };
@@ -81,19 +76,19 @@ const getProblemsOfPackage = async (packageId: number) => {
             name: problemSchema.name,
             languageId: problemSchema.languageId,
         })
-        .from(problemsToProblemPackageSchema)
+        .from(problemsToPackageSchema)
         .innerJoin(
             problemSchema,
-            eq(problemsToProblemPackageSchema.problemId, problemSchema.id),
+            eq(problemsToPackageSchema.problemId, problemSchema.id),
         )
-        .where(eq(problemsToProblemPackageSchema.packageId, packageId));
+        .where(eq(problemsToPackageSchema.packageId, packageId));
 
     return result.map((entry) => entry);
 };
 
 export default {
-    createProblemPackage,
-    getProblemPackageList,
+    createPackage,
+    getPackageList,
     updateProblemPackage,
     deleteProblemPackage,
     addProblemToPackage,

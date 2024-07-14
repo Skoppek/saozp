@@ -1,14 +1,11 @@
 import { Elysia } from 'elysia';
-import {
-    UserGroupCreationError,
-    UserGroupNotFoundError,
-} from '../errors/userGroupErrors';
+import { GroupCreationError, GroupNotFoundError } from '../errors/groupErrors';
 import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const userGroupErrorHandler = new Elysia()
     .error({
-        UserGroupCreationError,
-        UserGroupNotFoundError,
+        UserGroupCreationError: GroupCreationError,
+        UserGroupNotFoundError: GroupNotFoundError,
     })
     .use(HttpStatusCode())
     .onError(({ code, error, set, httpStatus }) => {

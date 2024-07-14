@@ -4,8 +4,8 @@ import profileController from './profileController';
 import problemController from './problemController';
 import submissionController from './submissionController';
 import adminsController from './adminsController';
-import userGroupController from './userGroupController';
-import problemPackageController from './problemPackageController';
+import groupController from './groupController';
+import packageController from './packageController';
 
 export const controller = new Elysia()
     .use(authController)
@@ -13,5 +13,5 @@ export const controller = new Elysia()
     .use(problemController)
     .use(submissionController)
     .use(adminsController)
-    .use(userGroupController)
-    .use(problemPackageController);
+    .use(groupController)
+    .use(packageController);

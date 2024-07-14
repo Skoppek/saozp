@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { problemRequests } from '../requests/problemRequests';
+import { problemRequests } from '../bodies/problemRequests';
 import { problemResponses } from '../responses/problemResponses';
 import { ProblemService } from '../services/ProblemService';
 import { authenticatedUser } from '../plugins/authenticatedUser';

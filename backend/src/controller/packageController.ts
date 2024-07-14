@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia';
 import { NotImplementedError } from '../errors/generalErrors';
 import { problemPackageIdParam } from '../plugins/problemPackageIdParam';
-import { problemPackageRequestBodies } from '../requests/problemPackageRequests';
+import { packageBodies } from '../bodies/problemPackageRequests';
 
 export default new Elysia({
     prefix: 'package',
@@ -9,11 +9,9 @@ export default new Elysia({
         tags: ['Packages'],
     },
 })
-    .use(problemPackageRequestBodies)
+    .use(packageBodies)
     .post('', ({}) => {}, {
-        detail: {
-            tags: ['Packages'],
-        },
+        body: 'createPackageBody',
     })
     .get('', ({}) => {
         throw new NotImplementedError();
@@ -24,9 +22,15 @@ export default new Elysia({
             .get('/', ({}) => {
                 throw new NotImplementedError();
             })
-            .put('', async ({}) => {
-                throw new NotImplementedError();
-            })
+            .put(
+                '',
+                async ({}) => {
+                    throw new NotImplementedError();
+                },
+                {
+                    body: 'updatePackageBody',
+                },
+            )
             .delete('', async ({}) => {
                 throw new NotImplementedError();
             })

@@ -1,7 +1,7 @@
 import {
     CreateProblemRequest,
     UpdateProblemRequest,
-} from '../requests/problemRequests';
+} from '../bodies/problemRequests';
 import problemRepository from '../repository/problemRepository';
 import { User } from '../model/schemas/userSchema';
 import { Profile } from '../model/schemas/profileSchema';

@@ -1,9 +1,9 @@
 import { Elysia } from 'elysia';
 import { authenticatedUser } from '../plugins/authenticatedUser';
-import { userGroupRequestBodies } from '../requests/userGroupRequests';
+import { userGroupBodies } from '../bodies/userGroupRequests';
 import { userGroupResponses } from '../responses/userGroupResponses';
 import { userGroupIdParam } from '../plugins/userGroupIdParam';
-import { UserGroupService } from '../services/UserGroupService';
+import { GroupService } from '../services/GroupService';
 import { userGroupErrorHandler } from '../errorHandlers/userGroupErrorHandler';
 
 export default new Elysia({
@@ -14,10 +14,10 @@ export default new Elysia({
 })
     .use(authenticatedUser)
     .use(userGroupErrorHandler)
-    .use(userGroupRequestBodies)
+    .use(userGroupBodies)
     .use(userGroupResponses)
     .decorate({
-        userGroupService: new UserGroupService(),
+        userGroupService: new GroupService(),
     })
     .post(
         '',

@@ -5,7 +5,7 @@ import { SubmissionService } from '../services/SubmissionService';
 import { submissionResponses } from '../responses/submissionResponses';
 import { submissionQueries } from '../queryParsers/submissionQueries';
 import { submissionErrorHandler } from '../errorHandlers/submissionErrorHandler';
-import { submissionRequestBodies } from '../requests/submissionRequests';
+import { submissionRequestBodies } from '../bodies/submissionRequests';
 
 export default new Elysia({
     prefix: 'submission',

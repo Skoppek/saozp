@@ -12,7 +12,7 @@ import {
     SubmissionCreationError,
     SubmissionNotFoundError,
 } from '../errors/submissionErrors';
-import { CreateSubmissionRequestBody } from '../requests/submissionRequests';
+import { CreateSubmissionRequestBody } from '../bodies/submissionRequests';
 import { ProblemNotFoundError } from '../errors/problemErrors';
 
 export class SubmissionService {

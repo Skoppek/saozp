@@ -2,7 +2,7 @@ import { integer, pgTable } from 'drizzle-orm/pg-core';
 import { serial, varchar } from 'drizzle-orm/pg-core/columns';
 import { userSchema } from './userSchema';
 
-export const problemPackageSchema = pgTable('problem_package', {
+export const packageSchema = pgTable('package', {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 128 }).notNull(),
     owner: integer('owner_id')
@@ -10,4 +10,4 @@ export const problemPackageSchema = pgTable('problem_package', {
         .notNull(),
 });
 
-export type NewProblemPackage = typeof problemPackageSchema.$inferInsert;
+export type NewPackage = typeof packageSchema.$inferInsert;

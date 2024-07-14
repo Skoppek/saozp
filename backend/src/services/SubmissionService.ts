@@ -13,7 +13,7 @@ import { CreateSubmissionRequestBody } from '../bodies/submissionRequests';
 import { ProblemNotFoundError } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
-import { TestRepository } from '../repository/TestRepository';
+import TestRepository from '../repository/TestRepository';
 
 export class SubmissionService {
     private problemRepository = new ProblemRepository();

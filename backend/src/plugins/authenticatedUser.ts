@@ -1,8 +1,8 @@
 import { Elysia } from 'elysia';
 import { sessionCookie } from './sessionCookie';
-import userRepository from '../repository/userRepository';
 import { InternalError } from '../errors/generalErrors';
 import AdminRepository from '../repository/AdminRepository';
+import UserRepository from '../repository/UserRepository';
 
 class UserWithSessionNotFoundError extends Error {
     constructor() {
@@ -14,6 +14,7 @@ export const authenticatedUser = new Elysia()
     .use(sessionCookie)
     .decorate({
         adminRepository: new AdminRepository(),
+        userRepository: new UserRepository(),
     })
     .error({
         UserWithSessionNotFoundError,
@@ -27,7 +28,7 @@ export const authenticatedUser = new Elysia()
     })
     .derive(
         { as: 'scoped' },
-        async ({ adminRepository, userId, sessionCookie }) => {
+        async ({ adminRepository, userRepository, userId, sessionCookie }) => {
             if (!userId || !sessionCookie) {
                 throw new InternalError();
             }

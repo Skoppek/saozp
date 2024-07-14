@@ -7,8 +7,9 @@ const userBasicData = t.Object({
 });
 
 const userGroupBasicData = t.Object({
+    id: t.Number(),
     name: t.String(),
-    creator: userBasicData,
+    owner: userBasicData,
 });
 
 const getUserGroupListResponse = t.Array(userGroupBasicData);

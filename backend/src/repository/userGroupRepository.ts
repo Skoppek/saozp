@@ -38,7 +38,7 @@ const getProfilesOfGroup = async (groupId: number) =>
         await db
             .select()
             .from(profileSchema)
-            .rightJoin(
+            .innerJoin(
                 usersToUserGroupSchema,
                 eq(profileSchema.userId, usersToUserGroupSchema.groupId),
             )
@@ -47,9 +47,23 @@ const getProfilesOfGroup = async (groupId: number) =>
         .map((entry) => entry.profiles)
         .filter((user) => !!user);
 
+const getUserGroupList = async () =>
+    (
+        await db
+            .select()
+            .from(userGroupSchema)
+            .innerJoin(
+                profileSchema,
+                eq(profileSchema.userId, userGroupSchema.owner),
+            )
+    ).map((entry) => {
+        return { ...entry.user_groups, owner: entry.profiles };
+    });
+
 export default {
     createUserGroup,
     addUserToGroup,
     removeUserFromGroup,
     getProfilesOfGroup,
+    getUserGroupList,
 };

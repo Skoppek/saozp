@@ -5,9 +5,11 @@ import { userGroupRequestBodies } from '../requests/userGroupRequests';
 import { userGroupResponses } from '../responses/userGroupResponses';
 import { userGroupIdParam } from '../plugins/userGroupIdParam';
 import { UserGroupService } from '../services/UserGroupService';
+import { userGroupErrorHandler } from '../errorHandlers/userGroupErrorHandler';
 
 export default new Elysia({ prefix: 'user_group' })
     .use(authenticatedUser)
+    .use(userGroupErrorHandler)
     .use(userGroupRequestBodies)
     .use(userGroupResponses)
     .decorate({
@@ -23,9 +25,8 @@ export default new Elysia({ prefix: 'user_group' })
     )
     .get(
         '/',
-        ({}) => {
-            throw new NotImplementedError();
-        },
+        async ({ userGroupService }) =>
+            await userGroupService.getUserGroupList(),
         {
             response: 'getUserGroupListResponse',
         },

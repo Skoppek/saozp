@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 import sessionRepository from '../repository/sessionRepository';
-import adminRepository from '../repository/adminRepository';
+import AdminRepository from '../repository/adminRepository';
 import { adminUserAccess } from '../plugins/adminUserAccess';
 
 export default new Elysia({
@@ -10,9 +10,12 @@ export default new Elysia({
     },
 })
     .use(adminUserAccess)
+    .decorate({
+        adminRepository: new AdminRepository(),
+    })
     .post(
         '',
-        async ({ body }) => {
+        async ({ adminRepository, body }) => {
             const newAdmin = await adminRepository.addToAdmins(body.userId);
             return newAdmin ? 'Admin added' : 'Admin already added';
         },
@@ -22,7 +25,7 @@ export default new Elysia({
     )
     .delete(
         ':userId',
-        ({ params: { userId }, user, set }) => {
+        ({ adminRepository, params: { userId }, user, set }) => {
             const id = parseInt(userId);
             if (id === user.id) {
                 set.status = 400;
@@ -56,7 +59,7 @@ export default new Elysia({
     )
     .get(
         'users',
-        async () => {
+        async ({ adminRepository }) => {
             const data = await adminRepository.getUsersAdminView();
             return data.map((item) => {
                 return {

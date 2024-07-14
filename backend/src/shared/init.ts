@@ -1,10 +1,12 @@
 import { isSignUpCredentials } from './SignUpCredentials';
 import userRepository from '../repository/userRepository';
-import adminRepository from '../repository/AdminRepository';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
+import AdminRepository from '../repository/AdminRepository';
 
 export const initAdmin = async () => {
+    const adminRepository = new AdminRepository();
+
     const adminCredentials = {
         login: Bun.env.ADMIN_LOGIN,
         password: Bun.env.ADMIN_PASSWORD,

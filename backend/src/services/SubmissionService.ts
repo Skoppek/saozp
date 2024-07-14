@@ -6,7 +6,6 @@ import {
     parseSubmissionListQuery,
     SubmissionListQuery,
 } from '../queryParsers/submissionQueries';
-import problemRepository from '../repository/problemRepository';
 import judge0Service from '../judge/judge0Client';
 import {
     SubmissionCreationError,
@@ -14,9 +13,12 @@ import {
 } from '../errors/submissionErrors';
 import { CreateSubmissionRequestBody } from '../bodies/submissionRequests';
 import { ProblemNotFoundError } from '../errors/problemErrors';
+import ProblemRepository from '../repository/ProblemRepository';
 
 export class SubmissionService {
-    private static reduceToStatus(
+    problemRepository = new ProblemRepository();
+
+    private reduceToStatus(
         statusIds: number[],
     ): { id: number; description: string } | undefined {
         if (statusIds.includes(1)) {
@@ -37,11 +39,11 @@ export class SubmissionService {
         return judge0Statuses.wrongAnswer;
     }
 
-    private static getAverage(array: number[]) {
+    private getAverage(array: number[]) {
         return array.reduce((avg, element) => avg + element / array.length, 0);
     }
 
-    private static submitTests(
+    private submitTests(
         tests: { input: string; expected: string }[],
         submissionId: number,
         languageId: number,
@@ -68,7 +70,7 @@ export class SubmissionService {
         { problemId, isCommit, code, userTests }: CreateSubmissionRequestBody,
         userId: number,
     ) {
-        const problem = await problemRepository.getProblemById(problemId);
+        const problem = await this.problemRepository.getProblemById(problemId);
 
         if (!problem) {
             throw new ProblemNotFoundError(problemId);
@@ -99,7 +101,7 @@ export class SubmissionService {
             newSubmission.code,
         );
 
-        SubmissionService.submitTests(
+        this.submitTests(
             !!isCommit ? problem.tests : userTests ?? [],
             newSubmission.id,
             problem.languageId,
@@ -141,7 +143,7 @@ export class SubmissionService {
                         lastName: submission.creator?.lastName ?? '',
                     },
                     createdAt: submission.createdAt?.toLocaleString(),
-                    status: SubmissionService.reduceToStatus(
+                    status: this.reduceToStatus(
                         results.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
@@ -158,7 +160,7 @@ export class SubmissionService {
             throw new SubmissionNotFoundError(submissionId);
         }
 
-        const problem = await problemRepository.getProblemById(
+        const problem = await this.problemRepository.getProblemById(
             submission.problemId,
         );
 
@@ -190,10 +192,10 @@ export class SubmissionService {
                         received: result.stdout,
                     };
                 }),
-                averageMemory: SubmissionService.getAverage(
+                averageMemory: this.getAverage(
                     results.map((result) => result.memory),
                 ),
-                averageTime: SubmissionService.getAverage(
+                averageTime: this.getAverage(
                     results.map((result) => parseFloat(result.time)),
                 ),
             },

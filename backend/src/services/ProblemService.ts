@@ -2,7 +2,6 @@ import {
     CreateProblemRequest,
     UpdateProblemRequest,
 } from '../bodies/problemRequests';
-import problemRepository from '../repository/problemRepository';
 import { User } from '../model/schemas/userSchema';
 import { Profile } from '../model/schemas/profileSchema';
 import {
@@ -10,17 +9,20 @@ import {
     ProblemNotFoundError,
     ProblemUpdateError,
 } from '../errors/problemErrors';
+import ProblemRepository from '../repository/ProblemRepository';
 
 export class ProblemService {
-    private static async fetchProblem(problemId: number) {
-        const problem = await problemRepository.getProblemById(+problemId);
+    problemRepository = new ProblemRepository();
+
+    private async fetchProblem(problemId: number) {
+        const problem = await this.problemRepository.getProblemById(+problemId);
         if (!problem || problem.isDeactivated) {
             throw new ProblemNotFoundError(problemId);
         }
         return problem;
     }
 
-    private static hideCreatorCode(code: string) {
+    private hideCreatorCode(code: string) {
         return (
             code
                 .match(/---(.*?)---/gs)
@@ -30,7 +32,7 @@ export class ProblemService {
         );
     }
 
-    private static getCreator(user?: User | null, profile?: Profile | null) {
+    private getCreator(user?: User | null, profile?: Profile | null) {
         return user && profile
             ? {
                   userId: user.id,
@@ -42,7 +44,7 @@ export class ProblemService {
     }
 
     async createProblem(data: CreateProblemRequest, creatorId: number) {
-        const newProblem = await problemRepository.createProblem({
+        const newProblem = await this.problemRepository.createProblem({
             name: data.name,
             description: data.description,
             creatorId,
@@ -58,7 +60,7 @@ export class ProblemService {
     }
 
     async getProblemList() {
-        return (await problemRepository.getProblems())
+        return (await this.problemRepository.getProblems())
             .filter((problem) => !problem.problems.isDeactivated)
             .map((problem) => {
                 return {
@@ -66,17 +68,14 @@ export class ProblemService {
                     name: problem.problems.name,
                     description: problem.problems.description,
                     languageId: problem.problems.languageId,
-                    creator: ProblemService.getCreator(
-                        problem.users,
-                        problem.profiles,
-                    ),
+                    creator: this.getCreator(problem.users, problem.profiles),
                     activeAfter: problem.problems.activeAfter,
                 };
             });
     }
 
     async getProblemDetails(problemId: number, isForSolving: boolean) {
-        const problem = await ProblemService.fetchProblem(problemId);
+        const problem = await this.fetchProblem(problemId);
 
         return {
             problemId: problem.id,
@@ -85,7 +84,7 @@ export class ProblemService {
             prompt: problem.prompt,
             languageId: problem.languageId,
             baseCode: isForSolving
-                ? ProblemService.hideCreatorCode(problem.baseCode)
+                ? this.hideCreatorCode(problem.baseCode)
                 : problem.baseCode,
             creatorId: problem.creatorId,
             tests: problem.tests,
@@ -94,7 +93,7 @@ export class ProblemService {
     }
 
     async updateProblem(problemId: number, data: UpdateProblemRequest) {
-        const updatedProblem = await problemRepository.updateProblemById(
+        const updatedProblem = await this.problemRepository.updateProblemById(
             problemId,
             {
                 name: data.name,
@@ -111,6 +110,6 @@ export class ProblemService {
     }
 
     async deleteProblem(problemId: number) {
-        await problemRepository.deleteProblemById(problemId);
+        await this.problemRepository.deleteProblemById(problemId);
     }
 }

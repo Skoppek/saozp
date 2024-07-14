@@ -6,7 +6,7 @@ import { GroupCreationError, GroupNotFoundError } from '../errors/groupErrors';
 import GroupRepository from '../repository/GroupRepository';
 
 export class GroupService {
-    groupRepository = new GroupRepository();
+    private groupRepository = new GroupRepository();
 
     async createUserGroup({ name }: CreateUserGroupBody, ownerId: number) {
         const newGroup = await this.groupRepository.createGroup({

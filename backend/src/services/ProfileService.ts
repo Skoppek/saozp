@@ -2,7 +2,7 @@ import { ProfileNotFoundError } from '../errors/profileErrors';
 import ProfileRepository from '../repository/ProfileRepository';
 
 export class ProfileService {
-    profileRepository = new ProfileRepository();
+    private profileRepository = new ProfileRepository();
 
     async createProfile(userId: number, firstName: string, lastName: string) {
         return await this.profileRepository.createProfile({

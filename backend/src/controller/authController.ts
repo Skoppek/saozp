@@ -1,10 +1,10 @@
 import { Elysia, t } from 'elysia';
-import sessionRepository from '../repository/sessionRepository';
 import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
 import { SessionService } from '../services/SessionService';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import sessionCookieDto from '../shared/sessionCookieDto';
+import SessionRepository from '../repository/SessionRepository';
 
 export default new Elysia()
     .decorate({
@@ -83,9 +83,12 @@ export default new Elysia()
         },
     )
     .use(authenticatedUser)
+    .decorate({
+        sessionRepository: new SessionRepository(),
+    })
     .delete(
         '/logout',
-        async ({ sessionCookie }) => {
+        async ({ sessionRepository, sessionCookie }) => {
             await sessionRepository.revokeSession(sessionCookie.value);
             sessionCookie.remove();
         },

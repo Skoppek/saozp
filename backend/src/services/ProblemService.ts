@@ -12,7 +12,7 @@ import {
 import ProblemRepository from '../repository/ProblemRepository';
 
 export class ProblemService {
-    problemRepository = new ProblemRepository();
+    private problemRepository = new ProblemRepository();
 
     private async fetchProblem(problemId: number) {
         const problem = await this.problemRepository.getProblemById(+problemId);

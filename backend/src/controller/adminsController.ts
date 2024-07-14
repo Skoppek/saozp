@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia';
-import sessionRepository from '../repository/sessionRepository';
 import AdminRepository from '../repository/AdminRepository';
 import { adminUserAccess } from '../plugins/adminUserAccess';
+import SessionRepository from '../repository/SessionRepository';
 
 export default new Elysia({
     prefix: 'admin',
@@ -12,6 +12,7 @@ export default new Elysia({
     .use(adminUserAccess)
     .decorate({
         adminRepository: new AdminRepository(),
+        sessionRepository: new SessionRepository(),
     })
     .post(
         '',
@@ -41,7 +42,7 @@ export default new Elysia({
     )
     .delete(
         'session/:id',
-        async ({ params: { id }, user, set }) => {
+        async ({ sessionRepository, params: { id }, user, set }) => {
             const session = await sessionRepository.getSessionById(id);
             if (session?.userId === user.id) {
                 set.status = 400;

@@ -16,7 +16,7 @@ import { ProblemNotFoundError } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
 
 export class SubmissionService {
-    problemRepository = new ProblemRepository();
+    private problemRepository = new ProblemRepository();
 
     private reduceToStatus(
         statusIds: number[],

@@ -1,8 +1,9 @@
-import sessionRepository from '../repository/sessionRepository';
 import { Session } from '../model/schemas/sessionSchema';
+import SessionRepository from '../repository/SessionRepository';
 
 export class SessionService {
     private static SESSION_LENGTH = 1000 * 3600 * 2;
+    private sessionRepository = new SessionRepository();
 
     static isSessionValid(session: Session) {
         return session.expiresAt > new Date();
@@ -10,15 +11,15 @@ export class SessionService {
 
     async createSession(userId: number) {
         const existingSession =
-            await sessionRepository.getLatestSessionOfUser(userId);
+            await this.sessionRepository.getLatestSessionOfUser(userId);
 
         const session =
             existingSession && SessionService.isSessionValid(existingSession)
-                ? await sessionRepository.refreshSession(
+                ? await this.sessionRepository.refreshSession(
                       existingSession.id,
                       SessionService.SESSION_LENGTH,
                   )
-                : await sessionRepository.createSession({
+                : await this.sessionRepository.createSession({
                       userId,
                       expiresAt: new Date(
                           Date.now() + SessionService.SESSION_LENGTH,

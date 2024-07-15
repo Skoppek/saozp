@@ -8,6 +8,6 @@ export const usersToGroupSchema = pgTable('users_to_groups', {
         .references(() => userSchema.id)
         .notNull(),
     groupId: integer('group_id')
-        .references(() => groupSchema.id)
+        .references(() => groupSchema.id, { onDelete: 'cascade' })
         .notNull(),
 });

@@ -37,7 +37,7 @@ bunx drizzle-kit generate
 Wprowadzenie migracji do bazy danych
 
 ```bash
-bunx drizzle-kit push:pg
+bunx drizzle-kit push
 ```
 
 ## Frontend

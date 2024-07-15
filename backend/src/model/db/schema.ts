@@ -7,6 +7,8 @@ import { submissionSchema } from '../schemas/submissionSchema';
 import { testSchema } from '../schemas/testSchema';
 import { groupSchema } from '../schemas/groupSchema';
 import { userSchema } from '../schemas/userSchema';
+import { bundleSchema } from '../schemas/bundleSchema';
+import { problemsToBundleSchema } from '../schemas/intermediates/problemsToBundleSchema';
 
 export default {
     profileSchema,
@@ -16,6 +18,8 @@ export default {
     submissionSchema,
     testSchema,
     adminSchema,
-    userGroupSchema: groupSchema,
-    usersToUserGroupSchema: usersToGroupSchema,
+    groupSchema,
+    usersToGroupSchema,
+    bundleSchema,
+    problemsToBundleSchema,
 };

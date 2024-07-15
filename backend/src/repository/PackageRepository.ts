@@ -29,6 +29,23 @@ export default class PackageRepository {
         });
     }
 
+    async getPackage(packageId: number) {
+        const result = await db
+            .select()
+            .from(packageSchema)
+            .innerJoin(
+                profileSchema,
+                eq(profileSchema.userId, packageSchema.owner),
+            )
+            .where(eq(packageSchema.id, packageId));
+
+        return result
+            .map((entry) => {
+                return { ...entry.package, owner: entry.profiles };
+            })
+            .at(0);
+    }
+
     async updateProblemPackage(packageId: number, data: Partial<NewPackage>) {
         const result = await db
             .update(packageSchema)

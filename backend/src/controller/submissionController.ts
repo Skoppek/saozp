@@ -1,5 +1,4 @@
 import { Elysia, t } from 'elysia';
-import { sessionCookie } from '../plugins/sessionCookie';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import { SubmissionService } from '../services/SubmissionService';
 import { submissionResponses } from '../responses/submissionResponses';
@@ -13,7 +12,6 @@ export default new Elysia({
         tags: ['Submissions'],
     },
 })
-    .use(sessionCookie)
     .use(authenticatedUser)
     .use(submissionErrorHandler)
     .use(submissionRequestBodies)

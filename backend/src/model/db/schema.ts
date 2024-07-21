@@ -8,6 +8,7 @@ import { testSchema } from '../schemas/testSchema';
 import { groupSchema } from '../schemas/groupSchema';
 import { userSchema } from '../schemas/userSchema';
 import { bundleSchema } from '../schemas/bundleSchema';
+import { passwordResetTokenSchema } from '../schemas/passwordResetTokenSchema';
 import { problemsToBundleSchema } from '../schemas/intermediates/problemsToBundleSchema';
 
 export default {
@@ -22,4 +23,5 @@ export default {
     usersToGroupSchema,
     bundleSchema,
     problemsToBundleSchema,
+    passwordResetTokenSchema
 };

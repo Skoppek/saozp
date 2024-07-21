@@ -2,6 +2,7 @@ import { Elysia, t } from 'elysia';
 import AdminRepository from '../repository/AdminRepository';
 import { adminUserAccess } from '../plugins/adminUserAccess';
 import SessionRepository from '../repository/SessionRepository';
+import {AuthService} from "../services/AuthService";
 
 export default new Elysia({
     prefix: 'admin',
@@ -13,6 +14,7 @@ export default new Elysia({
     .decorate({
         adminRepository: new AdminRepository(),
         sessionRepository: new SessionRepository(),
+        authService: new AuthService()
     })
     .post(
         '',
@@ -24,23 +26,34 @@ export default new Elysia({
             body: t.Object({ userId: t.Number() }),
         },
     )
-    .delete(
+    .group(
         ':userId',
-        ({ adminRepository, params: { userId }, user, set }) => {
-            const id = parseInt(userId);
-            if (id === user.id) {
-                set.status = 400;
-                throw new Error('You cannot revoke your own role!');
-            }
-            adminRepository.revokeAdmin(id);
-        },
         {
             params: t.Object({
-                userId: t.String(),
-            }),
+                userId: t.Number()
+            })
         },
-    )
-    .delete(
+        (app) => app
+            .post(
+                '',
+                async ({authService, params: { userId }}) =>
+                    await authService.createPasswordResetToken(userId),
+                {
+                    response: t.Object({
+                        token: t.String()
+                    })
+                }
+            ).delete(
+                '',
+                ({ adminRepository, params: { userId }, user, set }) => {
+                    if (userId === user.id) {
+                        set.status = 400;
+                        throw new Error('You cannot revoke your own role!');
+                    }
+                    adminRepository.revokeAdmin(userId);
+                }
+            )
+    ).delete(
         'session/:id',
         async ({ sessionRepository, params: { id }, user, set }) => {
             const session = await sessionRepository.getSessionById(id);
@@ -65,7 +78,7 @@ export default new Elysia({
             return data.map((item) => {
                 return {
                     ...item,
-                    isAdmin: item.adminId ? true : undefined,
+                    isAdmin: !!item.adminId,
                     sessionId: item.sessionId ?? undefined,
                     sessionExpiryDate: item.sessionExpiryDate ?? undefined,
                 };

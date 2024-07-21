@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { NewUser, userSchema } from '../model/schemas/userSchema';
+import { NewUser, User, userSchema } from '../model/schemas/userSchema';
 import { db } from '../model/db/db';
 
 export default class UserRepository {
@@ -23,6 +23,16 @@ export default class UserRepository {
             .select()
             .from(userSchema)
             .where(eq(userSchema.id, id));
+
+        return result.at(0);
+    }
+
+    async updateUser(id: number, user: Partial<User>) {
+        const result = await db
+            .update(userSchema)
+            .set(user)
+            .where(eq(userSchema.id, id))
+            .returning();
 
         return result.at(0);
     }

@@ -28,10 +28,8 @@ export default class SessionRepository {
         return result.at(0);
     }
 
-    static async deleteExpiredSessions() {
-        await db
-            .delete(sessionSchema)
-            .where(lt(sessionSchema.expiresAt, new Date()));
+    static deleteExpiredSessions() {
+        db.delete(sessionSchema).where(lt(sessionSchema.expiresAt, new Date()));
     }
 
     async getLatestSessionOfUser(userId: number) {

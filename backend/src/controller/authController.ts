@@ -5,8 +5,10 @@ import { SessionService } from '../services/SessionService';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import sessionCookieDto from '../shared/sessionCookieDto';
 import SessionRepository from '../repository/SessionRepository';
+import { authErrorHandler } from '../errorHandlers/authErrorHandler';
 
 export default new Elysia()
+    .use(authErrorHandler)
     .decorate({
         authService: new AuthService(),
         profileService: new ProfileService(),
@@ -79,6 +81,17 @@ export default new Elysia()
             body: t.Object({
                 login: t.String(),
                 password: t.String(),
+            }),
+        },
+    )
+    .post(
+        'password-reset',
+        async ({ authService, body: { token, newPassword } }) =>
+            await authService.resetPassword(token, newPassword),
+        {
+            body: t.Object({
+                token: t.String(),
+                newPassword: t.String(),
             }),
         },
     )

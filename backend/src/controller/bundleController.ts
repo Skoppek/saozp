@@ -24,11 +24,11 @@ export default new Elysia({
         },
     )
     .get('', async ({ bundleService }) => await bundleService.getBundleList())
-    .group(':bundleId', (app) =>
+    .group('/:bundleId', (app) =>
         app
             .use(bundleIdParam)
             .get(
-                '/',
+                '',
                 async ({ bundleService, bundleId }) =>
                     await bundleService.getBundle(bundleId),
             )
@@ -46,7 +46,7 @@ export default new Elysia({
                     await bundleService.deleteBundle(bundleId),
             )
             .group(
-                'users',
+                '/users',
                 {
                     body: 'problemIds',
                 },

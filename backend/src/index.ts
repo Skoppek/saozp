@@ -33,3 +33,5 @@ try {
     // we'll proceed, but let's report it
     console.error(message);
 }
+
+export type App = typeof app;

@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia';
 import AdminRepository from '../repository/AdminRepository';
 import { adminUserAccess } from '../plugins/adminUserAccess';
 import SessionRepository from '../repository/SessionRepository';
-import {AuthService} from "../services/AuthService";
+import { AuthService } from '../services/AuthService';
 
 export default new Elysia({
     prefix: 'admin',
@@ -14,7 +14,7 @@ export default new Elysia({
     .decorate({
         adminRepository: new AdminRepository(),
         sessionRepository: new SessionRepository(),
-        authService: new AuthService()
+        authService: new AuthService(),
     })
     .post(
         '',
@@ -27,34 +27,37 @@ export default new Elysia({
         },
     )
     .group(
-        ':userId',
+        '/:userId',
         {
             params: t.Object({
-                userId: t.Number()
-            })
+                userId: t.Number(),
+            }),
         },
-        (app) => app
-            .post(
-                '',
-                async ({authService, params: { userId }}) =>
-                    await authService.createPasswordResetToken(userId),
-                {
-                    response: t.Object({
-                        token: t.String()
-                    })
-                }
-            ).delete(
-                '',
-                ({ adminRepository, params: { userId }, user, set }) => {
-                    if (userId === user.id) {
-                        set.status = 400;
-                        throw new Error('You cannot revoke your own role!');
-                    }
-                    adminRepository.revokeAdmin(userId);
-                }
-            )
-    ).delete(
-        'session/:id',
+        (app) =>
+            app
+                .post(
+                    '/password_reset',
+                    async ({ authService, params: { userId } }) =>
+                        await authService.createPasswordResetToken(userId),
+                    {
+                        response: t.Object({
+                            token: t.String(),
+                        }),
+                    },
+                )
+                .delete(
+                    '',
+                    ({ adminRepository, params: { userId }, user, set }) => {
+                        if (userId === user.id) {
+                            set.status = 400;
+                            throw new Error('You cannot revoke your own role!');
+                        }
+                        adminRepository.revokeAdmin(userId);
+                    },
+                ),
+    )
+    .delete(
+        '/session/:id',
         async ({ sessionRepository, params: { id }, user, set }) => {
             const session = await sessionRepository.getSessionById(id);
             if (session?.userId === user.id) {
@@ -72,7 +75,7 @@ export default new Elysia({
         },
     )
     .get(
-        'users',
+        '/users',
         async ({ adminRepository }) => {
             const data = await adminRepository.getUsersAdminView();
             return data.map((item) => {

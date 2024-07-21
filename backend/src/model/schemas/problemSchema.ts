@@ -28,7 +28,7 @@ export const problemSchema = pgTable('problems', {
         >()
         .notNull(),
     baseCode: text('base_code').notNull(),
-    activeAfter: timestamp('unlockAfter').notNull().defaultNow(),
+    activeAfter: timestamp('unlock_after').notNull().defaultNow(),
     isDeactivated: boolean('deactivated').notNull().default(false),
 });
 

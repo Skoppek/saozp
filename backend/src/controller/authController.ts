@@ -7,7 +7,7 @@ import sessionCookieDto from '../shared/sessionCookieDto';
 import SessionRepository from '../repository/SessionRepository';
 import { authErrorHandler } from '../errorHandlers/authErrorHandler';
 
-export default new Elysia()
+export default new Elysia({ prefix: 'auth' })
     .use(authErrorHandler)
     .decorate({
         authService: new AuthService(),
@@ -16,7 +16,7 @@ export default new Elysia()
     })
     .use(sessionCookieDto)
     .post(
-        'sign-up',
+        '/sign_up',
         async ({
             authService,
             profileService,
@@ -53,7 +53,7 @@ export default new Elysia()
         },
     )
     .post(
-        '/sign-in',
+        '/sign_in',
         async ({
             authService,
             sessionService,
@@ -85,7 +85,7 @@ export default new Elysia()
         },
     )
     .post(
-        'password-reset',
+        '/password_reset',
         async ({ authService, body: { token, newPassword } }) =>
             await authService.resetPassword(token, newPassword),
         {

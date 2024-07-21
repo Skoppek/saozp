@@ -31,7 +31,7 @@ const updateProblemRequest = t.Object({
             }),
         ),
     ),
-    activeAfter: t.Date(),
+    activeAfter: t.Optional(t.Date()),
 });
 
 export type UpdateProblemRequest = Static<typeof updateProblemRequest>;

@@ -30,7 +30,7 @@ export default new Elysia({
     .get('', async ({ groupService }) => await groupService.getGroupList(), {
         response: 'getGroupListResponse',
     })
-    .group(':groupId', (app) =>
+    .group('/:groupId', (app) =>
         app
             .use(groupIdParam)
             .get(
@@ -55,7 +55,7 @@ export default new Elysia({
                     await groupService.deleteGroup(groupId),
             )
             .group(
-                'users',
+                '/users',
                 {
                     body: 'userIds',
                 },

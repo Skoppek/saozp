@@ -1,12 +1,11 @@
 import { Elysia, t } from 'elysia';
 
-export const userGroupIdParam = new Elysia()
+export const groupIdParam = new Elysia()
     .guard({
         params: t.Object({
             groupId: t.Number(),
         }),
     })
-    .derive({ as: 'local' }, ({ params: { groupId } }) => {
+    .derive({ as: 'global' }, ({ params: { groupId } }) => {
         return { groupId };
-    })
-    .propagate();
+    });

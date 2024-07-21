@@ -1,14 +1,11 @@
-import {
-    CreateUserGroupBody,
-    UpdateUserGroupBody,
-} from '../bodies/userGroupRequests';
+import { CreateGroupBody, UpdateGroupBody } from '../bodies/groupRequests';
 import { GroupCreationError, GroupNotFoundError } from '../errors/groupErrors';
 import GroupRepository from '../repository/GroupRepository';
 
 export class GroupService {
     private groupRepository = new GroupRepository();
 
-    async createUserGroup({ name }: CreateUserGroupBody, ownerId: number) {
+    async createGroup({ name }: CreateGroupBody, ownerId: number) {
         const newGroup = await this.groupRepository.createGroup({
             name,
             owner: ownerId,
@@ -19,11 +16,11 @@ export class GroupService {
         }
     }
 
-    async getUserGroupList() {
+    async getGroupList() {
         return await this.groupRepository.getGroupList();
     }
 
-    async getUserGroup(groupId: number) {
+    async getGroup(groupId: number) {
         const group = await this.groupRepository.getGroup(groupId);
 
         if (!group) {
@@ -38,7 +35,7 @@ export class GroupService {
         };
     }
 
-    async updateUserGroup(data: UpdateUserGroupBody, groupId: number) {
+    async updateGroup(data: UpdateGroupBody, groupId: number) {
         const updatedGroup = await this.groupRepository.updateGroup(
             data,
             groupId,
@@ -49,7 +46,7 @@ export class GroupService {
         }
     }
 
-    async deleteUserGroup(groupId: number) {
+    async deleteGroup(groupId: number) {
         await this.groupRepository.deleteGroup(groupId);
     }
 

@@ -6,6 +6,7 @@ import { controller } from './controller/controller';
 import { initAdmin } from './shared/init';
 import { swagger } from '@elysiajs/swagger';
 import swaggerConfig from './plugins/swaggerConfig';
+import { passwordResetTokenCleaner } from './plugins/passwordResetTokenCleaner';
 
 const app = new Elysia({
     cookie: {
@@ -17,6 +18,7 @@ const app = new Elysia({
     .use(corsSettings)
     .use(swagger(swaggerConfig))
     .use(sessionCleaner)
+    .use(passwordResetTokenCleaner)
     .use(controller);
 
 try {

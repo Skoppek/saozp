@@ -21,6 +21,7 @@ export default {
         `${SCHEMAS_PATH}/testSchema.ts`,
         `${SCHEMAS_PATH}/groupSchema.ts`,
         `${SCHEMAS_PATH}/bundleSchema.ts`,
+        `${SCHEMAS_PATH}/passwordResetTokenSchema.ts`,
         `${INTERMEDIATES_SCHEMAS_PATH}/usersToGroupSchema.ts`,
         `${INTERMEDIATES_SCHEMAS_PATH}/problemsToBundleSchema.ts`,
     ],

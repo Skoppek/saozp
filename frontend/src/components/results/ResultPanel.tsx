@@ -5,7 +5,6 @@ import {
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { Submission } from "../../shared/interfaces/Submission";
 import { useEffect, useState } from "react";
-import apiClient from "../../apiClient";
 import { Button } from "flowbite-react/components/Button";
 import { TestPanelStats } from "../TestPanelStats";
 import { TestResultList } from "../TestResultList";
@@ -13,6 +12,7 @@ import { ResultPanelTitle } from "./ResultPanelTitle";
 import { CodeEditor } from "../CodeEditor";
 import { getLanguageById } from "../../shared/constansts";
 import { Spinner } from "flowbite-react/components/Spinner";
+import apiClient from "../../client/apiClient.ts";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
@@ -25,7 +25,7 @@ export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
 
   useEffect(() => {
     if (isOpen && !details) {
-      apiClient.getSubmissionById(submission.submissionId).then((data) => {
+      apiClient.submissions.get(submission.submissionId).then((data) => {
         setDetails(data);
       });
     }

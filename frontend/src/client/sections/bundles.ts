@@ -12,10 +12,24 @@ interface UpdateBundle {
 const create = async (newBundle: NewBundle) =>
   await edenClient.bundle.post(newBundle);
 
-const getAll = async () => await edenClient.bundle.get();
+const getAll = async () =>
+  await edenClient.bundle.get().then((res) => {
+    if (!res.data) {
+      throw new Error("Unexpected null in response.");
+    }
+    return res.data;
+  });
 
 const get = async (bundleId: number) =>
-  await edenClient.bundle({ bundleId }).get();
+  await edenClient
+    .bundle({ bundleId })
+    .get()
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 const update = async (bundleId: number, updatedBundle: UpdateBundle) =>
   await edenClient.bundle({ bundleId }).put(updatedBundle);

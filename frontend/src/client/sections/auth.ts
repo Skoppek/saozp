@@ -10,21 +10,21 @@ interface Profile {
   lastName: string;
 }
 
-const signUp = (newUserInfo: LoginCredentials & Profile) => {
-  return edenClient.auth.sign_up.post(newUserInfo);
-};
+const signUp = async (newUserInfo: LoginCredentials & Profile) =>
+  await edenClient.auth.sign_up.post(newUserInfo);
 
-const signIn = (credentials: LoginCredentials) => {
-  return edenClient.auth.sign_in.post(credentials);
-};
+const signIn = async (credentials: LoginCredentials) =>
+  await edenClient.auth.sign_in.post(credentials);
 
-const logout = () => {
-  return edenClient.auth.logout.delete();
-};
+const logout = async () => await edenClient.auth.logout.delete();
 
-const getLoggedUser = () => {
-  return edenClient.me.get();
-};
+const getLoggedUser = async () =>
+  await edenClient.me.get().then((res) => {
+    if (!res.data) {
+      throw new Error("Unexpected null in response.");
+    }
+    return res.data;
+  });
 
 export default {
   signUp,

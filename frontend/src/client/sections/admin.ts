@@ -1,6 +1,12 @@
 import edenClient from "../edenClient.ts";
 
-const getUsers = async () => await edenClient.admin.users.get();
+const getUsers = async () =>
+  await edenClient.admin.users.get().then((res) => {
+    if (!res.data) {
+      throw new Error("Unexpected null in response.");
+    }
+    return res.data;
+  });
 
 const logoutUser = async (sessionId: string) =>
   await edenClient.admin

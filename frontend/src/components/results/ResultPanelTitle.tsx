@@ -23,7 +23,7 @@ export const ResultPanelTitle = ({
       >
         {STATUS_NAMES[submission.status?.id ?? TestStatus.UNKNOWN]}
       </Badge>
-      {showCommitFlag && !!submission.isCommit && (
+      {showCommitFlag && submission.isCommit && (
         <HiFlag className="size-6 text-orange-400" />
       )}
       {showAuthor && (

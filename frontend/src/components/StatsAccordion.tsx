@@ -5,12 +5,12 @@ import {
 import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
 import { Submission } from "../shared/interfaces/Submission";
 import { useEffect, useState } from "react";
-import apiClient from "../apiClient";
 import { CodeEditor } from "./CodeEditor";
 import { getLanguageById } from "../shared/constansts";
 import { TestPanelStats } from "./TestPanelStats";
 import { TestResultList } from "./TestResultList";
 import { ResultPanelTitle } from "./results/ResultPanelTitle";
+import apiClient from "../client/apiClient.ts";
 
 interface StatsAccordionProps {
   submission: SubmissionEntry;
@@ -22,13 +22,9 @@ export const StatsAccordion = ({ submission }: StatsAccordionProps) => {
 
   useEffect(() => {
     if (isOpen && !details) {
-      console.log("deeee");
-      apiClient
-        .getSubmissionById(submission.submissionId)
-        .then((data) => {
-          setDetails(data);
-        })
-        .catch(() => console.log("co do kurwy"));
+      apiClient.submissions
+        .get(submission.submissionId)
+        .then((data) => setDetails(data));
     }
   }, [details, isOpen, submission.submissionId]);
 

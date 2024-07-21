@@ -8,14 +8,11 @@ export default new Elysia()
     .use(authenticatedUser)
     .use(profileErrorHandler)
     .use(profileResponse)
-    .decorate({
-        profileService: new ProfileService(),
-    })
     .get(
-        'me',
-        async ({ profileService, user: { id, login, isAdmin } }) => {
+        '/me',
+        async ({ user: { id, login, isAdmin } }) => {
             return {
-                ...(await profileService.getProfileByUserId(id)),
+                ...(await ProfileService.getProfileByUserId(id)),
                 login,
                 isAdmin,
             };

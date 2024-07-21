@@ -1,12 +1,21 @@
 import edenClient from "../edenClient.ts";
-import { Problem } from "../../shared/interfaces/Problem.ts";
+import { NewProblem, Problem } from "../../shared/interfaces/Problem.ts";
 import { TestCase } from "../../shared/interfaces/TestCase.ts";
 
 interface Tests {
   tests: TestCase[];
 }
 
-const getAll = async () => await edenClient.problem.get();
+const create = async (newProblem: NewProblem) =>
+  await edenClient.problem.post(newProblem);
+
+const getAll = async () =>
+  await edenClient.problem.get().then((res) => {
+    if (!res.data) {
+      throw new Error("Unexpected null in response.");
+    }
+    return res.data;
+  });
 
 const get = async (problemId: number, solve?: boolean) =>
   await edenClient
@@ -17,6 +26,12 @@ const get = async (problemId: number, solve?: boolean) =>
       query: {
         solve: Boolean(solve).toString(),
       },
+    })
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
     });
 
 const update = async (
@@ -28,6 +43,7 @@ const remove = async (problemId: number) =>
   await edenClient.problem({ problemId }).delete();
 
 export default {
+  create,
   getAll,
   get,
   update,

@@ -3,12 +3,12 @@ import { ProblemFilter } from "../shared/interfaces/Problem";
 import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
 import { Problem } from "../shared/interfaces/Problem";
 import { AuthenticatedPage } from "./AuthenticatedPage";
-import apiClient from "../apiClient";
 import { useNavigate, useParams } from "react-router-dom";
 import { StatsAccordion } from "../components/StatsAccordion";
 import { TextInput } from "../components/TextInput";
 import { Label } from "flowbite-react/components/Label";
 import { Datepicker } from "flowbite-react/components/Datepicker";
+import apiClient from "../client/apiClient.ts";
 
 export const ProblemStatsPage = () => {
   const { id } = useParams();
@@ -24,8 +24,8 @@ export const ProblemStatsPage = () => {
       navigate("/problems");
       return;
     }
-    apiClient
-      .getSubmissions({
+    apiClient.submissions
+      .getMany({
         problemId: parseInt(id ?? "-1"),
         commitsOnly: true,
       })
@@ -33,7 +33,7 @@ export const ProblemStatsPage = () => {
         setSubmissions(data);
       });
 
-    apiClient.getProblemById(parseInt(id)).then((data) => {
+    apiClient.problems.get(parseInt(id)).then((data) => {
       setProblem(data);
     });
   }, [id, navigate]);

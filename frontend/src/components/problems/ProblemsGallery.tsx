@@ -3,9 +3,9 @@ import { ProblemFilter } from "../../shared/interfaces/Problem";
 import { User } from "../../shared/interfaces/User";
 import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { ProblemCard } from "./ProblemCard";
-import apiClient from "../../apiClient";
 import { LanguageId } from "../../shared/enums";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../../client/apiClient.ts";
 
 interface ProblemsGalleryProps {
   problems: ProblemEntry[];
@@ -17,14 +17,10 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    apiClient
-      .getUserOfCurrentSession()
-      .then((user) => {
-        setUser(user);
-      })
-      .catch(() => {
-        navigate("/");
-      });
+    apiClient.auth
+      .getLoggedUser()
+      .then((user) => setUser(user))
+      .catch(() => navigate("/"));
   }, [navigate]);
 
   return (

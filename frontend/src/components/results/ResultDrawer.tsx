@@ -3,6 +3,7 @@ import { HiBars2, HiSquaresPlus } from "react-icons/hi2";
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { Submission } from "../../shared/interfaces/Submission";
 import { ResultPanel } from "./ResultPanel";
+import moment from "moment";
 
 interface ResultDrawerProps {
   isOpen: boolean;
@@ -37,9 +38,7 @@ export const ResultDrawer = ({
           <div className="mx-4 flex flex-col gap-2">
             {submissions
               .sort((a, b) =>
-                new Date(a.createdAt ?? "") < new Date(b.createdAt ?? "")
-                  ? 1
-                  : 0,
+                moment(a.createdAt).isBefore(b.createdAt) ? 1 : 0,
               )
               .map((submission, key) => (
                 <ResultPanel

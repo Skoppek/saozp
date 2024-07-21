@@ -12,10 +12,24 @@ interface UpdateGroup {
 const create = async (newGroup: NewGroup) =>
   await edenClient.group.post(newGroup);
 
-const getAll = async () => await edenClient.group.get();
+const getAll = async () =>
+  await edenClient.group.get().then((res) => {
+    if (!res.data) {
+      throw new Error("Unexpected null in response.");
+    }
+    return res.data;
+  });
 
 const get = async (groupId: number) =>
-  await edenClient.group({ groupId }).get();
+  await edenClient
+    .group({ groupId })
+    .get()
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 const update = async (groupId: number, updatedGroup: UpdateGroup) =>
   await edenClient.group({ groupId }).put(updatedGroup);

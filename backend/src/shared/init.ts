@@ -1,13 +1,10 @@
 import { isSignUpCredentials } from './SignUpCredentials';
-import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
-import AdminRepository from '../repository/AdminRepository';
 import UserRepository from '../repository/UserRepository';
+import AdminRepository from '../repository/AdminRepository';
+import AuthService from '../services/AuthService';
 
 export const initAdmin = async () => {
-    const adminRepository = new AdminRepository();
-    const userRepository = new UserRepository();
-
     const adminCredentials = {
         login: Bun.env.ADMIN_LOGIN,
         password: Bun.env.ADMIN_PASSWORD,
@@ -21,13 +18,13 @@ export const initAdmin = async () => {
         );
     }
 
-    const adminAccount = await userRepository.getUserByLogin(
+    const adminAccount = await UserRepository.getUserByLogin(
         adminCredentials.login,
     );
 
     if (
         adminAccount?.id &&
-        !(await adminRepository.isAdmin(adminAccount?.id))
+        !(await AdminRepository.isAdmin(adminAccount?.id))
     ) {
         throw new Error(
             'Admin credentials in env variables belong to existing user but they are not an admin. Aborting...',
@@ -38,18 +35,14 @@ export const initAdmin = async () => {
 
     console.log('Admin user not registered. Creating ...');
 
-    const authService = new AuthService();
-
-    const user = await authService.signUp(
+    const user = await AuthService.signUp(
         adminCredentials.login,
         adminCredentials.password,
     );
 
-    await adminRepository.addToAdmins(user.id);
+    await AdminRepository.addToAdmins(user.id);
 
-    const profileService = new ProfileService();
-
-    await profileService.createProfile(
+    await ProfileService.createProfile(
         user.id,
         adminCredentials.firstName,
         adminCredentials.lastName,

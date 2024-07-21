@@ -7,10 +7,12 @@ export const generalErrorHandler = new Elysia()
         InternalError,
     })
     .use(HttpStatusCode())
-    .onError(({ code, error, set, httpStatus }) => {
+    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'InternalError':
                 set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
                 return error;
+            case 'NOT_FOUND':
+                return 'Endpoint not found.';
         }
     });

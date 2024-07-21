@@ -8,7 +8,7 @@ export const groupErrorHandler = new Elysia()
         GroupNotFoundError,
     })
     .use(HttpStatusCode())
-    .onError(({ code, error, set, httpStatus }) => {
+    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'GroupNotFoundError':
                 set.status = httpStatus.HTTP_404_NOT_FOUND;

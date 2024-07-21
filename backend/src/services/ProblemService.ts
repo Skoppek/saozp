@@ -32,15 +32,13 @@ export class ProblemService {
         );
     }
 
-    private getCreator(user?: User | null, profile?: Profile | null) {
-        return user && profile
-            ? {
-                  userId: user.id,
-                  login: user.login,
-                  firstName: profile.firstName,
-                  lastName: profile.lastName,
-              }
-            : undefined;
+    private getCreator(user: User, profile: Profile) {
+        return {
+            userId: user.id,
+            login: user.login,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+        };
     }
 
     async createProblem(data: CreateProblemRequest, creatorId: number) {

@@ -19,11 +19,11 @@ export default class ProblemRepository {
         return db
             .select()
             .from(problemSchema)
-            .leftJoin(
+            .innerJoin(
                 profileSchema,
                 eq(problemSchema.creatorId, profileSchema.userId),
             )
-            .leftJoin(userSchema, eq(problemSchema.creatorId, userSchema.id))
+            .innerJoin(userSchema, eq(problemSchema.creatorId, userSchema.id))
             .where(eq(problemSchema.isDeactivated, false));
     }
 

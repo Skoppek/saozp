@@ -13,7 +13,7 @@ export const authErrorHandler = new Elysia()
         UserNotFoundError,
     })
     .use(HttpStatusCode())
-    .onError(({ code, error, set, httpStatus }) => {
+    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'PasswordMarkedForResetError':
                 set.status = httpStatus.HTTP_307_TEMPORARY_REDIRECT;

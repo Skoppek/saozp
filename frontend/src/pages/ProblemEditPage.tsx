@@ -2,9 +2,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProblemEditor } from "../components/problems/ProblemEditor";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useEffect, useState } from "react";
-import apiClient from "../apiClient";
 import { Problem } from "../shared/interfaces/Problem";
 import { Spinner } from "flowbite-react/components/Spinner";
+import apiClient from "../client/apiClient.ts";
 
 export const ProblemEditPage = () => {
   const { id } = useParams();
@@ -17,8 +17,8 @@ export const ProblemEditPage = () => {
       return;
     }
     if (problem) {
-      apiClient
-        .getUserOfCurrentSession()
+      apiClient.auth
+        .getLoggedUser()
         .then((user) => {
           if (problem?.creatorId != user.userId) {
             throw new Error("Signed-in user is not the owner of this problem.");
@@ -28,7 +28,7 @@ export const ProblemEditPage = () => {
           navigate("/");
         });
     } else {
-      apiClient.getProblemById(parseInt(id)).then((data) => {
+      apiClient.problems.get(parseInt(id)).then((data) => {
         setProblem(data);
       });
     }

@@ -1,8 +1,8 @@
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { AuthContext } from "./Root";
+import apiClient from "../client/apiClient.ts";
 
 interface AuthenticatedPageProps {
   children: ReactNode;
@@ -14,12 +14,11 @@ export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
   const authContext = useContext(AuthContext);
 
   useEffect(() => {
-    apiClient
-      .isLoggedIn()
-      .then((response) => {
-        const userIsLogged = response.data;
-        authContext?.setIsLogged(userIsLogged);
-        if (!userIsLogged) {
+    apiClient.auth
+      .getLoggedUser()
+      .then((loggedUser) => {
+        authContext?.setIsLogged(!!loggedUser);
+        if (!loggedUser) {
           throw new Error("User not authenticated.");
         }
         setPageReady(true);

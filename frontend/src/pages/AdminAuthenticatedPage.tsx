@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
+import apiClient from "../client/apiClient.ts";
 
 interface AdminAuthenticatedPageProps {
   children: ReactNode;
@@ -14,7 +14,7 @@ export const AdminAuthenticatedPage = ({
   const [pageReady, setPageReady] = useState<boolean>();
 
   useEffect(() => {
-    apiClient.getUserOfCurrentSession().then((response) => {
+    apiClient.auth.getLoggedUser().then((response) => {
       if (!response.isAdmin) {
         navigate("/");
         return;

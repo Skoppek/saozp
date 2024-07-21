@@ -5,13 +5,13 @@ import { CodeEditor } from "../CodeEditor";
 import { TestCasesEditor } from "../TestCasesEditor";
 import { Card } from "flowbite-react/components/Card";
 import { Button } from "flowbite-react/components/Button";
-import apiClient from "../../apiClient";
 import { NewProblem } from "../../shared/interfaces/Problem";
 import { Problem } from "../../shared/interfaces/Problem";
 import { ALL_LANGUAGES, getLanguageById } from "../../shared/constansts";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Datepicker } from "flowbite-react";
+import apiClient from "../../client/apiClient.ts";
 
 interface ProblemEditorProps {
   problem?: Problem;
@@ -104,8 +104,8 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             onClick={() => {
               setIsCreating(true);
               problem
-                ? apiClient
-                    .updateProblemById(problem.problemId, {
+                ? apiClient.problems
+                    .update(problem.problemId, {
                       name: newProblem.name,
                       prompt: newProblem.prompt,
                       description: newProblem.description,
@@ -117,8 +117,8 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
                     .then(() => {
                       navigate("/problems");
                     })
-                : apiClient
-                    .createProblem({
+                : apiClient.problems
+                    .create({
                       name: newProblem.name,
                       prompt: newProblem.prompt,
                       description: newProblem.description,
@@ -159,7 +159,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
             color={"failure"}
             onClick={() => {
               setIsDeleting(true);
-              apiClient.deleteProblemByid(problem.problemId).then(() => {
+              apiClient.problems.remove(problem.problemId).then(() => {
                 navigate("/problems");
               });
             }}

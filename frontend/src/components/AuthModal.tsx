@@ -3,9 +3,9 @@ import { useCallback, useMemo, useState } from "react";
 import { TextInput } from "./TextInput";
 import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
-import apiClient from "../apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { User } from "../shared/interfaces/User";
+import apiClient from "../client/apiClient.ts";
 
 interface AuthModalProps {
   onLogin: (user?: User) => void;
@@ -30,7 +30,7 @@ export const AuthModal = ({
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [showWarnings, setShowWarnings] = useState<boolean>(false);
 
-  // Maybe looks awful but I dodn't have a better idea
+  // Maybe looks awful, but I don't have a better idea
   const resetStates = useCallback(() => {
     setLogin("");
     setPassword("");
@@ -61,7 +61,7 @@ export const AuthModal = ({
   }, [lastName.length]);
 
   const handleRegister = useCallback(() => {
-    apiClient
+    apiClient.auth
       .signUp({
         login: login,
         password,
@@ -80,7 +80,7 @@ export const AuthModal = ({
   }, [login, firstName, lastName, password]);
 
   const handleLogin = useCallback(() => {
-    apiClient
+    apiClient.auth
       .signIn({
         login: login,
         password,

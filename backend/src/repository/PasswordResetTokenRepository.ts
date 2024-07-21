@@ -6,8 +6,8 @@ import {
 import { eq } from 'drizzle-orm/sql';
 import { lt } from 'drizzle-orm';
 
-export default class {
-    async putToken(passwordResetToken: PasswordResetToken) {
+export default abstract class {
+    static async putToken(passwordResetToken: PasswordResetToken) {
         await db
             .insert(passwordResetTokenSchema)
             .values(passwordResetToken)
@@ -21,7 +21,7 @@ export default class {
             .returning();
     }
 
-    async removeTokenOfUser(userId: number) {
+    static async removeTokenOfUser(userId: number) {
         await db
             .delete(passwordResetTokenSchema)
             .where(eq(passwordResetTokenSchema.userId, userId));
@@ -33,7 +33,7 @@ export default class {
         );
     }
 
-    async getTokenForUser(userId: number) {
+    static async getTokenForUser(userId: number) {
         const result = await db
             .select()
             .from(passwordResetTokenSchema)
@@ -42,7 +42,7 @@ export default class {
         return result.at(0);
     }
 
-    async getTokenByToken(token: string) {
+    static async getTokenByToken(token: string) {
         const result = await db
             .select()
             .from(passwordResetTokenSchema)

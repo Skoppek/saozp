@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Navigation } from "../components/Navigation";
 import { createContext, useCallback, useEffect, useState } from "react";
-import apiClient from "../apiClient";
+import apiClient from "../client/apiClient.ts";
 
 export const AuthContext = createContext<
   | {
@@ -20,11 +20,9 @@ export const Root = () => {
   }, []);
 
   useEffect(() => {
-    apiClient
-      .isLoggedIn()
-      .then((response) => {
-        setIsLogged(response.data);
-      })
+    apiClient.auth
+      .getLoggedUser()
+      .then((data) => setIsLogged(!!data))
       .catch(() => setIsLogged(false));
   }, []);
 

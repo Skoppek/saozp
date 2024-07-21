@@ -13,7 +13,7 @@ export const problemErrorHandler = new Elysia()
         ProblemCreationError,
     })
     .use(HttpStatusCode())
-    .onError(({ code, error, set, httpStatus }) => {
+    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'ProblemNotFoundError':
                 set.status = httpStatus.HTTP_404_NOT_FOUND;

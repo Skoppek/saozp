@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import apiClient from "../../apiClient";
 import { Button, Modal, Spinner, Table } from "flowbite-react";
 import { HiCheck } from "react-icons/hi";
 import {
@@ -7,6 +6,8 @@ import {
   UserAdminDataFilter,
 } from "../../shared/interfaces/UserAdminData";
 import { HiDotsVertical } from "react-icons/hi";
+import apiClient from "../../client/apiClient.ts";
+import moment from "moment";
 
 interface UsersListProps {
   filter: UserAdminDataFilter;
@@ -18,25 +19,21 @@ export const UsersList = ({ filter }: UsersListProps) => {
   const [errorMsg, setErrorMsg] = useState<string | undefined>();
 
   const isSessionActive = useCallback(
-    (sessionId?: string, sessionExpiryDate?: string) => {
+    (sessionId?: string, sessionExpiryDate?: Date) => {
       return (
         sessionId &&
         sessionExpiryDate &&
-        new Date(sessionExpiryDate) > new Date()
+        moment(sessionExpiryDate).isAfter(moment())
       );
     },
     [],
   );
 
   useEffect(() => {
-    apiClient
-      .getUsersWithProfiles()
-      .then((data) => {
-        setUsers(data);
-      })
-      .catch(() => {
-        setUsers([]);
-      });
+    apiClient.admin
+      .getUsers()
+      .then((data) => setUsers(data))
+      .catch(() => setUsers([]));
   }, []);
 
   const filteredUsers = useMemo<UserAdminData[]>(() => {
@@ -77,8 +74,8 @@ export const UsersList = ({ filter }: UsersListProps) => {
                 <Button
                   onClick={() => {
                     if (selectedUser.sessionId) {
-                      apiClient
-                        .revokeSession(selectedUser.sessionId)
+                      apiClient.admin
+                        .logoutUser(selectedUser.sessionId)
                         .catch((error) => {
                           if (error.response.status === 400) {
                             setErrorMsg(
@@ -96,8 +93,8 @@ export const UsersList = ({ filter }: UsersListProps) => {
               <Button
                 onClick={() => {
                   if (selectedUser.isAdmin) {
-                    apiClient
-                      .revokeAdmin(selectedUser.userId)
+                    apiClient.admin
+                      .demote(selectedUser.userId)
                       .catch((error) => {
                         if (error.response.status === 400) {
                           setErrorMsg("Nie odebrać sobie roli administratora.");
@@ -105,7 +102,7 @@ export const UsersList = ({ filter }: UsersListProps) => {
                         }
                       });
                   } else {
-                    apiClient.promoteToAdmin(selectedUser.userId);
+                    apiClient.admin.promote(selectedUser.userId);
                   }
                 }}
               >

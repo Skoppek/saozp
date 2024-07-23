@@ -42,11 +42,11 @@ export default abstract class SessionRepository {
         return result.at(0);
     }
 
-    static async refreshSession(id: string, forMinutes: number) {
+    static async setSessionExpiryDate(id: string, expiresAt: Date) {
         const result = await db
             .update(sessionSchema)
             .set({
-                expiresAt: new Date(Date.now() + 1000 * 60 * forMinutes),
+                expiresAt,
             })
             .where(eq(sessionSchema.id, id))
             .returning();

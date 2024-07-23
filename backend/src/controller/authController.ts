@@ -20,9 +20,7 @@ export default new Elysia({ prefix: 'auth' })
 
             session.set({
                 httpOnly: false,
-                maxAge: 3600 * 2,
                 path: '/',
-                priority: 'high',
                 value: newSession.id,
                 sameSite: 'none',
                 expires: newSession?.expiresAt,
@@ -46,19 +44,17 @@ export default new Elysia({ prefix: 'auth' })
     )
     .post(
         '/sign_in',
-        async ({ body: { login, password }, cookie: { session } }) => {
+        async ({ body: { login, password }, cookie }) => {
             const userId = await AuthService.signIn(login, password);
             const newSession = await SessionService.createSession(userId);
 
-            session.set({
+            cookie.session?.set({
                 value: newSession.id,
-                httpOnly: false,
-                maxAge: 3600 * 2,
+                httpOnly: true,
                 path: '/',
-                priority: 'high',
                 sameSite: 'none',
                 expires: newSession.expiresAt,
-                secure: false,
+                secure: true,
             });
         },
         {
@@ -68,9 +64,6 @@ export default new Elysia({ prefix: 'auth' })
             body: t.Object({
                 login: t.String(),
                 password: t.String(),
-            }),
-            cookie: t.Object({
-                session: t.String(),
             }),
         },
     )

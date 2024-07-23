@@ -18,7 +18,7 @@ class UserWithSessionNotFoundError extends Error {
 
 export const authenticatedUser = new Elysia()
     .use(sessionErrorHandler)
-    .resolve({ as: 'global' }, async ({ cookie: { session } }) => {
+    .resolve({ as: 'scoped' }, async ({ cookie: { session } }) => {
         if (!session || !session.value) {
             throw new SessionCookieNotFoundError();
         }
@@ -48,7 +48,7 @@ export const authenticatedUser = new Elysia()
                 return error;
         }
     })
-    .derive({ as: 'scoped' }, async ({ userId, sessionCookie }) => {
+    .resolve({ as: 'scoped' }, async ({ userId, sessionCookie }) => {
         if (!userId || !sessionCookie) {
             throw new InternalError();
         }

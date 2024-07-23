@@ -1,8 +1,9 @@
 import { Session } from '../model/schemas/sessionSchema';
 import SessionRepository from '../repository/SessionRepository';
+import moment from 'moment';
 
 export class SessionService {
-    private static SESSION_LENGTH = 1000 * 3600 * 2;
+    private static SESSION_LENGTH = Bun.env.SESSION_LENGTH_IN_HOURS ?? 2;
 
     static isSessionValid(session: Session) {
         return session.expiresAt > new Date();
@@ -12,17 +13,19 @@ export class SessionService {
         const existingSession =
             await SessionRepository.getLatestSessionOfUser(userId);
 
+        const expiryDate = moment()
+            .add(SessionService.SESSION_LENGTH, 'hours')
+            .toDate();
+
         const session =
             existingSession && SessionService.isSessionValid(existingSession)
-                ? await SessionRepository.refreshSession(
+                ? await SessionRepository.setSessionExpiryDate(
                       existingSession.id,
-                      SessionService.SESSION_LENGTH,
+                      expiryDate,
                   )
                 : await SessionRepository.createSession({
                       userId,
-                      expiresAt: new Date(
-                          Date.now() + SessionService.SESSION_LENGTH,
-                      ),
+                      expiresAt: expiryDate,
                   });
 
         if (!session) {

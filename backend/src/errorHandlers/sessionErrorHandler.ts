@@ -13,7 +13,7 @@ export const sessionErrorHandler = new Elysia()
         SessionNotFoundError,
     })
     .use(HttpStatusCode())
-    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
+    .onError({ as: 'scoped' }, ({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'SessionCookieNotFoundError':
             case 'SessionNotFoundError':

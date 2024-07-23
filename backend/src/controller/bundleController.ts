@@ -10,11 +10,11 @@ export default new Elysia({
         tags: ['Bundles'],
     },
 })
-    .use(authenticatedUser)
     .use(bundleBodies)
     .decorate({
         bundleService: new BundleService(),
     })
+    .use(authenticatedUser)
     .post(
         '',
         async ({ bundleService, body, user }) =>
@@ -23,10 +23,12 @@ export default new Elysia({
             body: 'createBundleBody',
         },
     )
+    .use(authenticatedUser)
     .get('', async ({ bundleService }) => await bundleService.getBundleList())
     .group('/:bundleId', (app) =>
         app
             .use(bundleIdParam)
+            .use(authenticatedUser)
             .get(
                 '',
                 async ({ bundleService, bundleId }) =>

@@ -13,10 +13,7 @@ export default abstract class SessionRepository {
     }
 
     static async revokeSession(sessionId: string) {
-        return db
-            .update(sessionSchema)
-            .set({ expiresAt: new Date(0) })
-            .where(eq(sessionSchema.id, sessionId));
+        return db.delete(sessionSchema).where(eq(sessionSchema.id, sessionId));
     }
 
     static async getSessionById(id: string) {
@@ -43,6 +40,7 @@ export default abstract class SessionRepository {
     }
 
     static async setSessionExpiryDate(id: string, expiresAt: Date) {
+        console.log({ set: expiresAt });
         const result = await db
             .update(sessionSchema)
             .set({

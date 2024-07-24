@@ -17,8 +17,10 @@ export class SessionService {
             .add(SessionService.SESSION_LENGTH, 'hours')
             .toDate();
 
+        console.log(expiryDate);
+
         const session =
-            existingSession && SessionService.isSessionValid(existingSession)
+            !!existingSession && SessionService.isSessionValid(existingSession)
                 ? await SessionRepository.setSessionExpiryDate(
                       existingSession.id,
                       expiryDate,

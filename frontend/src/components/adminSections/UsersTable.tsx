@@ -2,13 +2,9 @@ import { Button, Table } from "flowbite-react";
 import { HiCheck, HiDotsVertical } from "react-icons/hi";
 import { UserAdminData } from "../../shared/interfaces/UserAdminData.ts";
 
-export interface UsersTableItem extends UserAdminData {
-  isSessionActive: boolean;
-}
-
 interface UsersTableInterface {
-  users: UsersTableItem[];
-  onSelect: (user: UsersTableItem) => void;
+  users: UserAdminData[];
+  onSelect: (user: UserAdminData) => void;
 }
 
 export const UsersTable = ({ users, onSelect }: UsersTableInterface) => {
@@ -21,7 +17,6 @@ export const UsersTable = ({ users, onSelect }: UsersTableInterface) => {
         <Table.HeadCell>Nazwisko</Table.HeadCell>
         <Table.HeadCell>Admin</Table.HeadCell>
         <Table.HeadCell>Sesja</Table.HeadCell>
-        <Table.HeadCell>Sesja ważna do</Table.HeadCell>
         <Table.HeadCell>
           <span className="sr-only">Edytuj</span>
         </Table.HeadCell>
@@ -35,9 +30,6 @@ export const UsersTable = ({ users, onSelect }: UsersTableInterface) => {
             <Table.Cell>{user.lastName}</Table.Cell>
             <Table.Cell>{user.isAdmin && <HiCheck size={25} />}</Table.Cell>
             <Table.Cell>{user.sessionId && <HiCheck size={25} />}</Table.Cell>
-            <Table.Cell>
-              {user.isSessionActive && <HiCheck size={25} />}
-            </Table.Cell>
             <Table.Cell>
               <Button size={"sm"} outline onClick={() => onSelect(user)}>
                 <HiDotsVertical size={20} />

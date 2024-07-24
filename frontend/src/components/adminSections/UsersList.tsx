@@ -1,13 +1,12 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Spinner } from "flowbite-react";
 import {
   UserAdminData,
   UserAdminDataFilter,
 } from "../../shared/interfaces/UserAdminData";
 import apiClient from "../../client/apiClient.ts";
-import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
-import { UsersTable, UsersTableItem } from "./UsersTable.tsx";
+import { UsersTable } from "./UsersTable.tsx";
 import { UserControlModal } from "./UserControlModal.tsx";
 
 interface UsersListProps {
@@ -16,17 +15,6 @@ interface UsersListProps {
 
 export const UsersList = ({ filter }: UsersListProps) => {
   const [selectedUser, setSelectedUser] = useState<UserAdminData | undefined>();
-
-  const isSessionActive = useCallback(
-    (sessionId?: string, sessionExpiryDate?: Date) => {
-      return (
-        !!sessionId &&
-        !!sessionExpiryDate &&
-        moment(sessionExpiryDate).isAfter(moment())
-      );
-    },
-    [],
-  );
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["admin", "users"],
@@ -54,20 +42,6 @@ export const UsersList = ({ filter }: UsersListProps) => {
     filter.login,
   ]);
 
-  const modifiedData = useMemo<UsersTableItem[]>(
-    () =>
-      filteredUsers.map((user) => {
-        return {
-          ...user,
-          isSessionActive: isSessionActive(
-            user.sessionId,
-            user.sessionExpiryDate,
-          ),
-        };
-      }),
-    [filteredUsers, isSessionActive],
-  );
-
   return (
     <>
       <UserControlModal
@@ -82,7 +56,7 @@ export const UsersList = ({ filter }: UsersListProps) => {
         </div>
       ) : (
         <UsersTable
-          users={modifiedData}
+          users={filteredUsers}
           onSelect={(user) => setSelectedUser(user)}
         />
       )}

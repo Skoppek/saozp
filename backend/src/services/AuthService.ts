@@ -52,7 +52,7 @@ export default abstract class AuthService {
 
         if (
             passwordResetToken &&
-            moment(passwordResetToken.expiresAt).isBefore(moment())
+            moment(passwordResetToken.expiresAt).isAfter(moment())
         ) {
             throw new PasswordMarkedForResetError();
         }

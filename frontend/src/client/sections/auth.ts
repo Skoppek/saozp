@@ -26,9 +26,16 @@ const getLoggedUser = async () =>
     return res.data;
   });
 
+const changePassword = async (token: string, newPassword: string) =>
+  await edenClient.auth.password_reset.post({
+    token,
+    newPassword,
+  });
+
 export default {
   signUp,
   signIn,
   logout,
   getLoggedUser,
+  changePassword,
 };

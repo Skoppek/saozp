@@ -2,14 +2,15 @@ import { PasswordResetTokenModal } from "./PasswordResetTokenModal.tsx";
 import { Button } from "flowbite-react";
 import apiClient from "../../../client/apiClient.ts";
 import { useState } from "react";
+import { UserAdminData } from "../../../shared/interfaces/UserAdminData.ts";
 
 interface PasswordResetControlProps {
-  userId: number;
+  user: UserAdminData;
   onClose: () => void;
 }
 
 export const PasswordResetControl = ({
-  userId,
+  user,
   onClose,
 }: PasswordResetControlProps) => {
   const [token, setToken] = useState("");
@@ -20,10 +21,11 @@ export const PasswordResetControl = ({
         isShown={!!token}
         onClose={() => onClose()}
         token={token}
+        userFullName={[user.firstName, user.lastName].join(" ")}
       />
       <Button
         onClick={() => {
-          apiClient.admin.resetPassword(userId).then((response) => {
+          apiClient.admin.resetPassword(user.userId).then((response) => {
             setToken(response.token);
           });
         }}

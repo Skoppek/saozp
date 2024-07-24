@@ -77,7 +77,7 @@ export const UserControlModal = ({
               {selectedUser.isAdmin ? "Odbierz" : "Nadaj"} rolę administratora
             </Button>
             <PasswordResetControl
-              userId={selectedUser.userId}
+              user={selectedUser}
               onClose={() => {
                 onClose();
                 close();

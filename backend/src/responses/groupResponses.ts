@@ -1,21 +1,21 @@
 import { Elysia, t } from 'elysia';
 
-const userBasicData = t.Object({
+const UserBasicData = t.Object({
     userId: t.Number(),
     firstName: t.String(),
     lastName: t.String(),
 });
 
-const userGroupBasicData = t.Object({
+const groupBasicData = t.Object({
     id: t.Number(),
     name: t.String(),
-    owner: userBasicData,
+    owner: UserBasicData,
 });
 
-const getUserGroupListResponse = t.Array(userGroupBasicData);
+const getGroupListResponse = t.Array(groupBasicData);
 
-const getUserGroupResponse = t.Intersect([
-    userGroupBasicData,
+const getGroupResponse = t.Intersect([
+    groupBasicData,
     t.Object({
         users: t.Array(
             t.Object({
@@ -27,7 +27,7 @@ const getUserGroupResponse = t.Intersect([
     }),
 ]);
 
-export const userGroupResponses = new Elysia().model({
-    getUserGroupListResponse,
-    getUserGroupResponse,
+export const groupResponses = new Elysia().model({
+    getGroupListResponse,
+    getGroupResponse,
 });

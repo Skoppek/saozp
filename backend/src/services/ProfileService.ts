@@ -1,19 +1,21 @@
 import { ProfileNotFoundError } from '../errors/profileErrors';
 import ProfileRepository from '../repository/ProfileRepository';
 
-export class ProfileService {
-    private profileRepository = new ProfileRepository();
-
-    async createProfile(userId: number, firstName: string, lastName: string) {
-        return await this.profileRepository.createProfile({
+export abstract class ProfileService {
+    static async createProfile(
+        userId: number,
+        firstName: string,
+        lastName: string,
+    ) {
+        return await ProfileRepository.createProfile({
             userId,
             firstName,
             lastName,
         });
     }
 
-    async getProfileByUserId(userId: number) {
-        const profile = await this.profileRepository.getProfileByUserId(userId);
+    static async getProfileByUserId(userId: number) {
+        const profile = await ProfileRepository.getProfileByUserId(userId);
 
         if (!profile) {
             throw new ProfileNotFoundError();

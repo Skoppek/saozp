@@ -1,42 +1,26 @@
 import { Elysia, t } from 'elysia';
-import { AuthService } from '../services/AuthService';
 import { ProfileService } from '../services/ProfileService';
 import { SessionService } from '../services/SessionService';
 import { authenticatedUser } from '../plugins/authenticatedUser';
-import sessionCookieDto from '../shared/sessionCookieDto';
 import SessionRepository from '../repository/SessionRepository';
 import { authErrorHandler } from '../errorHandlers/authErrorHandler';
+import AuthService from '../services/AuthService';
 
-export default new Elysia()
+export default new Elysia({ prefix: 'auth' })
     .use(authErrorHandler)
-    .decorate({
-        authService: new AuthService(),
-        profileService: new ProfileService(),
-        sessionService: new SessionService(),
-    })
-    .use(sessionCookieDto)
     .post(
-        'sign-up',
-        async ({
-            authService,
-            profileService,
-            sessionService,
-            body: { login, password, lastName, firstName },
-            cookie: { session },
-        }) => {
-            const newUser = await authService.signUp(login, password);
-            await profileService.createProfile(newUser.id, firstName, lastName);
-            const newSession = await sessionService.createSession(newUser.id);
+        '/sign_up',
+        async ({ body: { login, password, lastName, firstName }, cookie }) => {
+            const newUser = await AuthService.signUp(login, password);
+            await ProfileService.createProfile(newUser.id, firstName, lastName);
+            const newSession = await SessionService.createSession(newUser.id);
 
-            // @ts-ignore
-            session.set({
-                httpOnly: true,
-                maxAge: 3600 * 2,
-                path: '/',
-                priority: 'high',
+            cookie.session?.set({
                 value: newSession.id,
+                httpOnly: true,
+                path: '/',
                 sameSite: 'none',
-                expires: newSession?.expiresAt,
+                expires: newSession.expiresAt,
                 secure: true,
             });
         },
@@ -53,22 +37,15 @@ export default new Elysia()
         },
     )
     .post(
-        '/sign-in',
-        async ({
-            authService,
-            sessionService,
-            body: { login, password },
-            cookie: { session },
-        }) => {
-            const userId = await authService.signIn(login, password);
-            const newSession = await sessionService.createSession(userId);
+        '/sign_in',
+        async ({ body: { login, password }, cookie }) => {
+            const userId = await AuthService.signIn(login, password);
+            const newSession = await SessionService.createSession(userId);
 
-            session?.set({
-                httpOnly: true,
-                maxAge: 3600 * 2,
-                path: '/',
-                priority: 'high',
+            cookie.session?.set({
                 value: newSession.id,
+                httpOnly: true,
+                path: '/',
                 sameSite: 'none',
                 expires: newSession.expiresAt,
                 secure: true,
@@ -85,9 +62,9 @@ export default new Elysia()
         },
     )
     .post(
-        'password-reset',
-        async ({ authService, body: { token, newPassword } }) =>
-            await authService.resetPassword(token, newPassword),
+        '/password_reset',
+        async ({ body: { token, newPassword } }) =>
+            await AuthService.resetPassword(token, newPassword),
         {
             body: t.Object({
                 token: t.String(),
@@ -96,16 +73,16 @@ export default new Elysia()
         },
     )
     .use(authenticatedUser)
-    .decorate({
-        sessionRepository: new SessionRepository(),
-    })
     .delete(
         '/logout',
-        async ({ sessionRepository, sessionCookie }) => {
-            await sessionRepository.revokeSession(sessionCookie.value);
-            sessionCookie.remove();
+        async ({ cookie: { session } }) => {
+            await SessionRepository.revokeSession(session.value);
+            session.remove();
         },
         {
+            cookie: t.Object({
+                session: t.String(),
+            }),
             detail: {
                 tags: ['Auth'],
             },

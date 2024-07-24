@@ -8,10 +8,7 @@ import {
     UserNotFoundError,
 } from '../errors/authErrors';
 
-export class AuthService {
-    private userRepository = new UserRepository();
-    private passwordResetTokenRepository = new PasswordResetTokenRepository();
-
+export default abstract class AuthService {
     private static getSaltedPassword(password: string) {
         return password + Bun.env.PASSWORD_SALT ?? '';
     }
@@ -21,15 +18,15 @@ export class AuthService {
         return await Bun.password.hash(saltedPassword);
     }
 
-    async registerUser(login: string, password: string) {
-        return await this.userRepository.createUser({
+    static async registerUser(login: string, password: string) {
+        return await UserRepository.createUser({
             login,
             password: await AuthService.preparePassword(password),
         });
     }
 
-    async signUp(login: string, password: string) {
-        const existingUser = await this.userRepository.getUserByLogin(login);
+    static async signUp(login: string, password: string) {
+        const existingUser = await UserRepository.getUserByLogin(login);
         if (existingUser) {
             // throw 409
             throw new Error('User with this email already exists!');
@@ -44,18 +41,18 @@ export class AuthService {
         return newUser;
     }
 
-    async signIn(login: string, password: string) {
-        const user = await this.userRepository.getUserByLogin(login);
+    static async signIn(login: string, password: string) {
+        const user = await UserRepository.getUserByLogin(login);
         if (!user) {
             throw new UserNotFoundError();
         }
 
         const passwordResetToken =
-            await this.passwordResetTokenRepository.getTokenForUser(user.id);
+            await PasswordResetTokenRepository.getTokenForUser(user.id);
 
         if (
             passwordResetToken &&
-            moment(passwordResetToken.expiresAt).isBefore(moment())
+            moment(passwordResetToken.expiresAt).isAfter(moment())
         ) {
             throw new PasswordMarkedForResetError();
         }
@@ -73,14 +70,14 @@ export class AuthService {
         return user.id;
     }
 
-    async createPasswordResetToken(userId: number) {
+    static async createPasswordResetToken(userId: number) {
         const token = randomstring.generate({
             length: 8,
             charset: 'alphanumeric',
             capitalization: 'uppercase',
         });
 
-        await this.passwordResetTokenRepository.putToken({
+        await PasswordResetTokenRepository.putToken({
             userId,
             token,
             expiresAt: moment().add(1, 'day').toDate(),
@@ -89,20 +86,18 @@ export class AuthService {
         return { token };
     }
 
-    async resetPassword(token: string, newPassword: string) {
+    static async resetPassword(token: string, newPassword: string) {
         const tokenData =
-            await this.passwordResetTokenRepository.getTokenByToken(token);
+            await PasswordResetTokenRepository.getTokenByToken(token);
 
         if (!tokenData || moment(tokenData.expiresAt).isBefore(moment())) {
             throw new PasswordResetTokenNotFoundError();
         }
 
-        await this.userRepository.updateUser(tokenData.userId, {
+        await UserRepository.updateUser(tokenData.userId, {
             password: await AuthService.preparePassword(newPassword),
         });
 
-        await this.passwordResetTokenRepository.removeTokenOfUser(
-            tokenData.userId,
-        );
+        await PasswordResetTokenRepository.removeTokenOfUser(tokenData.userId);
     }
 }

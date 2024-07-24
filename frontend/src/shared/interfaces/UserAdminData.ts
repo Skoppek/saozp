@@ -1,40 +1,12 @@
-import pick from "lodash/pick";
-import { User, isUser } from "./User";
-
-export interface UserAdminData extends User {
+export interface UserAdminData {
   sessionId?: string;
-  sessionExpiryDate?: string;
+  isAdmin?: boolean;
+  sessionExpiryDate?: Date;
+  login: string;
+  firstName: string;
+  lastName: string;
+  userId: number;
 }
-
-export const isUserAdminData = (suspect: unknown): suspect is UserAdminData => {
-  return (
-    typeof suspect === "object" &&
-    suspect != null &&
-    isUser(
-      pick(suspect, ["userId", "login", "firstName", "lastName", "isAdmin"]),
-    ) &&
-    (() => {
-      if ("sessionId" in suspect) {
-        return typeof suspect.sessionId === "string";
-      }
-      return true;
-    })() &&
-    (() => {
-      if ("sessionExpiryDate" in suspect) {
-        return typeof suspect.sessionExpiryDate === "string";
-      }
-      return true;
-    })()
-  );
-};
-
-export const isUserAdminDataArray = (
-  suspect: unknown,
-): suspect is UserAdminData[] => {
-  return (
-    Array.isArray(suspect) && suspect.every((item) => isUserAdminData(item))
-  );
-};
 
 export interface UserAdminDataFilter {
   id: string;

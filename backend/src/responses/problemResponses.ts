@@ -1,4 +1,4 @@
-import { Elysia, Static, t } from 'elysia';
+import { Elysia, t } from 'elysia';
 
 const problemListResponse = t.Array(
     t.Object({
@@ -6,19 +6,15 @@ const problemListResponse = t.Array(
         name: t.String(),
         description: t.String(),
         languageId: t.Number(),
-        creator: t.Optional(
-            t.Object({
-                userId: t.Number(),
-                login: t.String(),
-                firstName: t.String(),
-                lastName: t.String(),
-            }),
-        ),
+        creator: t.Object({
+            userId: t.Number(),
+            login: t.String(),
+            firstName: t.String(),
+            lastName: t.String(),
+        }),
         activeAfter: t.Date(),
     }),
 );
-
-export type ProblemListResponse = Static<typeof problemListResponse>;
 
 const problemDetailsResponse = t.Object({
     problemId: t.Number(),
@@ -36,8 +32,6 @@ const problemDetailsResponse = t.Object({
     ),
     activeAfter: t.Date(),
 });
-
-export type ProblemDetailsResponse = Static<typeof problemDetailsResponse>;
 
 export const problemResponses = new Elysia().model({
     problemListResponse,

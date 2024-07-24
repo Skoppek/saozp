@@ -1,13 +1,13 @@
 import { Button } from "flowbite-react/components/Button";
 import { Navbar } from "flowbite-react/components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
-import apiClient from "../apiClient";
 import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
 import { useCallback, useEffect, useState } from "react";
 import { User } from "../shared/interfaces/User";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { AuthModal } from "./AuthModal";
 import { FaBoltLightning } from "react-icons/fa6";
+import apiClient from "../client/apiClient.ts";
 
 export const Navigation = () => {
   const [user, setUser] = useState<User | undefined>();
@@ -17,8 +17,8 @@ export const Navigation = () => {
   const navigate = useNavigate();
 
   const getUser = useCallback(() => {
-    apiClient
-      .getUserOfCurrentSession()
+    apiClient.auth
+      .getLoggedUser()
       .then((user) => {
         setUser(user);
         setIsLoggingOut(false);
@@ -36,7 +36,7 @@ export const Navigation = () => {
 
   const handleLogout = useCallback(() => {
     setIsLoggingOut(true);
-    apiClient.logout().then(() => {
+    apiClient.auth.logout().then(() => {
       setUser(undefined);
       navigate("/");
     });

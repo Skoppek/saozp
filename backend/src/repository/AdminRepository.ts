@@ -5,8 +5,8 @@ import { userSchema } from '../model/schemas/userSchema';
 import { profileSchema } from '../model/schemas/profileSchema';
 import { sessionSchema } from '../model/schemas/sessionSchema';
 
-export default class AdminRepository {
-    async addToAdmins(userId: number) {
+export default abstract class AdminRepository {
+    static async addToAdmins(userId: number) {
         const result = await db
             .insert(adminSchema)
             .values({ id: userId })
@@ -15,7 +15,7 @@ export default class AdminRepository {
         return result.at(0);
     }
 
-    async isAdmin(userId: number) {
+    static async isAdmin(userId: number) {
         const result = await db
             .select()
             .from(adminSchema)
@@ -24,11 +24,11 @@ export default class AdminRepository {
         return result.length ? true : undefined;
     }
 
-    async revokeAdmin(userId: number) {
+    static async revokeAdmin(userId: number) {
         await db.delete(adminSchema).where(eq(adminSchema.id, userId));
     }
 
-    async getUsersAdminView() {
+    static async getUsersAdminView() {
         return db
             .select({
                 userId: userSchema.id,

@@ -1,66 +1,61 @@
 import { Elysia } from 'elysia';
 import { authenticatedUser } from '../plugins/authenticatedUser';
-import { userGroupBodies } from '../bodies/userGroupRequests';
-import { userGroupResponses } from '../responses/userGroupResponses';
-import { userGroupIdParam } from '../plugins/userGroupIdParam';
+import { groupBodies } from '../bodies/groupRequests';
+import { groupResponses } from '../responses/groupResponses';
 import { GroupService } from '../services/GroupService';
-import { userGroupErrorHandler } from '../errorHandlers/userGroupErrorHandler';
+import { groupErrorHandler } from '../errorHandlers/groupErrorHandler';
+import { groupIdParam } from '../plugins/groupIdParam';
 
 export default new Elysia({
-    prefix: 'user_group',
+    prefix: 'group',
     detail: {
         tags: ['Groups'],
     },
 })
     .use(authenticatedUser)
-    .use(userGroupErrorHandler)
-    .use(userGroupBodies)
-    .use(userGroupResponses)
+    .use(groupErrorHandler)
+    .use(groupBodies)
+    .use(groupResponses)
     .decorate({
-        userGroupService: new GroupService(),
+        groupService: new GroupService(),
     })
     .post(
         '',
-        async ({ userGroupService, user, body }) =>
-            await userGroupService.createUserGroup(body, user.id),
+        async ({ groupService, user, body }) =>
+            await groupService.createGroup(body, user.id),
         {
-            body: 'createUserGroupRequestBody',
+            body: 'createGroupBody',
         },
     )
-    .get(
-        '',
-        async ({ userGroupService }) =>
-            await userGroupService.getUserGroupList(),
-        {
-            response: 'getUserGroupListResponse',
-        },
-    )
-    .group(':groupId', (app) =>
+    .get('', async ({ groupService }) => await groupService.getGroupList(), {
+        response: 'getGroupListResponse',
+    })
+    .group('/:groupId', (app) =>
         app
-            .use(userGroupIdParam)
+            .use(groupIdParam)
             .get(
                 '',
-                async ({ userGroupService, groupId }) =>
-                    await userGroupService.getUserGroup(groupId),
+                async ({ groupService, groupId }) =>
+                    await groupService.getGroup(groupId),
                 {
-                    response: 'getUserGroupResponse',
+                    response: 'getGroupResponse',
                 },
             )
             .put(
                 '',
-                async ({ userGroupService, body, groupId }) =>
-                    await userGroupService.updateUserGroup(body, groupId),
+                async ({ groupService, body, groupId }) =>
+                    await groupService.updateGroup(body, groupId),
                 {
-                    body: 'updateUserGroupRequestBody',
+                    body: 'updateGroupBody',
                 },
             )
             .delete(
                 '',
-                async ({ userGroupService, groupId }) =>
-                    await userGroupService.deleteUserGroup(groupId),
+                async ({ groupService, groupId }) =>
+                    await groupService.deleteGroup(groupId),
             )
             .group(
-                'users',
+                '/users',
                 {
                     body: 'userIds',
                 },
@@ -68,16 +63,16 @@ export default new Elysia({
                     app
                         .put(
                             '',
-                            async ({ userGroupService, groupId, body }) =>
-                                await userGroupService.addUsersToGroup(
+                            async ({ groupService, groupId, body }) =>
+                                await groupService.addUsersToGroup(
                                     groupId,
                                     body.userIds,
                                 ),
                         )
                         .delete(
                             '',
-                            async ({ userGroupService, groupId, body }) =>
-                                await userGroupService.removeUsersFromGroup(
+                            async ({ groupService, groupId, body }) =>
+                                await groupService.removeUsersFromGroup(
                                     groupId,
                                     body.userIds,
                                 ),

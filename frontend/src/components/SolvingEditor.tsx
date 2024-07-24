@@ -7,10 +7,10 @@ import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Spinner } from "flowbite-react";
-import apiClient from "../apiClient";
 import { ResultDrawer } from "./results/ResultDrawer";
 import { TestCasesEditor } from "./TestCasesEditor";
 import { useNavigate } from "react-router-dom";
+import apiClient from "../client/apiClient.ts";
 
 interface SolvingEditorProps {
   problem: Problem;
@@ -27,8 +27,8 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
 
   const getSubmissions = useCallback(
     (user: User) => {
-      apiClient
-        .getSubmissions({
+      apiClient.submissions
+        .getMany({
           userId: user.userId,
           problemId: problem.problemId,
         })
@@ -43,22 +43,19 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
     if (user) {
       getSubmissions(user);
     } else {
-      apiClient
-        .getUserOfCurrentSession()
-        .then((user) => {
-          setUser(user);
-        })
-        .catch(() => {
-          navigate("/");
-        });
+      apiClient.auth
+        .getLoggedUser()
+        .then((user) => setUser(user))
+        .catch(() => navigate("/"));
     }
   }, [getSubmissions, navigate, user]);
 
   const sendCode = useCallback(
     (isTest: boolean) => {
       setIsSubmitting(true);
-      apiClient
-        .submitSolution(problem.problemId, {
+      apiClient.submissions
+        .submit({
+          problemId: problem.problemId,
           code: code,
           userTests: userTests,
           isCommit: !isTest,

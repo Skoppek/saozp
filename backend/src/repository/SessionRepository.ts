@@ -2,8 +2,8 @@ import { desc, eq, lt } from 'drizzle-orm';
 import { NewSession, sessionSchema } from '../model/schemas/sessionSchema';
 import { db } from '../model/db/db';
 
-export default class SessionRepository {
-    async createSession(session: NewSession) {
+export default abstract class SessionRepository {
+    static async createSession(session: NewSession) {
         const result = await db
             .insert(sessionSchema)
             .values(session)
@@ -12,14 +12,11 @@ export default class SessionRepository {
         return result.at(0);
     }
 
-    async revokeSession(sessionId: string) {
-        return db
-            .update(sessionSchema)
-            .set({ expiresAt: new Date(0) })
-            .where(eq(sessionSchema.id, sessionId));
+    static async revokeSession(sessionId: string) {
+        return db.delete(sessionSchema).where(eq(sessionSchema.id, sessionId));
     }
 
-    async getSessionById(id: string) {
+    static async getSessionById(id: string) {
         const result = await db
             .select()
             .from(sessionSchema)
@@ -32,7 +29,7 @@ export default class SessionRepository {
         db.delete(sessionSchema).where(lt(sessionSchema.expiresAt, new Date()));
     }
 
-    async getLatestSessionOfUser(userId: number) {
+    static async getLatestSessionOfUser(userId: number) {
         const result = await db
             .select()
             .from(sessionSchema)
@@ -42,11 +39,12 @@ export default class SessionRepository {
         return result.at(0);
     }
 
-    async refreshSession(id: string, forMinutes: number) {
+    static async setSessionExpiryDate(id: string, expiresAt: Date) {
+        console.log({ set: expiresAt });
         const result = await db
             .update(sessionSchema)
             .set({
-                expiresAt: new Date(Date.now() + 1000 * 60 * forMinutes),
+                expiresAt,
             })
             .where(eq(sessionSchema.id, id))
             .returning();

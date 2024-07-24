@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { ProblemFilter } from "../shared/interfaces/Problem";
 import { ProblemEntry } from "../shared/interfaces/ProblemEntry";
-import apiClient from "../apiClient";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { ProblemsGallery } from "../components/problems/ProblemsGallery";
 import { Spinner } from "flowbite-react/components/Spinner";
@@ -10,14 +9,15 @@ import { LanguageSelect } from "../components/LanguageSelect";
 import { ALL_LANGUAGES } from "../shared/constansts";
 import { LinkButton } from "../components/LinkButton";
 import { ToggleSwitch } from "flowbite-react";
+import apiClient from "../client/apiClient.ts";
 
 export const ProblemsPage = () => {
   const [problems, setProblems] = useState<ProblemEntry[]>();
   const [filter, setFilter] = useState<ProblemFilter>({});
 
   useEffect(() => {
-    apiClient.getAllProblems().then((entires) => {
-      setProblems(entires);
+    apiClient.problems.getAll().then((entries) => {
+      setProblems(entries);
     });
   }, []);
 

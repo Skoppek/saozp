@@ -11,7 +11,7 @@ export const submissionErrorHandler = new Elysia()
         SubmissionCreationError,
     })
     .use(HttpStatusCode())
-    .onError(({ code, error, set, httpStatus }) => {
+    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
         switch (code) {
             case 'SubmissionNotFoundError':
                 set.status = httpStatus.HTTP_404_NOT_FOUND;

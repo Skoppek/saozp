@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useEffect, useState } from "react";
-import apiClient from "../apiClient";
 import { Problem } from "../shared/interfaces/Problem";
 import { SolvingEditor } from "../components/SolvingEditor";
 import { Spinner } from "flowbite-react/components/Spinner";
+import apiClient from "../client/apiClient.ts";
 
 export const SolvingPage = () => {
   const { id } = useParams();
@@ -16,9 +16,7 @@ export const SolvingPage = () => {
       navigate("/problems");
       return;
     }
-    apiClient.getProblemById(parseInt(id), true).then((data) => {
-      setProblem(data);
-    });
+    apiClient.problems.get(parseInt(id), true).then((data) => setProblem(data));
   }, [id, navigate]);
 
   return (

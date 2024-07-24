@@ -10,6 +10,9 @@ import { userSchema } from '../schemas/userSchema';
 import { bundleSchema } from '../schemas/bundleSchema';
 import { passwordResetTokenSchema } from '../schemas/passwordResetTokenSchema';
 import { problemsToBundleSchema } from '../schemas/intermediates/problemsToBundleSchema';
+import { contestSchema } from '../schemas/contestSchema';
+import { usersToContestSchema } from '../schemas/intermediates/usersToContestSchema';
+import { problemsToContestSchema } from '../schemas/intermediates/problemsToContestSchema';
 
 export default {
     profileSchema,
@@ -22,6 +25,9 @@ export default {
     groupSchema,
     usersToGroupSchema,
     bundleSchema,
+    contestSchema,
     problemsToBundleSchema,
-    passwordResetTokenSchema
+    passwordResetTokenSchema,
+    usersToContestSchema,
+    problemsToContestSchema,
 };

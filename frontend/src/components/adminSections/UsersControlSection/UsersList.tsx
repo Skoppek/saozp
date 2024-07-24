@@ -3,8 +3,8 @@ import { Spinner } from "flowbite-react";
 import {
   UserAdminData,
   UserAdminDataFilter,
-} from "../../shared/interfaces/UserAdminData";
-import apiClient from "../../client/apiClient.ts";
+} from "../../../shared/interfaces/UserAdminData.ts";
+import apiClient from "../../../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
 import { UsersTable } from "./UsersTable.tsx";
 import { UserControlModal } from "./UserControlModal.tsx";

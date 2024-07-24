@@ -1,8 +1,8 @@
 import { ToggleSwitch } from "flowbite-react/components/ToggleSwitch";
-import { ClassName } from "../../shared/interfaces/ClassName";
-import { TextInput } from "../TextInput";
-import { UsersList } from "./UsersList";
-import { UserAdminDataFilter } from "../../shared/interfaces/UserAdminData";
+import { ClassName } from "../../../shared/interfaces/ClassName.ts";
+import { TextInput } from "../../TextInput.tsx";
+import { UsersList } from "./UsersList.tsx";
+import { UserAdminDataFilter } from "../../../shared/interfaces/UserAdminData.ts";
 import { useState } from "react";
 
 interface UsersControlSectionProps extends ClassName {}

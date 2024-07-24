@@ -1,6 +1,6 @@
 import { Button, Table } from "flowbite-react";
 import { HiCheck, HiDotsVertical } from "react-icons/hi";
-import { UserAdminData } from "../../shared/interfaces/UserAdminData.ts";
+import { UserAdminData } from "../../../shared/interfaces/UserAdminData.ts";
 
 interface UsersTableInterface {
   users: UserAdminData[];

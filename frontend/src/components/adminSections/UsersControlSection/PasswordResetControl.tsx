@@ -1,6 +1,6 @@
 import { PasswordResetTokenModal } from "./PasswordResetTokenModal.tsx";
 import { Button } from "flowbite-react";
-import apiClient from "../../client/apiClient.ts";
+import apiClient from "../../../client/apiClient.ts";
 import { useState } from "react";
 
 interface PasswordResetControlProps {

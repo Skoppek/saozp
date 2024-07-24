@@ -1,6 +1,6 @@
 import { Button, Modal } from "flowbite-react";
-import apiClient from "../../client/apiClient.ts";
-import { UserAdminData } from "../../shared/interfaces/UserAdminData.ts";
+import apiClient from "../../../client/apiClient.ts";
+import { UserAdminData } from "../../../shared/interfaces/UserAdminData.ts";
 import { useState } from "react";
 import { PasswordResetControl } from "./PasswordResetControl.tsx";
 

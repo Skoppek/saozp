@@ -10,21 +10,18 @@ export default new Elysia({ prefix: 'auth' })
     .use(authErrorHandler)
     .post(
         '/sign_up',
-        async ({
-            body: { login, password, lastName, firstName },
-            cookie: { session },
-        }) => {
+        async ({ body: { login, password, lastName, firstName }, cookie }) => {
             const newUser = await AuthService.signUp(login, password);
             await ProfileService.createProfile(newUser.id, firstName, lastName);
             const newSession = await SessionService.createSession(newUser.id);
 
-            session.set({
-                httpOnly: false,
-                path: '/',
+            cookie.session?.set({
                 value: newSession.id,
+                httpOnly: true,
+                path: '/',
                 sameSite: 'none',
-                expires: newSession?.expiresAt,
-                secure: false,
+                expires: newSession.expiresAt,
+                secure: true,
             });
         },
         {
@@ -36,9 +33,6 @@ export default new Elysia({ prefix: 'auth' })
                 password: t.String(),
                 firstName: t.String(),
                 lastName: t.String(),
-            }),
-            cookie: t.Object({
-                session: t.String(),
             }),
         },
     )

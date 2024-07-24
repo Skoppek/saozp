@@ -2,6 +2,7 @@ import { Button, Modal } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
 import { UserAdminData } from "../../shared/interfaces/UserAdminData.ts";
 import { useState } from "react";
+import { PasswordResetControl } from "./PasswordResetControl.tsx";
 
 interface UserControlModalProps {
   isShown: boolean;
@@ -75,16 +76,13 @@ export const UserControlModal = ({
             >
               {selectedUser.isAdmin ? "Odbierz" : "Nadaj"} rolę administratora
             </Button>
-            <Button
-              onClick={() => {
-                apiClient.admin.resetPassword(selectedUser.userId).then(() => {
-                  onClose();
-                  close();
-                });
+            <PasswordResetControl
+              userId={selectedUser.userId}
+              onClose={() => {
+                onClose();
+                close();
               }}
-            >
-              Odnów hasło
-            </Button>
+            />
             {errorMsg && (
               <div className="text-base text-rose-500">{errorMsg}</div>
             )}

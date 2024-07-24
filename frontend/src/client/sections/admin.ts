@@ -24,7 +24,15 @@ const demote = async (userId: number) =>
   await edenClient.admin({ userId }).delete();
 
 const resetPassword = async (userId: number) =>
-  await edenClient.admin({ userId }).password_reset.post();
+  await edenClient
+    .admin({ userId })
+    .password_reset.post()
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 export default {
   getUsers,

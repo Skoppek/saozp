@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 
-const UserBasicData = t.Object({
+const userBasicData = t.Object({
     userId: t.Number(),
     firstName: t.String(),
     lastName: t.String(),
@@ -9,7 +9,7 @@ const UserBasicData = t.Object({
 const groupBasicData = t.Object({
     id: t.Number(),
     name: t.String(),
-    owner: UserBasicData,
+    owner: userBasicData,
 });
 
 const getGroupListResponse = t.Array(groupBasicData);

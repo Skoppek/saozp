@@ -23,12 +23,10 @@ export default new Elysia({
             body: 'createBundleBody',
         },
     )
-    .use(authenticatedUser)
     .get('', async ({ bundleService }) => await bundleService.getBundleList())
     .group('/:bundleId', (app) =>
         app
             .use(bundleIdParam)
-            .use(authenticatedUser)
             .get(
                 '',
                 async ({ bundleService, bundleId }) =>

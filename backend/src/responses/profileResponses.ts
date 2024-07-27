@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 
-export const profileResponse = new Elysia().model({
+export const profileResponses = new Elysia().model({
     profileResponse: t.Object({
         userId: t.Number(),
         login: t.String(),

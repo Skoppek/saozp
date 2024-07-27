@@ -4,6 +4,8 @@ import { NewProblem, problemSchema } from '../model/schemas/problemSchema';
 import _ from 'lodash';
 import { profileSchema } from '../model/schemas/profileSchema';
 import { userSchema } from '../model/schemas/userSchema';
+import { problemsToBundleSchema } from '../model/schemas/intermediates/problemsToBundleSchema';
+import { problemsToContestSchema } from '../model/schemas/intermediates/problemsToContestSchema';
 
 export default class ProblemRepository {
     async createProblem(newProblem: NewProblem) {
@@ -25,6 +27,28 @@ export default class ProblemRepository {
             )
             .innerJoin(userSchema, eq(problemSchema.creatorId, userSchema.id))
             .where(eq(problemSchema.isDeactivated, false));
+    }
+
+    static async getProblemsOfBundle(bundleId: number) {
+        return db
+            .select()
+            .from(problemSchema)
+            .innerJoin(
+                problemsToBundleSchema,
+                eq(problemsToBundleSchema.problemId, problemSchema.id),
+            )
+            .where(eq(problemsToBundleSchema.bundleId, bundleId));
+    }
+
+    static async getProblemsOfContest(contestId: number) {
+        return db
+            .select()
+            .from(problemSchema)
+            .innerJoin(
+                problemsToContestSchema,
+                eq(problemsToContestSchema.problemId, problemSchema.id),
+            )
+            .where(eq(problemsToContestSchema.contestId, contestId));
     }
 
     async getProblemById(problemId: number) {

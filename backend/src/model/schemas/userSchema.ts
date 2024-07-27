@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { serial, pgTable, varchar, index } from 'drizzle-orm/pg-core';
+import { serial, pgTable, varchar, index, char } from 'drizzle-orm/pg-core';
 import { profileSchema } from './profileSchema';
 
 export const userSchema = pgTable(
@@ -7,7 +7,7 @@ export const userSchema = pgTable(
     {
         id: serial('id').primaryKey(),
         login: varchar('login', { length: 256 }).unique().notNull(),
-        password: varchar('password', { length: 128 }).notNull(),
+        password: char('password', { length: 118 }).notNull(),
     },
     (users) => ({
         loginIdx: index('login_idx').on(users.login),

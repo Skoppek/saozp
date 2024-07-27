@@ -14,3 +14,4 @@ export const contestSchema = pgTable('contests', {
 });
 
 export type NewContest = typeof contestSchema.$inferInsert;
+export type Contest = typeof contestSchema.$inferSelect;

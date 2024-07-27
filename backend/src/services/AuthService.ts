@@ -15,7 +15,9 @@ export default abstract class AuthService {
 
     private static async preparePassword(password: string) {
         const saltedPassword = AuthService.getSaltedPassword(password);
-        return await Bun.password.hash(saltedPassword);
+        return await Bun.password.hash(saltedPassword, {
+            algorithm: 'argon2d',
+        });
     }
 
     static async registerUser(login: string, password: string) {

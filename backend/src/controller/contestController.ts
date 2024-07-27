@@ -1,4 +1,6 @@
 import { Elysia } from 'elysia';
+import { contestBodies } from '../bodies/contestBodies';
+import { authenticatedUser } from '../plugins/authenticatedUser';
 
 export default new Elysia({
     prefix: 'contest',
@@ -6,23 +8,31 @@ export default new Elysia({
         tags: ['Contest'],
     },
 })
-    .post('', ({}) => {})
+    .use(contestBodies)
+    .use(authenticatedUser)
+    .post('', ({}) => {}, {
+        body: 'createContestBody',
+    })
     .get('', ({}) => {})
     .group('/:contestId', (app) =>
         app
             .get('', ({}) => {})
-            .put('', ({}) => {})
+            .put('', ({}) => {}, {
+                body: 'updateContestBody',
+            })
             .delete('', ({}) => {})
             .group('/users', (app) =>
                 app
                     .get('', ({}) => {})
-                    .put('', ({}) => {})
-                    .delete('', ({}) => {}),
+                    .group('', { body: 'usersIds' }, (app) =>
+                        app.put('', ({}) => {}).delete('', ({}) => {}),
+                    ),
             )
             .group('/problems', (app) =>
                 app
                     .get('', ({}) => {})
-                    .put('', ({}) => {})
-                    .delete('', ({}) => {}),
+                    .group('', { body: 'problemIds' }, (app) =>
+                        app.put('', ({}) => {}).delete('', ({}) => {}),
+                    ),
             ),
     );

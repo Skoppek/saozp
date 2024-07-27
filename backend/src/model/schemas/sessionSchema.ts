@@ -8,7 +8,7 @@ export const sessionSchema = pgTable(
         userId: integer('user_id')
             .references(() => userSchema.id)
             .notNull(),
-        expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
+        expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
     },
     (sessionSchema) => ({
         sessionIdIdx: index('session_id_idx').on(sessionSchema.id),

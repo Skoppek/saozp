@@ -5,7 +5,7 @@ export const passwordResetTokenSchema = pgTable('password_reset_token', {
     userId: integer('user_id')
         .references(() => userSchema.id)
         .primaryKey(),
-    token: char('token', { length: 8 }).notNull(),
+    token: char('token', { length: 118 }).notNull(),
     expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
 });
 

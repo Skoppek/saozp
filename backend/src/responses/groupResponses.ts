@@ -14,20 +14,18 @@ const groupBasicData = t.Object({
 
 const getGroupListResponse = t.Array(groupBasicData);
 
-const getGroupResponse = t.Intersect([
-    groupBasicData,
+const getGroupResponse = groupBasicData;
+
+const getUsersList = t.Array(
     t.Object({
-        users: t.Array(
-            t.Object({
-                userId: t.Number(),
-                firstName: t.String(),
-                lastName: t.String(),
-            }),
-        ),
+        userId: t.Number(),
+        firstName: t.String(),
+        lastName: t.String(),
     }),
-]);
+);
 
 export const groupResponses = new Elysia().model({
     getGroupListResponse,
     getGroupResponse,
+    getUsersList,
 });

@@ -4,9 +4,11 @@ import {
     BundleCreationFailureError,
     BundleNotFoundError,
 } from '../errors/bundleErrors';
+import ProblemRepository from '../repository/ProblemRepository';
 
 export default class BundleService {
     private bundleRepository = new BundleRepository();
+    private problemRepository = new ProblemRepository();
 
     async createBundle({ name }: CreateBundleBody, ownerId: number) {
         const newBundle = await this.bundleRepository.createBundle({
@@ -30,13 +32,11 @@ export default class BundleService {
             throw new BundleNotFoundError(bundleId);
         }
 
-        const problems =
-            await this.bundleRepository.getProblemsOfBundle(bundleId);
+        return bundle;
+    }
 
-        return {
-            ...bundle,
-            problems,
-        };
+    async getProblemsOfBundle(bundleId: number) {
+        return this.problemRepository.getProblemsOfBundle(bundleId);
     }
 
     async updateBundle(data: UpdateBundleBody, bundleId: number) {

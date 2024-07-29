@@ -13,6 +13,7 @@ import adminsController from './controller/adminsController';
 import groupController from './controller/groupController';
 import bundleController from './controller/bundleController';
 import authController from './controller/authController';
+import contestController from './controller/contestController';
 
 const app = new Elysia()
     .use(generalErrorHandler)
@@ -26,7 +27,8 @@ const app = new Elysia()
     .use(submissionController)
     .use(adminsController)
     .use(groupController)
-    .use(bundleController);
+    .use(bundleController)
+    .use(contestController);
 
 try {
     await initAdmin();

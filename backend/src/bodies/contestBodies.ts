@@ -26,7 +26,7 @@ const problemIds = t.Union([
         problemIds: t.Array(t.Number()),
     }),
     t.Object({
-        bundleIds: t.Array(t.Number()),
+        bundleId: t.Number(),
     }),
 ]);
 
@@ -35,7 +35,7 @@ const usersIds = t.Union([
         usersIds: t.Array(t.Number()),
     }),
     t.Object({
-        groupIds: t.Array(t.Number()),
+        groupId: t.Number(),
     }),
 ]);
 

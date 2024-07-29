@@ -37,11 +37,21 @@ export default class ContestRepository {
     }
 
     async getContests() {
-        return db.select().from(contestSchema);
+        const result = await db
+            .select()
+            .from(contestSchema)
+            .innerJoin(
+                profileSchema,
+                eq(profileSchema.userId, contestSchema.owner),
+            );
+
+        return result.map((entry) => {
+            return { ...entry.contests, owner: entry.profiles };
+        });
     }
 
     async getContestById(contestId: number) {
-        return db
+        const result = await db
             .select()
             .from(contestSchema)
             .innerJoin(
@@ -49,53 +59,56 @@ export default class ContestRepository {
                 eq(profileSchema.userId, contestSchema.owner),
             )
             .where(eq(contestSchema.id, contestId));
+        return result
+            .map((entry) => {
+                return {
+                    ...entry.contests,
+                    owner: entry.profiles,
+                };
+            })
+            .at(0);
     }
 
     async addProblem(contestId: number, problemId: number) {
-        const result = await db
+        await db
             .insert(problemsToContestSchema)
             .values({
                 contestId,
                 problemId,
             })
+            .onConflictDoNothing()
             .returning();
-        return result.at(0);
     }
 
     async removeProblem(contestId: number, problemId: number) {
-        const result = await db
+        await db
             .delete(problemsToContestSchema)
             .where(
                 and(
                     eq(problemsToContestSchema.contestId, contestId),
                     eq(problemsToContestSchema.problemId, problemId),
                 ),
-            )
-            .returning();
-        return result.at(0);
+            );
     }
 
     async addUser(contestId: number, userId: number) {
-        const result = await db
+        await db
             .insert(usersToContestSchema)
             .values({
                 contestId,
                 userId,
             })
-            .returning();
-        return result.at(0);
+            .onConflictDoNothing();
     }
 
     async removeUser(contestId: number, userId: number) {
-        const result = await db
+        await db
             .delete(usersToContestSchema)
             .where(
                 and(
                     eq(usersToContestSchema.contestId, contestId),
                     eq(usersToContestSchema.userId, userId),
                 ),
-            )
-            .returning();
-        return result.at(0);
+            );
     }
 }

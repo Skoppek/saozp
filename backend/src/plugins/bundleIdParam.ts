@@ -6,7 +6,6 @@ export const bundleIdParam = new Elysia()
             bundleId: t.Number(),
         }),
     })
-    .derive({ as: 'local' }, ({ params: { bundleId } }) => {
+    .derive({ as: 'scoped' }, ({ params: { bundleId } }) => {
         return { bundleId };
-    })
-    .propagate();
+    });

@@ -1,8 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { NewUser, User, userSchema } from '../model/schemas/userSchema';
 import { db } from '../model/db/db';
-import { usersToGroupSchema } from '../model/schemas/intermediates/usersToGroupSchema';
-import { usersToContestSchema } from '../model/schemas/intermediates/usersToContestSchema';
 
 export default abstract class UserRepository {
     static async createUser(user: NewUser) {
@@ -27,28 +25,6 @@ export default abstract class UserRepository {
             .where(eq(userSchema.id, id));
 
         return result.at(0);
-    }
-
-    static async getUsersOfGroup(groupId: number) {
-        return db
-            .select()
-            .from(userSchema)
-            .innerJoin(
-                usersToGroupSchema,
-                eq(usersToGroupSchema.userId, userSchema.id),
-            )
-            .where(eq(usersToGroupSchema.groupId, groupId));
-    }
-
-    static async getUsersOfContest(contestId: number) {
-        return db
-            .select()
-            .from(userSchema)
-            .innerJoin(
-                usersToContestSchema,
-                eq(usersToContestSchema.userId, userSchema.id),
-            )
-            .where(eq(usersToContestSchema.contestId, contestId));
     }
 
     static async updateUser(id: number, user: Partial<User>) {

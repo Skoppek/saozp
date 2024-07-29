@@ -60,15 +60,13 @@ export default class BundleRepository {
     }
 
     async addProblemToBundle(bundleId: number, problemId: number) {
-        const result = await db
+        await db
             .insert(problemsToBundleSchema)
             .values({
                 bundleId,
                 problemId,
             })
-            .returning();
-
-        return result.at(0);
+            .onConflictDoNothing();
     }
 
     async removeProblemFromBundle(bundleId: number, problemId: number) {

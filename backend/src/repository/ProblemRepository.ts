@@ -29,20 +29,28 @@ export default class ProblemRepository {
             .where(eq(problemSchema.isDeactivated, false));
     }
 
-    static async getProblemsOfBundle(bundleId: number) {
-        return db
-            .select()
+    async getProblemsOfBundle(bundleId: number) {
+        const result = await db
+            .select({
+                problem: problemSchema,
+            })
             .from(problemSchema)
             .innerJoin(
                 problemsToBundleSchema,
                 eq(problemsToBundleSchema.problemId, problemSchema.id),
             )
             .where(eq(problemsToBundleSchema.bundleId, bundleId));
+
+        return result.map((entry) => entry.problem);
     }
 
-    static async getProblemsOfContest(contestId: number) {
+    async getProblemsOfContest(contestId: number) {
         return db
-            .select()
+            .select({
+                problemId: problemSchema.id,
+                name: problemSchema.name,
+                languageId: problemSchema.languageId,
+            })
             .from(problemSchema)
             .innerJoin(
                 problemsToContestSchema,

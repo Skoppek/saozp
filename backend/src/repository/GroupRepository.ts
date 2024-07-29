@@ -52,6 +52,7 @@ export default class GroupRepository {
                 userId,
                 groupId,
             })
+            .onConflictDoNothing()
             .returning();
 
         return result.at(0);

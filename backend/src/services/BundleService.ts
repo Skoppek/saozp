@@ -32,7 +32,7 @@ export default class BundleService {
             throw new BundleNotFoundError(bundleId);
         }
 
-        return bundleId;
+        return bundle;
     }
 
     async getProblemsOfBundle(bundleId: number) {

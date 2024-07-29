@@ -54,28 +54,39 @@ export default new Elysia({
                 async ({ groupService, groupId }) =>
                     await groupService.deleteGroup(groupId),
             )
-            .group(
-                '/users',
-                {
-                    body: 'userIds',
-                },
-                (app) =>
-                    app
-                        .put(
-                            '',
-                            async ({ groupService, groupId, body }) =>
-                                await groupService.addUsersToGroup(
-                                    groupId,
-                                    body.userIds,
+            .group('/users', (app) =>
+                app
+                    .get(
+                        '',
+                        async ({ groupService, groupId }) =>
+                            await groupService.getUsersOfGroup(groupId),
+                        {
+                            response: 'getUsersList',
+                        },
+                    )
+                    .group(
+                        '',
+                        {
+                            body: 'userIds',
+                        },
+                        (app) =>
+                            app
+                                .put(
+                                    '',
+                                    async ({ groupService, groupId, body }) =>
+                                        await groupService.addUsersToGroup(
+                                            groupId,
+                                            body.userIds,
+                                        ),
+                                )
+                                .delete(
+                                    '',
+                                    async ({ groupService, groupId, body }) =>
+                                        await groupService.removeUsersFromGroup(
+                                            groupId,
+                                            body.userIds,
+                                        ),
                                 ),
-                        )
-                        .delete(
-                            '',
-                            async ({ groupService, groupId, body }) =>
-                                await groupService.removeUsersFromGroup(
-                                    groupId,
-                                    body.userIds,
-                                ),
-                        ),
+                    ),
             ),
     );

@@ -1,6 +1,7 @@
 import { CreateGroupBody, UpdateGroupBody } from '../bodies/groupRequests';
 import { GroupCreationError, GroupNotFoundError } from '../errors/groupErrors';
 import GroupRepository from '../repository/GroupRepository';
+import ProfileRepository from '../repository/ProfileRepository';
 
 export class GroupService {
     private groupRepository = new GroupRepository();
@@ -27,12 +28,11 @@ export class GroupService {
             throw new GroupNotFoundError(groupId);
         }
 
-        const users = await this.groupRepository.getProfilesOfGroup(groupId);
+        return group;
+    }
 
-        return {
-            ...group,
-            users,
-        };
+    async getUsersOfGroup(groupId: number) {
+        return await ProfileRepository.getProfilesOfGroup(groupId);
     }
 
     async updateGroup(data: UpdateGroupBody, groupId: number) {

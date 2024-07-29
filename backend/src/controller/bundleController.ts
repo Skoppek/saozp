@@ -3,6 +3,7 @@ import { bundleBodies } from '../bodies/bundleRequests';
 import BundleService from '../services/BundleService';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import { bundleIdParam } from '../plugins/bundleIdParam';
+import { bundleResponses } from '../responses/bundleResponses';
 
 export default new Elysia({
     prefix: 'bundle',
@@ -11,6 +12,7 @@ export default new Elysia({
     },
 })
     .use(bundleBodies)
+    .use(bundleResponses)
     .decorate({
         bundleService: new BundleService(),
     })
@@ -23,7 +25,9 @@ export default new Elysia({
             body: 'createBundleBody',
         },
     )
-    .get('', async ({ bundleService }) => await bundleService.getBundleList())
+    .get('', async ({ bundleService }) => await bundleService.getBundleList(), {
+        response: 'getBundleListResponse',
+    })
     .group('/:bundleId', (app) =>
         app
             .use(bundleIdParam)
@@ -31,6 +35,9 @@ export default new Elysia({
                 '',
                 async ({ bundleService, bundleId }) =>
                     await bundleService.getBundle(bundleId),
+                {
+                    response: 'getBundleResponse',
+                },
             )
             .put(
                 '',
@@ -51,6 +58,9 @@ export default new Elysia({
                         '',
                         async ({ bundleService, bundleId }) =>
                             await bundleService.getProblemsOfBundle(bundleId),
+                        {
+                            response: 'getProblemsList',
+                        },
                     )
                     .group(
                         '',

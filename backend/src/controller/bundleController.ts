@@ -45,36 +45,45 @@ export default new Elysia({
                 async ({ bundleService, bundleId }) =>
                     await bundleService.deleteBundle(bundleId),
             )
-            .group(
-                '/users',
-                {
-                    body: 'problemIds',
-                },
-                (app) =>
-                    app
-                        .put(
-                            '',
-                            async ({
-                                bundleService,
-                                bundleId,
-                                body: { problemIds },
-                            }) =>
-                                await bundleService.addProblemsToBundle(
-                                    bundleId,
-                                    problemIds,
+            .group('/problems', (app) =>
+                app
+                    .get(
+                        '',
+                        async ({ bundleService, bundleId }) =>
+                            await bundleService.getProblemsOfBundle(bundleId),
+                    )
+                    .group(
+                        '',
+                        {
+                            body: 'problemIds',
+                        },
+                        (app) =>
+                            app
+
+                                .put(
+                                    '',
+                                    async ({
+                                        bundleService,
+                                        bundleId,
+                                        body: { problemIds },
+                                    }) =>
+                                        await bundleService.addProblemsToBundle(
+                                            bundleId,
+                                            problemIds,
+                                        ),
+                                )
+                                .delete(
+                                    '',
+                                    async ({
+                                        bundleService,
+                                        bundleId,
+                                        body: { problemIds },
+                                    }) =>
+                                        await bundleService.removeProblemsFromBundle(
+                                            bundleId,
+                                            problemIds,
+                                        ),
                                 ),
-                        )
-                        .delete(
-                            '',
-                            async ({
-                                bundleService,
-                                bundleId,
-                                body: { problemIds },
-                            }) =>
-                                await bundleService.removeProblemsFromBundle(
-                                    bundleId,
-                                    problemIds,
-                                ),
-                        ),
+                    ),
             ),
     );

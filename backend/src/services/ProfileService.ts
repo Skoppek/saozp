@@ -23,4 +23,8 @@ export abstract class ProfileService {
 
         return profile;
     }
+
+    static async getAllProfiles() {
+        return await ProfileRepository.getAllProfiles();
+    }
 }

@@ -9,6 +9,10 @@ export default abstract class ProfileRepository {
         await db.insert(profileSchema).values(newProfile);
     }
 
+    static async getAllProfiles() {
+        return db.select().from(profileSchema);
+    }
+
     static async getProfileByUserId(userId: number) {
         const result = await db
             .select()

@@ -15,6 +15,8 @@ export class GroupService {
         if (!newGroup) {
             throw new GroupCreationError();
         }
+
+        return newGroup.id;
     }
 
     async getGroupsOfOwner(ownerId: number) {

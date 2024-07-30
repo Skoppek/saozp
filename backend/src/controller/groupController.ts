@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import { groupBodies } from '../bodies/groupRequests';
 import { groupResponses } from '../responses/groupResponses';
@@ -25,6 +25,7 @@ export default new Elysia({
             await groupService.createGroup(body, user.id),
         {
             body: 'createGroupBody',
+            response: t.Number(),
         },
     )
     .get(

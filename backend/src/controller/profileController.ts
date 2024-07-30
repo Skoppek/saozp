@@ -8,6 +8,12 @@ export default new Elysia()
     .use(authenticatedUser)
     .use(profileErrorHandler)
     .use(profileResponses)
+    .get('/all', async ({}) => await ProfileService.getAllProfiles(), {
+        detail: {
+            tags: ['Profiles'],
+        },
+        response: 'profileList',
+    })
     .get(
         '/me',
         async ({ user: { id, login, isAdmin } }) => {

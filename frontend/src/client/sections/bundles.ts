@@ -38,10 +38,10 @@ const remove = async (bundleId: number) =>
   await edenClient.bundle({ bundleId }).delete();
 
 const addUsers = async (bundleId: number, problemIds: number[]) =>
-  await edenClient.bundle({ bundleId }).users.put({ problemIds });
+  await edenClient.bundle({ bundleId }).problems.put({ problemIds });
 
 const removeUsers = async (bundleId: number, problemIds: number[]) =>
-  await edenClient.bundle({ bundleId }).users.delete({ problemIds });
+  await edenClient.bundle({ bundleId }).problems.delete({ problemIds });
 
 export default {
   create,

@@ -27,9 +27,14 @@ export default new Elysia({
             body: 'createGroupBody',
         },
     )
-    .get('', async ({ groupService }) => await groupService.getGroupList(), {
-        response: 'getGroupListResponse',
-    })
+    .get(
+        '',
+        async ({ groupService, userId }) =>
+            await groupService.getGroupsOfOwner(userId),
+        {
+            response: 'getGroupListResponse',
+        },
+    )
     .group('/:groupId', (app) =>
         app
             .use(groupIdParam)

@@ -82,14 +82,15 @@ export default class GroupRepository {
         return result.map((entry) => entry.profiles).filter((user) => !!user);
     }
 
-    async getGroupList() {
+    async getGroupsOfOwner(ownerId: number) {
         const result = await db
             .select()
             .from(groupSchema)
             .innerJoin(
                 profileSchema,
                 eq(profileSchema.userId, groupSchema.owner),
-            );
+            )
+            .where(eq(groupSchema.owner, ownerId));
 
         return result.map((entry) => {
             return { ...entry.groups, owner: entry.profiles };

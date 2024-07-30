@@ -17,8 +17,8 @@ export class GroupService {
         }
     }
 
-    async getGroupList() {
-        return await this.groupRepository.getGroupList();
+    async getGroupsOfOwner(ownerId: number) {
+        return await this.groupRepository.getGroupsOfOwner(ownerId);
     }
 
     async getGroup(groupId: number) {

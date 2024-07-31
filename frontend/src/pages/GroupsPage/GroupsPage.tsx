@@ -7,16 +7,18 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { useState } from "react";
 import { GroupCreateModal } from "./GroupCreateModal.tsx";
 import { GroupDeleteModal } from "./GroupDeleteModal.tsx";
+import { GroupEditModal } from "./GroupEditModal.tsx";
 
 export const GroupsPage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
   const [showDeletionModal, setShowDeletionModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<{
     id: number;
     name: string;
   }>();
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ["groups"],
     queryFn: () => apiClient.groups.getAll(),
   });
@@ -33,14 +35,24 @@ export const GroupsPage = () => {
             }}
           />
           {selectedGroup && (
-            <GroupDeleteModal
-              group={selectedGroup}
-              show={showDeletionModal}
-              onClose={() => {
-                setShowDeletionModal(false);
-                void refetch();
-              }}
-            />
+            <>
+              <GroupEditModal
+                group={selectedGroup}
+                show={showEditModal}
+                onClose={() => {
+                  setShowEditModal(false);
+                  void refetch();
+                }}
+              />
+              <GroupDeleteModal
+                group={selectedGroup}
+                show={showDeletionModal}
+                onClose={() => {
+                  setShowDeletionModal(false);
+                  void refetch();
+                }}
+              />
+            </>
           )}
           <div className="flex flex-col gap-2">
             <Button
@@ -50,16 +62,29 @@ export const GroupsPage = () => {
             >
               Stwórz nową grupę
             </Button>
-            {!isLoading && data ? (
+            {!isFetching && data ? (
               <Table className="w-[512px]">
                 <Table.Head>
                   <Table.HeadCell>Nazwa</Table.HeadCell>
+                  <Table.HeadCell></Table.HeadCell>
                   <Table.HeadCell></Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
                   {data.map((group) => (
                     <Table.Row className="w-full bg-white dark:border-gray-700 dark:bg-gray-800">
                       <Table.Cell>{group.name}</Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          size={"xs"}
+                          color={"success"}
+                          onClick={() => {
+                            setSelectedGroup(group);
+                            setShowEditModal(true);
+                          }}
+                        >
+                          Edytuj
+                        </Button>
+                      </Table.Cell>
                       <Table.Cell>
                         <Button
                           size={"xs"}

@@ -12,6 +12,7 @@ interface TextInputProps extends ClassName {
   color?: string;
   helperText?: ReactNode;
   onChange?: (value: string) => void;
+  defaultValue?: string;
 }
 
 export const TextInput = ({
@@ -24,6 +25,7 @@ export const TextInput = ({
   placeholder,
   onChange,
   className,
+  defaultValue,
 }: TextInputProps) => {
   return (
     <div className={className}>
@@ -41,6 +43,7 @@ export const TextInput = ({
         onChange={(event) => {
           onChange?.(event.target.value);
         }}
+        defaultValue={defaultValue}
         value={value}
         helperText={helperText}
       />

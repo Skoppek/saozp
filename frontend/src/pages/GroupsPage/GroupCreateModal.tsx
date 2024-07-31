@@ -26,8 +26,7 @@ export const GroupCreateModal = ({ show, onClose }: GroupCreateModalProps) => {
             color={"success"}
             disabled={!name.length}
             onClick={() => {
-              void apiClient.groups.create({ name: name });
-              onClose();
+              apiClient.groups.create({ name: name }).then(() => onClose());
             }}
           >
             Stwórz

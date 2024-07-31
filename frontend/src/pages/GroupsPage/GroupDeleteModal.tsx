@@ -18,7 +18,7 @@ export const GroupDeleteModal = ({
 }: GroupDeleteModalProps) => {
   return (
     <Modal show={show} onClose={() => onClose()}>
-      <Modal.Header>Czy na pewno chce usunąć grupę?</Modal.Header>
+      <Modal.Header>Czy na pewno chcesz usunąć grupę?</Modal.Header>
       <Modal.Body>
         <div className="flex flex-col gap-4">
           <div
@@ -29,7 +29,7 @@ export const GroupDeleteModal = ({
           <Button
             color={"failure"}
             onClick={() => {
-              apiClient.groups.remove(group.id);
+              void apiClient.groups.remove(group.id);
               onClose();
             }}
           >

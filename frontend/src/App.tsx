@@ -9,12 +9,17 @@ import { AdminAuthenticatedPage } from "./pages/AdminAuthenticatedPage.tsx";
 import { AdminPage } from "./pages/AdminPage.tsx";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GroupsPage } from "./pages/GroupsPage/GroupsPage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
+      {
+        path: "/groups",
+        element: <GroupsPage />,
+      },
       {
         path: "/problems",
         element: <ProblemsPage />,

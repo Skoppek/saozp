@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import { groupBodies } from '../bodies/groupRequests';
 import { groupResponses } from '../responses/groupResponses';
@@ -25,11 +25,17 @@ export default new Elysia({
             await groupService.createGroup(body, user.id),
         {
             body: 'createGroupBody',
+            response: t.Number(),
         },
     )
-    .get('', async ({ groupService }) => await groupService.getGroupList(), {
-        response: 'getGroupListResponse',
-    })
+    .get(
+        '',
+        async ({ groupService, userId }) =>
+            await groupService.getGroupsOfOwner(userId),
+        {
+            response: 'getGroupListResponse',
+        },
+    )
     .group('/:groupId', (app) =>
         app
             .use(groupIdParam)

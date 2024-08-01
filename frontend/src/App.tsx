@@ -10,6 +10,7 @@ import { AdminPage } from "./pages/AdminPage.tsx";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GroupsPage } from "./pages/GroupsPage/GroupsPage.tsx";
+import { BundlePage } from "./pages/BundlesPage/BundlePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "/groups",
         element: <GroupsPage />,
+      },
+      {
+        path: "/bundles",
+        element: <BundlePage />,
       },
       {
         path: "/problems",

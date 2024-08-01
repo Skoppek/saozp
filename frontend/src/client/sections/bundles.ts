@@ -37,11 +37,22 @@ const update = async (bundleId: number, updatedBundle: UpdateBundle) =>
 const remove = async (bundleId: number) =>
   await edenClient.bundle({ bundleId }).delete();
 
-const addUsers = async (bundleId: number, problemIds: number[]) =>
+const addProblems = async (bundleId: number, problemIds: number[]) =>
   await edenClient.bundle({ bundleId }).problems.put({ problemIds });
 
-const removeUsers = async (bundleId: number, problemIds: number[]) =>
+const removeProblems = async (bundleId: number, problemIds: number[]) =>
   await edenClient.bundle({ bundleId }).problems.delete({ problemIds });
+
+const getProblems = async (bundleId: number) =>
+  await edenClient
+    .bundle({ bundleId })
+    .problems.get()
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 export default {
   create,
@@ -49,6 +60,7 @@ export default {
   get,
   update,
   remove,
-  addUsers,
-  removeUsers,
+  getProblems,
+  addProblems,
+  removeProblems,
 };

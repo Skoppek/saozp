@@ -52,9 +52,19 @@ export const Navigation = () => {
             </span>
           </Link>
         </Navbar.Brand>
-        <Navbar.Collapse>
-          {!!user && <Link to={"/problems"}>Zadania</Link>}
-        </Navbar.Collapse>
+        {!!user && (
+          <>
+            <Navbar.Collapse>
+              <Link to={"/problems"}>Zadania</Link>
+            </Navbar.Collapse>
+            <Navbar.Collapse>
+              <Link to={"/bundles"}>Paczki</Link>
+            </Navbar.Collapse>
+            <Navbar.Collapse>
+              <Link to={"/groups"}>Grupy</Link>
+            </Navbar.Collapse>
+          </>
+        )}
         <Navbar.Collapse>
           {!!user && (
             <div className="flex gap-2">

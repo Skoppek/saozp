@@ -87,12 +87,12 @@ export default new Elysia({
                                         body,
                                         params: { id },
                                     }) => {
-                                        if ('groupId' in body)
+                                        if (body.groupId)
                                             await contestService.addGroupToContest(
                                                 id,
                                                 body.groupId,
                                             );
-                                        else
+                                        if (body.usersIds)
                                             await contestService.addUsersToContest(
                                                 id,
                                                 body.usersIds,
@@ -106,9 +106,9 @@ export default new Elysia({
                                         body,
                                         params: { id },
                                     }) => {
-                                        if ('groupId' in body)
+                                        if (body.groupId)
                                             throw new NotImplementedError();
-                                        else
+                                        if (body.usersIds)
                                             await contestService.removeUsersFromContest(
                                                 id,
                                                 body.usersIds,
@@ -136,12 +136,12 @@ export default new Elysia({
                                         body,
                                         params: { id },
                                     }) => {
-                                        if ('problemIds' in body)
+                                        if (body.problemIds)
                                             await contestService.addProblemsToContest(
                                                 id,
                                                 body.problemIds,
                                             );
-                                        else
+                                        if (body.bundleId)
                                             await contestService.addBundleToContest(
                                                 id,
                                                 body.bundleId,
@@ -155,9 +155,9 @@ export default new Elysia({
                                         body,
                                         params: { id },
                                     }) => {
-                                        if ('bundleId' in body)
+                                        if (body.bundleId)
                                             throw new NotImplementedError();
-                                        else
+                                        if (body.problemIds)
                                             await contestService.removeProblemsFromContest(
                                                 id,
                                                 body.problemIds,

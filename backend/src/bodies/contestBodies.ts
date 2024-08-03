@@ -19,25 +19,19 @@ const updateContestBody = t.Partial(
     }),
 );
 
-export type UpdateContestBody = Static<typeof updateContestBody>;
-
-const problemIds = t.Union([
+const problemIds = t.Partial(
     t.Object({
         problemIds: t.Array(t.Number()),
-    }),
-    t.Object({
         bundleId: t.Number(),
     }),
-]);
+);
 
-const usersIds = t.Union([
+const usersIds = t.Partial(
     t.Object({
         usersIds: t.Array(t.Number()),
-    }),
-    t.Object({
         groupId: t.Number(),
     }),
-]);
+);
 
 export const contestBodies = new Elysia().model({
     createContestBody,

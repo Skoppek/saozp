@@ -45,7 +45,7 @@ export const ContestsPage = () => {
               {!isFetching && data ? (
                 <Table.Body>
                   {data.map((contest) => (
-                    <Table.Row>
+                    <Table.Row className="w-full bg-white dark:border-gray-700 dark:bg-gray-800">
                       <Table.Cell>{contest.name}</Table.Cell>
                       <Table.Cell>
                         {moment(contest.startDate).toDate().toLocaleString()}

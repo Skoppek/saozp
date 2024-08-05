@@ -4,9 +4,8 @@ import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import apiClient from "../../client/apiClient.ts";
 import { MarkdownEditor } from "../../components/markdown/MarkdownEditor.tsx";
-import { Datepicker, Label } from "flowbite-react";
 import moment from "moment";
-import { TimeInput } from "../../components/TimeInput.tsx";
+import { DateTimePicker } from "../../components/DateTimePicker.tsx";
 
 interface ContestCreateModalProps {
   show: boolean;
@@ -39,69 +38,23 @@ export const ContestCreateModal = ({
             label="Opis"
             rows={4}
           />
-          <Label htmlFor={"startDate"} value={"Start"} />
-          <div className="flex w-full gap-4">
-            <Datepicker
-              id={"startDate"}
-              onSelectedDateChanged={(date) =>
-                setStartDate(
-                  moment(startDate)
-                    .year(date.getFullYear())
-                    .month(date.getMonth())
-                    .date(date.getDate())
-                    .toDate(),
-                )
-              }
-              language="pl-pl"
-              showTodayButton={false}
-              defaultValue={startDate.getDate()}
+          <div className="flex gap-4">
+            <DateTimePicker
+              id="startDate"
+              value={startDate}
+              onChange={(value) => setStartDate(value)}
+              label="Start"
             />
-            <TimeInput
-              setTime={(hours, minutes) => {
-                setStartDate((prev) =>
-                  moment(prev)
-                    .set("hour", hours)
-                    .set("minute", minutes)
-                    .toDate(),
-                );
-              }}
-              defaultTime={startDate}
+            <DateTimePicker
+              id="endDate"
+              value={endDate}
+              onChange={(value) => setEndDate(value)}
+              label="Koniec"
             />
           </div>
-          <Label htmlFor={"endDate"} value={"Koniec"} />
-          <div className="flex w-full gap-4">
-            <Datepicker
-              id={"endDate"}
-              onSelectedDateChanged={(date) =>
-                setEndDate(
-                  moment(endDate)
-                    .year(date.getFullYear())
-                    .month(date.getMonth())
-                    .date(date.getDate())
-                    .toDate(),
-                )
-              }
-              language="pl-pl"
-              showTodayButton={false}
-              defaultValue={endDate.getDate()}
-            />
-            <TimeInput
-              setTime={(hours, minutes) => {
-                setEndDate((prev) =>
-                  moment(prev)
-                    .set("hour", hours)
-                    .set("minute", minutes)
-                    .toDate(),
-                );
-              }}
-              defaultTime={endDate}
-            />
-          </div>
-          <div>{startDate.toLocaleString()}</div>
-          <div>{endDate.toLocaleString()}</div>
           <Button
             color={"success"}
-            disabled={!name.length || moment(startDate).isSameOrBefore(endDate)}
+            disabled={!name.length || moment(startDate).isSameOrAfter(endDate)}
             onClick={() => {
               apiClient.contests
                 .create({ name, description, startDate, endDate })

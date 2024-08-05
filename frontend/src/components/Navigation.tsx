@@ -63,6 +63,9 @@ export const Navigation = () => {
             <Navbar.Collapse>
               <Link to={"/groups"}>Grupy</Link>
             </Navbar.Collapse>
+            <Navbar.Collapse>
+              <Link to={"/contests"}>Zawody</Link>
+            </Navbar.Collapse>
           </>
         )}
         <Navbar.Collapse>

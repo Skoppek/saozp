@@ -3,7 +3,7 @@ import { Editor } from "@monaco-editor/react";
 import { useState } from "react";
 import { LanguageId } from "../shared/enums";
 import { Language } from "../shared/interfaces/Language";
-import { LanguageSelect } from "./LanguageSelect";
+import { LanguageSelect } from "./inputs/LanguageSelect";
 import { Badge } from "flowbite-react/components/Badge";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import { Tooltip } from "flowbite-react";

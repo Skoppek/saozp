@@ -4,7 +4,12 @@ import apiClient from "../../client/apiClient.ts";
 import { Table } from "flowbite-react/components/Table";
 import { Button, ListGroup, Popover, Spinner } from "flowbite-react";
 import moment from "moment";
-import { HiDotsVertical, HiOutlineTrash } from "react-icons/hi";
+import {
+  HiDotsVertical,
+  HiOutlineTrash,
+  HiEye,
+  HiPencilAlt,
+} from "react-icons/hi";
 import { useState } from "react";
 import { ContestCreateModal } from "./ContestCreateModal.tsx";
 
@@ -59,7 +64,19 @@ export const ContestsPage = () => {
                             aria-labelledby="default-popover"
                             content={
                               <div className="flex justify-center">
-                                <ListGroup className="w-48">
+                                <ListGroup className="w-32">
+                                  <ListGroup.Item
+                                    onClick={() => {}}
+                                    icon={HiPencilAlt}
+                                  >
+                                    Edytuj
+                                  </ListGroup.Item>
+                                  <ListGroup.Item
+                                    onClick={() => {}}
+                                    icon={HiEye}
+                                  >
+                                    Wyniki
+                                  </ListGroup.Item>
                                   <ListGroup.Item
                                     onClick={() =>
                                       apiClient.contests

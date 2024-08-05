@@ -1,11 +1,11 @@
 import { Modal } from "flowbite-react/components/Modal";
-import { TextInput } from "../../components/TextInput.tsx";
 import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import apiClient from "../../client/apiClient.ts";
 import { MarkdownEditor } from "../../components/markdown/MarkdownEditor.tsx";
 import moment from "moment";
-import { DateTimePicker } from "../../components/DateTimePicker.tsx";
+import { DateTimePicker } from "../../components/inputs/DateTimePicker.tsx";
+import { TextInput } from "../../components/inputs/TextInput.tsx";
 
 interface ContestCreateModalProps {
   show: boolean;

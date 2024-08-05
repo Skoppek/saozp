@@ -1,6 +1,5 @@
 import { Label, TextInput } from "flowbite-react";
 import _ from "lodash";
-import moment from "moment";
 import { useMemo, useState } from "react";
 
 interface TimePartInputProps {
@@ -26,7 +25,7 @@ const TimePartInput = ({ value, maxValue, onChange }: TimePartInputProps) => {
       id="time"
       value={hoursDisplay}
       onChange={(event) => {
-        const value = parseInt(_.trimStart(event.target.value, "0"));
+        const value = parseInt(_.trimStart(event.target.value, "0")) % 100;
         if (value >= 0 && value < maxValue) {
           onChange(value);
         } else if (!event.target.value.length) {
@@ -58,7 +57,7 @@ export const TimeInput = ({ label, defaultTime, setTime }: TimeInputProps) => {
         <TimePartInput
           onChange={(value) => {
             setThisHours(value);
-            setTime(hours, minutes);
+            setTime(value, minutes);
           }}
           value={hours}
           maxValue={24}
@@ -66,7 +65,7 @@ export const TimeInput = ({ label, defaultTime, setTime }: TimeInputProps) => {
         <TimePartInput
           onChange={(value) => {
             setThisMinutes(value);
-            setTime(hours, minutes);
+            setTime(hours, value);
           }}
           value={minutes}
           maxValue={60}

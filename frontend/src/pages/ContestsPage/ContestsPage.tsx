@@ -11,7 +11,7 @@ import { ContestCreateModal } from "./ContestCreateModal.tsx";
 export const ContestsPage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, refetch } = useQuery({
     queryKey: ["contests"],
     queryFn: () => apiClient.contests.getAll(),
   });
@@ -23,7 +23,10 @@ export const ContestsPage = () => {
           <div className="flex flex-col gap-4">
             <ContestCreateModal
               show={showCreationModal}
-              onClose={() => setShowCreationModal(false)}
+              onClose={() => {
+                setShowCreationModal(false);
+                refetch();
+              }}
             />
             <Button
               size={"xs"}
@@ -45,10 +48,10 @@ export const ContestsPage = () => {
                     <Table.Row>
                       <Table.Cell>{contest.name}</Table.Cell>
                       <Table.Cell>
-                        {moment(contest.startDate).toLocaleString()}
+                        {moment(contest.startDate).toDate().toLocaleString()}
                       </Table.Cell>
                       <Table.Cell>
-                        {moment(contest.endDate).toLocaleString()}
+                        {moment(contest.endDate).toDate().toLocaleString()}
                       </Table.Cell>
                       <Table.Cell>
                         <Button outline color="gray">

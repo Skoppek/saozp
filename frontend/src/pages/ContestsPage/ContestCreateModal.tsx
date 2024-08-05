@@ -19,8 +19,10 @@ export const ContestCreateModal = ({
 }: ContestCreateModalProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(moment().toDate());
-  const [endDate, setEndDate] = useState(moment().toDate());
+  const [startDate, setStartDate] = useState(
+    moment().set("second", 0).toDate(),
+  );
+  const [endDate, setEndDate] = useState(moment().set("second", 0).toDate());
 
   return (
     <Modal show={show} onClose={() => onClose()}>
@@ -41,7 +43,15 @@ export const ContestCreateModal = ({
           <div className="flex w-full gap-4">
             <Datepicker
               id={"startDate"}
-              onSelectedDateChanged={(date) => setStartDate(date)}
+              onSelectedDateChanged={(date) =>
+                setStartDate(
+                  moment(startDate)
+                    .year(date.getFullYear())
+                    .month(date.getMonth())
+                    .date(date.getDate())
+                    .toDate(),
+                )
+              }
               language="pl-pl"
               showTodayButton={false}
               defaultValue={startDate.getDate()}
@@ -55,13 +65,22 @@ export const ContestCreateModal = ({
                     .toDate(),
                 );
               }}
+              defaultTime={startDate}
             />
           </div>
           <Label htmlFor={"endDate"} value={"Koniec"} />
           <div className="flex w-full gap-4">
             <Datepicker
               id={"endDate"}
-              onSelectedDateChanged={(date) => setEndDate(date)}
+              onSelectedDateChanged={(date) =>
+                setEndDate(
+                  moment(endDate)
+                    .year(date.getFullYear())
+                    .month(date.getMonth())
+                    .date(date.getDate())
+                    .toDate(),
+                )
+              }
               language="pl-pl"
               showTodayButton={false}
               defaultValue={endDate.getDate()}
@@ -75,11 +94,14 @@ export const ContestCreateModal = ({
                     .toDate(),
                 );
               }}
+              defaultTime={endDate}
             />
           </div>
+          <div>{startDate.toLocaleString()}</div>
+          <div>{endDate.toLocaleString()}</div>
           <Button
             color={"success"}
-            disabled={!name.length}
+            disabled={!name.length || moment(startDate).isSameOrBefore(endDate)}
             onClick={() => {
               apiClient.contests
                 .create({ name, description, startDate, endDate })

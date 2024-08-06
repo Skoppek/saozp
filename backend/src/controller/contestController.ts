@@ -6,6 +6,7 @@ import { contestErrorHandler } from '../errorHandlers/contestErrorHandler';
 import ContestService from '../services/ContestService';
 import idParam from '../plugins/idParam';
 import { NotImplementedError } from '../errors/generalErrors';
+import { contestQueries } from '../queryParsers/contestQueries';
 
 export default new Elysia({
     prefix: 'contest',
@@ -17,6 +18,7 @@ export default new Elysia({
     .use(contestBodies)
     .use(contestResponses)
     .use(authenticatedUser)
+    .use(contestQueries)
     .decorate({
         contestService: new ContestService(),
     })
@@ -30,9 +32,11 @@ export default new Elysia({
     )
     .get(
         '',
-        async ({ contestService }) => await contestService.getContestList(),
+        async ({ contestService, query }) =>
+            await contestService.getContestList(query),
         {
             response: 'getContestListResponse',
+            query: 'submissionListQuery',
         },
     )
     .use(idParam)

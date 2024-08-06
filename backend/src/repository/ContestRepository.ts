@@ -9,6 +9,8 @@ import { problemsToContestSchema } from '../model/schemas/intermediates/problems
 import { and } from 'drizzle-orm';
 import { usersToContestSchema } from '../model/schemas/intermediates/usersToContestSchema';
 import { profileSchema } from '../model/schemas/profileSchema';
+import { ContestListQuery } from '../queryParsers/contestQueries';
+import { mapIfPresent } from '../shared/mapper';
 
 export default class ContestRepository {
     async createContest(newContest: NewContest) {
@@ -36,13 +38,25 @@ export default class ContestRepository {
         return result.at(0);
     }
 
-    async getContests() {
+    async getContests(participantId?: number, ownerId?: number) {
         const result = await db
             .select()
             .from(contestSchema)
             .innerJoin(
                 profileSchema,
                 eq(profileSchema.userId, contestSchema.owner),
+            )
+            .innerJoin(
+                usersToContestSchema,
+                eq(usersToContestSchema.contestId, contestSchema.id),
+            )
+            .where(
+                and(
+                    mapIfPresent(participantId, (id) =>
+                        eq(usersToContestSchema.userId, id),
+                    ),
+                    mapIfPresent(ownerId, (id) => eq(contestSchema.owner, id)),
+                ),
             );
 
         return result.map((entry) => {

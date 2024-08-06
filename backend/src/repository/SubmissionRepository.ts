@@ -5,6 +5,7 @@ import {
     submissionSchema,
 } from '../model/schemas/submissionSchema';
 import { profileSchema } from '../model/schemas/profileSchema';
+import { mapIfPresent } from '../shared/mapper';
 
 export class SubmissionRepository {
     async createSubmission(newSubmission: NewSubmission) {
@@ -19,6 +20,7 @@ export class SubmissionRepository {
         userId?: number,
         problemId?: number,
         commitsOnly?: boolean,
+        contestId?: number,
     ) {
         return db
             .select({
@@ -34,13 +36,18 @@ export class SubmissionRepository {
             )
             .where(
                 and(
-                    userId ? eq(submissionSchema.userId, userId) : undefined,
-                    problemId
-                        ? eq(submissionSchema.problemId, problemId)
-                        : undefined,
-                    commitsOnly
-                        ? eq(submissionSchema.isCommit, commitsOnly)
-                        : undefined,
+                    mapIfPresent(userId, (id) =>
+                        eq(submissionSchema.userId, id),
+                    ),
+                    mapIfPresent(problemId, (id) =>
+                        eq(submissionSchema.problemId, id),
+                    ),
+                    mapIfPresent(commitsOnly, (isCommit) =>
+                        eq(submissionSchema.isCommit, isCommit),
+                    ),
+                    mapIfPresent(contestId, (id) =>
+                        eq(submissionSchema.contestId, id),
+                    ),
                 ),
             );
     }

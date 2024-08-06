@@ -19,6 +19,7 @@ const getSubmissionListResponse = t.Array(
             }),
         ),
         isCommit: t.Boolean(),
+        contestId: t.Optional(t.Number()),
     }),
 );
 
@@ -38,6 +39,7 @@ const getSubmissionDetailsResponse = t.Object({
         averageMemory: t.Number(),
         averageTime: t.Number(),
     }),
+    contestId: t.Optional(t.Number()),
 });
 
 export const submissionResponses = new Elysia().model({

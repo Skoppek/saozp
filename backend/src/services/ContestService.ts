@@ -7,6 +7,10 @@ import {
 import ProfileRepository from '../repository/ProfileRepository';
 import ProblemRepository from '../repository/ProblemRepository';
 import { Contest } from '../model/schemas/contestSchema';
+import {
+    ContestListQuery,
+    parseContestListQuery,
+} from '../queryParsers/contestQueries';
 
 export default class ContestService {
     private contestRepository = new ContestRepository();
@@ -29,8 +33,9 @@ export default class ContestService {
         }
     }
 
-    async getContestList() {
-        return this.contestRepository.getContests();
+    async getContestList(query: ContestListQuery) {
+        const { participantId, ownerId } = parseContestListQuery(query);
+        return this.contestRepository.getContests(participantId, ownerId);
     }
 
     async getContest(contestId: number) {

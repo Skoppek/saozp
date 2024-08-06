@@ -1,3 +1,4 @@
+import { mapIfPresent } from "../../shared/mapper.ts";
 import edenClient from "../edenClient.ts";
 
 interface NewContest {
@@ -14,13 +15,26 @@ interface Contest extends NewContest {
 const create = async (newContest: NewContest) =>
   await edenClient.contest.post(newContest);
 
-const getAll = async () =>
-  await edenClient.contest.get().then((res) => {
-    if (!res.data) {
-      throw new Error("Unexpected null in response.");
-    }
-    return res.data;
-  });
+const getAll = async ({
+  participantId,
+  ownerId,
+}: {
+  participantId?: number;
+  ownerId?: number;
+}) =>
+  await edenClient.contest
+    .get({
+      query: {
+        participantId: mapIfPresent(participantId, (a) => a.toString()),
+        ownerId: mapIfPresent(ownerId, (a) => a.toString()),
+      },
+    })
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 const get = async (contestId: number) =>
   await edenClient
@@ -89,5 +103,5 @@ export default {
   removeParticipants,
   getProblems,
   addProblems,
-  removeProblems
-}
+  removeProblems,
+};

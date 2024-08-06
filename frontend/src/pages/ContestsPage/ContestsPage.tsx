@@ -10,15 +10,16 @@ import {
   HiEye,
   HiPencilAlt,
 } from "react-icons/hi";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ContestCreateModal } from "./ContestCreateModal.tsx";
+import { AuthContext } from "../Root.tsx";
 
 export const ContestsPage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
-
+  const authContext = useContext(AuthContext);
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["contests"],
-    queryFn: () => apiClient.contests.getAll(),
+    queryFn: () => apiClient.contests.getAll({ ownerId: authContext?.id }),
   });
 
   return (

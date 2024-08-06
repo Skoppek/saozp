@@ -9,7 +9,6 @@ import { problemsToContestSchema } from '../model/schemas/intermediates/problems
 import { and } from 'drizzle-orm';
 import { usersToContestSchema } from '../model/schemas/intermediates/usersToContestSchema';
 import { profileSchema } from '../model/schemas/profileSchema';
-import { ContestListQuery } from '../queryParsers/contestQueries';
 import { mapIfPresent } from '../shared/mapper';
 
 export default class ContestRepository {

@@ -17,6 +17,7 @@ import { AuthContext } from "../Root.tsx";
 export const ContestsPage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
   const authContext = useContext(AuthContext);
+
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["contests"],
     queryFn: () => apiClient.contests.getAll({ ownerId: authContext?.id }),

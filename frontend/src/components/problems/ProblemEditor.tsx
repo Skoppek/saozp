@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { TextInput } from "../TextInput";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import { CodeEditor } from "../CodeEditor";
 import { TestCasesEditor } from "../TestCasesEditor";
@@ -12,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Datepicker } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
+import { TextInput } from "../inputs/TextInput.tsx";
 
 interface ProblemEditorProps {
   problem?: Problem;

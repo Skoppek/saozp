@@ -54,7 +54,15 @@ const remove = async (contestId: number) =>
   await edenClient.contest({ id: contestId }).delete();
 
 const getParticipants = async (contestId: number) =>
-  await edenClient.contest({ id: contestId }).users.get();
+  await edenClient
+    .contest({ id: contestId })
+    .users.get()
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 const addParticipants = async (
   contestId: number,

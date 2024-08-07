@@ -12,6 +12,7 @@ import { BundlePage } from "./pages/BundlesPage/BundlePage.tsx";
 import { ContestsPage } from "./pages/ContestsPage/ContestsPage.tsx";
 import { AdminAuthenticatedPage } from "./pages/AdminPages/AdminAuthenticatedPage.tsx";
 import { AdminPage } from "./pages/AdminPages/AdminPage.tsx";
+import { ContestEditPage } from "./pages/ContestsPage/ContestEditPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/contests",
         element: <ContestsPage />,
+      },
+      {
+        path: "/contests/:id/edit",
+        element: <ContestEditPage />,
       },
       {
         path: "/groups",

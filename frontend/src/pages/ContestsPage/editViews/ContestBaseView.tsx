@@ -17,8 +17,10 @@ export const ContestBaseView = ({ contestId }: ContestBaseViewProps) => {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(moment().set("second", 0).toDate);
-  const [endDate, setEndDate] = useState(moment().set("second", 0).toDate);
+  const [startDate, setStartDate] = useState(
+    moment().set("second", 0).toDate(),
+  );
+  const [endDate, setEndDate] = useState(moment().set("second", 0).toDate());
 
   useEffect(() => {
     if (data) {

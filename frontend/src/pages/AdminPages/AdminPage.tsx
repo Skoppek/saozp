@@ -1,4 +1,4 @@
-import { UsersControlSection } from "../components/adminSections/UsersControlSection/UsersControlSection.tsx";
+import { UsersControlSection } from "../../components/adminSections/UsersControlSection/UsersControlSection";
 
 export const AdminPage = () => {
   return (

@@ -45,9 +45,9 @@ interface TimeInputProps {
 }
 
 export const TimeInput = ({ label, defaultTime, setTime }: TimeInputProps) => {
-  const [hours, setThisHours] = useState<number>(defaultTime?.getHours() ?? 12);
+  const [hours, setThisHours] = useState<number>(defaultTime?.getHours ?? 12);
   const [minutes, setThisMinutes] = useState<number>(
-    defaultTime?.getMinutes() ?? 0,
+    defaultTime?.getMinutes ?? 0,
   );
 
   return (

@@ -45,7 +45,7 @@ export default class ContestRepository {
                 profileSchema,
                 eq(profileSchema.userId, contestSchema.owner),
             )
-            .innerJoin(
+            .leftJoin(
                 usersToContestSchema,
                 eq(usersToContestSchema.contestId, contestSchema.id),
             )

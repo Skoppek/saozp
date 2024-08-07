@@ -13,13 +13,15 @@ import {
 import { useContext, useState } from "react";
 import { ContestCreateModal } from "./ContestCreateModal.tsx";
 import { AuthContext } from "../Root.tsx";
+import { useNavigate } from "react-router-dom";
 
 export const ContestsPage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
   const authContext = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["contests"],
+    queryKey: ["allContests"],
     queryFn: () => apiClient.contests.getAll({ ownerId: authContext?.id }),
   });
 
@@ -68,7 +70,9 @@ export const ContestsPage = () => {
                               <div className="flex justify-center">
                                 <ListGroup className="w-32">
                                   <ListGroup.Item
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                      navigate(`/contests/${contest.id}/edit`);
+                                    }}
                                     icon={HiPencilAlt}
                                   >
                                     Edytuj

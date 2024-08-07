@@ -2,9 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AuthenticatedPage } from "../AuthenticatedPage";
 import { mapIfPresent } from "../../shared/mapper";
 import { useMemo } from "react";
-import { ContestProblemsView } from "./editViews/ContestProblemsView";
-import { ContestParticipantsView } from "./editViews/ContestParticipantsView";
 import { ContestBaseView } from "./editViews/ContestBaseView";
+import { ContestParticipantsView } from "./editViews/participants/ContestParticipantsView";
 
 export const ContestEditPage = () => {
   const { id } = useParams();
@@ -26,7 +25,7 @@ export const ContestEditPage = () => {
             <div className="grid grid-cols-3 gap-4">
               <ContestBaseView contestId={contestId} />
               <ContestParticipantsView contestId={contestId} />
-              <ContestProblemsView contestId={contestId} />
+              {/* <ContestProblemsView contestId={contestId} /> */}
             </div>
           )}
         </div>

@@ -1,10 +1,10 @@
 import { TestCase } from "../shared/interfaces/TestCase";
-import { TextInput } from "./TextInput";
 import { useMemo, useState } from "react";
 import { Badge, Button, Popover } from "flowbite-react";
 import { FaPlus } from "react-icons/fa";
 import { HiOutlineTrash, HiOutlineArrowRight } from "react-icons/hi";
 import { HiPencilAlt } from "react-icons/hi";
+import { TextInput } from "./inputs/TextInput";
 
 interface TestCasesEditorProps {
   testCases?: TestCase[];

@@ -47,7 +47,6 @@ export const DateTimePicker = ({
           }}
           language="pl-pl"
           showTodayButton={false}
-          defaultValue={value.getDate()}
         />
         <TimeInput
           setTime={(hours, minutes) => {

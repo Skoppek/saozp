@@ -1,6 +1,5 @@
 import { Modal } from "flowbite-react/components/Modal";
 import { useCallback, useMemo, useState } from "react";
-import { TextInput } from "./TextInput";
 import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
@@ -8,6 +7,7 @@ import { User } from "../shared/interfaces/User";
 import apiClient from "../client/apiClient.ts";
 import { StatusCodes } from "http-status-codes";
 import { Tooltip } from "flowbite-react";
+import { TextInput } from "./inputs/TextInput.tsx";
 
 interface AuthModalProps {
   onLogin: (user?: User) => void;

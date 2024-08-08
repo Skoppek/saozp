@@ -7,12 +7,14 @@ export const AuthContext = createContext<
   | {
       isLogged: boolean;
       setIsLogged: (value: boolean) => void;
+      id?: number;
     }
   | undefined
 >(undefined);
 
 export const Root = () => {
   const [isLogged, setIsLogged] = useState(false);
+  const [id, setId] = useState<number>();
   const url = useLocation();
 
   const setLogged = useCallback((value: boolean) => {
@@ -22,13 +24,19 @@ export const Root = () => {
   useEffect(() => {
     apiClient.auth
       .getLoggedUser()
-      .then((data) => setIsLogged(!!data))
-      .catch(() => setIsLogged(false));
+      .then((data) => {
+        setIsLogged(!!data);
+        setId(data.userId);
+      })
+      .catch(() => {
+        setIsLogged(false);
+        setId(undefined);
+      });
   }, []);
 
   return (
     <>
-      <AuthContext.Provider value={{ isLogged, setIsLogged: setLogged }}>
+      <AuthContext.Provider value={{ isLogged, setIsLogged: setLogged, id }}>
         <Navigation />
         {url.pathname === "/" && (
           <div className="mt-[20vh] flex flex-col items-center gap-8">

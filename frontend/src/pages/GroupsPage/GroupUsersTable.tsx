@@ -22,7 +22,13 @@ export const GroupUsersTable = ({
   const [selected, setSelected] = useState<User[]>([]);
   return (
     <div className={"flex flex-col"}>
-      <Button onClick={() => onConfirm(selected)} disabled={!selected.length}>
+      <Button
+        onClick={() => {
+          onConfirm(selected);
+          setSelected([]);
+        }}
+        disabled={!selected.length}
+      >
         {confirmLabel}
       </Button>
       <Table>

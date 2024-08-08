@@ -5,10 +5,10 @@ import { Problem } from "../shared/interfaces/Problem";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { useNavigate, useParams } from "react-router-dom";
 import { StatsAccordion } from "../components/StatsAccordion";
-import { TextInput } from "../components/TextInput";
 import { Label } from "flowbite-react/components/Label";
 import { Datepicker } from "flowbite-react/components/Datepicker";
 import apiClient from "../client/apiClient.ts";
+import { TextInput } from "../components/inputs/TextInput.tsx";
 
 export const ProblemStatsPage = () => {
   const { id } = useParams();

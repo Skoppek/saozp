@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
-import apiClient from "../client/apiClient.ts";
+import apiClient from "../../client/apiClient";
 
 interface AdminAuthenticatedPageProps {
   children: ReactNode;

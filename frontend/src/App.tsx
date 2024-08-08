@@ -5,18 +5,28 @@ import { ProblemCreatePage } from "./pages/ProblemCreatePage.tsx";
 import { ProblemEditPage } from "./pages/ProblemEditPage.tsx";
 import { ProblemStatsPage } from "./pages/ProblemsStatsPage.tsx";
 import { SolvingPage } from "./pages/SolvingPage.tsx";
-import { AdminAuthenticatedPage } from "./pages/AdminAuthenticatedPage.tsx";
-import { AdminPage } from "./pages/AdminPage.tsx";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { GroupsPage } from "./pages/GroupsPage/GroupsPage.tsx";
 import { BundlePage } from "./pages/BundlesPage/BundlePage.tsx";
+import { ContestsPage } from "./pages/ContestsPage/ContestsPage.tsx";
+import { AdminAuthenticatedPage } from "./pages/AdminPages/AdminAuthenticatedPage.tsx";
+import { AdminPage } from "./pages/AdminPages/AdminPage.tsx";
+import { ContestEditPage } from "./pages/ContestsPage/ContestEditPage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
+      {
+        path: "/contests",
+        element: <ContestsPage />,
+      },
+      {
+        path: "/contests/:id/edit",
+        element: <ContestEditPage />,
+      },
       {
         path: "/groups",
         element: <GroupsPage />,

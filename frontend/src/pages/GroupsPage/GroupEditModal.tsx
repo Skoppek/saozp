@@ -1,11 +1,11 @@
 import { Modal } from "flowbite-react/components/Modal";
-import { TextInput } from "../../components/TextInput.tsx";
 import { useEffect, useRef } from "react";
 import { Spinner } from "flowbite-react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient.ts";
 import { GroupUsersTable } from "./GroupUsersTable.tsx";
 import _ from "lodash";
+import { TextInput } from "../../components/inputs/TextInput.tsx";
 
 interface GroupEditModalProps {
   group: {

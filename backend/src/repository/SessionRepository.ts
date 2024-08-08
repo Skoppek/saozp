@@ -40,7 +40,6 @@ export default abstract class SessionRepository {
     }
 
     static async setSessionExpiryDate(id: string, expiresAt: Date) {
-        console.log({ set: expiresAt });
         const result = await db
             .update(sessionSchema)
             .set({

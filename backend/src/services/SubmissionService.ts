@@ -52,7 +52,6 @@ export class SubmissionService {
         code: string,
     ) {
         tests.forEach(async (test) => {
-            console.log(test);
             const token = (
                 await judge0Client.submit({
                     languageId: languageId,

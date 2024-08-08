@@ -4,12 +4,12 @@ import { ProblemEntry } from "../shared/interfaces/ProblemEntry";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 import { ProblemsGallery } from "../components/problems/ProblemsGallery";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { TextInput } from "../components/TextInput";
-import { LanguageSelect } from "../components/LanguageSelect";
+import { LanguageSelect } from "../components/inputs/LanguageSelect.tsx";
 import { ALL_LANGUAGES } from "../shared/constansts";
 import { LinkButton } from "../components/LinkButton";
 import { ToggleSwitch } from "flowbite-react";
 import apiClient from "../client/apiClient.ts";
+import { TextInput } from "../components/inputs/TextInput.tsx";
 
 export const ProblemsPage = () => {
   const [problems, setProblems] = useState<ProblemEntry[]>();

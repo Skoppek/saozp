@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 import { sessionCleaner } from './plugins/sessionCleaner';
 import { corsSettings } from './plugins/corsSettings';
@@ -14,6 +14,7 @@ import groupController from './controller/groupController';
 import bundleController from './controller/bundleController';
 import authController from './controller/authController';
 import contestController from './controller/contestController';
+import TestCasesService from './services/TestCasesService';
 
 const app = new Elysia()
     .use(generalErrorHandler)
@@ -28,7 +29,34 @@ const app = new Elysia()
     .use(adminsController)
     .use(groupController)
     .use(bundleController)
-    .use(contestController);
+    .use(contestController)
+    .post(
+        '/tests_validation',
+        async ({ body }) =>
+            await body.testsFile
+                .json()
+                .then((val) => TestCasesService.validateTestsFile(val)),
+        {
+            body: t.Object({
+                testsFile: t.File({
+                    type: 'application/json',
+                }),
+            }),
+            response: t.Union([
+                t.Null(),
+                t.Array(
+                    t.Object({
+                        input: t.Union([t.String(), t.Number(), t.Boolean()]),
+                        expected: t.Union([
+                            t.String(),
+                            t.Number(),
+                            t.Boolean(),
+                        ]),
+                    }),
+                ),
+            ]),
+        },
+    );
 
 try {
     await initAdmin();

@@ -10,6 +10,7 @@ import {
     ProblemUpdateError,
 } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
+import { isTestCasesFile } from './TestCasesService';
 
 export class ProblemService {
     private problemRepository = new ProblemRepository();
@@ -43,15 +44,10 @@ export class ProblemService {
 
     async createProblem(data: CreateProblemRequest, creatorId: number) {
         const newProblem = await this.problemRepository.createProblem({
-            name: data.name,
-            description: data.description,
+            ...data,
             creatorId,
-            prompt: data.prompt,
-            languageId: data.languageId,
-            tests: data.tests,
-            baseCode: data.baseCode,
-            activeAfter: data.activeAfter,
         });
+
         if (!newProblem) {
             throw new ProblemCreationError();
         }
@@ -93,14 +89,7 @@ export class ProblemService {
     async updateProblem(problemId: number, data: UpdateProblemRequest) {
         const updatedProblem = await this.problemRepository.updateProblemById(
             problemId,
-            {
-                name: data.name,
-                prompt: data.prompt,
-                languageId: data.languageId,
-                baseCode: data.baseCode,
-                tests: data.tests,
-                activeAfter: data.activeAfter,
-            },
+            data,
         );
         if (!updatedProblem) {
             throw new ProblemUpdateError(problemId);

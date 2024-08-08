@@ -12,6 +12,7 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { Datepicker } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
 import { TextInput } from "../inputs/TextInput.tsx";
+import { TestCasesFileUpload } from "./TestCasesFileUpload.tsx";
 
 interface ProblemEditorProps {
   problem?: Problem;
@@ -71,13 +72,13 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           }}
           markdown={newProblem.prompt}
         />
-        <TestCasesEditor
-          onChange={(value) => {
+        <TestCasesFileUpload
+          tests={newProblem.tests}
+          setTests={(tests) => {
             setNewProblem((prev) => {
-              return { ...prev, tests: value };
+              return { ...prev, tests };
             });
           }}
-          testCases={newProblem.tests}
         />
       </div>
       <div className="flex h-full w-1/2 flex-col justify-between gap-4">
@@ -105,31 +106,13 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
               setIsCreating(true);
               problem
                 ? apiClient.problems
-                    .update(problem.problemId, {
-                      name: newProblem.name,
-                      prompt: newProblem.prompt,
-                      description: newProblem.description,
-                      baseCode: newProblem.baseCode,
-                      languageId: newProblem.languageId,
-                      tests: newProblem.tests,
-                      activeAfter: newProblem.activeAfter,
-                    })
+                    .update(problem.problemId, newProblem)
                     .then(() => {
                       navigate("/problems");
                     })
-                : apiClient.problems
-                    .create({
-                      name: newProblem.name,
-                      prompt: newProblem.prompt,
-                      description: newProblem.description,
-                      baseCode: newProblem.baseCode,
-                      languageId: newProblem.languageId,
-                      tests: newProblem.tests,
-                      activeAfter: newProblem.activeAfter,
-                    })
-                    .then(() => {
-                      navigate("/problems");
-                    });
+                : apiClient.problems.create(newProblem).then(() => {
+                    navigate("/problems");
+                  });
             }}
           >
             {isCreating ? (

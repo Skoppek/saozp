@@ -6,6 +6,18 @@ interface Tests {
   tests: TestCase[];
 }
 
+const validateTests = async (file: FileList) =>
+  await edenClient.tests_validation
+    .post({
+      testsFile: file,
+    })
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
+
 const create = async (newProblem: NewProblem) =>
   await edenClient.problem.post(newProblem);
 
@@ -48,4 +60,5 @@ export default {
   get,
   update,
   remove,
+  validateTests,
 };

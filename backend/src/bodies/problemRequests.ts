@@ -17,22 +17,22 @@ const createProblemRequest = t.Object({
 
 export type CreateProblemRequest = Static<typeof createProblemRequest>;
 
-const updateProblemRequest = t.Object({
-    name: t.Optional(t.String()),
-    description: t.Optional(t.String()),
-    prompt: t.Optional(t.String()),
-    languageId: t.Optional(t.Number()),
-    baseCode: t.Optional(t.String()),
-    tests: t.Optional(
-        t.Array(
+const updateProblemRequest = t.Partial(
+    t.Object({
+        name: t.String(),
+        description: t.String(),
+        prompt: t.String(),
+        languageId: t.Number(),
+        baseCode: t.String(),
+        testsFile: t.Array(
             t.Object({
                 input: t.String(),
                 expected: t.String(),
             }),
         ),
-    ),
-    activeAfter: t.Optional(t.Date()),
-});
+        activeAfter: t.Date(),
+    }),
+);
 
 export type UpdateProblemRequest = Static<typeof updateProblemRequest>;
 

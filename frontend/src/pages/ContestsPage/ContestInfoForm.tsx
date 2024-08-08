@@ -38,7 +38,7 @@ export const ContestInfoForm = ({
       <MarkdownEditor
         onChange={(value) => setDescription(value)}
         label="Opis"
-        rows={4}
+        rows={8}
       />
       <div className="flex gap-4">
         <DateTimePicker

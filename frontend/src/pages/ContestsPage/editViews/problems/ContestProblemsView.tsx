@@ -88,8 +88,8 @@ export const ContestProblemsView = ({
             </div>
             <Table>
               <Table.Head>
-                <Table.HeadCell>Imię</Table.HeadCell>
-                <Table.HeadCell>Nazwisko</Table.HeadCell>
+                <Table.HeadCell>Nazwa</Table.HeadCell>
+                <Table.HeadCell>Język</Table.HeadCell>
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body>

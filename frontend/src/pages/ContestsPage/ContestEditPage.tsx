@@ -20,7 +20,7 @@ export const ContestEditPage = () => {
 
   return (
     <AuthenticatedPage>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mx-12">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           {contestId && (
             <div className="grid grid-cols-3 gap-4">

@@ -83,15 +83,23 @@ const removeParticipants = async (
   });
 
 const getProblems = async (contestId: number) =>
-  await edenClient.contest({ id: contestId }).problems.get();
+  await edenClient
+    .contest({ id: contestId })
+    .problems.get()
+    .then((res) => {
+      if (!res.data) {
+        throw new Error("Unexpected null in response.");
+      }
+      return res.data;
+    });
 
 const addProblems = async (
   contestId: number,
-  participantIds?: number[],
+  problemIds?: number[],
   bundleId?: number,
 ) =>
   await edenClient.contest({ id: contestId }).problems.put({
-    problemIds: participantIds,
+    problemIds: problemIds,
     bundleId: bundleId,
   });
 

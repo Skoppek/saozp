@@ -7,25 +7,25 @@ import { Checkbox } from "flowbite-react/components/Checkbox";
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
-import { Group } from "../../../../shared/interfaces/Group";
+import { Bundle } from "../../../../shared/interfaces/Bundle";
 
-interface AddGroupsModalProps {
+interface AddBundlesModalProps {
   contestId: number;
   show: boolean;
   onClose: () => void;
 }
 
-export const AddGroupsModal = ({
+export const AddBundlesModal = ({
   contestId,
   show,
   onClose,
-}: AddGroupsModalProps) => {
+}: AddBundlesModalProps) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["groups"],
-    queryFn: () => apiClient.groups.getAll(),
+    queryKey: ["bundles"],
+    queryFn: () => apiClient.bundles.getAll(),
   });
 
-  const [selected, setSelected] = useState<Group[]>([]);
+  const [selected, setSelected] = useState<Bundle[]>([]);
 
   useEffect(() => {
     refetch();
@@ -33,18 +33,14 @@ export const AddGroupsModal = ({
 
   return (
     <Modal show={show}>
-      <Modal.Header>Dodaj uczestników z grup</Modal.Header>
+      <Modal.Header>Dodaj zadania z paczek</Modal.Header>
       <Modal.Body>
         <Button
           color={"success"}
           onClick={() => {
             Promise.all(
-              selected.map((group) =>
-                apiClient.contests.addParticipants(
-                  contestId,
-                  undefined,
-                  group.id,
-                ),
+              selected.map((bundle) =>
+                apiClient.contests.addProblems(contestId, [], bundle.id),
               ),
             ).then(() => {
               onClose();
@@ -60,18 +56,18 @@ export const AddGroupsModal = ({
           </Table.Head>
           <Table.Body>
             {data && !isFetching ? (
-              data.map((group) => (
+              data.map((bundle) => (
                 <Table.Row>
-                  <Table.Cell>{group.name}</Table.Cell>
+                  <Table.Cell>{bundle.name}</Table.Cell>
                   <Table.Cell>
                     <Checkbox
                       onChange={() => {
-                        if (selected?.includes(group)) {
+                        if (selected?.includes(bundle)) {
                           setSelected((prev) =>
-                            prev.filter((item) => item != group),
+                            prev.filter((item) => item != bundle),
                           );
                         } else {
-                          setSelected((prev) => [...prev, group]);
+                          setSelected((prev) => [...prev, bundle]);
                         }
                       }}
                     />

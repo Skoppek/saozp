@@ -4,30 +4,34 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Checkbox } from "flowbite-react/components/Checkbox";
-import { Profile } from "../../../../shared/interfaces/Profile";
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
+import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
+import { Badge } from "flowbite-react/components/Badge";
+import { getLanguageById } from "../../../../shared/constansts";
 
-interface AddParticipantsModalProps {
+type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
+
+interface AddProblemsModalProps {
   contestId: number;
   show: boolean;
-  participants: Profile[];
+  problems: Problem[];
   onClose: () => void;
 }
 
-export const AddParticipantsModal = ({
+export const AddProblemsModal = ({
   contestId,
   show,
   onClose,
-  participants,
-}: AddParticipantsModalProps) => {
+  problems,
+}: AddProblemsModalProps) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["allUsers"],
-    queryFn: () => apiClient.groups.getAllUsers(),
+    queryKey: ["allProblems"],
+    queryFn: () => apiClient.problems.getAll(),
   });
 
-  const [selected, setSelected] = useState<Profile[]>([]);
+  const [selected, setSelected] = useState<Problem[]>([]);
 
   useEffect(() => {
     refetch();
@@ -35,15 +39,15 @@ export const AddParticipantsModal = ({
 
   return (
     <Modal show={show}>
-      <Modal.Header>Dodaj uczestników</Modal.Header>
+      <Modal.Header>Dodaj zadania</Modal.Header>
       <Modal.Body>
         <Button
           color={"success"}
           onClick={() =>
             apiClient.contests
-              .addParticipants(
+              .addProblems(
                 contestId,
-                selected.map((x) => x.userId),
+                selected.map((x) => x.problemId),
               )
               .then(() => {
                 onClose();
@@ -54,25 +58,29 @@ export const AddParticipantsModal = ({
         </Button>
         <Table>
           <Table.Head>
-            <Table.HeadCell>Imię</Table.HeadCell>
-            <Table.HeadCell>Nazwisko</Table.HeadCell>
+            <Table.HeadCell>Nazwa</Table.HeadCell>
+            <Table.HeadCell>Język</Table.HeadCell>
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>
             {data && !isFetching ? (
-              _.differenceBy(data, participants, "userId").map((user) => (
+              _.differenceBy(data, problems, "problemId").map((problem) => (
                 <Table.Row>
-                  <Table.Cell>{user.firstName}</Table.Cell>
-                  <Table.Cell>{user.lastName}</Table.Cell>
+                  <Table.Cell>{problem.name}</Table.Cell>
+                  <Table.Cell>
+                    <Badge className="w-fit">
+                      {getLanguageById(problem.languageId)?.name ?? "Nieznany"}
+                    </Badge>
+                  </Table.Cell>
                   <Table.Cell>
                     <Checkbox
                       onChange={() => {
-                        if (selected?.includes(user)) {
+                        if (selected?.includes(problem)) {
                           setSelected((prev) =>
-                            prev.filter((item) => item != user),
+                            prev.filter((item) => item != problem),
                           );
                         } else {
-                          setSelected((prev) => [...prev, user]);
+                          setSelected((prev) => [...prev, problem]);
                         }
                       }}
                     />

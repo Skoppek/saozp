@@ -4,6 +4,7 @@ import { mapIfPresent } from "../../shared/mapper";
 import { useMemo } from "react";
 import { ContestBaseView } from "./editViews/ContestBaseView";
 import { ContestParticipantsView } from "./editViews/participants/ContestParticipantsView";
+import { ContestProblemsView } from "./editViews/problems/ContestProblemsView";
 
 export const ContestEditPage = () => {
   const { id } = useParams();
@@ -25,7 +26,7 @@ export const ContestEditPage = () => {
             <div className="grid grid-cols-3 gap-4">
               <ContestBaseView contestId={contestId} />
               <ContestParticipantsView contestId={contestId} />
-              {/* <ContestProblemsView contestId={contestId} /> */}
+              <ContestProblemsView contestId={contestId} />
             </div>
           )}
         </div>

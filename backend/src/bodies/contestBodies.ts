@@ -19,10 +19,10 @@ const updateContestBody = t.Partial(
     }),
 );
 
-const problemIds = t.Partial(
+const problemsInfo = t.Partial(
     t.Object({
-        problemIds: t.Array(t.Number()),
         bundleId: t.Number(),
+        problemIds: t.Array(t.Number()),
     }),
 );
 
@@ -36,6 +36,6 @@ const usersIds = t.Partial(
 export const contestBodies = new Elysia().model({
     createContestBody,
     updateContestBody,
-    problemIds,
+    problemsInfo,
     usersIds,
 });

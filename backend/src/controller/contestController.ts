@@ -127,7 +127,7 @@ export default new Elysia({
                                 response: 'getContestProblemsResponse',
                             },
                         )
-                        .group('', { body: 'problemIds' }, (app) =>
+                        .group('', { body: 'problemsInfo' }, (app) =>
                             app
                                 .put(
                                     '',
@@ -136,15 +136,15 @@ export default new Elysia({
                                         body,
                                         params: { id },
                                     }) => {
-                                        if (body.problemIds)
-                                            await contestService.addProblemsToContest(
-                                                id,
-                                                body.problemIds,
-                                            );
                                         if (body.bundleId)
                                             await contestService.addBundleToContest(
                                                 id,
                                                 body.bundleId,
+                                            );
+                                        if (body.problemIds)
+                                            await contestService.addProblemsToContest(
+                                                id,
+                                                body.problemIds,
                                             );
                                     },
                                 )

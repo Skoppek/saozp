@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import { CodeEditor } from "../CodeEditor";
-import { TestCasesEditor } from "../TestCasesEditor";
 import { Card } from "flowbite-react/components/Card";
 import { Button } from "flowbite-react/components/Button";
 import { NewProblem } from "../../shared/interfaces/Problem";

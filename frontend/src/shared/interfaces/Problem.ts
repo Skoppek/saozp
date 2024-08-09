@@ -10,7 +10,7 @@ export interface Problem {
   prompt: string;
   baseCode: string;
   tests: TestCase[];
-  activeAfter: Date;
+  isContestsOnly?: boolean;
 }
 
 export interface ProblemFilter {
@@ -20,4 +20,6 @@ export interface ProblemFilter {
   isOwner?: boolean;
 }
 
-export type NewProblem = Omit<Problem, "problemId" | "creatorId">;
+export interface NewProblem extends Omit<Problem, "problemId" | "creatorId"> {
+  isContestsOnly: boolean;
+}

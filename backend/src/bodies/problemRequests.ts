@@ -12,7 +12,7 @@ const createProblemRequest = t.Object({
             expected: t.String(),
         }),
     ),
-    activeAfter: t.Date(),
+    isContestsOnly: t.Boolean(),
 });
 
 export type CreateProblemRequest = Static<typeof createProblemRequest>;
@@ -30,7 +30,7 @@ const updateProblemRequest = t.Partial(
                 expected: t.String(),
             }),
         ),
-        activeAfter: t.Date(),
+        isContestsOnly: t.Boolean(),
     }),
 );
 

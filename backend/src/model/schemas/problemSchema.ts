@@ -5,7 +5,6 @@ import {
     json,
     serial,
     text,
-    timestamp,
     varchar,
 } from 'drizzle-orm/pg-core/columns';
 import { userSchema } from './userSchema';
@@ -16,7 +15,7 @@ export const problemSchema = pgTable('problems', {
         .references(() => userSchema.id)
         .notNull(),
     name: varchar('name', { length: 128 }).notNull(),
-    description: varchar('description', { length: 512 }).notNull(),
+    description: varchar('description', { length: 1024 }).notNull(),
     prompt: text('prompt').notNull(),
     languageId: integer('language_id').notNull(),
     tests: json('tests')
@@ -28,7 +27,7 @@ export const problemSchema = pgTable('problems', {
         >()
         .notNull(),
     baseCode: text('base_code').notNull(),
-    activeAfter: timestamp('unlock_after').notNull().defaultNow(),
+    isContestsOnly: boolean('contests_only').notNull().default(false),
     isDeactivated: boolean('deactivated').notNull().default(false),
 });
 

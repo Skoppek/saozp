@@ -1,34 +1,32 @@
 import { useState } from "react";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
 import { CodeEditor } from "../CodeEditor";
-import { Card } from "flowbite-react/components/Card";
 import { Button } from "flowbite-react/components/Button";
 import { NewProblem } from "../../shared/interfaces/Problem";
 import { Problem } from "../../shared/interfaces/Problem";
 import { ALL_LANGUAGES, getLanguageById } from "../../shared/constansts";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { Datepicker } from "flowbite-react";
+import { ToggleSwitch } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
 import { TextInput } from "../inputs/TextInput.tsx";
 import { TestCasesFileUpload } from "./TestCasesFileUpload.tsx";
+import { LanguageId } from "../../shared/enums.ts";
 
 interface ProblemEditorProps {
   problem?: Problem;
 }
 
 export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
-  const [newProblem, setNewProblem] = useState<NewProblem>(
-    problem ?? {
-      name: "",
-      description: "",
-      baseCode: "",
-      prompt: "",
-      tests: [],
-      languageId: ALL_LANGUAGES[0].id,
-      activeAfter: new Date(),
-    },
-  );
+  const [newProblem, setNewProblem] = useState<NewProblem>({
+    name: problem?.name ?? "",
+    description: problem?.description ?? "",
+    baseCode: problem?.baseCode ?? "",
+    prompt: problem?.prompt ?? "",
+    tests: problem?.tests ?? [],
+    languageId: problem?.languageId ?? ALL_LANGUAGES[0].id,
+    isContestsOnly: problem?.isContestsOnly ?? false,
+  });
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -37,7 +35,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
   return (
     <div className="m-8 flex h-[75vh] flex-row gap-4">
       <div className="flex h-full w-1/2 flex-col gap-2">
-        <Card>
+        <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800">
           <div className="flex gap-4">
             <TextInput
               className="w-full"
@@ -62,15 +60,15 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
               value={newProblem.description}
             />
           </div>
-        </Card>
-        <MarkdownEditor
-          onChange={(value) => {
-            setNewProblem((prev) => {
-              return { ...prev, prompt: value };
-            });
-          }}
-          markdown={newProblem.prompt}
-        />
+          <MarkdownEditor
+            onChange={(value) => {
+              setNewProblem((prev) => {
+                return { ...prev, prompt: value };
+              });
+            }}
+            markdown={newProblem.prompt}
+          />
+        </div>
         <TestCasesFileUpload
           tests={newProblem.tests}
           setTests={(tests) => {
@@ -98,9 +96,28 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           chosenLanguage={getLanguageById(problem?.languageId ?? 0)}
           showEditTips={true}
         />
-        <div className="flex w-full gap-2">
+        <div className="flex flex-col w-full items-center gap-2">
+          <ToggleSwitch
+            label="Tylko do zawodów"
+            checked={!!newProblem.isContestsOnly}
+            onChange={() => {
+              setNewProblem((prev) => {
+                return {
+                  ...prev,
+                  isContestsOnly: !prev.isContestsOnly,
+                };
+              });
+            }}
+          />
           <Button
-            className="w-1/2"
+            className="w-full"
+            disabled={
+              !newProblem.baseCode.length ||
+              !newProblem.name.length ||
+              !newProblem.tests.length ||
+              !newProblem.prompt.length ||
+              newProblem.languageId === LanguageId.UNKNOWN
+            }
             onClick={() => {
               setIsCreating(true);
               problem
@@ -122,19 +139,6 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
               "Dodaj"
             )}
           </Button>
-          <Datepicker
-            id={"activeAfter"}
-            onSelectedDateChanged={(date) =>
-              setNewProblem((prev) => {
-                return { ...prev, activeAfter: date };
-              })
-            }
-            language="pl-pl"
-            showTodayButton={false}
-            labelClearButton="Dzisiaj"
-            className="w-1/2"
-            defaultDate={new Date(newProblem.activeAfter)}
-          />
         </div>
         {problem && (
           <Button

@@ -18,7 +18,7 @@ export default class ProblemRepository {
     }
 
     async getProblems() {
-        return db
+        const result = await db
             .select()
             .from(problemSchema)
             .innerJoin(
@@ -27,6 +27,13 @@ export default class ProblemRepository {
             )
             .innerJoin(userSchema, eq(problemSchema.creatorId, userSchema.id))
             .where(eq(problemSchema.isDeactivated, false));
+
+        return result.map((entry) => {
+            return {
+                ...entry.problems,
+                creator: entry.profiles,
+            };
+        });
     }
 
     async getProblemsOfBundle(bundleId: number) {
@@ -76,9 +83,10 @@ export default class ProblemRepository {
     async updateProblemById(problemId: number, problem: Partial<NewProblem>) {
         const result = await db
             .update(problemSchema)
-            .set({ ..._.omitBy(problem, (value) => _.isUndefined(value)) })
+            .set(_.omitBy(problem, (value) => _.isUndefined(value)))
             .where(eq(problemSchema.id, problemId))
             .returning();
+        console.log(result);
 
         return result.at(0);
     }

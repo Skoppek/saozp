@@ -27,9 +27,14 @@ export default new Elysia({
             body: 'createProblemRequest',
         },
     )
-    .get('', async ({ problemService }) => problemService.getProblemList(), {
-        response: 'problemListResponse',
-    })
+    .get(
+        '',
+        async ({ problemService, userId }) =>
+            problemService.getProblemList(userId),
+        {
+            response: 'problemListResponse',
+        },
+    )
     .group(
         '/:problemId',
         {
@@ -43,10 +48,12 @@ export default new Elysia({
                     '',
                     async ({
                         problemService,
+                        userId,
                         params: { problemId },
                         query: { solve },
                     }) =>
                         await problemService.getProblemDetails(
+                            userId,
                             problemId,
                             solve === 'true',
                         ),
@@ -69,6 +76,5 @@ export default new Elysia({
                     '',
                     async ({ problemService, params: { problemId } }) =>
                         await problemService.deleteProblem(problemId),
-                    {},
                 ),
     );

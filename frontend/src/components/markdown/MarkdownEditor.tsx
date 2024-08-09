@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
-import { Label } from "flowbite-react/components/Label";
 import { MarkdownCard } from "./MarkdownCard";
 import { Textarea } from "flowbite-react/components/Textarea";
 import { ClassName } from "../../shared/interfaces/ClassName";
+import { Label } from "flowbite-react/components/Label";
 
 interface MarkdownEditorProps extends ClassName {
   markdown?: string;
@@ -23,7 +23,7 @@ export const MarkdownEditor = ({
   const [showPreview, setShowPreview] = useState(false);
   const [value, setMarkdown] = useState<string>(markdown ?? "");
   return (
-    <div className="flex flex-col gap-1 rounded-lg border border-gray-200 bg-white p-6 shadow-md dark:border-gray-700 dark:bg-gray-800">
+    <div>
       {!displayOnly && (
         <div className="mb-2 flex flex-row justify-between">
           <Label value={label ?? "Treść zadania"} />

@@ -33,15 +33,6 @@ export class ProblemService {
         );
     }
 
-    private getCreator(user: User, profile: Profile) {
-        return {
-            userId: user.id,
-            login: user.login,
-            firstName: profile.firstName,
-            lastName: profile.lastName,
-        };
-    }
-
     async createProblem(data: CreateProblemRequest, creatorId: number) {
         const newProblem = await this.problemRepository.createProblem({
             ...data,
@@ -53,23 +44,39 @@ export class ProblemService {
         }
     }
 
-    async getProblemList() {
+    async getProblemList(userId: number) {
         return (await this.problemRepository.getProblems())
-            .filter((problem) => !problem.problems.isDeactivated)
+            .filter((problem) => {
+                if (problem.creatorId == userId) {
+                    return true;
+                }
+                console.log(problem);
+
+                return !problem.isContestsOnly;
+            })
+            .filter((problem) => !problem.isDeactivated)
             .map((problem) => {
                 return {
-                    problemId: problem.problems.id,
-                    name: problem.problems.name,
-                    description: problem.problems.description,
-                    languageId: problem.problems.languageId,
-                    creator: this.getCreator(problem.users, problem.profiles),
-                    activeAfter: problem.problems.activeAfter,
+                    problemId: problem.id,
+                    name: problem.name,
+                    description: problem.description,
+                    languageId: problem.languageId,
+                    creator: problem.creator,
+                    contestsOnly: problem.isContestsOnly ? true : undefined,
                 };
             });
     }
 
-    async getProblemDetails(problemId: number, isForSolving: boolean) {
+    async getProblemDetails(
+        userId: number,
+        problemId: number,
+        isForSolving: boolean,
+    ) {
         const problem = await this.fetchProblem(problemId);
+
+        if (problem.isContestsOnly && userId != problem.creatorId) {
+            throw new ProblemNotFoundError(problemId);
+        }
 
         return {
             problemId: problem.id,
@@ -82,7 +89,7 @@ export class ProblemService {
                 : problem.baseCode,
             creatorId: problem.creatorId,
             tests: problem.tests,
-            activeAfter: problem.activeAfter,
+            isContestsOnly: problem.isContestsOnly ? true : undefined,
         };
     }
 

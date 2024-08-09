@@ -2,7 +2,6 @@ import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { Badge } from "flowbite-react/components/Badge";
 import { LinkButton } from "../LinkButton";
 import { getLanguageById } from "../../shared/constansts";
-import { useMemo } from "react";
 
 interface ProblemCardProps {
   problem: ProblemEntry;
@@ -10,11 +9,6 @@ interface ProblemCardProps {
 }
 
 export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
-  const isActive = useMemo<boolean>(
-    () => new Date(problem.activeAfter) < new Date(),
-    [problem.activeAfter],
-  );
-
   return (
     <div className="flex w-full justify-between gap-2 rounded-md bg-sky-500/20 p-4 dark:bg-sky-950">
       <div className="flex items-center gap-4">
@@ -28,7 +22,7 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
           {problem.description}
         </div>
         <div className="flex gap-2">
-          {(isOwner || isActive) && (
+          {isOwner && (
             <LinkButton
               to={`/problems/solve/${problem.problemId}`}
               buttonProps={{ color: "success", size: "xs" }}
@@ -51,9 +45,6 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
           )}
         </div>
       </div>
-      {!isActive && (
-        <div>{`Aktywne od ${new Date(problem.activeAfter).toLocaleDateString()}`}</div>
-      )}
       <div className="flex items-end gap-4">
         <div className="italic">{`${problem.creator.firstName} ${problem.creator.lastName}`}</div>
       </div>

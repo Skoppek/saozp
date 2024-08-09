@@ -8,11 +8,10 @@ const problemListResponse = t.Array(
         languageId: t.Number(),
         creator: t.Object({
             userId: t.Number(),
-            login: t.String(),
             firstName: t.String(),
             lastName: t.String(),
         }),
-        activeAfter: t.Date(),
+        isContestsOnly: t.Optional(t.Boolean()),
     }),
 );
 
@@ -30,7 +29,7 @@ const problemDetailsResponse = t.Object({
             expected: t.String(),
         }),
     ),
-    activeAfter: t.Date(),
+    isContestsOnly: t.Optional(t.Boolean()),
 });
 
 export const problemResponses = new Elysia().model({

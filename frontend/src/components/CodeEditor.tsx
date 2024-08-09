@@ -32,7 +32,7 @@ export const CodeEditor = ({
 
   return (
     <div className={className}>
-      <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="flex w-full items-center justify-between gap-4">
           {Array.isArray(languages) ? (
             <LanguageSelect

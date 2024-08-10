@@ -1,10 +1,10 @@
 import { ProblemEditor } from "../components/problems/ProblemEditor";
-import { AuthenticatedPage } from "./AuthenticatedPage";
+import { UserLoggedCheck } from "../checks/UserLoggedCheck";
 
 export const ProblemCreatePage = () => {
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <ProblemEditor />
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

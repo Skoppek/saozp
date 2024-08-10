@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ProblemEditor } from "../components/problems/ProblemEditor";
-import { AuthenticatedPage } from "./AuthenticatedPage";
+import { UserLoggedCheck } from "../checks/UserLoggedCheck.tsx";
 import { useEffect, useState } from "react";
 import { Problem } from "../shared/interfaces/Problem";
 import { Spinner } from "flowbite-react/components/Spinner";
@@ -35,12 +35,12 @@ export const ProblemEditPage = () => {
   }, [id, navigate, problem, problem?.creatorId]);
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       {problem ? (
         <ProblemEditor problem={problem} />
       ) : (
         <Spinner aria-label="Extra large spinner" size="xl" />
       )}
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ProblemFilter } from "../shared/interfaces/Problem";
 import { ProblemEntry } from "../shared/interfaces/ProblemEntry";
-import { AuthenticatedPage } from "./AuthenticatedPage";
+import { UserLoggedCheck } from "../checks/UserLoggedCheck.tsx";
 import { ProblemsGallery } from "../components/problems/ProblemsGallery";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { LanguageSelect } from "../components/inputs/LanguageSelect.tsx";
@@ -22,7 +22,7 @@ export const ProblemsPage = () => {
   }, []);
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex items-end justify-center gap-4">
           <LinkButton label="Stwórz nowe zadanie" to="/problems/create" />
@@ -73,6 +73,6 @@ export const ProblemsPage = () => {
           <Spinner aria-label="Extra large spinner" size="xl" />
         )}
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

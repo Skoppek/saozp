@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AuthenticatedPage } from "../AuthenticatedPage.tsx";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import apiClient from "../../client/apiClient.ts";
 import { Table } from "flowbite-react/components/Table";
 import { Button, ListGroup, Popover, Spinner } from "flowbite-react";
@@ -26,7 +26,7 @@ export const ContestsPage = () => {
   });
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           <div className="flex flex-col gap-4">
@@ -113,6 +113,6 @@ export const ContestsPage = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

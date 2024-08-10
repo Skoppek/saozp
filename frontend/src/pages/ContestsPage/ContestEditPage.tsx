@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { AuthenticatedPage } from "../AuthenticatedPage";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck";
 import { mapIfPresent } from "../../shared/mapper";
 import { useMemo } from "react";
 import { ContestBaseView } from "./editViews/ContestBaseView";
@@ -19,7 +19,7 @@ export const ContestEditPage = () => {
   }, [id]);
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="flex flex-col gap-4 mx-12">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           {contestId && (
@@ -31,6 +31,6 @@ export const ContestEditPage = () => {
           )}
         </div>
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ProblemFilter } from "../shared/interfaces/Problem";
 import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
 import { Problem } from "../shared/interfaces/Problem";
-import { AuthenticatedPage } from "./AuthenticatedPage";
+import { UserLoggedCheck } from "../checks/UserLoggedCheck.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { StatsAccordion } from "../components/StatsAccordion";
 import { Label } from "flowbite-react/components/Label";
@@ -39,7 +39,7 @@ export const ProblemStatsPage = () => {
   }, [id, navigate]);
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="mt-4 flex w-full flex-col items-center">
         <div className="text-6xl">{problem?.name}</div>
         <div>{problem?.description}</div>
@@ -100,6 +100,6 @@ export const ProblemStatsPage = () => {
           )
           .map((submission) => <StatsAccordion submission={submission} />)}
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

@@ -6,13 +6,13 @@ import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { Submission } from "../../shared/interfaces/Submission";
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
-import { TestPanelStats } from "../TestPanelStats";
-import { TestResultList } from "../TestResultList";
+import { TestResultList } from "./TestResultList.tsx";
 import { ResultPanelTitle } from "./ResultPanelTitle";
 import { CodeEditor } from "../CodeEditor";
 import { getLanguageById } from "../../shared/constansts";
 import { Spinner } from "flowbite-react/components/Spinner";
 import apiClient from "../../client/apiClient.ts";
+import { TestPanelStats } from "../testCases/TestPanelStats.tsx";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;

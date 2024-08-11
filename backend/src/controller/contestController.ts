@@ -36,7 +36,7 @@ export default new Elysia({
             await contestService.getContestList(query),
         {
             response: 'getContestListResponse',
-            query: 'submissionListQuery',
+            query: 'contestListQuery',
         },
     )
     .use(idParam)

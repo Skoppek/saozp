@@ -3,14 +3,15 @@ import { ContestsPage } from "./pages/ContestsPage/ContestsPage";
 import { ContestEditPage } from "./pages/ContestsPage/ContestEditPage";
 import { GroupsPage } from "./pages/GroupsPage/GroupsPage";
 import { BundlePage } from "./pages/BundlesPage/BundlePage";
-import { ProblemsPage } from "./pages/ProblemsPage";
-import { ProblemCreatePage } from "./pages/ProblemCreatePage";
-import { ProblemEditPage } from "./pages/ProblemEditPage";
-import { ProblemStatsPage } from "./pages/ProblemsStatsPage";
-import { SolvingPage } from "./pages/SolvingPage";
+import { ProblemsPage } from "./pages/ProblemPage/ProblemsPage";
+import { ProblemCreatePage } from "./pages/ProblemPage/ProblemCreatePage";
+import { ProblemEditPage } from "./pages/ProblemPage/ProblemEditPage";
+import { ProblemStatsPage } from "./pages/ProblemPage/ProblemsStatsPage";
+import { SolvingPage } from "./pages/ProblemPage/SolvingPage";
 import { AdminAuthenticatedPage } from "./pages/AdminPages/AdminAuthenticatedPage";
 import { AdminPage } from "./pages/AdminPages/AdminPage";
 import { Root } from "./pages/Root";
+import { ParticipantSection } from "./pages/ContestsPage/ParticipantSection";
 
 export default createBrowserRouter([
   {
@@ -18,8 +19,12 @@ export default createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: "/contests",
+        path: "/contests/my",
         element: <ContestsPage />,
+      },
+      {
+        path: "/contests",
+        element: <ParticipantSection />,
       },
       {
         path: "/contests/:id/edit",

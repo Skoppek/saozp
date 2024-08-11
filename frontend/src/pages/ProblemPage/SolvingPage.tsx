@@ -1,13 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { UserLoggedCheck } from "../checks/UserLoggedCheck.tsx";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { useEffect, useState } from "react";
-import { Problem } from "../shared/interfaces/Problem";
-import { SolvingEditor } from "../components/SolvingEditor";
+import { Problem } from "../../shared/interfaces/Problem.ts";
+import { SolvingEditor } from "../../components/SolvingEditor.tsx";
 import { Spinner } from "flowbite-react/components/Spinner";
-import apiClient from "../client/apiClient.ts";
+import apiClient from "../../client/apiClient.ts";
+import { useParam } from "../../shared/useParam.tsx";
 
 export const SolvingPage = () => {
   const { problemId, contestId } = useParams();
+  const { value } = useParam({ param: contestId, type: "string" });
   const navigate = useNavigate();
   const [problem, setProblem] = useState<Problem>();
 
@@ -25,7 +27,10 @@ export const SolvingPage = () => {
     <UserLoggedCheck>
       <div className="h-[79vh]">
         {problem ? (
-          <SolvingEditor problem={problem} />
+          <SolvingEditor
+            problem={problem}
+            contestId={typeof value === "number" ? value : undefined}
+          />
         ) : (
           <Spinner aria-label="Extra large spinner" size="xl" />
         )}

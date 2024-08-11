@@ -6,10 +6,10 @@ import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useContext, useState } from "react";
 import { Button, Spinner } from "flowbite-react";
 import { ResultDrawer } from "./results/ResultDrawer";
-import { TestCasesEditor } from "./TestCasesEditor";
 import apiClient from "../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../pages/Root.tsx";
+import { TestCasesEditor } from "./testCases/TestCasesEditor.tsx";
 
 interface SolvingEditorProps {
   problem: Problem;
@@ -29,7 +29,7 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
     queryFn: () =>
       apiClient.submissions.getMany({
         problemId: problem.problemId,
-        userId: authContext?.id,
+        userId: authContext?.user?.userId,
       }),
   });
 

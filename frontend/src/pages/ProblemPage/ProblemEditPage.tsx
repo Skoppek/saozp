@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { ProblemEditor } from "../components/problems/ProblemEditor";
-import { UserLoggedCheck } from "../checks/UserLoggedCheck.tsx";
+import { ProblemEditor } from "../../components/problems/ProblemEditor.tsx";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { useEffect, useState } from "react";
-import { Problem } from "../shared/interfaces/Problem";
+import { Problem } from "../../shared/interfaces/Problem.ts";
 import { Spinner } from "flowbite-react/components/Spinner";
-import apiClient from "../client/apiClient.ts";
+import apiClient from "../../client/apiClient.ts";
 
 export const ProblemEditPage = () => {
   const { id } = useParams();

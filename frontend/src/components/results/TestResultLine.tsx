@@ -1,6 +1,6 @@
 import { Badge } from "flowbite-react/components/Badge";
-import { TestCaseResult } from "../shared/interfaces/TestCaseResult";
-import { TestStatus } from "../shared/enums";
+import { TestCaseResult } from "../../shared/interfaces/TestCaseResult";
+import { TestStatus } from "../../shared/enums";
 import { useMemo } from "react";
 import { HiOutlineArrowRight } from "react-icons/hi";
 

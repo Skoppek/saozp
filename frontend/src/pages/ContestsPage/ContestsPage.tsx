@@ -21,8 +21,10 @@ export const ContestsPage = () => {
   const navigate = useNavigate();
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["allContests"],
-    queryFn: () => apiClient.contests.getAll({ ownerId: authContext?.id }),
+    queryKey: ["allContests", authContext?.user?.userId],
+    queryFn: () =>
+      apiClient.contests.getAll({ ownerId: authContext?.user?.userId }),
+    enabled: !!authContext?.user?.userId,
   });
 
   return (

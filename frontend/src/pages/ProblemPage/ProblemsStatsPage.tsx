@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { ProblemFilter } from "../shared/interfaces/Problem";
-import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
-import { Problem } from "../shared/interfaces/Problem";
-import { UserLoggedCheck } from "../checks/UserLoggedCheck.tsx";
+import { ProblemFilter } from "../../shared/interfaces/Problem.ts";
+import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry.ts";
+import { Problem } from "../../shared/interfaces/Problem.ts";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { StatsAccordion } from "../components/StatsAccordion";
-import { Label } from "flowbite-react/components/Label";
 import { Datepicker } from "flowbite-react/components/Datepicker";
-import apiClient from "../client/apiClient.ts";
-import { TextInput } from "../components/inputs/TextInput.tsx";
+import apiClient from "../../client/apiClient.ts";
+import { TextInput } from "../../components/inputs/TextInput.tsx";
+import { Label } from "flowbite-react/components/Label";
+import { StatsAccordion } from "../../components/results/StatsAccordion.tsx";
 
 export const ProblemStatsPage = () => {
   const { id } = useParams();

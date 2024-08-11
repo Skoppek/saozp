@@ -1,7 +1,7 @@
 import { Badge } from "flowbite-react/components/Badge";
-import { TestStatus } from "../shared/enums";
 import { useMemo } from "react";
-import { Submission } from "../shared/interfaces/Submission";
+import { Submission } from "../../shared/interfaces/Submission";
+import { TestStatus } from "../../shared/enums";
 
 interface TestPanelStatsProps {
   submission: Submission;

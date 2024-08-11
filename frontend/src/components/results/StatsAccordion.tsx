@@ -2,15 +2,15 @@ import {
   Accordion,
   AccordionContent,
 } from "flowbite-react/components/Accordion";
-import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
-import { Submission } from "../shared/interfaces/Submission";
+import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry.ts";
+import { Submission } from "../../shared/interfaces/Submission.ts";
 import { useEffect, useState } from "react";
-import { CodeEditor } from "./CodeEditor";
-import { getLanguageById } from "../shared/constansts";
-import { TestPanelStats } from "./TestPanelStats";
-import { TestResultList } from "./TestResultList";
-import { ResultPanelTitle } from "./results/ResultPanelTitle";
-import apiClient from "../client/apiClient.ts";
+import { CodeEditor } from "../CodeEditor.tsx";
+import { getLanguageById } from "../../shared/constansts.ts";
+import { TestResultList } from "../results/TestResultList.tsx";
+import { ResultPanelTitle } from "../results/ResultPanelTitle.tsx";
+import apiClient from "../../client/apiClient.ts";
+import { TestPanelStats } from "../testCases/TestPanelStats.tsx";
 
 interface StatsAccordionProps {
   submission: SubmissionEntry;

@@ -14,16 +14,16 @@ export const UserLoggedCheck = ({ children }: CheckInterface) => {
     apiClient.auth
       .getLoggedUser()
       .then((loggedUser) => {
-        authContext?.setIsLogged(!!loggedUser);
         if (!loggedUser) {
           throw new Error("User not authenticated.");
         }
+        authContext?.setUser(loggedUser);
         setPageReady(true);
       })
       .catch(() => {
         navigate("/");
       });
-  }, [authContext, navigate]);
+  }, []);
 
   return (
     <>
@@ -31,7 +31,7 @@ export const UserLoggedCheck = ({ children }: CheckInterface) => {
         <>{children}</>
       ) : (
         <div className="grid h-screen w-screen place-content-center">
-          <Spinner aria-label="Extra large spinner" size="xl" />
+          <Spinner />
         </div>
       )}
     </>

@@ -24,7 +24,7 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
         <div className="flex gap-2">
           {isOwner && (
             <LinkButton
-              to={`/problems/solve/${problem.problemId}`}
+              to={`/problems/${problem.problemId}/solve`}
               buttonProps={{ color: "success", size: "xs" }}
               label="Rozwiąż"
             />

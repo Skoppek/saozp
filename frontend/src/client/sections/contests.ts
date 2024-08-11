@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { mapIfPresent } from "../../shared/mapper.ts";
 import edenClient from "../edenClient.ts";
 
@@ -24,10 +25,13 @@ const getAll = async ({
 }) =>
   await edenClient.contest
     .get({
-      query: {
-        participantId: mapIfPresent(participantId, (a) => a.toString()),
-        ownerId: mapIfPresent(ownerId, (a) => a.toString()),
-      },
+      query: _.omitBy(
+        {
+          participantId: mapIfPresent(participantId, (a) => a.toString()),
+          ownerId: mapIfPresent(ownerId, (a) => a.toString()),
+        },
+        (v) => v === undefined,
+      ),
     })
     .then((res) => {
       if (!res.data) {

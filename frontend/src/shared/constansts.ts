@@ -63,3 +63,5 @@ export const PROBLEM_PROMPT_LENGTH_LIMIT = 10_000;
 
 export const TEST_INPUT_LENGTH_LIMIT = 64;
 export const TEST_EXPECTED_VALUE_LENGTH_LIMIT = 64;
+
+export const dateTimeFormat = "DD.MM.YYYY - HH:mm";

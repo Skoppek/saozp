@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
-import { Accordion, Button, Spinner } from "flowbite-react";
+import { Accordion, Spinner } from "flowbite-react";
 import { ParticipantsSubmissions } from "./ParticipantSubmissions";
 import { LinkButton } from "../../components/LinkButton";
 

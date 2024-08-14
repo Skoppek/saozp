@@ -8,6 +8,8 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { Button } from "flowbite-react/components/Button";
 import { HiChevronRight } from "react-icons/hi";
 import { ParticipantProblemsList } from "./ParticipantProblemsList";
+import moment from "moment";
+import { dateTimeFormat } from "../../shared/constansts";
 
 export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);
@@ -39,9 +41,11 @@ export const ParticipantPage = () => {
                   <Table.Row id={index.toString()}>
                     <Table.Cell>{contest.name}</Table.Cell>
                     <Table.Cell>
-                      {contest.startDate.toLocaleString()}
+                      {moment(contest.startDate).format(dateTimeFormat)}
                     </Table.Cell>
-                    <Table.Cell>{contest.endDate.toLocaleString()}</Table.Cell>
+                    <Table.Cell>
+                      {moment(contest.endDate).format(dateTimeFormat)}
+                    </Table.Cell>
                     <Table.Cell>
                       {[contest.owner.firstName, contest.owner.lastName].join(
                         " ",

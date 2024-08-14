@@ -90,6 +90,7 @@ export const ContestProblemsView = ({
               <Table.Head>
                 <Table.HeadCell>Nazwa</Table.HeadCell>
                 <Table.HeadCell>Język</Table.HeadCell>
+                <Table.HeadCell>Twórca</Table.HeadCell>
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body>
@@ -101,6 +102,12 @@ export const ContestProblemsView = ({
                         {getLanguageById(problem.languageId)?.name ??
                           "Nieznany"}
                       </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {[
+                        problem.creator.firstName,
+                        problem.creator.lastName,
+                      ].join(" ")}
                     </Table.Cell>
                     <Table.Cell>
                       <Checkbox

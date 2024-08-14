@@ -9,7 +9,7 @@ import { useParam } from "../../shared/useParam.tsx";
 
 export const SolvingPage = () => {
   const { problemId, contestId } = useParams();
-  const { value } = useParam({ param: contestId, type: "string" });
+  const { value } = useParam({ param: contestId, type: "number" });
   const navigate = useNavigate();
   const [problem, setProblem] = useState<Problem>();
 

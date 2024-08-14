@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
-import { Accordion, Spinner } from "flowbite-react";
+import { Accordion, Button, Spinner } from "flowbite-react";
+import { ParticipantsSubmissions } from "./ParticipantSubmissions";
+import { LinkButton } from "../../components/LinkButton";
 
 interface ParticipantProblemsListProps {
   contestId: number;
@@ -20,8 +22,22 @@ export const ParticipantProblemsList = ({
         <Accordion className="w-[500px]">
           {data?.map((problem, index) => (
             <Accordion.Panel id={index.toString()}>
-              <Accordion.Title>{problem.name}</Accordion.Title>
-              <Accordion.Content></Accordion.Content>
+              <Accordion.Title>
+                <div className="flex justify-between w-[400px]">
+                  <div>{problem.name}</div>
+                  <LinkButton
+                    to={`/contests/${contestId}/problem/${problem.problemId}`}
+                    label="Rozwiąż"
+                    buttonProps={{ size: "xs" }}
+                  />
+                </div>
+              </Accordion.Title>
+              <Accordion.Content>
+                <ParticipantsSubmissions
+                  problemId={problem.problemId}
+                  contestId={contestId}
+                />
+              </Accordion.Content>
             </Accordion.Panel>
           ))}
         </Accordion>

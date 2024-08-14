@@ -30,6 +30,7 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
       apiClient.submissions.getMany({
         problemId: problem.problemId,
         userId: authContext?.user?.userId,
+        contestId,
       }),
   });
 

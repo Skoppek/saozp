@@ -3,8 +3,7 @@ import {
   AccordionContent,
 } from "flowbite-react/components/Accordion";
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry.ts";
-import { Submission } from "../../shared/interfaces/Submission.ts";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CodeEditor } from "../CodeEditor.tsx";
 import { getLanguageById } from "../../shared/constansts.ts";
 import { TestResultList } from "../results/TestResultList.tsx";

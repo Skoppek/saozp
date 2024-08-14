@@ -1,5 +1,6 @@
 import { Elysia, Static, t } from 'elysia';
 import { mapIfPresent } from '../shared/mapper';
+import _ from 'lodash';
 
 const submissionListQuery = t.Object({
     userId: t.Optional(t.String()),

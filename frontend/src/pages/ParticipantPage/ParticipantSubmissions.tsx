@@ -28,19 +28,23 @@ export const ParticipantsSubmissions = ({
 
   return (
     <>
-      {data && isFetching ? (
-        <Table>
-          <TableBody>
-            {data.map((submission, index) => (
-              <Table.Row id={index.toString()}>
-                <Table.Cell>
-                  {submission.createdAt?.toLocaleString() ?? ""}
-                </Table.Cell>
-								<Table.Cell>{submission.}</Table.Cell>
-              </Table.Row>
-            ))}
-          </TableBody>
-        </Table>
+      {data && !isFetching ? (
+        !!data.length ? (
+          <Table>
+            <TableBody>
+              {data.map((submission, index) => (
+                <Table.Row id={index.toString()}>
+                  <Table.Cell>
+                    {submission.createdAt?.toLocaleString() ?? ""}
+                  </Table.Cell>
+                  {/* <Table.Cell>{submission.}</Table.Cell> */}
+                </Table.Row>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <>Such empty</>
+        )
       ) : (
         <Spinner />
       )}

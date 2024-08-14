@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa";
 import { HiOutlineTrash, HiOutlineArrowRight } from "react-icons/hi";
 import { HiPencilAlt } from "react-icons/hi";
 import { TestCase } from "../../shared/interfaces/TestCase";
-import { TextInput } from "../inputs/TextInput";
+import { TextInput } from "../../components/inputs/TextInput";
 
 interface TestCasesEditorProps {
   testCases?: TestCase[];

@@ -1,6 +1,7 @@
 import edenClient from "../edenClient.ts";
 import { TestCase } from "../../shared/interfaces/TestCase.ts";
 import { mapIfPresent } from "../../shared/mapper.ts";
+import _ from "lodash";
 
 interface SubmissionQuery {
   userId?: number;
@@ -23,12 +24,15 @@ const submit = async (newSubmission: NewSubmission) =>
 const getMany = async (query: SubmissionQuery) =>
   await edenClient.submission
     .get({
-      query: {
-        userId: mapIfPresent(query.userId, (id) => id.toString()),
-        problemId: mapIfPresent(query.problemId, (id) => id.toString()),
-        contestId: mapIfPresent(query.contestId, (id) => id.toString()),
-        commitsOnly: mapIfPresent(query.commitsOnly, (a) => a.toString()),
-      },
+      query: _.omitBy(
+        {
+          userId: mapIfPresent(query.userId, (id) => id.toString()),
+          problemId: mapIfPresent(query.problemId, (id) => id.toString()),
+          contestId: mapIfPresent(query.contestId, (id) => id.toString()),
+          commitsOnly: mapIfPresent(query.commitsOnly, (a) => a.toString()),
+        },
+        (x) => x == undefined,
+      ),
     })
     .then((res) => {
       if (!res.data) {

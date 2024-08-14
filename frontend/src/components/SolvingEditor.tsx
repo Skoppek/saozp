@@ -9,7 +9,7 @@ import { ResultDrawer } from "./results/ResultDrawer";
 import apiClient from "../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../pages/Root.tsx";
-import { TestCasesEditor } from "./testCases/TestCasesEditor.tsx";
+import { TestCasesEditor } from "../pages/ProblemPage/TestCasesEditor.tsx";
 
 interface SolvingEditorProps {
   problem: Problem;

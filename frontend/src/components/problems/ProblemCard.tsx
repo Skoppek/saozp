@@ -22,13 +22,11 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
           {problem.description}
         </div>
         <div className="flex gap-2">
-          {isOwner && (
-            <LinkButton
-              to={`/problems/${problem.problemId}/solve`}
-              buttonProps={{ color: "success", size: "xs" }}
-              label="Rozwiąż"
-            />
-          )}
+          <LinkButton
+            to={`/problems/${problem.problemId}/solve`}
+            buttonProps={{ color: "success", size: "xs" }}
+            label="Rozwiąż"
+          />
           {isOwner && (
             <>
               <LinkButton

@@ -45,8 +45,6 @@ export const Navigation = () => {
     });
   }, [navigate]);
 
-  console.log(user);
-
   return (
     <>
       <Navbar fluid className="bg-sky-600 dark:bg-slate-700 dark:text-white">

@@ -9,7 +9,6 @@ interface TestPanelStatsProps {
 
 export const TestPanelStats = ({ submission }: TestPanelStatsProps) => {
   const efficiency = useMemo(() => {
-    if (!submission) return 0;
     const tests = submission.result.tests;
     if (!tests.length) return 0;
     return (

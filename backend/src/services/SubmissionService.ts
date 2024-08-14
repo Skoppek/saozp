@@ -142,7 +142,7 @@ export class SubmissionService {
                         firstName: submission.creator?.firstName ?? '',
                         lastName: submission.creator?.lastName ?? '',
                     },
-                    createdAt: submission.createdAt?.toLocaleString(),
+                    createdAt: submission.createdAt ?? undefined,
                     status: this.reduceToStatus(
                         results.map((result) => result.status.id),
                     ),

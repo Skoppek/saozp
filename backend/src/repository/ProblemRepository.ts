@@ -86,7 +86,6 @@ export default class ProblemRepository {
             .set(_.omitBy(problem, (value) => _.isUndefined(value)))
             .where(eq(problemSchema.id, problemId))
             .returning();
-        console.log(result);
 
         return result.at(0);
     }

@@ -16,7 +16,9 @@ export const ResultPanelTitle = ({
 }: ResultPanelTitleProps) => {
   return (
     <div className="flex gap-8">
-      {submission.createdAt ?? ""}
+      {submission.createdAt && (
+        <>{new Date(submission.createdAt).toLocaleString()}</>
+      )}
       <Badge
         size={"sm"}
         color={STATUS_COLORS[submission.status?.id ?? TestStatus.UNKNOWN]}

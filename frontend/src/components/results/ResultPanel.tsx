@@ -12,7 +12,7 @@ import { CodeEditor } from "../CodeEditor";
 import { getLanguageById } from "../../shared/constansts";
 import { Spinner } from "flowbite-react/components/Spinner";
 import apiClient from "../../client/apiClient.ts";
-import { TestPanelStats } from "../testCases/TestPanelStats.tsx";
+import { TestPanelStats } from "./TestPanelStats.tsx";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;

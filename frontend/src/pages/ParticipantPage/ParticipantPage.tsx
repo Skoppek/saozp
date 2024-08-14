@@ -1,13 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck";
 import apiClient from "../../client/apiClient";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../Root";
 import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
+import { Button } from "flowbite-react/components/Button";
+import { HiChevronRight } from "react-icons/hi";
+import { ParticipantProblemsList } from "./ParticipantProblemsList";
 
-export const ParticipantSection = () => {
+export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);
+
+  const [contestId, setContestId] = useState<number | undefined>();
 
   const { data, isFetching } = useQuery({
     queryKey: ["participantContests"],
@@ -27,6 +32,7 @@ export const ParticipantSection = () => {
                 <Table.HeadCell>Start</Table.HeadCell>
                 <Table.HeadCell>Koniec</Table.HeadCell>
                 <Table.HeadCell>Organizator</Table.HeadCell>
+                <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body>
                 {data.map((contest, index) => (
@@ -41,6 +47,11 @@ export const ParticipantSection = () => {
                         " ",
                       )}
                     </Table.Cell>
+                    <Table.Cell>
+                      <Button onClick={() => setContestId(contest.id)}>
+                        <HiChevronRight />
+                      </Button>
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
@@ -48,6 +59,7 @@ export const ParticipantSection = () => {
           ) : (
             <Spinner />
           )}
+          {contestId && <ParticipantProblemsList contestId={contestId} />}
         </div>
       </div>
     </UserLoggedCheck>

@@ -11,7 +11,7 @@ import { SolvingPage } from "./pages/ProblemPage/SolvingPage";
 import { AdminAuthenticatedPage } from "./pages/AdminPages/AdminAuthenticatedPage";
 import { AdminPage } from "./pages/AdminPages/AdminPage";
 import { Root } from "./pages/Root";
-import { ParticipantSection } from "./pages/ContestsPage/ParticipantSection";
+import { ParticipantPage } from "./pages/ParticipantPage/ParticipantPage";
 
 export default createBrowserRouter([
   {
@@ -24,7 +24,7 @@ export default createBrowserRouter([
       },
       {
         path: "/contests",
-        element: <ParticipantSection />,
+        element: <ParticipantPage />,
       },
       {
         path: "/contests/:id/edit",

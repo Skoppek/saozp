@@ -1,14 +1,11 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { AuthContext } from "./Root";
+import { AuthContext } from "../pages/Root.tsx";
 import apiClient from "../client/apiClient.ts";
+import CheckInterface from "./CheckProps.ts";
 
-interface AuthenticatedPageProps {
-  children: ReactNode;
-}
-
-export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
+export const UserLoggedCheck = ({ children }: CheckInterface) => {
   const navigate = useNavigate();
   const [pageReady, setPageReady] = useState<boolean>();
   const authContext = useContext(AuthContext);
@@ -17,16 +14,16 @@ export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
     apiClient.auth
       .getLoggedUser()
       .then((loggedUser) => {
-        authContext?.setIsLogged(!!loggedUser);
         if (!loggedUser) {
           throw new Error("User not authenticated.");
         }
+        authContext?.setUser(loggedUser);
         setPageReady(true);
       })
       .catch(() => {
         navigate("/");
       });
-  }, [authContext, navigate]);
+  }, []);
 
   return (
     <>
@@ -34,7 +31,7 @@ export const AuthenticatedPage = ({ children }: AuthenticatedPageProps) => {
         <>{children}</>
       ) : (
         <div className="grid h-screen w-screen place-content-center">
-          <Spinner aria-label="Extra large spinner" size="xl" />
+          <Spinner />
         </div>
       )}
     </>

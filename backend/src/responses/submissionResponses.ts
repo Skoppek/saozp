@@ -11,7 +11,7 @@ const getSubmissionListResponse = t.Array(
                 userId: t.Number(),
             }),
         ),
-        createdAt: t.Optional(t.String()),
+        createdAt: t.Optional(t.Date()),
         status: t.Optional(
             t.Object({
                 id: t.Number(),

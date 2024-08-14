@@ -1,10 +1,13 @@
 import edenClient from "../edenClient.ts";
 import { TestCase } from "../../shared/interfaces/TestCase.ts";
+import { mapIfPresent } from "../../shared/mapper.ts";
+import _ from "lodash";
 
 interface SubmissionQuery {
   userId?: number;
   problemId?: number;
   commitsOnly?: boolean;
+  contestId?: number;
 }
 
 interface NewSubmission {
@@ -12,6 +15,7 @@ interface NewSubmission {
   code: string;
   userTests?: TestCase[];
   isCommit: boolean;
+  contestId?: number;
 }
 
 const submit = async (newSubmission: NewSubmission) =>
@@ -20,15 +24,15 @@ const submit = async (newSubmission: NewSubmission) =>
 const getMany = async (query: SubmissionQuery) =>
   await edenClient.submission
     .get({
-      query: {
-        userId: query.userId ? Number(query.userId).toString() : undefined,
-        problemId: query.problemId
-          ? Number(query.problemId).toString()
-          : undefined,
-        commitsOnly: query.commitsOnly
-          ? Boolean(query.commitsOnly).toString()
-          : undefined,
-      },
+      query: _.omitBy(
+        {
+          userId: mapIfPresent(query.userId, (id) => id.toString()),
+          problemId: mapIfPresent(query.problemId, (id) => id.toString()),
+          contestId: mapIfPresent(query.contestId, (id) => id.toString()),
+          commitsOnly: mapIfPresent(query.commitsOnly, (a) => a.toString()),
+        },
+        (x) => x == undefined,
+      ),
     })
     .then((res) => {
       if (!res.data) {

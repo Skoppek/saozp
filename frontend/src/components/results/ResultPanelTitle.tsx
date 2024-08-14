@@ -1,7 +1,6 @@
-import { Badge } from "flowbite-react/components/Badge";
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
-import { STATUS_COLORS, STATUS_NAMES, TestStatus } from "../../shared/enums";
 import { HiFlag } from "react-icons/hi";
+import { SubmissionStatusBadge } from "../SubmissionStatusBadge";
 
 interface ResultPanelTitleProps {
   submission: SubmissionEntry;
@@ -16,13 +15,10 @@ export const ResultPanelTitle = ({
 }: ResultPanelTitleProps) => {
   return (
     <div className="flex gap-8">
-      {submission.createdAt ?? ""}
-      <Badge
-        size={"sm"}
-        color={STATUS_COLORS[submission.status?.id ?? TestStatus.UNKNOWN]}
-      >
-        {STATUS_NAMES[submission.status?.id ?? TestStatus.UNKNOWN]}
-      </Badge>
+      {submission.createdAt && (
+        <>{new Date(submission.createdAt).toLocaleString()}</>
+      )}
+      <SubmissionStatusBadge submission={submission} />
       {showCommitFlag && submission.isCommit && (
         <HiFlag className="size-6 text-orange-400" />
       )}

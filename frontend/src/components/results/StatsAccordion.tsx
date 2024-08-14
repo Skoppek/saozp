@@ -2,15 +2,15 @@ import {
   Accordion,
   AccordionContent,
 } from "flowbite-react/components/Accordion";
-import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
-import { Submission } from "../shared/interfaces/Submission";
-import { useEffect, useState } from "react";
-import { CodeEditor } from "./CodeEditor";
-import { getLanguageById } from "../shared/constansts";
-import { TestPanelStats } from "./TestPanelStats";
-import { TestResultList } from "./TestResultList";
-import { ResultPanelTitle } from "./results/ResultPanelTitle";
-import apiClient from "../client/apiClient.ts";
+import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry.ts";
+import { useState } from "react";
+import { CodeEditor } from "../CodeEditor.tsx";
+import { getLanguageById } from "../../shared/constansts.ts";
+import { TestResultList } from "../results/TestResultList.tsx";
+import { ResultPanelTitle } from "../results/ResultPanelTitle.tsx";
+import apiClient from "../../client/apiClient.ts";
+import { TestPanelStats } from "./TestPanelStats.tsx";
+import { useQuery } from "@tanstack/react-query";
 
 interface StatsAccordionProps {
   submission: SubmissionEntry;
@@ -18,15 +18,12 @@ interface StatsAccordionProps {
 
 export const StatsAccordion = ({ submission }: StatsAccordionProps) => {
   const [isOpen, setOpen] = useState(false);
-  const [details, setDetails] = useState<Submission>();
 
-  useEffect(() => {
-    if (isOpen && !details) {
-      apiClient.submissions
-        .get(submission.submissionId)
-        .then((data) => setDetails(data));
-    }
-  }, [details, isOpen, submission.submissionId]);
+  const { data, isFetching } = useQuery({
+    queryKey: ["submission", submission.submissionId, "details"],
+    queryFn: () => apiClient.submissions.get(submission.submissionId),
+    enabled: isOpen,
+  });
 
   return (
     <Accordion collapseAll onClick={() => setOpen((prev) => !prev)}>
@@ -37,15 +34,15 @@ export const StatsAccordion = ({ submission }: StatsAccordionProps) => {
           <ResultPanelTitle submission={submission} showAuthor={true} />
         </Accordion.Title>
         <AccordionContent>
-          {details && (
+          {data && !isFetching && (
             <div className="flex flex-col gap-2">
-              <TestPanelStats submission={details} />
+              <TestPanelStats submission={data} />
               <div className="flex gap-4">
-                <TestResultList tests={details.result.tests} />
+                <TestResultList tests={data.result.tests} />
                 <div className="h-[40vh] w-1/2">
                   <CodeEditor
-                    languages={getLanguageById(details.languageId)}
-                    code={details.code}
+                    languages={getLanguageById(data.languageId)}
+                    code={data.code}
                     className="size-full"
                   />
                 </div>

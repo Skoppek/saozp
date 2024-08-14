@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { ProblemFilter } from "../shared/interfaces/Problem";
-import { ProblemEntry } from "../shared/interfaces/ProblemEntry";
-import { AuthenticatedPage } from "./AuthenticatedPage";
-import { ProblemsGallery } from "../components/problems/ProblemsGallery";
+import { ProblemFilter } from "../../shared/interfaces/Problem.ts";
+import { ProblemEntry } from "../../shared/interfaces/ProblemEntry.ts";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
+import { ProblemsGallery } from "../../components/problems/ProblemsGallery.tsx";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { LanguageSelect } from "../components/inputs/LanguageSelect.tsx";
-import { ALL_LANGUAGES } from "../shared/constansts";
-import { LinkButton } from "../components/LinkButton";
+import { LanguageSelect } from "../../components/inputs/LanguageSelect.tsx";
+import { ALL_LANGUAGES } from "../../shared/constansts.ts";
+import { LinkButton } from "../../components/LinkButton.tsx";
 import { ToggleSwitch } from "flowbite-react";
-import apiClient from "../client/apiClient.ts";
-import { TextInput } from "../components/inputs/TextInput.tsx";
+import apiClient from "../../client/apiClient.ts";
+import { TextInput } from "../../components/inputs/TextInput.tsx";
 
 export const ProblemsPage = () => {
   const [problems, setProblems] = useState<ProblemEntry[]>();
@@ -22,7 +22,7 @@ export const ProblemsPage = () => {
   }, []);
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex items-end justify-center gap-4">
           <LinkButton label="Stwórz nowe zadanie" to="/problems/create" />
@@ -73,6 +73,6 @@ export const ProblemsPage = () => {
           <Spinner aria-label="Extra large spinner" size="xl" />
         )}
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

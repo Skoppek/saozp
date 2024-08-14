@@ -57,11 +57,20 @@ export default class ProblemRepository {
                 problemId: problemSchema.id,
                 name: problemSchema.name,
                 languageId: problemSchema.languageId,
+                creator: {
+                    userId: profileSchema.userId,
+                    firstName: profileSchema.firstName,
+                    lastName: profileSchema.lastName,
+                },
             })
             .from(problemSchema)
             .innerJoin(
                 problemsToContestSchema,
                 eq(problemsToContestSchema.problemId, problemSchema.id),
+            )
+            .innerJoin(
+                profileSchema,
+                eq(profileSchema.userId, problemSchema.creatorId),
             )
             .where(eq(problemsToContestSchema.contestId, contestId));
     }
@@ -86,7 +95,6 @@ export default class ProblemRepository {
             .set(_.omitBy(problem, (value) => _.isUndefined(value)))
             .where(eq(problemSchema.id, problemId))
             .returning();
-        console.log(result);
 
         return result.at(0);
     }

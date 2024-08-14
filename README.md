@@ -92,10 +92,10 @@ artillery report <wynik>.json
 
 ## TODO
 
-- [ ] ładowanie testów plikami
+- [x] ładowanie testów plikami
 - [x] reset hasła przez admina
-- [ ] tworzenie grup zajęciowych
-- [ ] grupowanie problemów w konkursy
-- [ ] przypisanie użytkowników do konkursów
+- [x] tworzenie grup zajęciowych
+- [x] grupowanie problemów w konkursy
+- [x] przypisanie użytkowników do konkursów
 - [ ] statystyka wyników
 - [ ] ponowne uruchamianie testów na rozwiązaniach

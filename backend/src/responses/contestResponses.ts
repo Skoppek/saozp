@@ -10,6 +10,7 @@ const problemBasicData = t.Object({
     problemId: t.Number(),
     name: t.String(),
     languageId: t.Number(),
+    creator: userBasicData,
 });
 
 const contestBasicData = t.Object({

@@ -1,4 +1,4 @@
-import { AuthenticatedPage } from "../AuthenticatedPage.tsx";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { Table } from "flowbite-react";
 import { Button } from "flowbite-react/components/Button";
 import { useQuery } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ export const BundlePage = () => {
   });
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           <BundleCreateModal
@@ -107,6 +107,6 @@ export const BundlePage = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

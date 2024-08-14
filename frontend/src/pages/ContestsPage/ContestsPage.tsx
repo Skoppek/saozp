@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AuthenticatedPage } from "../AuthenticatedPage.tsx";
+import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import apiClient from "../../client/apiClient.ts";
 import { Table } from "flowbite-react/components/Table";
 import { Button, ListGroup, Popover, Spinner } from "flowbite-react";
@@ -21,12 +21,14 @@ export const ContestsPage = () => {
   const navigate = useNavigate();
 
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["allContests"],
-    queryFn: () => apiClient.contests.getAll({ ownerId: authContext?.id }),
+    queryKey: ["allContests", authContext?.user?.userId],
+    queryFn: () =>
+      apiClient.contests.getAll({ ownerId: authContext?.user?.userId }),
+    enabled: !!authContext?.user?.userId,
   });
 
   return (
-    <AuthenticatedPage>
+    <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           <div className="flex flex-col gap-4">
@@ -113,6 +115,6 @@ export const ContestsPage = () => {
           </div>
         </div>
       </div>
-    </AuthenticatedPage>
+    </UserLoggedCheck>
   );
 };

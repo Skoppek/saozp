@@ -4,7 +4,7 @@ import { SubmissionStatus } from "./SubmissionStatus";
 export interface SubmissionEntry {
   submissionId: number;
   creator: User | null;
-  createdAt?: string;
+  createdAt?: Date;
   status?: SubmissionStatus;
   isCommit: boolean;
 }

@@ -50,7 +50,6 @@ export class ProblemService {
                 if (problem.creatorId == userId) {
                     return true;
                 }
-                console.log(problem);
 
                 return !problem.isContestsOnly;
             })

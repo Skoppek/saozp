@@ -1,56 +1,40 @@
 import { getLanguageById } from "../shared/constansts";
 import { TestCase } from "../shared/interfaces/TestCase";
-import { SubmissionEntry } from "../shared/interfaces/SubmissionEntry";
-import { User } from "../shared/interfaces/User";
 import { Problem } from "../shared/interfaces/Problem";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { Button, Spinner } from "flowbite-react";
 import { ResultDrawer } from "./results/ResultDrawer";
-import { TestCasesEditor } from "./TestCasesEditor";
-import { useNavigate } from "react-router-dom";
 import apiClient from "../client/apiClient.ts";
+import { useQuery } from "@tanstack/react-query";
+import { AuthContext } from "../pages/Root.tsx";
+import { TestCasesEditor } from "../pages/ProblemPage/TestCasesEditor.tsx";
 
 interface SolvingEditorProps {
   problem: Problem;
+  contestId?: number;
 }
 
-export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
+export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState(problem.baseCode);
-  const [submissions, setSubmissions] = useState<SubmissionEntry[]>([]);
-  const [user, setUser] = useState<User>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [userTests, setUserTests] = useState<TestCase[]>([]);
-  const navigate = useNavigate();
 
-  const getSubmissions = useCallback(
-    (user: User) => {
-      apiClient.submissions
-        .getMany({
-          userId: user.userId,
-          problemId: problem.problemId,
-        })
-        .then((entries) => {
-          setSubmissions(entries);
-        });
-    },
-    [problem.problemId],
-  );
+  const authContext = useContext(AuthContext);
 
-  useEffect(() => {
-    if (user) {
-      getSubmissions(user);
-    } else {
-      apiClient.auth
-        .getLoggedUser()
-        .then((user) => setUser(user))
-        .catch(() => navigate("/"));
-    }
-  }, [getSubmissions, navigate, user]);
+  const { data: submissions, refetch } = useQuery({
+    queryKey: ["submissions", problem.problemId],
+    queryFn: () =>
+      apiClient.submissions.getMany({
+        problemId: problem.problemId,
+        userId: authContext?.user?.userId,
+        contestId,
+      }),
+  });
 
-  const sendCode = useCallback(
+  const commitCode = useCallback(
     (isTest: boolean) => {
       setIsSubmitting(true);
       apiClient.submissions
@@ -59,13 +43,14 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
           code: code,
           userTests: userTests,
           isCommit: !isTest,
+          contestId,
         })
         .then(() => {
           setIsSubmitting(false);
-          if (user) getSubmissions(user);
+          refetch();
         });
     },
-    [code, getSubmissions, problem.problemId, user, userTests],
+    [code, problem.problemId, userTests],
   );
 
   return (
@@ -85,7 +70,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
             onChange={(tests) => setUserTests(tests)}
           />
           <div className="flex w-full gap-4">
-            <Button className="w-full" onClick={() => sendCode(false)}>
+            <Button className="w-full" onClick={() => commitCode(false)}>
               {isSubmitting ? (
                 <Spinner aria-label="Extra large spinner" size="md" />
               ) : (
@@ -96,7 +81,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
               className="w-full"
               color="warning"
               outline
-              onClick={() => sendCode(true)}
+              onClick={() => commitCode(true)}
               disabled={!userTests.length}
             >
               {isSubmitting ? (
@@ -121,7 +106,7 @@ export const SolvingEditor = ({ problem }: SolvingEditorProps) => {
       <ResultDrawer
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        submissions={submissions}
+        submissions={submissions ?? []}
         onCheckCode={(submission) => setCode(submission.code)}
       />
     </div>

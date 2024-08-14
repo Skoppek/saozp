@@ -1,42 +1,37 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { Navigation } from "../components/Navigation";
-import { createContext, useCallback, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import apiClient from "../client/apiClient.ts";
+import { User } from "../shared/interfaces/User.ts";
 
 export const AuthContext = createContext<
   | {
-      isLogged: boolean;
-      setIsLogged: (value: boolean) => void;
-      id?: number;
+      user?: User;
+      setUser: (value?: User) => void;
     }
   | undefined
 >(undefined);
 
 export const Root = () => {
-  const [isLogged, setIsLogged] = useState(false);
-  const [id, setId] = useState<number>();
+  const [user, setUser] = useState<User | undefined>();
   const url = useLocation();
-
-  const setLogged = useCallback((value: boolean) => {
-    setIsLogged(value);
-  }, []);
 
   useEffect(() => {
     apiClient.auth
       .getLoggedUser()
       .then((data) => {
-        setIsLogged(!!data);
-        setId(data.userId);
+        setUser(data);
       })
       .catch(() => {
-        setIsLogged(false);
-        setId(undefined);
+        setUser(undefined);
       });
   }, []);
 
   return (
     <>
-      <AuthContext.Provider value={{ isLogged, setIsLogged: setLogged, id }}>
+      <AuthContext.Provider
+        value={{ user, setUser: (user?: User) => setUser(user) }}
+      >
         <Navigation />
         {url.pathname === "/" && (
           <div className="mt-[20vh] flex flex-col items-center gap-8">

@@ -1,7 +1,7 @@
 import { Badge } from "flowbite-react/components/Badge";
-import { TestStatus } from "../shared/enums";
 import { useMemo } from "react";
-import { Submission } from "../shared/interfaces/Submission";
+import { Submission } from "../../shared/interfaces/Submission";
+import { TestStatus } from "../../shared/enums";
 
 interface TestPanelStatsProps {
   submission: Submission;
@@ -9,7 +9,6 @@ interface TestPanelStatsProps {
 
 export const TestPanelStats = ({ submission }: TestPanelStatsProps) => {
   const efficiency = useMemo(() => {
-    if (!submission) return 0;
     const tests = submission.result.tests;
     if (!tests.length) return 0;
     return (

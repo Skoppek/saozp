@@ -69,7 +69,13 @@ export class SubmissionService {
     }
 
     async createSubmission(
-        { problemId, isCommit, code, userTests }: CreateSubmissionRequestBody,
+        {
+            problemId,
+            isCommit,
+            contestId,
+            code,
+            userTests,
+        }: CreateSubmissionRequestBody,
         userId: number,
     ) {
         const problem = await this.problemRepository.getProblemById(problemId);
@@ -90,6 +96,7 @@ export class SubmissionService {
             userId,
             code,
             isCommit,
+            contestId,
         });
 
         if (!newSubmission) {
@@ -114,13 +121,14 @@ export class SubmissionService {
     }
 
     async getSubmissionsList(query: SubmissionListQuery) {
-        const { userId, problemId, commitsOnly } =
+        const { userId, problemId, contestId, commitsOnly } =
             parseSubmissionListQuery(query);
 
         const submissions = await this.submissionRepository.getSubmissionsList(
             userId,
             problemId,
             commitsOnly,
+            contestId,
         );
 
         return await Promise.all(
@@ -142,7 +150,7 @@ export class SubmissionService {
                         firstName: submission.creator?.firstName ?? '',
                         lastName: submission.creator?.lastName ?? '',
                     },
-                    createdAt: submission.createdAt?.toLocaleString(),
+                    createdAt: submission.createdAt ?? undefined,
                     status: this.reduceToStatus(
                         results.map((result) => result.status.id),
                     ),

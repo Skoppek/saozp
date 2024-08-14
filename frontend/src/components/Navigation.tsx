@@ -2,12 +2,13 @@ import { Button } from "flowbite-react/components/Button";
 import { Navbar } from "flowbite-react/components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { User } from "../shared/interfaces/User";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { AuthModal } from "./AuthModal";
 import { FaBoltLightning } from "react-icons/fa6";
 import apiClient from "../client/apiClient.ts";
+import { AuthContext } from "../pages/Root.tsx";
 
 export const Navigation = () => {
   const [user, setUser] = useState<User | undefined>();
@@ -15,6 +16,7 @@ export const Navigation = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const navigate = useNavigate();
+  const authContext = useContext(AuthContext);
 
   const getUser = useCallback(() => {
     apiClient.auth
@@ -38,6 +40,7 @@ export const Navigation = () => {
     setIsLoggingOut(true);
     apiClient.auth.logout().then(() => {
       setUser(undefined);
+      authContext?.setUser(undefined);
       navigate("/");
     });
   }, [navigate]);
@@ -62,6 +65,9 @@ export const Navigation = () => {
             </Navbar.Collapse>
             <Navbar.Collapse>
               <Link to={"/groups"}>Grupy</Link>
+            </Navbar.Collapse>
+            <Navbar.Collapse>
+              <Link to={"/contests/my"}>Moje Zawody</Link>
             </Navbar.Collapse>
             <Navbar.Collapse>
               <Link to={"/contests"}>Zawody</Link>

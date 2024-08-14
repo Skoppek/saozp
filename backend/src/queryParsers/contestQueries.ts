@@ -16,5 +16,5 @@ export const parseContestListQuery = (query: ContestListQuery) => {
 };
 
 export const contestQueries = new Elysia().model({
-    submissionListQuery: contestListQuery,
+    contestListQuery,
 });

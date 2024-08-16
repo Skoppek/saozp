@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../../client/apiClient";
-import { useEffect, useState } from "react";
 import moment from "moment";
 import { Spinner } from "flowbite-react";
 import { ContestInfoForm } from "../ContestInfoForm";
@@ -15,32 +14,19 @@ export const ContestBaseView = ({ contestId }: ContestBaseViewProps) => {
     queryFn: () => apiClient.contests.get(contestId),
   });
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(
-    moment().set("second", 0).toDate(),
-  );
-  const [endDate, setEndDate] = useState(moment().set("second", 0).toDate());
-
-  useEffect(() => {
-    if (data) {
-      setName(data.name);
-      setDescription(data.description);
-      setStartDate(data.startDate);
-      setEndDate(data.endDate);
-    }
-  }, [data]);
-
   return (
     <div>
-      {data && !isFetching ? (
+      {!isFetching ? (
         <ContestInfoForm
-          defaultData={data}
-          onSubmit={() =>
-            apiClient.contests
-              .put(contestId, { name, description, startDate, endDate })
-              .then(() => refetch())
-          }
+          defaultData={{
+            name: data?.name ?? "",
+            description: data?.description ?? "",
+            startDate: data?.startDate ?? moment().set("second", 0).toDate(),
+            endDate: data?.endDate ?? moment().set("second", 0).toDate(),
+          }}
+          onSubmit={(x) => {
+            apiClient.contests.put(contestId, x).then(() => refetch());
+          }}
           submitLabel={"Zatwierdź zmiany"}
         />
       ) : (

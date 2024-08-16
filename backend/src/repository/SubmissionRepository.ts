@@ -56,9 +56,20 @@ export class SubmissionRepository {
         const result = await db
             .select()
             .from(submissionSchema)
+            .leftJoin(
+                profileSchema,
+                eq(submissionSchema.userId, profileSchema.userId),
+            )
             .where(eq(submissionSchema.id, id));
 
-        return result.at(0);
+        return result
+            .map((submission) => {
+                return {
+                    ...submission.submissions,
+                    creator: submission.profiles,
+                };
+            })
+            .at(0);
     }
 
     async deleteSubmissionById(id: number) {

@@ -73,17 +73,19 @@ export const ContestsPage = () => {
                                 <ListGroup className="w-32">
                                   <ListGroup.Item
                                     onClick={() => {
+                                      navigate(`/contests/${contest.id}/stats`);
+                                    }}
+                                    icon={HiEye}
+                                  >
+                                    Wyniki
+                                  </ListGroup.Item>
+                                  <ListGroup.Item
+                                    onClick={() => {
                                       navigate(`/contests/${contest.id}/edit`);
                                     }}
                                     icon={HiPencilAlt}
                                   >
                                     Edytuj
-                                  </ListGroup.Item>
-                                  <ListGroup.Item
-                                    onClick={() => {}}
-                                    icon={HiEye}
-                                  >
-                                    Wyniki
                                   </ListGroup.Item>
                                   <ListGroup.Item
                                     onClick={() =>

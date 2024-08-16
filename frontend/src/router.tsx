@@ -12,12 +12,17 @@ import { AdminAuthenticatedPage } from "./pages/AdminPages/AdminAuthenticatedPag
 import { AdminPage } from "./pages/AdminPages/AdminPage";
 import { Root } from "./pages/Root";
 import { ParticipantPage } from "./pages/ParticipantPage/ParticipantPage";
+import { ContestStatsPage } from "./pages/ContestStatsPage/ContestStatsPage";
 
 export default createBrowserRouter([
   {
     path: "/",
     element: <Root />,
     children: [
+      {
+        path: "/contests/:id/stats",
+        element: <ContestStatsPage />,
+      },
       {
         path: "/contests/my",
         element: <ContestsPage />,

@@ -26,11 +26,13 @@ export const DateTimePicker = ({
   label,
 }: DateTimePickerProps) => {
   const [_, setThisDate] = useState(value);
+
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={id} value={label} />
       <div className="flex w-full gap-2">
         <Datepicker
+          defaultDate={moment(value).toDate()}
           theme={customTheme}
           id={id}
           weekStart={1}

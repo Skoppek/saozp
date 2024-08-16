@@ -4,7 +4,6 @@ import { Accordion } from "flowbite-react/components/Accordion";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { StatsTopSubmissionsDetails } from "./StatsTopSubmissionsDetails";
 import { useState } from "react";
-import { LiveSubmissionView } from "./LiveSubmissionView";
 
 interface StatsTopSubmissionsProps {
   contestId: number;

@@ -64,7 +64,7 @@ export const GroupEditModal = ({
               onChange={changeName}
               defaultValue={group.name}
             />
-            <div className={"flex justify-around"}>
+            <div className={"flex justify-around gap-2"}>
               {!isFetchingAll &&
               allUsers != undefined &&
               groupUsers != undefined ? (

@@ -8,6 +8,34 @@ import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
 import { Group } from "../../../../shared/interfaces/Group";
+import { TextInput } from "../../../../components/inputs/TextInput";
+
+const AddGroupsButton = ({
+  group: participants,
+  contestId,
+  onSucces,
+}: {
+  group: Group[];
+  contestId: number;
+  onSucces: () => void;
+}) => {
+  return (
+    <Button
+      color={"success"}
+      onClick={() => {
+        Promise.all(
+          participants.map((group) =>
+            apiClient.contests.addParticipants(contestId, undefined, group.id),
+          ),
+        ).then(() => {
+          onSucces();
+        });
+      }}
+    >
+      Dodaj
+    </Button>
+  );
+};
 
 interface AddGroupsModalProps {
   contestId: number;
@@ -26,33 +54,30 @@ export const AddGroupsModal = ({
   });
 
   const [selected, setSelected] = useState<Group[]>([]);
+  const [nameFilter, setNameFilter] = useState("");
 
   useEffect(() => {
     refetch();
   }, [show]);
 
   return (
-    <Modal show={show}>
+    <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj uczestników z grup</Modal.Header>
-      <Modal.Body>
-        <Button
-          color={"success"}
-          onClick={() => {
-            Promise.all(
-              selected.map((group) =>
-                apiClient.contests.addParticipants(
-                  contestId,
-                  undefined,
-                  group.id,
-                ),
-              ),
-            ).then(() => {
-              onClose();
-            });
-          }}
-        >
-          Dodaj
-        </Button>
+      <Modal.Body className="w-full">
+        <div className="flex gap-2 w-full">
+          <TextInput
+            className="w-full"
+            placeholder="Szukaj po nazwie"
+            type="text"
+            id={"groupFilter"}
+            onChange={(value) => setNameFilter(value.toLowerCase())}
+          />
+          <AddGroupsButton
+            group={selected}
+            contestId={contestId}
+            onSucces={onClose}
+          />
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell>Nazwa</Table.HeadCell>
@@ -60,24 +85,28 @@ export const AddGroupsModal = ({
           </Table.Head>
           <Table.Body>
             {data && !isFetching ? (
-              data.map((group) => (
-                <Table.Row>
-                  <Table.Cell>{group.name}</Table.Cell>
-                  <Table.Cell>
-                    <Checkbox
-                      onChange={() => {
-                        if (selected?.includes(group)) {
-                          setSelected((prev) =>
-                            prev.filter((item) => item != group),
-                          );
-                        } else {
-                          setSelected((prev) => [...prev, group]);
-                        }
-                      }}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))
+              data
+                .filter((group) =>
+                  group.name.toLowerCase().includes(nameFilter),
+                )
+                .map((group) => (
+                  <Table.Row>
+                    <Table.Cell>{group.name}</Table.Cell>
+                    <Table.Cell>
+                      <Checkbox
+                        onChange={() => {
+                          if (selected?.includes(group)) {
+                            setSelected((prev) =>
+                              prev.filter((item) => item != group),
+                            );
+                          } else {
+                            setSelected((prev) => [...prev, group]);
+                          }
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
             ) : (
               <Spinner />
             )}

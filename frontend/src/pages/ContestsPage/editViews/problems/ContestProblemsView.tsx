@@ -8,6 +8,7 @@ import { AddProblemsModal } from "./AddProblemsModal";
 import { AddBundlesModal } from "./AddBundlesModal";
 import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
 import { getLanguageById } from "../../../../shared/constansts";
+import { TextInput } from "../../../../components/inputs/TextInput";
 
 type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
 
@@ -26,6 +27,7 @@ export const ContestProblemsView = ({
   const [selected, setSelected] = useState<Problem[]>([]);
   const [showAddProblems, setShowAddProblems] = useState(false);
   const [showAddBundles, setShowAddBundles] = useState(false);
+  const [nameFilter, setNameFilter] = useState("");
 
   return (
     <div>
@@ -86,6 +88,13 @@ export const ContestProblemsView = ({
                 Wyrzuć
               </Button>
             </div>
+            <TextInput
+              className="w-full"
+              placeholder="Szukaj"
+              type="text"
+              id={"problemFilter"}
+              onChange={(value) => setNameFilter(value.toLowerCase())}
+            />
             <Table>
               <Table.Head>
                 <Table.HeadCell>Nazwa</Table.HeadCell>
@@ -94,36 +103,40 @@ export const ContestProblemsView = ({
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                {data.map((problem) => (
-                  <Table.Row>
-                    <Table.Cell>{problem.name}</Table.Cell>
-                    <Table.Cell>
-                      <Badge className="w-fit">
-                        {getLanguageById(problem.languageId)?.name ??
-                          "Nieznany"}
-                      </Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      {[
-                        problem.creator.firstName,
-                        problem.creator.lastName,
-                      ].join(" ")}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Checkbox
-                        onChange={() => {
-                          if (selected?.includes(problem)) {
-                            setSelected((prev) =>
-                              prev.filter((item) => item != problem),
-                            );
-                          } else {
-                            setSelected((prev) => [...prev, problem]);
-                          }
-                        }}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                {data
+                  .filter((problem) =>
+                    problem.name.toLowerCase().includes(nameFilter),
+                  )
+                  .map((problem) => (
+                    <Table.Row>
+                      <Table.Cell>{problem.name}</Table.Cell>
+                      <Table.Cell>
+                        <Badge className="w-fit">
+                          {getLanguageById(problem.languageId)?.name ??
+                            "Nieznany"}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell>
+                        {[
+                          problem.creator.firstName,
+                          problem.creator.lastName,
+                        ].join(" ")}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Checkbox
+                          onChange={() => {
+                            if (selected?.includes(problem)) {
+                              setSelected((prev) =>
+                                prev.filter((item) => item != problem),
+                              );
+                            } else {
+                              setSelected((prev) => [...prev, problem]);
+                            }
+                          }}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
               </Table.Body>
             </Table>
           </div>

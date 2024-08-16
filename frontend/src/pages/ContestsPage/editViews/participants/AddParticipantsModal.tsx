@@ -8,6 +8,8 @@ import { Profile } from "../../../../shared/interfaces/Profile";
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
+import { displayNames } from "../../../../shared/functions";
+import { TextInput } from "../../../../components/inputs/TextInput";
 
 interface AddParticipantsModalProps {
   contestId: number;
@@ -28,30 +30,38 @@ export const AddParticipantsModal = ({
   });
 
   const [selected, setSelected] = useState<Profile[]>([]);
+  const [nameFilter, setNameFilter] = useState("");
 
   useEffect(() => {
     refetch();
   }, [show]);
 
   return (
-    <Modal show={show}>
+    <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj uczestników</Modal.Header>
       <Modal.Body>
-        <Button
-          color={"success"}
-          onClick={() =>
-            apiClient.contests
-              .addParticipants(
-                contestId,
-                selected.map((x) => x.userId),
-              )
-              .then(() => {
-                onClose();
-              })
-          }
-        >
-          Dodaj
-        </Button>
+        <div className="flex gap-2 w-full">
+          <TextInput
+            className="w-full"
+            placeholder="Szukaj"
+            type="text"
+            id={"participantFilter"}
+            onChange={(value) => setNameFilter(value.toLowerCase())}
+          />
+          <Button
+            color={"success"}
+            onClick={() =>
+              apiClient.contests
+                .addParticipants(
+                  contestId,
+                  selected.map((x) => x.userId),
+                )
+                .then(onClose)
+            }
+          >
+            Dodaj
+          </Button>
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell>Imię</Table.HeadCell>
@@ -60,25 +70,29 @@ export const AddParticipantsModal = ({
           </Table.Head>
           <Table.Body>
             {data && !isFetching ? (
-              _.differenceBy(data, participants, "userId").map((user) => (
-                <Table.Row>
-                  <Table.Cell>{user.firstName}</Table.Cell>
-                  <Table.Cell>{user.lastName}</Table.Cell>
-                  <Table.Cell>
-                    <Checkbox
-                      onChange={() => {
-                        if (selected?.includes(user)) {
-                          setSelected((prev) =>
-                            prev.filter((item) => item != user),
-                          );
-                        } else {
-                          setSelected((prev) => [...prev, user]);
-                        }
-                      }}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))
+              _.differenceBy(data, participants, "userId")
+                .filter((participant) =>
+                  displayNames(participant).toLowerCase().includes(nameFilter),
+                )
+                .map((user) => (
+                  <Table.Row>
+                    <Table.Cell>{user.firstName}</Table.Cell>
+                    <Table.Cell>{user.lastName}</Table.Cell>
+                    <Table.Cell>
+                      <Checkbox
+                        onChange={() => {
+                          if (selected?.includes(user)) {
+                            setSelected((prev) =>
+                              prev.filter((item) => item != user),
+                            );
+                          } else {
+                            setSelected((prev) => [...prev, user]);
+                          }
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
             ) : (
               <Spinner />
             )}

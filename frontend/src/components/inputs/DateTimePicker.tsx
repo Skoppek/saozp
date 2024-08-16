@@ -61,7 +61,10 @@ export const DateTimePicker = ({
               return newDate;
             });
           }}
-          defaultTime={value}
+          defaultTime={{
+            hours: moment(value).toDate().getHours(),
+            minutes: moment(value).toDate().getMinutes(),
+          }}
         />
       </div>
     </div>

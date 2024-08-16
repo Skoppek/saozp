@@ -10,6 +10,7 @@ import _ from "lodash";
 import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
 import { Badge } from "flowbite-react/components/Badge";
 import { getLanguageById } from "../../../../shared/constansts";
+import { TextInput } from "../../../../components/inputs/TextInput";
 
 type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
 
@@ -32,30 +33,38 @@ export const AddProblemsModal = ({
   });
 
   const [selected, setSelected] = useState<Problem[]>([]);
+  const [nameFilter, setNameFilter] = useState("");
 
   useEffect(() => {
     refetch();
   }, [show]);
 
   return (
-    <Modal show={show}>
+    <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj zadania</Modal.Header>
       <Modal.Body>
-        <Button
-          color={"success"}
-          onClick={() =>
-            apiClient.contests
-              .addProblems(
-                contestId,
-                selected.map((x) => x.problemId),
-              )
-              .then(() => {
-                onClose();
-              })
-          }
-        >
-          Dodaj
-        </Button>
+        <div className="flex gap-2 w-full">
+          <TextInput
+            className="w-full"
+            placeholder="Szukaj po nazwie"
+            type="text"
+            id={"problemFilter"}
+            onChange={(value) => setNameFilter(value.toLowerCase())}
+          />
+          <Button
+            color={"success"}
+            onClick={() =>
+              apiClient.contests
+                .addProblems(
+                  contestId,
+                  selected.map((x) => x.problemId),
+                )
+                .then(onClose)
+            }
+          >
+            Dodaj
+          </Button>
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell>Nazwa</Table.HeadCell>
@@ -64,29 +73,34 @@ export const AddProblemsModal = ({
           </Table.Head>
           <Table.Body>
             {data && !isFetching ? (
-              _.differenceBy(data, problems, "problemId").map((problem) => (
-                <Table.Row>
-                  <Table.Cell>{problem.name}</Table.Cell>
-                  <Table.Cell>
-                    <Badge className="w-fit">
-                      {getLanguageById(problem.languageId)?.name ?? "Nieznany"}
-                    </Badge>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Checkbox
-                      onChange={() => {
-                        if (selected?.includes(problem)) {
-                          setSelected((prev) =>
-                            prev.filter((item) => item != problem),
-                          );
-                        } else {
-                          setSelected((prev) => [...prev, problem]);
-                        }
-                      }}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))
+              _.differenceBy(data, problems, "problemId")
+                .filter((problem) =>
+                  problem.name.toLowerCase().includes(nameFilter),
+                )
+                .map((problem) => (
+                  <Table.Row>
+                    <Table.Cell>{problem.name}</Table.Cell>
+                    <Table.Cell>
+                      <Badge className="w-fit">
+                        {getLanguageById(problem.languageId)?.name ??
+                          "Nieznany"}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Checkbox
+                        onChange={() => {
+                          if (selected?.includes(problem)) {
+                            setSelected((prev) =>
+                              prev.filter((item) => item != problem),
+                            );
+                          } else {
+                            setSelected((prev) => [...prev, problem]);
+                          }
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
             ) : (
               <Spinner />
             )}

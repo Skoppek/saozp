@@ -80,7 +80,7 @@ export const BundleEditModal = ({
               onChange={changeName}
               defaultValue={bundle.name}
             />
-            <div className={"flex justify-around"}>
+            <div className={"flex justify-around gap-2"}>
               {!isFetchingAll &&
               allProblems != undefined &&
               bundleProblems != undefined ? (

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { BundleCreateModal } from "./BundleCreateModal.tsx";
 import { BundleDeleteModal } from "./BundleDeleteModal.tsx";
 import { BundleEditModal } from "./BundleEditModal.tsx";
+import { TextInput } from "../../components/inputs/TextInput.tsx";
 
 export const BundlePage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
@@ -17,6 +18,7 @@ export const BundlePage = () => {
     id: number;
     name: string;
   }>();
+  const [nameFilter, setNameFilter] = useState("");
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["bundles"],
@@ -55,13 +57,21 @@ export const BundlePage = () => {
             </>
           )}
           <div className="flex flex-col gap-2">
-            <Button
-              size={"xs"}
-              color={"green"}
-              onClick={() => setShowCreationModal(true)}
-            >
-              Stwórz nową paczkę
-            </Button>
+            <div className="flex gap-2 w-full">
+              <TextInput
+                className="w-full"
+                placeholder="Szukaj po nazwie"
+                type="text"
+                id={"bundleFilter"}
+                onChange={(value) => setNameFilter(value.toLowerCase())}
+              />
+              <Button
+                color={"green"}
+                onClick={() => setShowCreationModal(true)}
+              >
+                Stwórz
+              </Button>
+            </div>
             {!isFetching && data ? (
               <Table className="w-[512px]">
                 <Table.Head>
@@ -70,35 +80,39 @@ export const BundlePage = () => {
                   <Table.HeadCell></Table.HeadCell>
                 </Table.Head>
                 <Table.Body className="divide-y">
-                  {data.map((group) => (
-                    <Table.Row className="w-full bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell>{group.name}</Table.Cell>
-                      <Table.Cell>
-                        <Button
-                          size={"xs"}
-                          color={"success"}
-                          onClick={() => {
-                            setSelected(group);
-                            setShowEditModal(true);
-                          }}
-                        >
-                          Edytuj
-                        </Button>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Button
-                          size={"xs"}
-                          color={"failure"}
-                          onClick={() => {
-                            setSelected(group);
-                            setShowDeletionModal(true);
-                          }}
-                        >
-                          Usuń
-                        </Button>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
+                  {data
+                    .filter((bundle) =>
+                      bundle.name.toLowerCase().includes(nameFilter),
+                    )
+                    .map((group) => (
+                      <Table.Row className="w-full bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell>{group.name}</Table.Cell>
+                        <Table.Cell>
+                          <Button
+                            size={"xs"}
+                            color={"success"}
+                            onClick={() => {
+                              setSelected(group);
+                              setShowEditModal(true);
+                            }}
+                          >
+                            Edytuj
+                          </Button>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Button
+                            size={"xs"}
+                            color={"failure"}
+                            onClick={() => {
+                              setSelected(group);
+                              setShowDeletionModal(true);
+                            }}
+                          >
+                            Usuń
+                          </Button>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
                 </Table.Body>
               </Table>
             ) : (

@@ -1,5 +1,6 @@
 import { Label, TextInput } from "flowbite-react";
 import _ from "lodash";
+import moment from "moment";
 import { useMemo, useState } from "react";
 
 interface TimePartInputProps {
@@ -39,16 +40,17 @@ const TimePartInput = ({ value, maxValue, onChange }: TimePartInputProps) => {
 };
 
 interface TimeInputProps {
-  defaultTime?: Date;
+  defaultTime?: {
+    hours: number;
+    minutes: number;
+  };
   label?: string;
   setTime: (hours: number, minutes: number) => void;
 }
 
 export const TimeInput = ({ label, defaultTime, setTime }: TimeInputProps) => {
-  const [hours, setThisHours] = useState<number>(defaultTime?.getHours ?? 12);
-  const [minutes, setThisMinutes] = useState<number>(
-    defaultTime?.getMinutes ?? 0,
-  );
+  const [hours, setThisHours] = useState<number>(defaultTime?.hours ?? 12);
+  const [minutes, setThisMinutes] = useState<number>(defaultTime?.minutes ?? 0);
 
   return (
     <div className="flex flex-col gap-2">

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
 import { Bundle } from "../../../../shared/interfaces/Bundle";
+import { TextInput } from "../../../../components/inputs/TextInput";
 
 interface AddBundlesModalProps {
   contestId: number;
@@ -26,29 +27,39 @@ export const AddBundlesModal = ({
   });
 
   const [selected, setSelected] = useState<Bundle[]>([]);
+  const [nameFilter, setNameFilter] = useState("");
 
   useEffect(() => {
     refetch();
   }, [show]);
 
   return (
-    <Modal show={show}>
+    <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj zadania z paczek</Modal.Header>
       <Modal.Body>
-        <Button
-          color={"success"}
-          onClick={() => {
-            Promise.all(
-              selected.map((bundle) =>
-                apiClient.contests.addProblems(contestId, [], bundle.id),
-              ),
-            ).then(() => {
-              onClose();
-            });
-          }}
-        >
-          Dodaj
-        </Button>
+        <div className="flex gap-2 w-full">
+          <TextInput
+            className="w-full"
+            placeholder="Szukaj po nazwie"
+            type="text"
+            id={"bundleFilter"}
+            onChange={(value) => setNameFilter(value.toLowerCase())}
+          />
+          <Button
+            color={"success"}
+            onClick={() => {
+              Promise.all(
+                selected.map((bundle) =>
+                  apiClient.contests.addProblems(contestId, [], bundle.id),
+                ),
+              ).then(() => {
+                onClose();
+              });
+            }}
+          >
+            Dodaj
+          </Button>
+        </div>
         <Table>
           <Table.Head>
             <Table.HeadCell>Nazwa</Table.HeadCell>
@@ -56,24 +67,28 @@ export const AddBundlesModal = ({
           </Table.Head>
           <Table.Body>
             {data && !isFetching ? (
-              data.map((bundle) => (
-                <Table.Row>
-                  <Table.Cell>{bundle.name}</Table.Cell>
-                  <Table.Cell>
-                    <Checkbox
-                      onChange={() => {
-                        if (selected?.includes(bundle)) {
-                          setSelected((prev) =>
-                            prev.filter((item) => item != bundle),
-                          );
-                        } else {
-                          setSelected((prev) => [...prev, bundle]);
-                        }
-                      }}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))
+              data
+                .filter((bundle) =>
+                  bundle.name.toLowerCase().includes(nameFilter),
+                )
+                .map((bundle) => (
+                  <Table.Row>
+                    <Table.Cell>{bundle.name}</Table.Cell>
+                    <Table.Cell>
+                      <Checkbox
+                        onChange={() => {
+                          if (selected?.includes(bundle)) {
+                            setSelected((prev) =>
+                              prev.filter((item) => item != bundle),
+                            );
+                          } else {
+                            setSelected((prev) => [...prev, bundle]);
+                          }
+                        }}
+                      />
+                    </Table.Cell>
+                  </Table.Row>
+                ))
             ) : (
               <Spinner />
             )}

@@ -61,8 +61,8 @@ export const ContestInfoForm = ({
           onSubmit({
             name,
             description,
-            startDate: moment(startDate).toDate(),
-            endDate: moment(endDate).toDate(),
+            startDate,
+            endDate,
           })
         }
       >

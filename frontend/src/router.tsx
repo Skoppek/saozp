@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { ContestsPage } from "./pages/ContestsPage/ContestsPage";
+import { MyContestsPage } from "./pages/ContestsPage/MyContestsPage";
 import { ContestEditPage } from "./pages/ContestsPage/ContestEditPage";
 import { GroupsPage } from "./pages/GroupsPage/GroupsPage";
 import { BundlePage } from "./pages/BundlesPage/BundlePage";
@@ -25,7 +25,7 @@ export default createBrowserRouter([
       },
       {
         path: "/contests/my",
-        element: <ContestsPage />,
+        element: <MyContestsPage />,
       },
       {
         path: "/contests",

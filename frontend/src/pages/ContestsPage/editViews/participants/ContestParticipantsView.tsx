@@ -7,6 +7,8 @@ import { useState } from "react";
 import { Profile } from "../../../../shared/interfaces/Profile";
 import { AddParticipantsModal } from "./AddParticipantsModal";
 import { AddGroupsModal } from "./AddGroupsModal";
+import { displayNames } from "../../../../shared/functions";
+import { TextInput } from "../../../../components/inputs/TextInput";
 
 interface ContestParticipantsViewProps {
   contestId: number;
@@ -23,6 +25,7 @@ export const ContestParticipantsView = ({
   const [selected, setSelected] = useState<Profile[]>([]);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
   const [showAddGroups, setShowAddGroups] = useState(false);
+  const [nameFilter, setNameFilter] = useState("");
 
   return (
     <div>
@@ -83,6 +86,13 @@ export const ContestParticipantsView = ({
                 Wyrzuć
               </Button>
             </div>
+            <TextInput
+              className="w-full"
+              placeholder="Szukaj"
+              type="text"
+              id={"participantFilter"}
+              onChange={(value) => setNameFilter(value.toLowerCase())}
+            />
             <Table>
               <Table.Head>
                 <Table.HeadCell>Imię</Table.HeadCell>
@@ -90,25 +100,31 @@ export const ContestParticipantsView = ({
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                {data.map((user) => (
-                  <Table.Row>
-                    <Table.Cell>{user.firstName}</Table.Cell>
-                    <Table.Cell>{user.lastName}</Table.Cell>
-                    <Table.Cell>
-                      <Checkbox
-                        onChange={() => {
-                          if (selected?.includes(user)) {
-                            setSelected((prev) =>
-                              prev.filter((item) => item != user),
-                            );
-                          } else {
-                            setSelected((prev) => [...prev, user]);
-                          }
-                        }}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                {data
+                  .filter((participant) =>
+                    displayNames(participant)
+                      .toLowerCase()
+                      .includes(nameFilter),
+                  )
+                  .map((user) => (
+                    <Table.Row>
+                      <Table.Cell>{user.firstName}</Table.Cell>
+                      <Table.Cell>{user.lastName}</Table.Cell>
+                      <Table.Cell>
+                        <Checkbox
+                          onChange={() => {
+                            if (selected?.includes(user)) {
+                              setSelected((prev) =>
+                                prev.filter((item) => item != user),
+                              );
+                            } else {
+                              setSelected((prev) => [...prev, user]);
+                            }
+                          }}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
               </Table.Body>
             </Table>
           </div>

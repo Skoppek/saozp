@@ -5,11 +5,11 @@ import { Problem } from "../../shared/interfaces/Problem.ts";
 import { SolvingEditor } from "../../components/SolvingEditor.tsx";
 import { Spinner } from "flowbite-react/components/Spinner";
 import apiClient from "../../client/apiClient.ts";
-import { useParam } from "../../shared/useParam.tsx";
+import { useNumberParam } from "../../shared/useParam.tsx";
 
 export const SolvingPage = () => {
   const { problemId, contestId } = useParams();
-  const { value } = useParam({ param: contestId, type: "number" });
+  const { value } = useNumberParam({ param: contestId, type: "number" });
   const navigate = useNavigate();
   const [problem, setProblem] = useState<Problem>();
 

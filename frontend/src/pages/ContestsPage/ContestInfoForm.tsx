@@ -40,7 +40,7 @@ export const ContestInfoForm = ({
         label="Opis"
         rows={8}
       />
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-2">
         <DateTimePicker
           id="startDate"
           value={startDate}
@@ -61,8 +61,8 @@ export const ContestInfoForm = ({
           onSubmit({
             name,
             description,
-            startDate,
-            endDate,
+            startDate: moment(startDate).toDate(),
+            endDate: moment(endDate).toDate(),
           })
         }
       >

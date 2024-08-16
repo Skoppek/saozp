@@ -16,7 +16,7 @@ import { TestPanelStats } from "./TestPanelStats.tsx";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
-  onCheckCode: (submission: Submission) => void;
+  onCheckCode?: (submission: Submission) => void;
 }
 
 export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
@@ -44,9 +44,11 @@ export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
             <div className="flex flex-col gap-2">
               <div className="flex justify-between">
                 <TestPanelStats submission={details} />
-                <Button size="xs" onClick={() => onCheckCode(details)}>
-                  Wklej rozwiązanie
-                </Button>
+                {!!onCheckCode && (
+                  <Button size="xs" onClick={() => onCheckCode(details)}>
+                    Wklej rozwiązanie
+                  </Button>
+                )}
               </div>
               <div className="flex gap-4">
                 <TestResultList tests={details.result.tests} />

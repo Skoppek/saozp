@@ -40,6 +40,14 @@ const getSubmissionDetailsResponse = t.Object({
         averageTime: t.Number(),
     }),
     contestId: t.Optional(t.Number()),
+    createdAt: t.Optional(t.Date()),
+    creator: t.Optional(
+        t.Object({
+            firstName: t.String(),
+            lastName: t.String(),
+            userId: t.Number(),
+        }),
+    ),
 });
 
 export const submissionResponses = new Elysia().model({

@@ -14,6 +14,7 @@ import { ProblemNotFoundError } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
 import TestRepository from '../repository/TestRepository';
+import { mapIfPresent } from '../shared/mapper';
 
 export class SubmissionService {
     private problemRepository = new ProblemRepository();
@@ -208,6 +209,8 @@ export class SubmissionService {
                     results.map((result) => parseFloat(result.time)),
                 ),
             },
+            createdAt: mapIfPresent(submission.createdAt, (v) => v),
+            creator: mapIfPresent(submission.creator, (v) => v),
         };
     }
 }

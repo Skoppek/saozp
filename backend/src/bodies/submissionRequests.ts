@@ -13,6 +13,7 @@ const createSubmissionRequestBody = t.Object({
     ),
     isCommit: t.Boolean(),
     contestId: t.Optional(t.Number()),
+    createdAt: t.Optional(t.Date()),
 });
 
 export type CreateSubmissionRequestBody = Static<

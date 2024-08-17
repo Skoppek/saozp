@@ -79,6 +79,7 @@ export class SubmissionService {
             contestId,
             code,
             userTests,
+            createdAt,
         }: CreateSubmissionRequestBody,
         userId: number,
     ) {
@@ -94,7 +95,7 @@ export class SubmissionService {
 
             if (
                 contest &&
-                !moment().isBetween(contest.startDate, contest.endDate)
+                !moment(createdAt).isBetween(contest.startDate, contest.endDate)
             ) {
                 throw new Error(
                     'Submissions to this contest are not accepted yet/anymore.',
@@ -115,6 +116,7 @@ export class SubmissionService {
             code,
             isCommit,
             contestId,
+            createdAt,
         });
 
         if (!newSubmission) {

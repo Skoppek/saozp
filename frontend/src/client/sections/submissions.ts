@@ -16,6 +16,7 @@ interface NewSubmission {
   userTests?: TestCase[];
   isCommit: boolean;
   contestId?: number;
+  createdAt?: Date;
 }
 
 const submit = async (newSubmission: NewSubmission) =>

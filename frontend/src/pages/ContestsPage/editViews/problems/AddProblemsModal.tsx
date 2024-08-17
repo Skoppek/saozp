@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Checkbox } from "flowbite-react/components/Checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
 import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
@@ -27,23 +27,19 @@ export const AddProblemsModal = ({
   onClose,
   problems,
 }: AddProblemsModalProps) => {
-  const { data, isFetching, refetch } = useQuery({
-    queryKey: ["allProblems"],
+  const { data, isFetching } = useQuery({
+    queryKey: ["allProblems", contestId],
     queryFn: () => apiClient.problems.getAll(),
   });
 
   const [selected, setSelected] = useState<Problem[]>([]);
   const [nameFilter, setNameFilter] = useState("");
 
-  useEffect(() => {
-    refetch();
-  }, [show]);
-
   return (
     <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj zadania</Modal.Header>
       <Modal.Body>
-        <div className="flex gap-2 w-full">
+        <div className="flex w-full gap-2">
           <TextInput
             className="w-full"
             placeholder="Szukaj po nazwie"

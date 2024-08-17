@@ -5,7 +5,6 @@ import {
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { Submission } from "../../shared/interfaces/Submission";
 import { useEffect, useState } from "react";
-import { Button } from "flowbite-react/components/Button";
 import { TestResultList } from "./TestResultList.tsx";
 import { ResultPanelTitle } from "./ResultPanelTitle";
 import { CodeEditor } from "../CodeEditor";
@@ -16,10 +15,9 @@ import { TestPanelStats } from "./TestPanelStats.tsx";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
-  onCheckCode?: (submission: Submission) => void;
 }
 
-export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
+export const ResultPanel = ({ submission }: ResultPanelProps) => {
   const [isOpen, setOpen] = useState(false);
   const [details, setDetails] = useState<Submission>();
 
@@ -41,25 +39,18 @@ export const ResultPanel = ({ submission, onCheckCode }: ResultPanelProps) => {
         </Accordion.Title>
         <AccordionContent>
           {details ? (
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col items-center gap-2">
               <div className="flex justify-between">
                 <TestPanelStats submission={details} />
-                {!!onCheckCode && (
-                  <Button size="xs" onClick={() => onCheckCode(details)}>
-                    Wklej rozwiązanie
-                  </Button>
-                )}
               </div>
-              <div className="flex gap-4">
-                <TestResultList tests={details.result.tests} />
-                <div className="h-[40vh] w-1/2">
-                  <CodeEditor
-                    languages={getLanguageById(details.languageId)}
-                    code={details.code}
-                    className="size-full"
-                  />
-                </div>
+              <div className="h-80 w-full">
+                <CodeEditor
+                  languages={getLanguageById(details.languageId)}
+                  code={details.code}
+                  className="size-full"
+                />
               </div>
+              <TestResultList tests={details.result.tests} />
             </div>
           ) : (
             <div className="flex w-screen justify-center">

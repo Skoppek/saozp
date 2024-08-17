@@ -6,5 +6,6 @@ export default {
   theme: {
     extend: {},
   },
+  // eslint-disable-next-line no-undef
   plugins: [flowbite.plugin(), require("@tailwindcss/typography")],
 };

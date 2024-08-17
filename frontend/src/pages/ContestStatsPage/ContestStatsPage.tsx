@@ -29,7 +29,7 @@ export const ContestStatsPage = () => {
       <div className="flex flex-col gap-4">
         {data && !isFetching && (
           <div className="flex flex-col items-center gap-4 overflow-x-auto pt-8">
-            <div className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col items-center gap-2">
               <div className="text-4xl">{data.name}</div>
               <Badge
                 color={

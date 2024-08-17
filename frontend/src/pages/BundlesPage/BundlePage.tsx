@@ -57,7 +57,7 @@ export const BundlePage = () => {
             </>
           )}
           <div className="flex flex-col gap-2">
-            <div className="flex gap-2 w-full">
+            <div className="flex w-full gap-2">
               <TextInput
                 className="w-full"
                 placeholder="Szukaj po nazwie"

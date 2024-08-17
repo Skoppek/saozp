@@ -25,7 +25,7 @@ export const SolvingPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="h-[79vh]">
+      <div>
         {problem ? (
           <SolvingEditor
             problem={problem}

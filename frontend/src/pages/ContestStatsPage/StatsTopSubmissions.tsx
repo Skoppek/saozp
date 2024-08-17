@@ -14,6 +14,7 @@ export const StatsTopSubmissions = ({
   contestId,
   onProblemOpen,
 }: StatsTopSubmissionsProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSelected] = useState<number | undefined>();
 
   const { data, isFetching } = useQuery({
@@ -40,7 +41,7 @@ export const StatsTopSubmissions = ({
                 }
               >
                 <Accordion.Title>
-                  <div className="flex justify-between w-[400px]">
+                  <div className="flex w-[400px] justify-between">
                     <div>{problem.name}</div>
                   </div>
                 </Accordion.Title>

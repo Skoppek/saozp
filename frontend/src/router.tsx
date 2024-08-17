@@ -14,6 +14,7 @@ import { Root } from "./pages/Root";
 import { ParticipantPage } from "./pages/ParticipantPage/ParticipantPage";
 import { ContestStatsPage } from "./pages/ContestStatsPage/ContestStatsPage";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default createBrowserRouter([
   {
     path: "/",

@@ -25,7 +25,7 @@ export const ParticipantProblemsList = ({
           {data?.map((problem, index) => (
             <Accordion.Panel id={index.toString()}>
               <Accordion.Title>
-                <div className="flex justify-between w-[400px]">
+                <div className="flex w-[400px] justify-between">
                   <div>{problem.name}</div>
                   <LinkButton
                     to={`/contests/${contestId}/problem/${problem.problemId}`}

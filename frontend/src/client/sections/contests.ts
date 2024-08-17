@@ -91,9 +91,8 @@ const getProblems = async (contestId: number) =>
     .contest({ id: contestId })
     .problems.get()
     .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
+      if (!res.data) throw new Error("Unexpected null in response.");
+      if (res.error) throw new Error("Something went wrong");
       return res.data;
     });
 

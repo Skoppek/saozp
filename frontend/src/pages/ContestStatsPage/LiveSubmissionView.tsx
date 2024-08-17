@@ -4,6 +4,7 @@ import { ResultPanel } from "../../components/results/ResultPanel";
 import { Spinner } from "flowbite-react";
 import { displayNames } from "../../shared/functions";
 import { HiOutlineCubeTransparent } from "react-icons/hi";
+import { InfoCard } from "../../components/InfoCard";
 
 interface LiveSubmissionViewProps {
   contestId: number;
@@ -37,14 +38,12 @@ export const LiveSubmissionView = ({
               </div>
             ))
           ) : (
-            <div className="flex h-[250px] overflow-y-auto rounded-lg border border-gray-200 bg-white p-8 shadow-md dark:border-gray-700 dark:bg-gray-800">
-              <div className="prose break-words dark:prose-invert">
-                <div className="flex flex-col items-center">
-                  <HiOutlineCubeTransparent size={120} />
-                  <span>Jeszcze nie zgłoszono rozwiązań</span>
-                </div>
+            <InfoCard>
+              <div className="flex flex-col items-center">
+                <HiOutlineCubeTransparent size={120} />
+                <span>Jeszcze nie zgłoszono rozwiązań</span>
               </div>
-            </div>
+            </InfoCard>
           )}
         </div>
       ) : (

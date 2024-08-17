@@ -18,7 +18,7 @@ export const ParticipantPage = () => {
   const [contestId, setContestId] = useState<number | undefined>();
   const [nameFilter, setNameFilter] = useState("");
 
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, error } = useQuery({
     queryKey: ["participantContests"],
     queryFn: () =>
       apiClient.contests.getAll({ participantId: authContext?.user?.userId }),

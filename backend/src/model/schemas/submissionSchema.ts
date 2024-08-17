@@ -24,7 +24,9 @@ export const submissionSchema = pgTable(
         code: text('code').notNull(),
         createdAt: timestamp('created_at').defaultNow(),
         isCommit: boolean('is_commit').notNull().default(false),
-        contestId: integer('contest_id').references(() => contestSchema.id),
+        contestId: integer('contest_id').references(() => contestSchema.id, {
+            onDelete: 'set null',
+        }),
     },
     (submissionSchema) => ({
         userIdIdx: index('submission_user_id_idx').on(submissionSchema.userId),

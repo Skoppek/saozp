@@ -121,8 +121,15 @@ export default new Elysia({
                     app
                         .get(
                             '',
-                            async ({ contestService, params: { id } }) =>
-                                await contestService.getProblemsOfContest(id),
+                            async ({
+                                contestService,
+                                params: { id },
+                                userId,
+                            }) =>
+                                await contestService.getProblemsOfContest(
+                                    id,
+                                    userId,
+                                ),
                             {
                                 response: 'getContestProblemsResponse',
                             },

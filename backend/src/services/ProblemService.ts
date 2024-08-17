@@ -73,8 +73,12 @@ export class ProblemService {
     ) {
         const problem = await this.fetchProblem(problemId);
 
-        if (problem.isContestsOnly && userId != problem.creatorId) {
-            throw new ProblemNotFoundError(problemId);
+        if (
+            problem.isContestsOnly &&
+            userId != problem.creatorId &&
+            !isForSolving
+        ) {
+            throw new Error('No access');
         }
 
         return {

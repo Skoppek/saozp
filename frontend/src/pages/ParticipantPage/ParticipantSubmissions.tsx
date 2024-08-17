@@ -32,7 +32,7 @@ export const ParticipantsSubmissions = ({
   return (
     <>
       {data && !isFetching ? (
-        !!data.length ? (
+        data.length ? (
           <Table>
             <TableBody>
               {data.map((submission, index) => (

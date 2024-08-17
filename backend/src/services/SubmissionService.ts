@@ -15,11 +15,14 @@ import ProblemRepository from '../repository/ProblemRepository';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
 import TestRepository from '../repository/TestRepository';
 import { mapIfPresent } from '../shared/mapper';
+import ContestRepository from '../repository/ContestRepository';
+import moment from 'moment';
 
 export class SubmissionService {
     private problemRepository = new ProblemRepository();
     private submissionRepository = new SubmissionRepository();
     private testRepository = new TestRepository();
+    private contestRepository = new ContestRepository();
 
     private reduceToStatus(
         statusIds: number[],
@@ -76,13 +79,28 @@ export class SubmissionService {
             contestId,
             code,
             userTests,
+            createdAt,
         }: CreateSubmissionRequestBody,
         userId: number,
     ) {
         const problem = await this.problemRepository.getProblemById(problemId);
 
-        if (!problem) {
+        if (!problem || problem.isDeactivated) {
             throw new ProblemNotFoundError(problemId);
+        }
+
+        if (contestId) {
+            const contest =
+                await this.contestRepository.getContestById(contestId);
+
+            if (
+                contest &&
+                !moment(createdAt).isBetween(contest.startDate, contest.endDate)
+            ) {
+                throw new Error(
+                    'Submissions to this contest are not accepted yet/anymore.',
+                );
+            }
         }
 
         if (!isCommit) {
@@ -98,6 +116,7 @@ export class SubmissionService {
             code,
             isCommit,
             contestId,
+            createdAt,
         });
 
         if (!newSubmission) {

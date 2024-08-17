@@ -25,6 +25,7 @@ export const DateTimePicker = ({
   value,
   label,
 }: DateTimePickerProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setThisDate] = useState(value);
 
   return (

@@ -4,12 +4,13 @@ import { Problem } from "../shared/interfaces/Problem";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useContext, useState } from "react";
-import { Button, Spinner } from "flowbite-react";
-import { ResultDrawer } from "./results/ResultDrawer";
+import { Accordion, Button, Spinner } from "flowbite-react";
+import { ResultsModal } from "./results/ResultModal.tsx";
 import apiClient from "../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../pages/Root.tsx";
-import { TestCasesEditor } from "../pages/ProblemPage/TestCasesEditor.tsx";
+import { TestCasesFileUpload } from "./problems/TestCasesFileUpload.tsx";
+import { SubmitControls } from "./SubmitControls.tsx";
 
 interface SolvingEditorProps {
   problem: Problem;
@@ -44,55 +45,70 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
           userTests: userTests,
           isCommit: !isTest,
           contestId,
+          createdAt: new Date(),
         })
         .then(() => {
           setIsSubmitting(false);
-          refetch();
+          void refetch();
         });
     },
-    [code, problem.problemId, userTests],
+    [contestId, refetch, code, problem.problemId, userTests],
   );
 
   return (
-    <div className="mx-8 h-full">
+    <div className="mx-8 mb-32 h-full overflow-y-auto">
+      <ResultsModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        submissions={submissions ?? []}
+        onCheckCode={(submission) => setCode(submission.code)}
+      />
       <div className="m-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {problem.name}
       </div>
-      <div className="flex h-[75vh] gap-4">
+      <div className="flex gap-4">
         <div className="flex w-2/5 flex-col gap-2">
-          <MarkdownEditor
-            markdown={problem.prompt}
-            displayOnly
-            className="h-full"
+          <SubmitControls
+            submitFn={commitCode}
+            enableTests={!!userTests.length}
+            isWaiting={isSubmitting}
+            contestId={contestId}
           />
-          <TestCasesEditor
-            testCases={userTests}
-            onChange={(tests) => setUserTests(tests)}
-          />
-          <div className="flex w-full gap-4">
-            <Button className="w-full" onClick={() => commitCode(false)}>
-              {isSubmitting ? (
-                <Spinner aria-label="Extra large spinner" size="md" />
-              ) : (
-                "Wyślij"
-              )}
-            </Button>
-            <Button
-              className="w-full"
-              color="warning"
-              outline
-              onClick={() => commitCode(true)}
-              disabled={!userTests.length}
-            >
-              {isSubmitting ? (
-                <Spinner aria-label="Extra large spinner" size="md" />
-              ) : (
-                "Przetestuj"
-              )}
-            </Button>
-          </div>
+          <Accordion className="h-fit w-full" collapseAll>
+            <Accordion.Panel>
+              <Accordion.Title>Opis</Accordion.Title>
+              <Accordion.Content>
+                <MarkdownEditor
+                  markdown={problem.prompt}
+                  displayOnly
+                  className="h-full"
+                />
+              </Accordion.Content>
+            </Accordion.Panel>
+            <Accordion.Panel>
+              <Accordion.Title>Testowanie</Accordion.Title>
+              <Accordion.Content>
+                <div className="flex flex-col gap-2">
+                  <TestCasesFileUpload
+                    tests={userTests}
+                    setTests={(tests) => setUserTests(tests)}
+                  />
+                  <Button
+                    className="w-full"
+                    color="warning"
+                    outline
+                    onClick={() => commitCode(true)}
+                    disabled={!userTests.length}
+                  >
+                    {isSubmitting ? <Spinner /> : "Przetestuj"}
+                  </Button>
+                </div>
+              </Accordion.Content>
+            </Accordion.Panel>
+          </Accordion>
+          <Button onClick={() => setIsOpen(true)}>Wyniki</Button>
         </div>
-        <div className="w-3/5">
+        <div className="flex w-3/5 flex-col gap-2">
           <CodeEditor
             languages={getLanguageById(problem.languageId)}
             code={code}
@@ -103,12 +119,6 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
           />
         </div>
       </div>
-      <ResultDrawer
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        submissions={submissions ?? []}
-        onCheckCode={(submission) => setCode(submission.code)}
-      />
     </div>
   );
 };

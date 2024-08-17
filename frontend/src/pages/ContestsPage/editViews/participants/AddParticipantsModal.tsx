@@ -34,13 +34,13 @@ export const AddParticipantsModal = ({
 
   useEffect(() => {
     refetch();
-  }, [show]);
+  }, [show, refetch]);
 
   return (
     <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj uczestników</Modal.Header>
       <Modal.Body>
-        <div className="flex gap-2 w-full">
+        <div className="flex w-full gap-2">
           <TextInput
             className="w-full"
             placeholder="Szukaj"

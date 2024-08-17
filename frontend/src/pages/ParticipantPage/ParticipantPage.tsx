@@ -29,7 +29,7 @@ export const ParticipantPage = () => {
     <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
-          <div className="flex flex-col gap-2 w-1/2">
+          <div className="flex w-1/2 flex-col gap-2">
             <TextInput
               className="w-full"
               placeholder="Szukaj po nazwie"

@@ -1,6 +1,7 @@
 import { desc, eq, lt } from 'drizzle-orm';
 import { NewSession, sessionSchema } from '../model/schemas/sessionSchema';
 import { db } from '../model/db/db';
+import moment from 'moment';
 
 export default abstract class SessionRepository {
     static async createSession(session: NewSession) {
@@ -25,8 +26,11 @@ export default abstract class SessionRepository {
         return result.at(0);
     }
 
-    static deleteExpiredSessions() {
-        db.delete(sessionSchema).where(lt(sessionSchema.expiresAt, new Date()));
+    static async deleteExpiredSessions() {
+        return await db
+            .delete(sessionSchema)
+            .where(lt(sessionSchema.expiresAt, new Date()))
+            .returning();
     }
 
     static async getLatestSessionOfUser(userId: number) {

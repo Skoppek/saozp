@@ -43,7 +43,7 @@ export const Navigation = () => {
       authContext?.setUser(undefined);
       navigate("/");
     });
-  }, [navigate]);
+  }, [authContext, navigate]);
 
   return (
     <>

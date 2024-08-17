@@ -34,15 +34,15 @@ export const MyContestsPage = () => {
     <UserLoggedCheck>
       <div className="flex flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
-          <div className="flex flex-col gap-4 w-1/2">
+          <div className="flex w-1/2 flex-col gap-4">
             <ContestCreateModal
               show={showCreationModal}
               onClose={() => {
                 setShowCreationModal(false);
-                refetch();
+                void refetch();
               }}
             />
-            <div className="flex gap-2 w-full">
+            <div className="flex w-full gap-2">
               <TextInput
                 className="w-full"
                 placeholder="Szukaj po nazwie"

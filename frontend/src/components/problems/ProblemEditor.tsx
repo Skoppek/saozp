@@ -96,10 +96,10 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           chosenLanguage={getLanguageById(problem?.languageId ?? 0)}
           showEditTips={true}
         />
-        <div className="flex flex-col w-full items-center gap-2">
+        <div className="flex w-full flex-col items-center gap-2">
           <ToggleSwitch
             label="Tylko do zawodów"
-            checked={!!newProblem.isContestsOnly}
+            checked={newProblem.isContestsOnly}
             onChange={() => {
               setNewProblem((prev) => {
                 return {

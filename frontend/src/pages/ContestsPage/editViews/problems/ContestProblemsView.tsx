@@ -47,11 +47,11 @@ export const ContestProblemsView = ({
             show={showAddBundles}
             onClose={() => {
               setShowAddBundles(false);
-              refetch();
+              void refetch();
             }}
           />
           <div className="flex flex-col gap-2">
-            <div className="flex gap-1 w-full">
+            <div className="flex w-full gap-1">
               <Button
                 className="w-full"
                 size={"xs"}

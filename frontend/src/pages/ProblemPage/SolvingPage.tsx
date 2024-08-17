@@ -9,7 +9,7 @@ import { useNumberParam } from "../../shared/useParam.tsx";
 
 export const SolvingPage = () => {
   const { problemId, contestId } = useParams();
-  const { value } = useNumberParam({ param: contestId, type: "number" });
+  const { value } = useNumberParam({ param: contestId });
   const navigate = useNavigate();
   const [problem, setProblem] = useState<Problem>();
 
@@ -25,7 +25,7 @@ export const SolvingPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="h-[79vh]">
+      <div>
         {problem ? (
           <SolvingEditor
             problem={problem}

@@ -11,6 +11,7 @@ import {
     ContestListQuery,
     parseContestListQuery,
 } from '../queryParsers/contestQueries';
+import moment from 'moment';
 
 export default class ContestService {
     private contestRepository = new ContestRepository();
@@ -60,7 +61,15 @@ export default class ContestService {
         return await ProfileRepository.getProfilesOfContest(contestId);
     }
 
-    async getProblemsOfContest(contestId: number) {
+    async getProblemsOfContest(contestId: number, userId: number) {
+        const contest = await this.contestRepository.getContestById(contestId);
+
+        if (
+            userId != contest?.owner.userId &&
+            moment().isBefore(contest?.startDate)
+        )
+            throw new Error('This contest has not started yet.');
+
         return await this.problemRepository.getProblemsOfContest(contestId);
     }
 

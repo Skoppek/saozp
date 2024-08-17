@@ -4,9 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Checkbox } from "flowbite-react/components/Checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
-import _ from "lodash";
 import { Bundle } from "../../../../shared/interfaces/Bundle";
 import { TextInput } from "../../../../components/inputs/TextInput";
 
@@ -21,23 +20,19 @@ export const AddBundlesModal = ({
   show,
   onClose,
 }: AddBundlesModalProps) => {
-  const { data, isFetching, refetch } = useQuery({
-    queryKey: ["bundles"],
+  const { data, isFetching } = useQuery({
+    queryKey: ["bundles", contestId],
     queryFn: () => apiClient.bundles.getAll(),
   });
 
   const [selected, setSelected] = useState<Bundle[]>([]);
   const [nameFilter, setNameFilter] = useState("");
 
-  useEffect(() => {
-    refetch();
-  }, [show]);
-
   return (
     <Modal show={show} onClose={onClose}>
       <Modal.Header>Dodaj zadania z paczek</Modal.Header>
       <Modal.Body>
-        <div className="flex gap-2 w-full">
+        <div className="flex w-full gap-2">
           <TextInput
             className="w-full"
             placeholder="Szukaj po nazwie"

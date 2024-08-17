@@ -3,10 +3,8 @@ import apiClient from "../../client/apiClient";
 import { TestStatus } from "../../shared/enums";
 import moment from "moment";
 import { dateTimeFormat } from "../../shared/constansts";
-import { Label, Spinner } from "flowbite-react";
-import { displayNames } from "../../shared/functions";
+import { Spinner } from "flowbite-react";
 import { TopStatPanel } from "./TopStatPanel";
-import { useEffect } from "react";
 
 interface StatsTopSubmissionsDetailsProps {
   problemId: number;

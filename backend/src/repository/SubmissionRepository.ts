@@ -28,6 +28,7 @@ export class SubmissionRepository {
                 creator: profileSchema,
                 createdAt: submissionSchema.createdAt,
                 isCommit: submissionSchema.isCommit,
+                problemId: submissionSchema.problemId,
             })
             .from(submissionSchema)
             .leftJoin(

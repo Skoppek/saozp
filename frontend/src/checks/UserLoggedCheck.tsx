@@ -23,7 +23,7 @@ export const UserLoggedCheck = ({ children }: CheckInterface) => {
       .catch(() => {
         navigate("/");
       });
-  }, [authContext, navigate]);
+  }, []);
 
   return (
     <>

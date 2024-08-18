@@ -1,6 +1,7 @@
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { HiFlag } from "react-icons/hi";
 import { SubmissionStatusBadge } from "../SubmissionStatusBadge";
+import { RerunIcon } from "../RerunIcon";
 
 interface ResultPanelTitleProps {
   submission: SubmissionEntry;
@@ -19,6 +20,7 @@ export const ResultPanelTitle = ({
         <>{new Date(submission.createdAt).toLocaleString()}</>
       )}
       <SubmissionStatusBadge submission={submission} />
+      {submission.rerun && <RerunIcon rerunDate={submission.rerun} />}
       {showCommitFlag && submission.isCommit && (
         <HiFlag className="size-6 text-orange-400" />
       )}

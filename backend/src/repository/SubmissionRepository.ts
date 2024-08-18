@@ -29,6 +29,7 @@ export class SubmissionRepository {
                 createdAt: submissionSchema.createdAt,
                 isCommit: submissionSchema.isCommit,
                 problemId: submissionSchema.problemId,
+                rerun: submissionSchema.rerun,
             })
             .from(submissionSchema)
             .leftJoin(

@@ -221,6 +221,7 @@ export class SubmissionService {
                         results.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
+                    rerun: mapIfPresent(submission.rerun, (o) => o),
                 };
             }),
         );

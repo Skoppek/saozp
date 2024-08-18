@@ -10,6 +10,7 @@ import { and } from 'drizzle-orm';
 import { usersToContestSchema } from '../model/schemas/intermediates/usersToContestSchema';
 import { profileSchema } from '../model/schemas/profileSchema';
 import { mapIfPresent } from '../shared/mapper';
+import _ from 'lodash';
 
 export default class ContestRepository {
     async createContest(newContest: NewContest) {
@@ -58,9 +59,12 @@ export default class ContestRepository {
                 ),
             );
 
-        return result.map((entry) => {
-            return { ...entry.contests, owner: entry.profiles };
-        });
+        return _.uniqBy(
+            result.map((entry) => {
+                return { ...entry.contests, owner: entry.profiles };
+            }),
+            'id',
+        );
     }
 
     async getContestById(contestId: number) {

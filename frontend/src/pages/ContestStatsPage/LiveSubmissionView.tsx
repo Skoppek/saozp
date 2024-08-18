@@ -5,6 +5,7 @@ import { Spinner } from "flowbite-react";
 import { displayNames } from "../../shared/functions";
 import { HiOutlineCubeTransparent } from "react-icons/hi";
 import { InfoCard } from "../../components/InfoCard";
+import _ from "lodash";
 
 interface LiveSubmissionViewProps {
   contestId: number;
@@ -29,14 +30,18 @@ export const LiveSubmissionView = ({
       {data && !isFetching ? (
         <div className="flex flex-col gap-2">
           {data.length ? (
-            data.map((submission) => (
-              <div>
-                {submission.creator && (
-                  <span>{displayNames(submission.creator)}</span>
-                )}
-                <ResultPanel submission={submission} />
-              </div>
-            ))
+            _.chain(data)
+              .sortBy("createdAt")
+              .reverse()
+              .value()
+              .map((submission) => (
+                <div>
+                  {submission.creator && (
+                    <span>{displayNames(submission.creator)}</span>
+                  )}
+                  <ResultPanel submission={submission} />
+                </div>
+              ))
           ) : (
             <InfoCard>
               <div className="flex flex-col items-center">

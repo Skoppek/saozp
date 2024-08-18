@@ -111,6 +111,9 @@ const removeProblems = async (contestId: number, participantIds?: number[]) =>
     problemIds: participantIds,
   });
 
+const rerun = async (contestId: number) =>
+  await edenClient.contest({ id: contestId }).rerun.post();
+
 export default {
   create,
   get,
@@ -123,4 +126,5 @@ export default {
   getProblems,
   addProblems,
   removeProblems,
+  rerun,
 };

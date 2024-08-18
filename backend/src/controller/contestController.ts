@@ -68,6 +68,11 @@ export default new Elysia({
                     async ({ contestService, params: { id } }) =>
                         await contestService.deleteContest(id),
                 )
+                .post(
+                    '/rerun',
+                    async ({ contestService, params: { id } }) =>
+                        await contestService.rerunLatestSubmissions(id),
+                )
                 .group('/users', (app) =>
                     app
                         .get(

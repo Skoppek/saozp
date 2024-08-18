@@ -12,10 +12,16 @@ import {
     parseContestListQuery,
 } from '../queryParsers/contestQueries';
 import moment from 'moment';
+import { SubmissionRepository } from '../repository/SubmissionRepository';
+import _ from 'lodash';
+import { SubmissionService } from './SubmissionService';
 
 export default class ContestService {
     private contestRepository = new ContestRepository();
     private problemRepository = new ProblemRepository();
+    private submissionRepository = new SubmissionRepository();
+
+    private submissionService = new SubmissionService();
 
     async createContest(
         { name, endDate, startDate, description }: CreateContestBody,
@@ -55,6 +61,31 @@ export default class ContestService {
 
     async deleteContest(contestId: number) {
         await this.contestRepository.deleteContest(contestId);
+    }
+
+    async rerunLatestSubmissions(contestId: number) {
+        const allSubmissions =
+            await this.submissionRepository.getSubmissionsList(
+                undefined,
+                undefined,
+                true,
+                contestId,
+            );
+
+        const idsToRerun = _.chain(allSubmissions)
+            .groupBy('problemId')
+            .map((o) =>
+                _.chain(o)
+                    .groupBy('creator.userId')
+                    .map((o) => _.chain(o).sortBy('createdAt').last().value())
+                    .flatMap()
+                    .value(),
+            )
+            .flatMap()
+            .map((o) => o.id)
+            .value();
+
+        this.submissionService.rerunSubmissions(idsToRerun);
     }
 
     async getUsersOfContest(contestId: number) {

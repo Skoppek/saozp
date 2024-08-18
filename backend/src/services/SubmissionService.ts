@@ -17,6 +17,7 @@ import TestRepository from '../repository/TestRepository';
 import { mapIfPresent } from '../shared/mapper';
 import ContestRepository from '../repository/ContestRepository';
 import moment from 'moment';
+import _ from 'lodash';
 
 export class SubmissionService {
     private problemRepository = new ProblemRepository();
@@ -140,6 +141,51 @@ export class SubmissionService {
         };
     }
 
+    async rerunSubmissions(ids: number[]) {
+        const originals = await Promise.all(
+            ids.map((id) => this.submissionRepository.getSubmissionById(id)),
+        );
+
+        originals
+            .filter((o) => o != undefined)
+            .forEach(async (o) => {
+                const problem = await this.problemRepository.getProblemById(
+                    o.problemId,
+                );
+
+                if (!problem || problem.isDeactivated) {
+                    throw new ProblemNotFoundError(o.problemId);
+                }
+
+                const newSubmission =
+                    await this.submissionRepository.createSubmission({
+                        problemId: o.problemId,
+                        userId: o.userId,
+                        code: o.code,
+                        isCommit: o.isCommit,
+                        contestId: o.contestId,
+                        createdAt: o.createdAt,
+                        rerun: new Date(),
+                    });
+
+                if (!newSubmission) {
+                    throw new SubmissionCreationError();
+                }
+
+                const mergedCode = problem.baseCode.replace(
+                    /---(.*?)---/gs,
+                    newSubmission.code,
+                );
+
+                this.submitTests(
+                    problem.tests,
+                    newSubmission.id,
+                    problem.languageId,
+                    mergedCode,
+                );
+            });
+    }
+
     async getSubmissionsList(query: SubmissionListQuery) {
         const { userId, problemId, contestId, commitsOnly } =
             parseSubmissionListQuery(query);
@@ -175,6 +221,7 @@ export class SubmissionService {
                         results.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
+                    rerun: mapIfPresent(submission.rerun, (o) => o),
                 };
             }),
         );

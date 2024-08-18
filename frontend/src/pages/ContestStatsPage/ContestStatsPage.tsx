@@ -9,6 +9,8 @@ import { LiveSubmissionView } from "./LiveSubmissionView";
 import { dateTimeFormat } from "../../shared/constansts";
 import moment from "moment";
 import { Badge } from "flowbite-react/components/Badge";
+import { Button } from "flowbite-react";
+import { RerunButton } from "../../components/RerunButton";
 
 export const ContestStatsPage = () => {
   const { id } = useParams();
@@ -31,20 +33,25 @@ export const ContestStatsPage = () => {
           <div className="flex flex-col items-center gap-4 overflow-x-auto pt-8">
             <div className="flex flex-col items-center gap-2">
               <div className="text-4xl">{data.name}</div>
-              <Badge
-                color={
-                  moment().isBefore(data.endDate)
-                    ? moment().isAfter(data.startDate)
-                      ? "green"
-                      : "blue"
-                    : "red"
-                }
-              >
-                {[
-                  moment(data.startDate).format(dateTimeFormat),
-                  moment(data.endDate).format(dateTimeFormat),
-                ].join(" - ")}
-              </Badge>
+              <div className="flex flex-col gap-4 items-center">
+                <Badge
+                  color={
+                    moment().isBefore(data.endDate)
+                      ? moment().isAfter(data.startDate)
+                        ? "green"
+                        : "blue"
+                      : "red"
+                  }
+                >
+                  {[
+                    moment(data.startDate).format(dateTimeFormat),
+                    moment(data.endDate).format(dateTimeFormat),
+                  ].join(" - ")}
+                </Badge>
+                {moment().isAfter(data.endDate) && contestIdValue && (
+                  <RerunButton contestId={contestIdValue} />
+                )}
+              </div>
             </div>
             {contestIdValue && (
               <div className="flex gap-4">

@@ -1,4 +1,4 @@
-#include <stdio.h>
+export default `#include <stdio.h>
 
 ---
 
@@ -13,4 +13,4 @@ int main() {
     scanf("%d", &input);
     printf("%d", solve(input));
     return 0;
-}
+}`;

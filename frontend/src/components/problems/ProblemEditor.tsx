@@ -12,6 +12,7 @@ import apiClient from "../../client/apiClient.ts";
 import { TextInput } from "../inputs/TextInput.tsx";
 import { TestCasesFileUpload } from "./TestCasesFileUpload.tsx";
 import { LanguageId } from "../../shared/enums.ts";
+import { languageToSnippet } from "../../shared/defaultCodeSnippets/snippetToLanguage.ts";
 
 interface ProblemEditorProps {
   problem?: Problem;
@@ -88,7 +89,9 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           }}
           onLanguageChange={(value) => {
             setNewProblem((prev) => {
-              return { ...prev, languageId: value };
+              const code =
+                prev.baseCode !== "" ? prev.baseCode : languageToSnippet[value];
+              return { ...prev, languageId: value, baseCode: code };
             });
           }}
           code={newProblem.baseCode}

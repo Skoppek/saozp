@@ -1,4 +1,4 @@
----
+export default `---
 
 def solve():
     # tutaj wpisz rozwiązanie
@@ -6,4 +6,4 @@ def solve():
 ---
 
 data = input()
-print(solve(data))
+print(solve(data))`;

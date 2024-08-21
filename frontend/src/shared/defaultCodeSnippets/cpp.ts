@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>
+export default `#include <bits/stdc++.h>
 using namespace std;
 
 ---
@@ -14,4 +14,4 @@ int main() {
     cin >> input;
     cout << solve(input);
     return 0;
-}
+}`;

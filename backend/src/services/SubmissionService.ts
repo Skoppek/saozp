@@ -111,6 +111,27 @@ export class SubmissionService {
             );
         }
 
+        if (contestId) {
+            const contestSubmissions = await this.getSubmissionsList({
+                contestId: contestId.toString(),
+                problemId: problemId.toString(),
+                commitsOnly: true.toString(),
+                userId: userId.toString(),
+            });
+
+            Promise.all(
+                _.chain(contestSubmissions)
+                    .sortBy('createdAt')
+                    .take(3)
+                    .value()
+                    .map((submission) =>
+                        this.submissionRepository.deleteSubmissionById(
+                            submission.submissionId,
+                        ),
+                    ),
+            );
+        }
+
         const newSubmission = await this.submissionRepository.createSubmission({
             problemId,
             userId,

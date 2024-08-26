@@ -23,4 +23,5 @@ export const adminUserAccess = new Elysia()
         if (!user.isAdmin) {
             throw new UnauthorizedError();
         }
-    }).propagate();
+    })
+    .propagate();

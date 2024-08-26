@@ -75,7 +75,7 @@ export class SubmissionRepository {
     }
 
     async deleteSubmissionById(id: number) {
-        db.delete(submissionSchema).where(eq(submissionSchema.id, id));
+        return db.delete(submissionSchema).where(eq(submissionSchema.id, id));
     }
 
     async deleteNonCommitSubmissions(userId: number, problemId: number) {

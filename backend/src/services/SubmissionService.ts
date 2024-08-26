@@ -111,27 +111,6 @@ export class SubmissionService {
             );
         }
 
-        if (contestId) {
-            const contestSubmissions = await this.getSubmissionsList({
-                contestId: contestId.toString(),
-                problemId: problemId.toString(),
-                commitsOnly: true.toString(),
-                userId: userId.toString(),
-            });
-
-            Promise.all(
-                _.chain(contestSubmissions)
-                    .sortBy('createdAt')
-                    .take(3)
-                    .value()
-                    .map((submission) =>
-                        this.submissionRepository.deleteSubmissionById(
-                            submission.submissionId,
-                        ),
-                    ),
-            );
-        }
-
         const newSubmission = await this.submissionRepository.createSubmission({
             problemId,
             userId,
@@ -156,6 +135,28 @@ export class SubmissionService {
             problem.languageId,
             mergedCode,
         );
+
+        if (contestId) {
+            const contestSubmissions = await this.getSubmissionsList({
+                contestId: contestId.toString(),
+                problemId: problemId.toString(),
+                commitsOnly: true.toString(),
+                userId: userId.toString(),
+            });
+
+            await Promise.all(
+                _.chain(contestSubmissions)
+                    .sortBy('createdAt')
+                    .dropRight(3)
+                    .value()
+                    .map((submission) => {
+                        console.log(submission.submissionId);
+                        return this.submissionRepository.deleteSubmissionById(
+                            submission.submissionId,
+                        );
+                    }),
+            );
+        }
 
         return {
             submissionId: newSubmission.id,

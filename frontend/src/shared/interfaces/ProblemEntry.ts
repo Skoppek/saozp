@@ -3,7 +3,7 @@ import { Problem } from "./Problem";
 export interface ProblemEntry
   extends Pick<
     Problem,
-    "problemId" | "name" | "description" | "languageId" | "isContestsOnly"
+    "problemId" | "name" | "languageId" | "isContestsOnly"
   > {
   creator: {
     userId: number;

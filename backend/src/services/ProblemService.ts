@@ -2,15 +2,12 @@ import {
     CreateProblemRequest,
     UpdateProblemRequest,
 } from '../bodies/problemRequests';
-import { User } from '../model/schemas/userSchema';
-import { Profile } from '../model/schemas/profileSchema';
 import {
     ProblemCreationError,
     ProblemNotFoundError,
     ProblemUpdateError,
 } from '../errors/problemErrors';
 import ProblemRepository from '../repository/ProblemRepository';
-import { isTestCasesFile } from './TestCasesService';
 
 export class ProblemService {
     private problemRepository = new ProblemRepository();
@@ -58,7 +55,6 @@ export class ProblemService {
                 return {
                     problemId: problem.id,
                     name: problem.name,
-                    description: problem.description,
                     languageId: problem.languageId,
                     creator: problem.creator,
                     contestsOnly: problem.isContestsOnly ? true : undefined,
@@ -84,7 +80,6 @@ export class ProblemService {
         return {
             problemId: problem.id,
             name: problem.name,
-            description: problem.description,
             prompt: problem.prompt,
             languageId: problem.languageId,
             baseCode: isForSolving

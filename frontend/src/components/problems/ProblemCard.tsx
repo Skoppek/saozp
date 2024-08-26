@@ -18,9 +18,6 @@ export const ProblemCard = ({ problem, isOwner }: ProblemCardProps) => {
         <div className="h-full text-xl font-bold tracking-tight text-gray-900 dark:text-white">
           {problem.name}
         </div>
-        <div className="overflow-x-auto font-normal text-gray-700 dark:text-gray-400">
-          {problem.description}
-        </div>
         <div className="flex gap-2">
           <LinkButton
             to={`/problems/${problem.problemId}/solve`}

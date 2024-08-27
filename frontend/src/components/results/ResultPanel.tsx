@@ -3,8 +3,7 @@ import {
   AccordionContent,
 } from "flowbite-react/components/Accordion";
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
-import { Submission } from "../../shared/interfaces/Submission";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TestResultList } from "./TestResultList.tsx";
 import { ResultPanelTitle } from "./ResultPanelTitle";
 import { CodeEditor } from "../CodeEditor";
@@ -12,6 +11,8 @@ import { getLanguageById } from "../../shared/constansts";
 import { Spinner } from "flowbite-react/components/Spinner";
 import apiClient from "../../client/apiClient.ts";
 import { TestPanelStats } from "./TestPanelStats.tsx";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "flowbite-react";
 
 interface ResultPanelProps {
   submission: SubmissionEntry;
@@ -19,15 +20,12 @@ interface ResultPanelProps {
 
 export const ResultPanel = ({ submission }: ResultPanelProps) => {
   const [isOpen, setOpen] = useState(false);
-  const [details, setDetails] = useState<Submission>();
 
-  useEffect(() => {
-    if (isOpen && !details) {
-      apiClient.submissions.get(submission.submissionId).then((data) => {
-        setDetails(data);
-      });
-    }
-  }, [details, isOpen, submission.submissionId]);
+  const { data, isFetching, refetch } = useQuery({
+    queryKey: ["submission", submission.submissionId, "results"],
+    queryFn: () => apiClient.submissions.get(submission.submissionId),
+    enabled: isOpen,
+  });
 
   return (
     <Accordion collapseAll onClick={() => setOpen((prev) => !prev)}>
@@ -38,19 +36,22 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
           <ResultPanelTitle submission={submission} showCommitFlag={true} />
         </Accordion.Title>
         <AccordionContent>
-          {details ? (
+          {data && !isFetching ? (
             <div className="flex flex-col items-center gap-2">
-              <div className="flex justify-between">
-                <TestPanelStats submission={details} />
+              <div className="flex flex-row justify-between w-full">
+                <TestPanelStats submission={data} />
+                <Button onClick={() => refetch()} size={"xs"}>
+                  Odśwież
+                </Button>
               </div>
               <div className="h-80 w-full">
                 <CodeEditor
-                  languages={getLanguageById(details.languageId)}
-                  code={details.code}
+                  languages={getLanguageById(data.languageId)}
+                  code={data.code}
                   className="size-full"
                 />
               </div>
-              <TestResultList tests={details.result.tests} />
+              <TestResultList tests={data.result.tests} />
             </div>
           ) : (
             <div className="flex w-screen justify-center">

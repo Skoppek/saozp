@@ -275,6 +275,14 @@ export class SubmissionService {
             )
         ).submissions;
 
+        const averageTime = this.getAverage(
+            results.map((result) => parseFloat(result.time)),
+        );
+
+        const averageMemory = this.getAverage(
+            results.map((result) => result.memory),
+        );
+
         return {
             languageId:
                 (await judge0Service.getLanguageById(problem.languageId))?.id ??
@@ -290,12 +298,8 @@ export class SubmissionService {
                         received: result.stdout,
                     };
                 }),
-                averageMemory: this.getAverage(
-                    results.map((result) => result.memory),
-                ),
-                averageTime: this.getAverage(
-                    results.map((result) => parseFloat(result.time)),
-                ),
+                averageMemory: isNaN(averageMemory) ? null : averageMemory,
+                averageTime: isNaN(averageTime) ? null : averageTime,
             },
             createdAt: mapIfPresent(submission.createdAt, (v) => v),
             creator: mapIfPresent(submission.creator, (v) => v),

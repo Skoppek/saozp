@@ -29,11 +29,11 @@ export const TestPanelStats = ({ submission }: TestPanelStatsProps) => {
       <Badge
         className="w-fit"
         size="xl"
-      >{`Średnia pamięć: ${(submission?.result.averageMemory / 1024).toFixed(2)} MB`}</Badge>
+      >{`Średnia pamięć: ${(submission?.result.averageMemory ?? 0 / 1024).toFixed(2)} MB`}</Badge>
       <Badge
         className="w-fit"
         size="xl"
-      >{`Średni czas: ${(submission?.result.averageTime * 1000).toFixed(0)} ms`}</Badge>
+      >{`Średni czas: ${(submission?.result.averageTime ?? 0 * 1000).toFixed(0)} ms`}</Badge>
       <Badge className="w-fit" size="xl">{`Skuteczność: ${efficiency}%`}</Badge>
     </div>
   );

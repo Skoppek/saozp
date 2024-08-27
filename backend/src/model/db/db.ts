@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import {Client} from 'pg';
+import { Client } from 'pg';
 import schema from './schema';
 
 const connectionString = process.env.DB_CONNECTION_STRING;

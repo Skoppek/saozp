@@ -2,6 +2,6 @@ import { TestCaseResult } from "./TestCaseResult";
 
 export interface Result {
   tests: TestCaseResult[];
-  averageMemory: number;
-  averageTime: number;
+  averageMemory: number | null;
+  averageTime: number | null;
 }

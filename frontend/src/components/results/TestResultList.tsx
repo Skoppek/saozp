@@ -27,7 +27,7 @@ export const TestResultList = ({ tests }: TestResultListProps) => {
                   }
                   className="flex justify-center"
                 >
-                  {test.received}
+                  {test.received != null ? test.received : "Błąd"}
                 </Badge>
               </Table.Cell>
               {test.statusId !== TestStatus.ACCEPTED && (

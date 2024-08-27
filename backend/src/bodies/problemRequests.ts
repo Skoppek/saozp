@@ -2,7 +2,6 @@ import { Elysia, Static, t } from 'elysia';
 
 const createProblemRequest = t.Object({
     name: t.String(),
-    description: t.String(),
     prompt: t.String(),
     languageId: t.Number(),
     baseCode: t.String(),
@@ -17,22 +16,7 @@ const createProblemRequest = t.Object({
 
 export type CreateProblemRequest = Static<typeof createProblemRequest>;
 
-const updateProblemRequest = t.Partial(
-    t.Object({
-        name: t.String(),
-        description: t.String(),
-        prompt: t.String(),
-        languageId: t.Number(),
-        baseCode: t.String(),
-        testsFile: t.Array(
-            t.Object({
-                input: t.String(),
-                expected: t.String(),
-            }),
-        ),
-        isContestsOnly: t.Boolean(),
-    }),
-);
+const updateProblemRequest = t.Partial(createProblemRequest);
 
 export type UpdateProblemRequest = Static<typeof updateProblemRequest>;
 

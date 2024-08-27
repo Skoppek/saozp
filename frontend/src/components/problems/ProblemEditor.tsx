@@ -21,7 +21,6 @@ interface ProblemEditorProps {
 export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
   const [newProblem, setNewProblem] = useState<NewProblem>({
     name: problem?.name ?? "",
-    description: problem?.description ?? "",
     baseCode: problem?.baseCode ?? "",
     prompt: problem?.prompt ?? "",
     tests: problem?.tests ?? [],
@@ -37,30 +36,17 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
     <div className="m-8 flex h-[75vh] flex-row gap-4">
       <div className="flex h-full w-1/2 flex-col gap-2">
         <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex gap-4">
-            <TextInput
-              className="w-full"
-              label="Nazwa zadania"
-              id="problem-name"
-              onChange={(value) => {
-                setNewProblem((prev) => {
-                  return { ...prev, name: value };
-                });
-              }}
-              value={newProblem.name}
-            />
-            <TextInput
-              className="w-full"
-              label="Krótki opis"
-              id="problem-description"
-              onChange={(value) => {
-                setNewProblem((prev) => {
-                  return { ...prev, description: value };
-                });
-              }}
-              value={newProblem.description}
-            />
-          </div>
+          <TextInput
+            className="w-full"
+            label="Nazwa zadania"
+            id="problem-name"
+            onChange={(value) => {
+              setNewProblem((prev) => {
+                return { ...prev, name: value };
+              });
+            }}
+            value={newProblem.name}
+          />
           <MarkdownEditor
             onChange={(value) => {
               setNewProblem((prev) => {

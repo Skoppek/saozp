@@ -15,7 +15,6 @@ export const problemSchema = pgTable('problems', {
         .references(() => userSchema.id)
         .notNull(),
     name: varchar('name', { length: 128 }).notNull(),
-    description: varchar('description', { length: 1024 }).notNull(),
     prompt: text('prompt').notNull(),
     languageId: integer('language_id').notNull(),
     tests: json('tests')

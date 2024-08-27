@@ -4,7 +4,6 @@ const problemListResponse = t.Array(
     t.Object({
         problemId: t.Number(),
         name: t.String(),
-        description: t.String(),
         languageId: t.Number(),
         creator: t.Object({
             userId: t.Number(),
@@ -18,7 +17,6 @@ const problemListResponse = t.Array(
 const problemDetailsResponse = t.Object({
     problemId: t.Number(),
     name: t.String(),
-    description: t.String(),
     prompt: t.String(),
     languageId: t.Number(),
     baseCode: t.String(),

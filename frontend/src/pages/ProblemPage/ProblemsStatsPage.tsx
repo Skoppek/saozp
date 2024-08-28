@@ -42,7 +42,6 @@ export const ProblemStatsPage = () => {
     <UserLoggedCheck>
       <div className="mt-4 flex w-full flex-col items-center">
         <div className="text-6xl">{problem?.name}</div>
-        <div>{problem?.description}</div>
       </div>
       <div className="flex items-end justify-center gap-4">
         <TextInput

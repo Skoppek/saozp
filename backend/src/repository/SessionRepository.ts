@@ -1,7 +1,6 @@
 import { desc, eq, lt } from 'drizzle-orm';
 import { NewSession, sessionSchema } from '../model/schemas/sessionSchema';
 import { db } from '../model/db/db';
-import moment from 'moment';
 
 export default abstract class SessionRepository {
     static async createSession(session: NewSession) {

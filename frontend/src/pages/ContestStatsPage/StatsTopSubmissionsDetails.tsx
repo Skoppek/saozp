@@ -33,11 +33,15 @@ const fetchTopSubmissions = async (problemId: number, contestId: number) => {
     .at(0);
 
   const bestMemory = details
-    .sort((a, b) => (a.result.averageMemory <= b.result.averageMemory ? 1 : 0))
+    .sort((a, b) =>
+      (a.result.averageMemory ?? 0 <= (b.result.averageMemory ?? 0)) ? 1 : 0,
+    )
     .at(0);
 
   const bestTime = details
-    .sort((a, b) => (a.result.averageTime <= b.result.averageTime ? 1 : 0))
+    .sort((a, b) =>
+      (a.result.averageTime ?? 0) <= (b.result.averageTime ?? 0) ? 1 : 0,
+    )
     .at(0);
 
   return {
@@ -71,12 +75,12 @@ export const StatsTopSubmissionsDetails = ({
           />
           <TopStatPanel
             label={"Najmniejsze zużycie pamięci"}
-            value={data?.bestMemory?.result.averageMemory}
+            value={data?.bestMemory?.result.averageMemory ?? 0}
             creator={data.bestMemory?.creator}
           />
           <TopStatPanel
             label={"Najszybsze rozwiązanie"}
-            value={data?.bestTime?.result.averageTime}
+            value={data?.bestTime?.result.averageTime ?? 0}
             creator={data.bestMemory?.creator}
           />
         </div>

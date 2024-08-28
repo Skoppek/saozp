@@ -9,7 +9,6 @@ import { LiveSubmissionView } from "./LiveSubmissionView";
 import { dateTimeFormat } from "../../shared/constansts";
 import moment from "moment";
 import { Badge } from "flowbite-react/components/Badge";
-import { Button } from "flowbite-react";
 import { RerunButton } from "../../components/RerunButton";
 
 export const ContestStatsPage = () => {

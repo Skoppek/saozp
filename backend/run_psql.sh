@@ -8,4 +8,5 @@ docker run \
 -e POSTGRES_DB=saozp \
 -v ./psql:/var/lib/postgresql/data \
 -p 5000:5432 \
+-n soazp-db \
 -d postgres

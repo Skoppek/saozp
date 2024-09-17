@@ -9,19 +9,19 @@ import {
 } from '../errors/authErrors';
 
 export default abstract class AuthService {
-    private static getSaltedPassword(password: string) {
+    private static getSaltedString(password: string) {
         return password + Bun.env.PASSWORD_SALT ?? '';
     }
 
-    private static async preparePassword(password: string) {
-        const saltedPassword = AuthService.getSaltedPassword(password);
-        return await Bun.password.hash(saltedPassword);
+    private static async getHashedString(value: string) {
+        const saltedValue = AuthService.getSaltedString(value);
+        return await Bun.password.hash(saltedValue);
     }
 
     static async registerUser(login: string, password: string) {
         return await UserRepository.createUser({
             login,
-            password: await AuthService.preparePassword(password),
+            password: await AuthService.getHashedString(password),
         });
     }
 
@@ -59,7 +59,7 @@ export default abstract class AuthService {
 
         if (
             !Bun.password.verifySync(
-                AuthService.getSaltedPassword(password),
+                AuthService.getSaltedString(password),
                 user.password,
             )
         ) {
@@ -79,7 +79,7 @@ export default abstract class AuthService {
 
         await PasswordResetTokenRepository.putToken({
             userId,
-            token,
+            token: await Bun.password.hash(token),
             expiresAt: moment().add(1, 'day').toDate(),
         });
 
@@ -87,15 +87,16 @@ export default abstract class AuthService {
     }
 
     static async resetPassword(token: string, newPassword: string) {
-        const tokenData =
-            await PasswordResetTokenRepository.getTokenByToken(token);
+        const tokenData = await PasswordResetTokenRepository.getTokenByToken(
+            await AuthService.getHashedString(token),
+        );
 
         if (!tokenData || moment(tokenData.expiresAt).isBefore(moment())) {
             throw new PasswordResetTokenNotFoundError();
         }
 
         await UserRepository.updateUser(tokenData.userId, {
-            password: await AuthService.preparePassword(newPassword),
+            password: await AuthService.getHashedString(newPassword),
         });
 
         await PasswordResetTokenRepository.removeTokenOfUser(tokenData.userId);

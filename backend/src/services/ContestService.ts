@@ -16,8 +16,6 @@ import { SubmissionService } from './SubmissionService';
 import StageRepository from '../repository/StageRepository';
 
 export default class ContestService {
-    private submissionRepository = new SubmissionRepository();
-
     private submissionService = new SubmissionService();
 
     private contestId: number;

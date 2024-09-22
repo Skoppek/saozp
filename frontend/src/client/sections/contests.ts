@@ -150,6 +150,7 @@ export default {
   addParticipants,
   removeParticipants,
   getStages,
+  getStage,
   addProblems,
   addBundle,
   removeProblems,

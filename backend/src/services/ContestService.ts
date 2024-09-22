@@ -57,9 +57,19 @@ export default class ContestService {
             throw new ContestNotFoundError(this.contestId);
         }
 
-        const stages = await StageRepository.getStagesOfContest(contest.id);
+        return contest;
+    }
 
-        return { ...contest, stages: stages.map((stage) => stage.id) };
+    async getStages() {
+        const phases = await StageRepository.getStagesOfContest(this.contestId);
+        return phases.map((phase) => {
+            return {
+                id: phase.id,
+                name: phase.name,
+                startDate: phase.startDate,
+                endDate: phase.endDate,
+            };
+        });
     }
 
     async update(data: Partial<Contest>) {

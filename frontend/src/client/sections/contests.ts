@@ -42,7 +42,7 @@ const getAll = async ({
 
 const get = async (contestId: number) =>
   await edenClient
-    .contest({ id: contestId })
+    .contest({ contestId })
     .get()
     .then((res) => {
       if (!res.data) {
@@ -52,14 +52,14 @@ const get = async (contestId: number) =>
     });
 
 const put = async (contestId: number, data: Partial<Contest>) =>
-  await edenClient.contest({ id: contestId }).put(data);
+  await edenClient.contest({ contestId }).put(data);
 
 const remove = async (contestId: number) =>
-  await edenClient.contest({ id: contestId }).delete();
+  await edenClient.contest({ contestId }).delete();
 
 const getParticipants = async (contestId: number) =>
   await edenClient
-    .contest({ id: contestId })
+    .contest({ contestId })
     .users.get()
     .then((res) => {
       if (!res.data) {
@@ -73,7 +73,7 @@ const addParticipants = async (
   participantIds?: number[],
   groupId?: number,
 ) =>
-  await edenClient.contest({ id: contestId }).users.put({
+  await edenClient.contest({ contestId }).users.put({
     usersIds: participantIds,
     groupId,
   });
@@ -82,14 +82,25 @@ const removeParticipants = async (
   contestId: number,
   participantIds?: number[],
 ) =>
-  await edenClient.contest({ id: contestId }).users.delete({
+  await edenClient.contest({ contestId }).users.delete({
     usersIds: participantIds,
   });
 
-const getProblems = async (contestId: number) =>
+const getStages = async (contestId: number) =>
   await edenClient
-    .contest({ id: contestId })
-    .problems.get()
+    .contest({ contestId })
+    .stages.get()
+    .then((res) => {
+      if (!res.data) throw new Error("Unexpected null in response.");
+      if (res.error) throw new Error("Something went wrong");
+      return res.data;
+    });
+
+const getStage = async (contestId: number, stageId: number) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .get()
     .then((res) => {
       if (!res.data) throw new Error("Unexpected null in response.");
       if (res.error) throw new Error("Something went wrong");
@@ -98,21 +109,36 @@ const getProblems = async (contestId: number) =>
 
 const addProblems = async (
   contestId: number,
-  problemIds?: number[],
-  bundleId?: number,
+  stageId: number,
+  problemIds: number[],
 ) =>
-  await edenClient.contest({ id: contestId }).problems.put({
-    problemIds: problemIds,
-    bundleId: bundleId,
-  });
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .problems.put(problemIds);
 
-const removeProblems = async (contestId: number, participantIds?: number[]) =>
-  await edenClient.contest({ id: contestId }).problems.delete({
-    problemIds: participantIds,
-  });
+const addBundle = async (
+  contestId: number,
+  stageId: number,
+  bundleId: number,
+) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .bundle.put(bundleId);
+
+const removeProblems = async (
+  contestId: number,
+  stageId: number,
+  problemIds: number[],
+) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .problems.delete(problemIds);
 
 const rerun = async (contestId: number) =>
-  await edenClient.contest({ id: contestId }).rerun.post();
+  await edenClient.contest({ contestId }).rerun.post();
 
 export default {
   create,
@@ -123,8 +149,9 @@ export default {
   getParticipants,
   addParticipants,
   removeParticipants,
-  getProblems,
+  getStages,
   addProblems,
+  addBundle,
   removeProblems,
   rerun,
 };

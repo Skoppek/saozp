@@ -25,7 +25,6 @@ const getContestResponse = t.Intersect([
     contestBasicData,
     t.Object({
         description: t.String(),
-        stages: t.Array(t.Number()),
     }),
 ]);
 

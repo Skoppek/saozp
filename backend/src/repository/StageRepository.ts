@@ -3,7 +3,6 @@ import { db } from '../model/db/db';
 import { NewStage, Stage, stageSchema } from '../model/schemas/stageSchema';
 import _ from 'lodash';
 import { problemsToStageSchema } from '../model/schemas/intermediates/problemsToContestSchema';
-import { mapIfPresent } from '../shared/mapper';
 
 export default class StageRepository {
     static async createStage(newStage: NewStage) {

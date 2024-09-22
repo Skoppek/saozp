@@ -1,5 +1,4 @@
-import { NewStage, Stage } from '../model/schemas/stageSchema';
-import BundleRepository from '../repository/BundleRepository';
+import { NewStage } from '../model/schemas/stageSchema';
 import ProblemRepository from '../repository/ProblemRepository';
 import StageRepository from '../repository/StageRepository';
 

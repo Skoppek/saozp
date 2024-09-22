@@ -97,5 +97,5 @@ artillery report <wynik>.json
 - [x] tworzenie grup zajęciowych
 - [x] grupowanie problemów w konkursy
 - [x] przypisanie użytkowników do konkursów
-- [ ] statystyka wyników
-- [ ] ponowne uruchamianie testów na rozwiązaniach
+- [x] statystyka wyników
+- [x] ponowne uruchamianie testów na rozwiązaniach

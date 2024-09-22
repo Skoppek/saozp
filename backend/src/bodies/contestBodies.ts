@@ -3,8 +3,6 @@ import { Elysia, Static, t } from 'elysia';
 const createContestBody = t.Object({
     name: t.String(),
     description: t.String(),
-    startDate: t.Date(),
-    endDate: t.Date(),
 });
 
 export type CreateContestBody = Static<typeof createContestBody>;

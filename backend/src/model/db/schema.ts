@@ -12,7 +12,7 @@ import { passwordResetTokenSchema } from '../schemas/passwordResetTokenSchema';
 import { problemsToBundleSchema } from '../schemas/intermediates/problemsToBundleSchema';
 import { contestSchema } from '../schemas/contestSchema';
 import { usersToContestSchema } from '../schemas/intermediates/usersToContestSchema';
-import { problemsToContestSchema } from '../schemas/intermediates/problemsToContestSchema';
+import { problemsToStageSchema } from '../schemas/intermediates/problemsToContestSchema';
 
 export default {
     profileSchema,
@@ -29,5 +29,5 @@ export default {
     problemsToBundleSchema,
     passwordResetTokenSchema,
     usersToContestSchema,
-    problemsToContestSchema,
+    problemsToContestSchema: problemsToStageSchema,
 };

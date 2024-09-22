@@ -5,7 +5,7 @@ import _ from 'lodash';
 import { profileSchema } from '../model/schemas/profileSchema';
 import { userSchema } from '../model/schemas/userSchema';
 import { problemsToBundleSchema } from '../model/schemas/intermediates/problemsToBundleSchema';
-import { problemsToContestSchema } from '../model/schemas/intermediates/problemsToContestSchema';
+import { problemsToStageSchema } from '../model/schemas/intermediates/problemsToContestSchema';
 
 export default class ProblemRepository {
     async createProblem(newProblem: NewProblem) {
@@ -36,7 +36,7 @@ export default class ProblemRepository {
         });
     }
 
-    async getProblemsOfBundle(bundleId: number) {
+    static async getProblemsOfBundle(bundleId: number) {
         const result = await db
             .select({
                 problem: problemSchema,
@@ -51,28 +51,19 @@ export default class ProblemRepository {
         return result.map((entry) => entry.problem);
     }
 
-    async getProblemsOfContest(contestId: number) {
+    static async getProblemsOfStage(stageId: number) {
         return db
             .select({
                 problemId: problemSchema.id,
                 name: problemSchema.name,
                 languageId: problemSchema.languageId,
-                creator: {
-                    userId: profileSchema.userId,
-                    firstName: profileSchema.firstName,
-                    lastName: profileSchema.lastName,
-                },
             })
             .from(problemSchema)
             .innerJoin(
-                problemsToContestSchema,
-                eq(problemsToContestSchema.problemId, problemSchema.id),
+                problemsToStageSchema,
+                eq(problemsToStageSchema.problemId, problemSchema.id),
             )
-            .innerJoin(
-                profileSchema,
-                eq(profileSchema.userId, problemSchema.creatorId),
-            )
-            .where(eq(problemsToContestSchema.contestId, contestId));
+            .where(eq(problemsToStageSchema.stageId, stageId));
     }
 
     async getProblemById(problemId: number) {

@@ -5,33 +5,38 @@ import {
     ContestNotFoundError,
 } from '../errors/contestErrors';
 import ProfileRepository from '../repository/ProfileRepository';
-import ProblemRepository from '../repository/ProblemRepository';
 import { Contest } from '../model/schemas/contestSchema';
 import {
     ContestListQuery,
     parseContestListQuery,
 } from '../queryParsers/contestQueries';
-import moment from 'moment';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
 import _ from 'lodash';
 import { SubmissionService } from './SubmissionService';
+import StageRepository from '../repository/StageRepository';
 
 export default class ContestService {
-    private contestRepository = new ContestRepository();
-    private problemRepository = new ProblemRepository();
     private submissionRepository = new SubmissionRepository();
 
     private submissionService = new SubmissionService();
 
-    async createContest(
-        { name, endDate, startDate, description }: CreateContestBody,
+    private contestId: number;
+
+    constructor(constestId: number) {
+        this.contestId = constestId;
+    }
+
+    getContestId() {
+        return this.contestId;
+    }
+
+    static async create(
+        { name, description }: CreateContestBody,
         ownerId: number,
     ) {
-        const newContest = await this.contestRepository.createContest({
+        const newContest = await ContestRepository.createContest({
             owner: ownerId,
             name,
-            startDate,
-            endDate,
             description,
         });
 
@@ -40,36 +45,38 @@ export default class ContestService {
         }
     }
 
-    async getContestList(query: ContestListQuery) {
+    static async getMany(query: ContestListQuery) {
         const { participantId, ownerId } = parseContestListQuery(query);
-        return this.contestRepository.getContests(participantId, ownerId);
+        return ContestRepository.getContests(participantId, ownerId);
     }
 
-    async getContest(contestId: number) {
-        const contest = await this.contestRepository.getContestById(contestId);
+    async getDetails() {
+        const contest = await ContestRepository.getContestById(this.contestId);
 
         if (!contest) {
-            throw new ContestNotFoundError(contestId);
+            throw new ContestNotFoundError(this.contestId);
         }
 
-        return contest;
+        const stages = await StageRepository.getStagesOfContest(contest.id);
+
+        return { ...contest, stages: stages.map((stage) => stage.id) };
     }
 
-    async updateContest(contestId: number, data: Partial<Contest>) {
-        await this.contestRepository.updateContest(contestId, data);
+    async update(data: Partial<Contest>) {
+        await ContestRepository.updateContest(this.contestId, data);
     }
 
-    async deleteContest(contestId: number) {
-        await this.contestRepository.deleteContest(contestId);
+    async delete() {
+        await ContestRepository.deleteContest(this.contestId);
     }
 
-    async rerunLatestSubmissions(contestId: number) {
+    async rerunLatestSubmissions() {
         const allSubmissions =
             await this.submissionRepository.getSubmissionsList(
                 undefined,
                 undefined,
                 true,
-                contestId,
+                this.contestId,
             );
 
         const idsToRerun = _.chain(allSubmissions)
@@ -88,67 +95,25 @@ export default class ContestService {
         this.submissionService.rerunSubmissions(idsToRerun);
     }
 
-    async getUsersOfContest(contestId: number) {
-        return await ProfileRepository.getProfilesOfContest(contestId);
+    async getParticipants() {
+        return await ProfileRepository.getProfilesOfContest(this.contestId);
     }
 
-    async getProblemsOfContest(contestId: number, userId: number) {
-        const contest = await this.contestRepository.getContestById(contestId);
-
-        if (
-            userId != contest?.owner.userId &&
-            moment().isBefore(contest?.startDate)
-        )
-            throw new Error('This contest has not started yet.');
-
-        return await this.problemRepository.getProblemsOfContest(contestId);
-    }
-
-    async addUsersToContest(contestId: number, userIds: number[]) {
+    async addParticipants(userIds: number[]) {
         await Promise.all(
-            userIds.map((id) => this.contestRepository.addUser(contestId, id)),
+            userIds.map((id) => ContestRepository.addUser(this.contestId, id)),
         );
     }
 
-    async addGroupToContest(contestId: number, groupId: number) {
+    async addGroup(groupId: number) {
         const users = await ProfileRepository.getProfilesOfGroup(groupId);
-
-        await this.addUsersToContest(
-            contestId,
-            users.map((user) => user.userId),
-        );
+        await this.addParticipants(users.map((user) => user.userId));
     }
 
-    async removeUsersFromContest(contestId: number, userIds: number[]) {
+    async removeParticipants(userIds: number[]) {
         await Promise.all(
             userIds.map((id) =>
-                this.contestRepository.removeUser(contestId, id),
-            ),
-        );
-    }
-
-    async addProblemsToContest(contestId: number, problemIds: number[]) {
-        await Promise.all(
-            problemIds.map((id) =>
-                this.contestRepository.addProblem(contestId, id),
-            ),
-        );
-    }
-
-    async addBundleToContest(contestId: number, bundleId: number) {
-        const problems =
-            await this.problemRepository.getProblemsOfBundle(bundleId);
-
-        await this.addProblemsToContest(
-            contestId,
-            problems.map((problem) => problem.id),
-        );
-    }
-
-    async removeProblemsFromContest(contestId: number, problemIds: number[]) {
-        await Promise.all(
-            problemIds.map((id) =>
-                this.contestRepository.removeProblem(contestId, id),
+                ContestRepository.removeUser(this.contestId, id),
             ),
         );
     }

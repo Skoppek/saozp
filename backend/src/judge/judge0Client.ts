@@ -14,7 +14,6 @@ const submit = async ({
     languageId,
     code,
     test,
-    callbackUrl,
 }: {
     languageId: number;
     code: string;
@@ -22,21 +21,17 @@ const submit = async ({
         input: string;
         expected: string;
     };
-    callbackUrl?: string;
 }) => {
     const submission = {
         language_id: languageId,
         source_code: code,
         stdin: test.input,
         expected_output: test.expected,
-        callback_url: callbackUrl,
     };
 
     const res = await axios.post(
         `${judge0Url}/submissions`,
-        {
-            ...submission,
-        },
+        submission,
         axiosConfig,
     );
 

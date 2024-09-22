@@ -16,8 +16,6 @@ const problemBasicData = t.Object({
 const contestBasicData = t.Object({
     id: t.Number(),
     name: t.String(),
-    startDate: t.Date(),
-    endDate: t.Date(),
     owner: userBasicData,
 });
 
@@ -27,6 +25,7 @@ const getContestResponse = t.Intersect([
     contestBasicData,
     t.Object({
         description: t.String(),
+        stages: t.Array(t.Number()),
     }),
 ]);
 

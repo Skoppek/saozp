@@ -66,7 +66,7 @@ export default class ProblemRepository {
             .where(eq(problemsToStageSchema.stageId, stageId));
     }
 
-    async getProblemById(problemId: number) {
+    static async getProblemById(problemId: number) {
         const result = await db
             .select()
             .from(problemSchema)
@@ -80,7 +80,10 @@ export default class ProblemRepository {
         return result.at(0);
     }
 
-    async updateProblemById(problemId: number, problem: Partial<NewProblem>) {
+    static async updateProblemById(
+        problemId: number,
+        problem: Partial<NewProblem>,
+    ) {
         const result = await db
             .update(problemSchema)
             .set(_.omitBy(problem, (value) => _.isUndefined(value)))

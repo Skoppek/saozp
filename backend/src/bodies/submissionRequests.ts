@@ -12,7 +12,7 @@ const createSubmissionRequestBody = t.Object({
         ),
     ),
     isCommit: t.Boolean(),
-    contestId: t.Optional(t.Number()),
+    stageId: t.Optional(t.Number()),
     createdAt: t.Optional(t.Date()),
 });
 

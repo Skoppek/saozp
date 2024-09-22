@@ -81,13 +81,12 @@ export default class ContestService {
     }
 
     async rerunLatestSubmissions() {
-        const allSubmissions =
-            await this.submissionRepository.getSubmissionsList(
-                undefined,
-                undefined,
-                true,
-                this.contestId,
-            );
+        const allSubmissions = await SubmissionRepository.getSubmissionsList(
+            undefined,
+            undefined,
+            true,
+            this.contestId,
+        );
 
         const idsToRerun = _.chain(allSubmissions)
             .groupBy('problemId')

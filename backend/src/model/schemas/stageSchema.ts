@@ -10,7 +10,7 @@ import { contestSchema } from './contestSchema';
 export const stageSchema = pgTable('stages', {
     id: serial('id').primaryKey(),
     contestId: integer('contest_id')
-        .references(() => contestSchema.id)
+        .references(() => contestSchema.id, { onDelete: 'cascade' })
         .notNull(),
     name: varchar('name', { length: 64 }).notNull(),
     startDate: timestamp('starts', { withTimezone: true }).notNull(),

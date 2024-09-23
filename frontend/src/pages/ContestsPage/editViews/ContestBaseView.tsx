@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../../client/apiClient";
-import moment from "moment";
 import { Spinner } from "flowbite-react";
 import { ContestInfoForm } from "../ContestInfoForm";
 
@@ -21,8 +20,6 @@ export const ContestBaseView = ({ contestId }: ContestBaseViewProps) => {
           defaultData={{
             name: data?.name ?? "",
             description: data?.description ?? "",
-            startDate: data?.startDate ?? moment().set("second", 0).toDate(),
-            endDate: data?.endDate ?? moment().set("second", 0).toDate(),
           }}
           onSubmit={(x) => {
             apiClient.contests.put(contestId, x).then(() => refetch());

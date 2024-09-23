@@ -79,7 +79,7 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
               <Accordion.Title>Opis</Accordion.Title>
               <Accordion.Content>
                 <MarkdownEditor
-                  markdown={problem.prompt}
+                  defaultMarkdown={problem.prompt}
                   displayOnly
                   className="h-full"
                 />

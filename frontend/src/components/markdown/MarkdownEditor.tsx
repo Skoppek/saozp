@@ -6,7 +6,7 @@ import { ClassName } from "../../shared/interfaces/ClassName";
 import { Label } from "flowbite-react/components/Label";
 
 interface MarkdownEditorProps extends ClassName {
-  markdown?: string;
+  defaultMarkdown?: string;
   label?: string;
   onChange?: (value: string) => void;
   displayOnly?: true;
@@ -15,13 +15,13 @@ interface MarkdownEditorProps extends ClassName {
 
 export const MarkdownEditor = ({
   onChange,
-  markdown,
+  defaultMarkdown = "",
   label,
   displayOnly,
   rows,
 }: MarkdownEditorProps) => {
   const [showPreview, setShowPreview] = useState(false);
-  const [value, setMarkdown] = useState<string>(markdown ?? "");
+  const [value, setMarkdown] = useState<string>(defaultMarkdown);
   return (
     <div>
       {!displayOnly && (

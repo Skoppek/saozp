@@ -53,7 +53,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
                 return { ...prev, prompt: value };
               });
             }}
-            markdown={newProblem.prompt}
+            defaultMarkdown={newProblem.prompt}
           />
         </div>
         <TestCasesFileUpload

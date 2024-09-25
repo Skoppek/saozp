@@ -6,6 +6,7 @@ import {
     serial,
     text,
     timestamp,
+    varchar,
 } from 'drizzle-orm/pg-core';
 import { problemSchema } from './problemSchema';
 import { userSchema } from './userSchema';
@@ -28,6 +29,7 @@ export const submissionSchema = pgTable(
             onDelete: 'set null',
         }),
         rerun: timestamp('rerun'),
+        ip: varchar('ip', { length: 15 }),
     },
     (submissionSchema) => ({
         userIdIdx: index('submission_user_id_idx').on(submissionSchema.userId),

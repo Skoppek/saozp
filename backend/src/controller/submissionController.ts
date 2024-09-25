@@ -5,6 +5,7 @@ import { submissionResponses } from '../responses/submissionResponses';
 import { submissionQueries } from '../queryParsers/submissionQueries';
 import { submissionErrorHandler } from '../errorHandlers/submissionErrorHandler';
 import { submissionRequestBodies } from '../bodies/submissionRequests';
+import { ip } from 'elysia-ip';
 
 export default new Elysia({
     prefix: 'submission',
@@ -20,10 +21,11 @@ export default new Elysia({
     .decorate({
         submissionService: new SubmissionService(),
     })
+    .use(ip())
     .post(
         '',
-        async ({ userId, body }) =>
-            await SubmissionService.createSubmission(body, userId),
+        async ({ userId, body, ip }) =>
+            await SubmissionService.createSubmission({ ...body, ip }, userId),
         {
             body: 'createSubmissionRequestBody',
         },

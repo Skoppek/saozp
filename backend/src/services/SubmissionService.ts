@@ -28,7 +28,8 @@ export class SubmissionService {
             code,
             userTests,
             createdAt,
-        }: CreateSubmissionRequestBody,
+            ip,
+        }: CreateSubmissionRequestBody & { ip?: string },
         userId: number,
     ) {
         const problem = await ProblemRepository.getProblemById(problemId);
@@ -48,6 +49,7 @@ export class SubmissionService {
             createdAt,
             problem,
             userTests,
+            ip,
         );
         await SubmissionService.checkForContestDeletions(
             stageId,
@@ -75,6 +77,7 @@ export class SubmissionService {
             isDeactivated: boolean;
         },
         userTests: { input: string; expected: string }[] | undefined,
+        ip?: string,
     ) {
         const newSubmission = await SubmissionRepository.createSubmission({
             problemId,
@@ -83,6 +86,7 @@ export class SubmissionService {
             isCommit,
             stageId,
             createdAt,
+            ip,
         });
 
         if (!newSubmission) {
@@ -95,7 +99,7 @@ export class SubmissionService {
         );
 
         SubmissionService.submitTests(
-            !!isCommit ? problem.tests : userTests ?? [],
+            !!isCommit ? problem.tests : (userTests ?? []),
             newSubmission.id,
             problem.languageId,
             mergedCode,
@@ -299,6 +303,7 @@ export class SubmissionService {
             },
             createdAt: mapIfPresent(submission.createdAt, (v) => v),
             creator: mapIfPresent(submission.creator, (v) => v),
+            ip: mapIfPresent(submission.ip, (v) => v),
         };
     }
 

@@ -4,7 +4,7 @@ import { userSchema } from './userSchema';
 
 export const contestSchema = pgTable('contests', {
     id: serial('id').primaryKey(),
-    name: varchar('name', { length: 128 }).notNull(),
+    name: varchar('name', { length: 64 }).notNull(),
     description: text('description').notNull(),
     owner: integer('owner_id')
         .references(() => userSchema.id)

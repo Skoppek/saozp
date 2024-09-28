@@ -17,18 +17,18 @@ export const StagesView = () => {
   });
 
   return (
-    <div className="w-full">
+    <>
       {data && !isFetching ? (
         <div className="flex flex-col items-center gap-4">
           <CreateStageModal onCreate={() => refetch()} />
-          <Accordion className="w-[800px]">
+          <Accordion className="w-[600px]" collapseAll>
             {_(data)
               .sortBy("startDate")
               .value()
               .map((stage) => (
                 <Accordion.Panel>
                   <Accordion.Title>
-                    <div className="flex justify-between w-[700px]">
+                    <div className="flex justify-between w-[500px]">
                       <Badge size="sm">
                         {displayDateTime(stage.startDate)}
                       </Badge>
@@ -53,6 +53,6 @@ export const StagesView = () => {
       ) : (
         <Spinner />
       )}
-    </div>
+    </>
   );
 };

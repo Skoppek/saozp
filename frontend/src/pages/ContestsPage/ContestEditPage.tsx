@@ -4,6 +4,8 @@ import { ContestContextProvider } from "../../shared/useContestContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMemo } from "react";
 import { mapIfPresent } from "../../shared/mapper";
+import { ContestParticipantsView } from "./editViews/participants/ContestParticipantsView";
+import { ContestBaseView } from "./editViews/ContestBaseView";
 
 export const ContestEditPage = () => {
   const { id } = useParams();
@@ -21,10 +23,10 @@ export const ContestEditPage = () => {
   return (
     <UserLoggedCheck>
       <ContestContextProvider contestId={contestId}>
-        <div className="flex flex-col justify-center gap-4 overflow-x-auto mx-12 pt-12">
+        <div className="flex justify-center gap-4 overflow-x-auto mx-12 pt-12">
+          <ContestBaseView contestId={contestId} />
           <StagesView />
-          {/* <ContestBaseView contestId={contestId} /> */}
-          {/* <ContestParticipantsView contestId={contestId} /> */}
+          <ContestParticipantsView />
         </div>
       </ContestContextProvider>
     </UserLoggedCheck>

@@ -23,6 +23,7 @@ export default {
         `${SCHEMAS_PATH}/bundleSchema.ts`,
         `${SCHEMAS_PATH}/contestSchema.ts`,
         `${SCHEMAS_PATH}/passwordResetTokenSchema.ts`,
+        `${SCHEMAS_PATH}/stageSchema.ts`,
         `${INTERMEDIATES_SCHEMAS_PATH}/usersToGroupSchema.ts`,
         `${INTERMEDIATES_SCHEMAS_PATH}/problemsToBundleSchema.ts`,
         `${INTERMEDIATES_SCHEMAS_PATH}/usersToContestSchema.ts`,

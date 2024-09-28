@@ -1,12 +1,11 @@
 import _ from "lodash";
 import { mapIfPresent } from "../../shared/mapper.ts";
 import edenClient from "../edenClient.ts";
+import { NewStage } from "../../shared/interfaces/NewStage.ts";
 
 interface NewContest {
   name: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
 }
 
 interface Contest extends NewContest {
@@ -86,6 +85,10 @@ const removeParticipants = async (
     usersIds: participantIds,
   });
 
+const addStage = async (contestId: number, newStage: NewStage) => {
+  await edenClient.contest({ contestId }).stages.post(newStage);
+};
+
 const getStages = async (contestId: number) =>
   await edenClient
     .contest({ contestId })
@@ -153,6 +156,7 @@ export default {
   getStage,
   addProblems,
   addBundle,
+  addStage,
   removeProblems,
   rerun,
 };

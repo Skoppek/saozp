@@ -29,5 +29,5 @@ export default {
     problemsToBundleSchema,
     passwordResetTokenSchema,
     usersToContestSchema,
-    problemsToContestSchema: problemsToStageSchema,
+    problemsToStageSchema,
 };

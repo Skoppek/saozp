@@ -1,12 +1,11 @@
 import { Accordion, Badge, Spinner } from "flowbite-react";
 import { CreateStageModal } from "./CreateStageModal";
-import { useContestContext } from "../../../../shared/useContest";
+import { useContestContext } from "../../../../shared/useContestContext";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../../../client/apiClient";
 import _ from "lodash";
-import { dateTimeFormat } from "../../../../shared/constansts";
-import moment from "moment";
 import { displayDateTime } from "../../../../shared/functions";
+import { StageProblemsView } from "../problems/StageProblemsView";
 
 export const StagesView = () => {
   const { id: contestId } = useContestContext();
@@ -20,7 +19,7 @@ export const StagesView = () => {
   return (
     <div className="w-full">
       {data && !isFetching ? (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4">
           <CreateStageModal onCreate={() => refetch()} />
           <Accordion className="w-[800px]">
             {_(data)
@@ -38,11 +37,14 @@ export const StagesView = () => {
                     </div>
                   </Accordion.Title>
                   <Accordion.Content>
-                    <CreateStageModal
-                      onCreate={() => refetch()}
-                      stageId={stage.id}
-                      defaultValue={stage}
-                    />
+                    <div className="flex flex-col gap-4">
+                      <CreateStageModal
+                        onCreate={() => refetch()}
+                        defaultValue={stage}
+                        stageId={stage.id}
+                      />
+                      <StageProblemsView stageId={stage.id} />
+                    </div>
                   </Accordion.Content>
                 </Accordion.Panel>
               ))}

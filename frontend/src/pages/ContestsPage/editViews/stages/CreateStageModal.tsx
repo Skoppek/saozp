@@ -5,7 +5,7 @@ import { Button } from "flowbite-react/components/Button";
 import { DateTimePicker } from "../../../../components/inputs/DateTimePicker";
 import apiClient from "../../../../client/apiClient";
 import { NewStage } from "../../../../shared/interfaces/NewStage";
-import { useContestContext } from "../../../../shared/useContest";
+import { useContestContext } from "../../../../shared/useContestContext";
 import { Spinner } from "flowbite-react";
 import inRange from "lodash/inRange";
 import moment from "moment";

@@ -218,10 +218,13 @@ export default new Elysia({
                                                         body,
                                                     }) =>
                                                         await stageService.addBundle(
-                                                            body,
+                                                            body.bundleId,
                                                         ),
                                                     {
-                                                        body: t.Number(),
+                                                        body: t.Object({
+                                                            bundleId:
+                                                                t.Number(),
+                                                        }),
                                                     },
                                                 ),
                                     )

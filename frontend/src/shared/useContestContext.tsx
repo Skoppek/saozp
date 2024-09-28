@@ -1,29 +1,18 @@
-import { createContext, useContext, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { mapIfPresent } from "../../../backend/src/shared/mapper";
+import { createContext, useContext, useMemo } from "react";
 
 interface Contest {
-  id?: number;
+  id: number;
 }
 
 const ContestContext = createContext<Contest | undefined>(undefined);
 
 export const ContestContextProvider = ({
   children,
+  contestId,
 }: {
   children?: React.ReactNode;
+  contestId: number;
 }) => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const contestId = useMemo(() => {
-    const resolvedId = mapIfPresent(id, parseInt);
-    if (!resolvedId) {
-      navigate("/contests");
-    }
-    return resolvedId;
-  }, [id, navigate]);
-
   const ctxValue = useMemo<Contest>(() => {
     return {
       id: contestId,

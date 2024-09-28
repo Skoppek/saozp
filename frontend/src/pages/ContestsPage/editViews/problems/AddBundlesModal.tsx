@@ -11,12 +11,14 @@ import { TextInput } from "../../../../components/inputs/TextInput";
 
 interface AddBundlesModalProps {
   contestId: number;
+  stageId: number;
   show: boolean;
   onClose: () => void;
 }
 
 export const AddBundlesModal = ({
   contestId,
+  stageId,
   show,
   onClose,
 }: AddBundlesModalProps) => {
@@ -45,7 +47,7 @@ export const AddBundlesModal = ({
             onClick={() => {
               Promise.all(
                 selected.map((bundle) =>
-                  apiClient.contests.addProblems(contestId, [], bundle.id),
+                  apiClient.contests.addBundle(contestId, stageId, bundle.id),
                 ),
               ).then(() => {
                 onClose();

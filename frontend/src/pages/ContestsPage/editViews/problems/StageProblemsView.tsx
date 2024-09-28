@@ -9,19 +9,16 @@ import { AddBundlesModal } from "./AddBundlesModal";
 import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
 import { getLanguageById } from "../../../../shared/constansts";
 import { TextInput } from "../../../../components/inputs/TextInput";
+import { useContestContext } from "../../../../shared/useContestContext";
 
 type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
 
-interface ContestProblemsViewProps {
-  contestId: number;
-}
+export const StageProblemsView = ({ stageId }: { stageId: number }) => {
+  const { id: contestId } = useContestContext();
 
-export const ContestProblemsView = ({
-  contestId,
-}: ContestProblemsViewProps) => {
   const { data, isFetching, refetch } = useQuery({
-    queryKey: ["contestEdit", "problems", contestId],
-    queryFn: () => apiClient.contests.getProblems(contestId),
+    queryKey: ["stage", stageId, "problems"],
+    queryFn: () => apiClient.contests.getStage(contestId, stageId),
   });
 
   const [selected, setSelected] = useState<Problem[]>([]);
@@ -35,8 +32,9 @@ export const ContestProblemsView = ({
         <>
           <AddProblemsModal
             contestId={contestId}
+            stageId={stageId}
             show={showAddProblems}
-            problems={data}
+            problems={data.problems}
             onClose={() => {
               setShowAddProblems(false);
               refetch();
@@ -44,6 +42,7 @@ export const ContestProblemsView = ({
           />
           <AddBundlesModal
             contestId={contestId}
+            stageId={stageId}
             show={showAddBundles}
             onClose={() => {
               setShowAddBundles(false);
@@ -77,6 +76,7 @@ export const ContestProblemsView = ({
                   apiClient.contests
                     .removeProblems(
                       contestId,
+                      stageId,
                       selected.map((x) => x.problemId),
                     )
                     .then(() => {
@@ -99,11 +99,10 @@ export const ContestProblemsView = ({
               <Table.Head>
                 <Table.HeadCell>Nazwa</Table.HeadCell>
                 <Table.HeadCell>Język</Table.HeadCell>
-                <Table.HeadCell>Twórca</Table.HeadCell>
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body>
-                {data
+                {data.problems
                   .filter((problem) =>
                     problem.name.toLowerCase().includes(nameFilter),
                   )
@@ -115,12 +114,6 @@ export const ContestProblemsView = ({
                           {getLanguageById(problem.languageId)?.name ??
                             "Nieznany"}
                         </Badge>
-                      </Table.Cell>
-                      <Table.Cell>
-                        {[
-                          problem.creator.firstName,
-                          problem.creator.lastName,
-                        ].join(" ")}
                       </Table.Cell>
                       <Table.Cell>
                         <Checkbox

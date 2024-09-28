@@ -128,7 +128,7 @@ const addBundle = async (
   await edenClient
     .contest({ contestId })
     .stages({ stageId })
-    .bundle.put(bundleId);
+    .bundle.put({ bundleId });
 
 const removeProblems = async (
   contestId: number,

@@ -16,6 +16,7 @@ type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
 
 interface AddProblemsModalProps {
   contestId: number;
+  stageId: number;
   show: boolean;
   problems: Problem[];
   onClose: () => void;
@@ -23,6 +24,7 @@ interface AddProblemsModalProps {
 
 export const AddProblemsModal = ({
   contestId,
+  stageId,
   show,
   onClose,
   problems,
@@ -53,6 +55,7 @@ export const AddProblemsModal = ({
               apiClient.contests
                 .addProblems(
                   contestId,
+                  stageId,
                   selected.map((x) => x.problemId),
                 )
                 .then(onClose)

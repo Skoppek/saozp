@@ -39,24 +39,27 @@ export default class StageRepository {
     }
 
     static async getStagesOfContest(contestId: number) {
-        return db
+        return await db
             .select()
             .from(stageSchema)
             .where(eq(stageSchema.contestId, contestId));
     }
 
     static async addProblem(stageId: number, problemId: number) {
-        db.insert(problemsToStageSchema)
+        await db
+            .insert(problemsToStageSchema)
             .values({ problemId, stageId })
             .returning();
     }
 
     static async removeProblem(stageId: number, problemId: number) {
-        db.delete(problemsToStageSchema).where(
-            and(
-                eq(problemsToStageSchema.stageId, stageId),
-                eq(problemsToStageSchema.problemId, problemId),
-            ),
-        );
+        await db
+            .delete(problemsToStageSchema)
+            .where(
+                and(
+                    eq(problemsToStageSchema.stageId, stageId),
+                    eq(problemsToStageSchema.problemId, problemId),
+                ),
+            );
     }
 }

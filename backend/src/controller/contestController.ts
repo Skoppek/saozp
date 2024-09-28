@@ -140,6 +140,7 @@ export default new Elysia({
                             '/:stageId',
                             {
                                 params: t.Object({
+                                    contestId: t.Number(),
                                     stageId: t.Number(),
                                 }),
                             },

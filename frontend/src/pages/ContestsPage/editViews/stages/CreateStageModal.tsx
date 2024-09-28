@@ -12,17 +12,25 @@ import moment from "moment";
 
 interface CreateStageModalProps {
   onCreate: () => void;
+  defaultValue?: NewStage;
+  stageId?: number;
 }
 
-export const CreateStageModal = ({ onCreate }: CreateStageModalProps) => {
+export const CreateStageModal = ({
+  onCreate,
+  defaultValue,
+  stageId,
+}: CreateStageModalProps) => {
   const [show, setShow] = useState(false);
   const [waiting, setWaiting] = useState(false);
 
-  const [newStage, setNewStage] = useState<NewStage>({
-    name: "",
-    startDate: new Date(),
-    endDate: new Date(),
-  });
+  const [newStage, setNewStage] = useState<NewStage>(
+    defaultValue ?? {
+      name: "",
+      startDate: new Date(),
+      endDate: new Date(),
+    },
+  );
 
   const isValid = useMemo<boolean>(() => {
     return (
@@ -35,7 +43,13 @@ export const CreateStageModal = ({ onCreate }: CreateStageModalProps) => {
 
   const addStage = useCallback(async () => {
     if (contestId) {
-      await apiClient.contests.addStage(contestId, newStage);
+      setWaiting(true);
+      if (defaultValue && stageId) {
+        await apiClient.contests.updateStage(contestId, stageId, newStage);
+      } else {
+        await apiClient.contests.addStage(contestId, newStage);
+      }
+      setWaiting(false);
     }
   }, [contestId, newStage]);
 
@@ -47,10 +61,12 @@ export const CreateStageModal = ({ onCreate }: CreateStageModalProps) => {
         className="w-full"
         onClick={() => setShow(true)}
       >
-        Dodaj etap
+        {defaultValue ? "Edytuj" : "Dodaj etap"}
       </Button>
       <Modal show={show} onClose={() => setShow(false)}>
-        <Modal.Header>Dodawanie etapu</Modal.Header>
+        <Modal.Header>
+          {defaultValue ? "Edycja etapu" : "Dodwanie etapu"}
+        </Modal.Header>
         <Modal.Body>
           <div className="flex flex-col gap-4">
             <TextInput
@@ -64,6 +80,7 @@ export const CreateStageModal = ({ onCreate }: CreateStageModalProps) => {
                   };
                 });
               }}
+              defaultValue={defaultValue ? defaultValue.name : ""}
             />
             <div className="flex gap-4">
               <DateTimePicker
@@ -99,7 +116,13 @@ export const CreateStageModal = ({ onCreate }: CreateStageModalProps) => {
                 onCreate();
               }}
             >
-              {waiting ? <Spinner /> : "Dodaj etap"}
+              {waiting ? (
+                <Spinner />
+              ) : defaultValue ? (
+                "Modyfikuj"
+              ) : (
+                "Dodaj etap"
+              )}
             </Button>
           </div>
         </Modal.Body>

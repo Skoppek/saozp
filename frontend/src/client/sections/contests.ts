@@ -149,6 +149,9 @@ const updateStage = async (
   stageData: NewStage,
 ) => await edenClient.contest({ contestId }).stages({ stageId }).put(stageData);
 
+const removeStage = async (contestId: number, stageId: number) =>
+  await edenClient.contest({ contestId }).stages({ stageId }).delete();
+
 export default {
   create,
   get,
@@ -158,12 +161,13 @@ export default {
   getParticipants,
   addParticipants,
   removeParticipants,
-  getStages,
-  getStage,
-  updateStage,
   addProblems,
   addBundle,
   addStage,
+  getStages,
+  getStage,
+  updateStage,
+  removeStage,
   removeProblems,
   rerun,
 };

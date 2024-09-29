@@ -60,6 +60,7 @@ export default class ContestService {
 
     async getStages() {
         const phases = await StageRepository.getStagesOfContest(this.contestId);
+
         return phases.map((phase) => {
             return {
                 id: phase.id,

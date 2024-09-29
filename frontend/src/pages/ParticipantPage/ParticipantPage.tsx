@@ -8,9 +8,8 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { Button } from "flowbite-react/components/Button";
 import { HiChevronRight } from "react-icons/hi";
 import { ParticipantProblemsList } from "./ParticipantProblemsList";
-import moment from "moment";
-import { dateTimeFormat } from "../../shared/constansts";
 import { TextInput } from "../../components/inputs/TextInput";
+import { ContestContextProvider } from "../../shared/useContestContext";
 
 export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);
@@ -27,7 +26,7 @@ export const ParticipantPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 h-full">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           <div className="flex w-1/2 flex-col gap-2">
             <TextInput
@@ -41,8 +40,6 @@ export const ParticipantPage = () => {
               <Table>
                 <Table.Head>
                   <Table.HeadCell>Nazwa</Table.HeadCell>
-                  <Table.HeadCell>Start</Table.HeadCell>
-                  <Table.HeadCell>Koniec</Table.HeadCell>
                   <Table.HeadCell>Organizator</Table.HeadCell>
                   <Table.HeadCell></Table.HeadCell>
                 </Table.Head>
@@ -54,12 +51,6 @@ export const ParticipantPage = () => {
                     .map((contest, index) => (
                       <Table.Row id={index.toString()}>
                         <Table.Cell>{contest.name}</Table.Cell>
-                        <Table.Cell>
-                          {moment(contest.startDate).format(dateTimeFormat)}
-                        </Table.Cell>
-                        <Table.Cell>
-                          {moment(contest.endDate).format(dateTimeFormat)}
-                        </Table.Cell>
                         <Table.Cell>
                           {[
                             contest.owner.firstName,

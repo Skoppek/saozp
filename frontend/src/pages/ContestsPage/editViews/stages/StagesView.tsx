@@ -1,4 +1,4 @@
-import { Accordion, Badge, Spinner } from "flowbite-react";
+import { Accordion, Badge, Button, Spinner } from "flowbite-react";
 import { CreateStageModal } from "./CreateStageModal";
 import { useContestContext } from "../../../../shared/useContestContext";
 import { useQuery } from "@tanstack/react-query";
@@ -12,8 +12,7 @@ export const StagesView = () => {
 
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["contestEdit", "stages", contestId],
-    queryFn: () => apiClient.contests.getStages(contestId!),
-    enabled: !!contestId,
+    queryFn: () => apiClient.contests.getStages(contestId),
   });
 
   return (
@@ -44,6 +43,17 @@ export const StagesView = () => {
                         stageId={stage.id}
                       />
                       <StageProblemsView stageId={stage.id} />
+                      <Button
+                        color={"red"}
+                        size="xs"
+                        onClick={() => {
+                          apiClient.contests
+                            .removeStage(contestId, stage.id)
+                            .then(() => refetch());
+                        }}
+                      >
+                        Usuń etap
+                      </Button>
                     </div>
                   </Accordion.Content>
                 </Accordion.Panel>

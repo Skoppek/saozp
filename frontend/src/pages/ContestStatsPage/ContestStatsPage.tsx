@@ -3,13 +3,14 @@ import { UserLoggedCheck } from "../../checks/UserLoggedCheck";
 import { useNumberParam } from "../../shared/useParam";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
-import { StatsTopSubmissions } from "./StatsTopSubmissions";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { LiveSubmissionView } from "./LiveSubmissionView";
-import { dateTimeFormat } from "../../shared/constansts";
-import moment from "moment";
-import { Badge } from "flowbite-react/components/Badge";
 import { RerunButton } from "../../components/RerunButton";
+import { Table } from "flowbite-react/components/Table";
+import { Spinner } from "flowbite-react";
+import { displayNames } from "../../shared/functions";
+import _ from "lodash";
+import { ScoreButton } from "./ScoreButton";
 
 export const ContestStatsPage = () => {
   const { id } = useParams();
@@ -25,6 +26,24 @@ export const ContestStatsPage = () => {
     enabled: !!contestIdValue,
   });
 
+  const { data: participants, isFetching: isFetchingParticipants } = useQuery({
+    queryKey: ["contest", contestIdValue, "participants", "stats"],
+    queryFn: () => apiClient.contests.getParticipants(contestIdValue!),
+    enabled: !!contestIdValue,
+  });
+
+  const { data: stages, isFetching: isFetchingStages } = useQuery({
+    queryKey: ["contest", contestIdValue, "stages", "stats"],
+    queryFn: () => apiClient.contests.getStagesStats(contestIdValue!),
+    enabled: !!contestIdValue,
+  });
+
+  const sortedStages = useMemo(() => {
+    return stages && !isFetchingStages
+      ? _(stages).sortBy("stage.startDate").value()
+      : undefined;
+  }, [stages, isFetchingStages]);
+
   return (
     <UserLoggedCheck>
       <div className="flex flex-col gap-4">
@@ -33,31 +52,44 @@ export const ContestStatsPage = () => {
             <div className="flex flex-col items-center gap-2">
               <div className="text-4xl">{data.name}</div>
               <div className="flex flex-col gap-4 items-center">
-                <Badge
-                  color={
-                    moment().isBefore(data.endDate)
-                      ? moment().isAfter(data.startDate)
-                        ? "green"
-                        : "blue"
-                      : "red"
-                  }
-                >
-                  {[
-                    moment(data.startDate).format(dateTimeFormat),
-                    moment(data.endDate).format(dateTimeFormat),
-                  ].join(" - ")}
-                </Badge>
-                {moment().isAfter(data.endDate) && contestIdValue && (
-                  <RerunButton contestId={contestIdValue} />
-                )}
+                {contestIdValue && <RerunButton contestId={contestIdValue} />}
               </div>
             </div>
             {contestIdValue && (
               <div className="flex gap-4">
-                <StatsTopSubmissions
-                  contestId={contestIdValue}
-                  onProblemOpen={(id) => setSelected(id)}
-                />
+                <Table>
+                  <Table.Head>
+                    <Table.HeadCell>Uczestnik</Table.HeadCell>
+                    {sortedStages &&
+                      sortedStages.map((stage) => (
+                        <Table.HeadCell>{stage.stage.id}</Table.HeadCell>
+                      ))}
+                  </Table.Head>
+                  <Table.Body>
+                    {participants && !isFetchingParticipants ? (
+                      participants.map((participant) => (
+                        <Table.Row>
+                          <Table.Cell>{displayNames(participant)}</Table.Cell>
+                          {sortedStages &&
+                            sortedStages.map((stage) => (
+                              <Table.Cell>
+                                <ScoreButton
+                                  value={
+                                    stage.results.find(
+                                      (x) =>
+                                        x.participantId === participant.userId,
+                                    )?.result ?? 0
+                                  }
+                                />
+                              </Table.Cell>
+                            ))}
+                        </Table.Row>
+                      ))
+                    ) : (
+                      <Spinner />
+                    )}
+                  </Table.Body>
+                </Table>
                 {selected && (
                   <LiveSubmissionView
                     contestId={contestIdValue}

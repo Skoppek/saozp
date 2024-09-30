@@ -14,6 +14,10 @@ import { SubmissionRepository } from '../repository/SubmissionRepository';
 import _ from 'lodash';
 import { SubmissionService } from './SubmissionService';
 import StageRepository from '../repository/StageRepository';
+import ProblemRepository from '../repository/ProblemRepository';
+import judge0Client from '../judge/judge0Client';
+import TestRepository from '../repository/TestRepository';
+import judge0Statuses from '../shared/judge0Statuses';
 
 export default class ContestService {
     private submissionService = new SubmissionService();
@@ -123,6 +127,85 @@ export default class ContestService {
             userIds.map((id) =>
                 ContestRepository.removeUser(this.contestId, id),
             ),
+        );
+    }
+
+    async getStagesStats() {
+        const stages = await StageRepository.getStagesOfContest(this.contestId);
+        const participants = await this.getParticipants();
+
+        return await Promise.all(
+            stages.map(async (stage) => {
+                const participantsResults = await Promise.all(
+                    participants.map(async (participant) => {
+                        return {
+                            participantId: participant.userId,
+                            result: await ContestService.getResultOfParticipantInStage(
+                                participant.userId,
+                                stage.id,
+                            ),
+                        };
+                    }),
+                );
+
+                return {
+                    stage: {
+                        id: stage.id,
+                        name: stage.name,
+                        startDate: stage.startDate,
+                        endDate: stage.endDate,
+                    },
+                    results: participantsResults,
+                };
+            }),
+        );
+    }
+
+    private static async getResultOfParticipantInStage(
+        participant: number,
+        stage: number,
+    ) {
+        const submissions = await SubmissionRepository.getSubmissionsList(
+            participant,
+            undefined,
+            true,
+            stage,
+        );
+
+        const x = _(submissions)
+            .sortBy('createdAt')
+            .groupBy('problemId')
+            .map((group) => _.last(group) ?? [])
+            .flatMap()
+            .value();
+
+        const results = await Promise.all(
+            x.map(async (submission) => {
+                return await ContestService.getResultOfSubmission(
+                    submission.id,
+                );
+            }),
+        );
+
+        const mean = _.mean(results);
+
+        return _.isNaN(mean) ? 0 : mean;
+    }
+
+    private static async getResultOfSubmission(submission: number) {
+        const tests = await TestRepository.getTestsOfSubmission(submission);
+        const results = (
+            await judge0Client.getSubmissionBatch(
+                tests.map((test) => test.token),
+            )
+        ).submissions;
+
+        const correctCount = results.filter(
+            (result) => result.status.id == judge0Statuses.accepted.id,
+        ).length;
+
+        return _.floor(
+            (correctCount / (!!results.length ? results.length : 1)) * 100,
         );
     }
 }

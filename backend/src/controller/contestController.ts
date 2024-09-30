@@ -136,6 +136,29 @@ export default new Elysia({
                                 ),
                             },
                         )
+                        .get(
+                            '/stats',
+                            async ({ contestService }) =>
+                                await contestService.getStagesStats(),
+                            {
+                                response: t.Array(
+                                    t.Object({
+                                        stage: t.Object({
+                                            id: t.Number(),
+                                            name: t.String(),
+                                            startDate: t.Date(),
+                                            endDate: t.Date(),
+                                        }),
+                                        results: t.Array(
+                                            t.Object({
+                                                participantId: t.Number(),
+                                                result: t.Number(),
+                                            }),
+                                        ),
+                                    }),
+                                ),
+                            },
+                        )
                         .group(
                             '/:stageId',
                             {

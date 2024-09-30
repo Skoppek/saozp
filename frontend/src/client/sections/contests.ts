@@ -152,6 +152,16 @@ const updateStage = async (
 const removeStage = async (contestId: number, stageId: number) =>
   await edenClient.contest({ contestId }).stages({ stageId }).delete();
 
+const getStagesStats = async (contestId: number) =>
+  await edenClient
+    .contest({ contestId })
+    .stages.stats.get()
+    .then((res) => {
+      if (!res.data) throw new Error("Unexpected null in response.");
+      if (res.error) throw new Error("Something went wrong");
+      return res.data;
+    });
+
 export default {
   create,
   get,
@@ -166,6 +176,7 @@ export default {
   addStage,
   getStages,
   getStage,
+  getStagesStats,
   updateStage,
   removeStage,
   removeProblems,

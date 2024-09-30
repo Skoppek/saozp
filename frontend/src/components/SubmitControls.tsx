@@ -9,16 +9,21 @@ import humanizeDuration from "humanize-duration";
 export const SubmitControls = ({
   submitFn,
   contestId,
+  stageId,
   isWaiting,
 }: {
   submitFn: (asTest: boolean) => void;
   contestId?: number;
+  stageId?: number;
   isWaiting?: boolean;
   enableTests?: boolean;
 }) => {
   const { data, isFetching } = useQuery({
     queryKey: ["submission", "contest", contestId],
-    queryFn: () => (contestId ? apiClient.contests.get(contestId) : undefined),
+    queryFn: () =>
+      contestId && stageId
+        ? apiClient.contests.getStage(contestId, stageId)
+        : undefined,
     enabled: !_.isUndefined(contestId),
   });
 

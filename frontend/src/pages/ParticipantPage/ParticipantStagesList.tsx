@@ -3,12 +3,9 @@ import apiClient from "../../client/apiClient";
 import { Accordion, Button, Spinner } from "flowbite-react";
 import { InfoCard } from "../../components/InfoCard";
 import { HiEyeOff } from "react-icons/hi";
+import { StageProblems } from "./StageProblems";
 
-export const ParticipantProblemsList = ({
-  contestId,
-}: {
-  contestId: number;
-}) => {
+export const ParticipantStagesList = ({ contestId }: { contestId: number }) => {
   const { data, isFetching, isError, refetch } = useQuery({
     queryKey: ["participant", "problems", contestId],
     queryFn: () => apiClient.contests.getStages(contestId),
@@ -23,18 +20,10 @@ export const ParticipantProblemsList = ({
               <Accordion.Title>
                 <div className="flex w-[400px] justify-between">
                   <div>{stage.name}</div>
-                  {/* <LinkButton
-                    to={`/contests/${contestId}/problem/${problem.problemId}`}
-                    label="Rozwiąż"
-                    buttonProps={{ size: "xs" }}
-                  /> */}
                 </div>
               </Accordion.Title>
               <Accordion.Content>
-                {/* <ParticipantsSubmissions
-                  problemId={problem.problemId}
-                  contestId={contestId}
-                /> */}
+                <StageProblems contestId={contestId} stageId={stage.id} />
               </Accordion.Content>
             </Accordion.Panel>
           ))}

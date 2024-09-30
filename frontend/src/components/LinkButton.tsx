@@ -17,7 +17,11 @@ export const LinkButton = ({
   return (
     <div className={className}>
       <Link to={to}>
-        <Button size={buttonProps?.size} color={buttonProps?.color}>
+        <Button
+          size={buttonProps?.size}
+          color={buttonProps?.color}
+          className={className}
+        >
           {label}
         </Button>
       </Link>

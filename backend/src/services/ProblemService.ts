@@ -10,10 +10,8 @@ import {
 import ProblemRepository from '../repository/ProblemRepository';
 
 export class ProblemService {
-    private problemRepository = new ProblemRepository();
-
     private async fetchProblem(problemId: number) {
-        const problem = await this.problemRepository.getProblemById(+problemId);
+        const problem = await ProblemRepository.getProblemById(+problemId);
         if (!problem || problem.isDeactivated) {
             throw new ProblemNotFoundError(problemId);
         }
@@ -31,7 +29,7 @@ export class ProblemService {
     }
 
     async createProblem(data: CreateProblemRequest, creatorId: number) {
-        const newProblem = await this.problemRepository.createProblem({
+        const newProblem = await ProblemRepository.createProblem({
             ...data,
             creatorId,
         });
@@ -42,7 +40,7 @@ export class ProblemService {
     }
 
     async getProblemList(userId: number) {
-        return (await this.problemRepository.getProblems())
+        return (await ProblemRepository.getProblems())
             .filter((problem) => {
                 if (problem.creatorId == userId) {
                     return true;
@@ -92,7 +90,7 @@ export class ProblemService {
     }
 
     async updateProblem(problemId: number, data: UpdateProblemRequest) {
-        const updatedProblem = await this.problemRepository.updateProblemById(
+        const updatedProblem = await ProblemRepository.updateProblemById(
             problemId,
             data,
         );
@@ -102,6 +100,6 @@ export class ProblemService {
     }
 
     async deleteProblem(problemId: number) {
-        await this.problemRepository.deleteProblemById(problemId);
+        await ProblemRepository.deleteProblemById(problemId);
     }
 }

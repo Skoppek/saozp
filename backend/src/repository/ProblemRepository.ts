@@ -8,7 +8,7 @@ import { problemsToBundleSchema } from '../model/schemas/intermediates/problemsT
 import { problemsToStageSchema } from '../model/schemas/intermediates/problemsToContestSchema';
 
 export default class ProblemRepository {
-    async createProblem(newProblem: NewProblem) {
+    static async createProblem(newProblem: NewProblem) {
         const result = await db
             .insert(problemSchema)
             .values(newProblem)
@@ -17,7 +17,7 @@ export default class ProblemRepository {
         return result.at(0);
     }
 
-    async getProblems() {
+    static async getProblems() {
         const result = await db
             .select()
             .from(problemSchema)
@@ -93,7 +93,7 @@ export default class ProblemRepository {
         return result.at(0);
     }
 
-    async deleteProblemById(problemId: number) {
+    static async deleteProblemById(problemId: number) {
         await db
             .update(problemSchema)
             .set({

@@ -7,9 +7,9 @@ import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Button } from "flowbite-react/components/Button";
 import { HiChevronRight } from "react-icons/hi";
-import { ParticipantProblemsList } from "./ParticipantProblemsList";
+import { ParticipantStagesList } from "./ParticipantStagesList";
 import { TextInput } from "../../components/inputs/TextInput";
-import { ContestContextProvider } from "../../shared/useContestContext";
+import { Card } from "flowbite-react/components/Card";
 
 export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);
@@ -70,7 +70,7 @@ export const ParticipantPage = () => {
               <Spinner />
             )}
           </div>
-          {contestId && <ParticipantProblemsList contestId={contestId} />}
+          {contestId && <ParticipantStagesList contestId={contestId} />}
         </div>
       </div>
     </UserLoggedCheck>

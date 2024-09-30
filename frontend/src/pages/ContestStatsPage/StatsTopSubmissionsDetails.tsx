@@ -14,7 +14,7 @@ interface StatsTopSubmissionsDetailsProps {
 const fetchTopSubmissions = async (problemId: number, contestId: number) => {
   const all = await apiClient.submissions.getMany({
     problemId,
-    contestId,
+    stageId: contestId,
     commitsOnly: true,
   });
 

@@ -11,22 +11,22 @@ import { RerunIcon } from "../../components/RerunIcon";
 
 interface ParticipantsSubmissions {
   problemId: number;
-  contestId: number;
+  stageId: number;
 }
 
 export const ParticipantsSubmissions = ({
   problemId,
-  contestId,
+  stageId,
 }: ParticipantsSubmissions) => {
   const authContext = useContext(AuthContext);
 
   const { data, isFetching } = useQuery({
-    queryKey: ["contest", "problem", problemId, "submissisons"],
+    queryKey: ["contest", "problem", problemId, "submissisons", stageId],
     queryFn: () =>
       apiClient.submissions.getMany({
         problemId,
         userId: authContext?.user?.userId,
-        contestId,
+        stageId,
         commitsOnly: true,
       }),
   });
@@ -47,10 +47,8 @@ export const ParticipantsSubmissions = ({
                       {moment(submission.createdAt).format(dateTimeFormat)}
                     </Table.Cell>
                     <Table.Cell>
-                      {submission.rerun ? (
+                      {submission.rerun && (
                         <RerunIcon rerunDate={submission.rerun} />
-                      ) : (
-                        ""
                       )}
                     </Table.Cell>
                     <Table.Cell className="flex justify-end">
@@ -61,7 +59,7 @@ export const ParticipantsSubmissions = ({
             </TableBody>
           </Table>
         ) : (
-          <>Such empty</>
+          <>Brak rozwiązań</>
         )
       ) : (
         <Spinner />

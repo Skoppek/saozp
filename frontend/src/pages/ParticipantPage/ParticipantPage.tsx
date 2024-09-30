@@ -9,7 +9,6 @@ import { Button } from "flowbite-react/components/Button";
 import { HiChevronRight } from "react-icons/hi";
 import { ParticipantStagesList } from "./ParticipantStagesList";
 import { TextInput } from "../../components/inputs/TextInput";
-import { Card } from "flowbite-react/components/Card";
 
 export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);

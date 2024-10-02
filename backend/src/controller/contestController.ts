@@ -195,6 +195,36 @@ export default new Elysia({
                                             }),
                                         },
                                     )
+                                    .post(
+                                        '/stats',
+                                        async ({
+                                            contestService,
+                                            body,
+                                            params: { stageId },
+                                        }) =>
+                                            await contestService.getStatsForStage(
+                                                stageId,
+                                                body.participantId,
+                                            ),
+                                        {
+                                            body: t.Object({
+                                                participantId: t.Number(),
+                                            }),
+                                            response: t.Array(
+                                                t.Object({
+                                                    problem: t.Object({
+                                                        problemId: t.Number(),
+                                                        name: t.String(),
+                                                        languageId: t.Number(),
+                                                    }),
+                                                    submissionId: t.Optional(
+                                                        t.Number(),
+                                                    ),
+                                                    result: t.Number(),
+                                                }),
+                                            ),
+                                        },
+                                    )
                                     .put(
                                         '',
                                         async ({ stageService, body }) =>

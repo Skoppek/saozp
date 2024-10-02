@@ -14,10 +14,10 @@ import { SubmissionRepository } from '../repository/SubmissionRepository';
 import _ from 'lodash';
 import { SubmissionService } from './SubmissionService';
 import StageRepository from '../repository/StageRepository';
-import ProblemRepository from '../repository/ProblemRepository';
 import judge0Client from '../judge/judge0Client';
 import TestRepository from '../repository/TestRepository';
 import judge0Statuses from '../shared/judge0Statuses';
+import ProblemRepository from '../repository/ProblemRepository';
 
 export default class ContestService {
     private submissionService = new SubmissionService();
@@ -206,6 +206,39 @@ export default class ContestService {
 
         return _.floor(
             (correctCount / (!!results.length ? results.length : 1)) * 100,
+        );
+    }
+
+    async getStatsForStage(stageId: number, participantId: number) {
+        const problems = await ProblemRepository.getProblemsOfStage(stageId);
+
+        return await Promise.all(
+            problems.map(async (problem) => {
+                const submissions =
+                    await SubmissionRepository.getSubmissionsList(
+                        participantId,
+                        problem.problemId,
+                        true,
+                        stageId,
+                    );
+
+                const lastSubmission = _(submissions)
+                    .sortBy('createdAt')
+                    .groupBy('problemId')
+                    .map((group) => _.last(group) ?? [])
+                    .flatMap()
+                    .value()[0];
+
+                return {
+                    problem: problem,
+                    submissionId: lastSubmission?.id,
+                    result: lastSubmission
+                        ? await ContestService.getResultOfSubmission(
+                              lastSubmission.id,
+                          )
+                        : -1,
+                };
+            }),
         );
     }
 }

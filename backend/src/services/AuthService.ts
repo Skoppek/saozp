@@ -5,6 +5,7 @@ import moment from 'moment';
 import {
     PasswordMarkedForResetError,
     PasswordResetTokenNotFoundError,
+    PasswordResetWrongLoginError,
     UserNotFoundError,
 } from '../errors/authErrors';
 
@@ -72,24 +73,37 @@ export default abstract class AuthService {
 
     static async createPasswordResetToken(userId: number) {
         const token = randomstring.generate({
-            length: 8,
+            length: 4,
             charset: 'alphanumeric',
             capitalization: 'uppercase',
         });
 
+        console.log(token);
+
         await PasswordResetTokenRepository.putToken({
             userId,
-            token: await Bun.password.hash(token),
+            token: Bun.hash(token).toString(),
             expiresAt: moment().add(1, 'day').toDate(),
         });
 
         return { token };
     }
 
-    static async resetPassword(token: string, newPassword: string) {
-        const tokenData = await PasswordResetTokenRepository.getTokenByToken(
-            await AuthService.getHashedString(token),
-        );
+    static async resetPassword(
+        token: string,
+        newPassword: string,
+        login: string,
+    ) {
+        const hash = Bun.hash(token).toString();
+
+        const tokenData =
+            await PasswordResetTokenRepository.getTokenByToken(hash);
+
+        const user = await UserRepository.getUserByLogin(login);
+
+        if (user?.id != tokenData?.userId) {
+            throw new PasswordResetWrongLoginError();
+        }
 
         if (!tokenData || moment(tokenData.expiresAt).isBefore(moment())) {
             throw new PasswordResetTokenNotFoundError();

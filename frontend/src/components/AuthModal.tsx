@@ -155,22 +155,32 @@ export const AuthModal = ({
         <div className="flex flex-col gap-4">
           {isPasswordReset ? (
             <>
-              <Tooltip
-                content={
-                  "W razie braku tokena zmiany hasła zgłoś się po nowy do administratora."
-                }
-                style={"light"}
-                placement={"right-start"}
-              >
+              <div className="flex gap-4">
                 <TextInput
-                  id={"password-token"}
+                  id={"password-token-login"}
                   type={"text"}
-                  label={"Token zmiany hasła"}
+                  label={"Login"}
                   color={showWarnings ? "failure" : "gray"}
-                  helperText={showWarnings ? "Błędny token" : undefined}
-                  onChange={(value) => setToken(value)}
+                  helperText={showWarnings ? "Niepoprawny login" : undefined}
+                  onChange={(value) => setLogin(value)}
                 />
-              </Tooltip>
+                <Tooltip
+                  content={
+                    "W razie braku tokena zmiany hasła zgłoś się po nowy do administratora."
+                  }
+                  style={"light"}
+                  placement={"right-start"}
+                >
+                  <TextInput
+                    id={"password-token"}
+                    type={"text"}
+                    label={"Token zmiany hasła"}
+                    color={showWarnings ? "failure" : "gray"}
+                    helperText={showWarnings ? "Błędny token" : undefined}
+                    onChange={(value) => setToken(value)}
+                  />
+                </Tooltip>
+              </div>
               <TextInput
                 id={"new-password"}
                 type={"password"}
@@ -180,7 +190,7 @@ export const AuthModal = ({
               <Button
                 onClick={async () => {
                   await apiClient.auth
-                    .changePassword(token, password)
+                    .changePassword(token, password, login)
                     .then((response) => {
                       if (response.error) throw response.error;
                       resetStates();

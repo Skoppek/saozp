@@ -15,3 +15,9 @@ export class PasswordResetTokenNotFoundError extends Error {
         super('Provided reset token not found.');
     }
 }
+
+export class PasswordResetWrongLoginError extends Error {
+    constructor() {
+        super('Provided login is wrong.');
+    }
+}

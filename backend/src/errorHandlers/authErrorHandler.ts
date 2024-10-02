@@ -2,6 +2,7 @@ import { Elysia } from 'elysia';
 import {
     PasswordMarkedForResetError,
     PasswordResetTokenNotFoundError,
+    PasswordResetWrongLoginError,
     UserNotFoundError,
 } from '../errors/authErrors';
 import { HttpStatusCode } from 'elysia-http-status-code';
@@ -10,6 +11,7 @@ export const authErrorHandler = new Elysia()
     .error({
         PasswordMarkedForResetError,
         PasswordResetTokenNotFoundError,
+        PasswordResetWrongLoginError,
         UserNotFoundError,
     })
     .use(HttpStatusCode())
@@ -19,6 +21,7 @@ export const authErrorHandler = new Elysia()
                 set.status = httpStatus.HTTP_418_IM_A_TEAPOT;
                 return error;
             case 'PasswordResetTokenNotFoundError':
+            case 'PasswordResetWrongLoginError':
             case 'UserNotFoundError':
                 set.status = httpStatus.HTTP_404_NOT_FOUND;
                 return error;

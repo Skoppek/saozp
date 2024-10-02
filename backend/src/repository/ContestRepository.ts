@@ -75,8 +75,9 @@ export default class ContestRepository {
                 profileSchema,
                 eq(profileSchema.userId, contestSchema.owner),
             )
-            .innerJoin(stageSchema, eq(stageSchema.contestId, contestSchema.id))
+            .leftJoin(stageSchema, eq(stageSchema.contestId, contestSchema.id))
             .where(eq(contestSchema.id, contestId));
+
         return result
             .map((entry) => {
                 return {

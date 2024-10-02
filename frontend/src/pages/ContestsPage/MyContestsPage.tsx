@@ -67,67 +67,69 @@ export const MyContestsPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="flex flex-col justify-center gap-4 overflow-x-auto pt-12 w-1/2">
-        <ContestCreateModal
-          show={showCreationModal}
-          onClose={() => {
-            setShowCreationModal(false);
-            void refetch();
-          }}
-        />
-        <div className="flex justify-between w-full gap-2">
-          <TextInput
-            className="w-4/5"
-            placeholder="Szukaj po nazwie"
-            type="text"
-            id={"contestFilter"}
-            onChange={(value) => setNameFilter(value.toLowerCase())}
-          />
-          <ContestInfoForm
-            submitLabel="Dodaj zawody"
-            onSubmit={(value) => {
-              apiClient.contests.create(value);
-              refetch();
+      <div className="w-full flex justify-center">
+        <div className="flex flex-col gap-4 overflow-x-auto pt-12 w-1/2">
+          <ContestCreateModal
+            show={showCreationModal}
+            onClose={() => {
+              setShowCreationModal(false);
+              void refetch();
             }}
           />
-        </div>
-        <div className="h-screen">
-          <Table className="h-full">
-            <Table.Head>
-              <Table.HeadCell>Nazwa</Table.HeadCell>
-              <Table.HeadCell></Table.HeadCell>
-            </Table.Head>
-            {!isFetching && data ? (
-              <Table.Body>
-                {data
-                  .filter((contest) =>
-                    contest.name.toLowerCase().includes(nameFilter),
-                  )
-                  .map((contest) => (
-                    <Table.Row className="w-full bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell>{contest.name}</Table.Cell>
-                      <Table.Cell className="flex justify-end">
-                        <ContestOptions
-                          onScore={() => {
-                            navigate(`/contests/${contest.id}/stats`);
-                          }}
-                          onEdit={() => {
-                            navigate(`/contests/${contest.id}/edit`);
-                          }}
-                          onDelete={() =>
-                            apiClient.contests
-                              .remove(contest.id)
-                              .then(() => refetch())
-                          }
-                        />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-              </Table.Body>
-            ) : (
-              <Spinner />
-            )}
-          </Table>
+          <div className="flex justify-between w-full gap-2">
+            <TextInput
+              className="w-4/5"
+              placeholder="Szukaj po nazwie"
+              type="text"
+              id={"contestFilter"}
+              onChange={(value) => setNameFilter(value.toLowerCase())}
+            />
+            <ContestInfoForm
+              submitLabel="Dodaj zawody"
+              onSubmit={(value) => {
+                apiClient.contests.create(value);
+                refetch();
+              }}
+            />
+          </div>
+          <div className="h-screen">
+            <Table className="h-full">
+              <Table.Head>
+                <Table.HeadCell>Nazwa</Table.HeadCell>
+                <Table.HeadCell></Table.HeadCell>
+              </Table.Head>
+              {!isFetching && data ? (
+                <Table.Body>
+                  {data
+                    .filter((contest) =>
+                      contest.name.toLowerCase().includes(nameFilter),
+                    )
+                    .map((contest) => (
+                      <Table.Row className="w-full bg-white dark:border-gray-700 dark:bg-gray-800">
+                        <Table.Cell>{contest.name}</Table.Cell>
+                        <Table.Cell className="flex justify-end">
+                          <ContestOptions
+                            onScore={() => {
+                              navigate(`/contests/${contest.id}/stats`);
+                            }}
+                            onEdit={() => {
+                              navigate(`/contests/${contest.id}/edit`);
+                            }}
+                            onDelete={() =>
+                              apiClient.contests
+                                .remove(contest.id)
+                                .then(() => refetch())
+                            }
+                          />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                </Table.Body>
+              ) : (
+                <Spinner />
+              )}
+            </Table>
+          </div>
         </div>
       </div>
     </UserLoggedCheck>

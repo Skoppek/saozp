@@ -1,4 +1,4 @@
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import { ScoreButton } from "./ScoreButton";
 import _ from "lodash";
 import { displayNames } from "../../shared/functions";
@@ -49,7 +49,13 @@ export const StatsTable = ({
           _(stages)
             .sortBy("stage.startDate")
             .value()
-            .map((stage) => <Table.HeadCell>{stage.stage.id}</Table.HeadCell>)}
+            .map((stage) => (
+              <Table.HeadCell>
+                <Tooltip content={stage.stage.name}>
+                  {_.truncate(stage.stage.name, { length: 8 })}
+                </Tooltip>
+              </Table.HeadCell>
+            ))}
       </Table.Head>
       <Table.Body>
         {participants.map((participant) => (

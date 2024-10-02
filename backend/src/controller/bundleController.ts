@@ -25,9 +25,14 @@ export default new Elysia({
             body: 'createBundleBody',
         },
     )
-    .get('', async ({ bundleService }) => await bundleService.getBundleList(), {
-        response: 'getBundleListResponse',
-    })
+    .get(
+        '',
+        async ({ bundleService, user }) =>
+            await bundleService.getBundleList(user.id),
+        {
+            response: 'getBundleListResponse',
+        },
+    )
     .group('/:bundleId', (app) =>
         app
             .use(bundleIdParam)
@@ -56,8 +61,8 @@ export default new Elysia({
                 app
                     .get(
                         '',
-                        async ({ bundleService, bundleId }) =>
-                            await bundleService.getProblemsOfBundle(bundleId),
+                        async ({ bundleId }) =>
+                            await BundleService.getProblemsOfBundle(bundleId),
                         {
                             response: 'getProblemsList',
                         },

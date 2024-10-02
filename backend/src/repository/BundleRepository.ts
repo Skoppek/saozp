@@ -15,14 +15,15 @@ export default class BundleRepository {
         return result.at(0);
     }
 
-    async getBundleList() {
+    async getBundleList(userId: number) {
         const result = await db
             .select()
             .from(bundleSchema)
             .innerJoin(
                 profileSchema,
                 eq(profileSchema.userId, bundleSchema.owner),
-            );
+            )
+            .where(eq(bundleSchema.owner, userId));
 
         return result.map((entry) => {
             return { ...entry.bundle, owner: entry.profiles };

@@ -68,7 +68,7 @@ export const CreateStageModal = ({
           {defaultValue ? "Edycja etapu" : "Dodwanie etapu"}
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-[15rem]">
             <TextInput
               id={"stageCreation"}
               label={"Nazwa"}

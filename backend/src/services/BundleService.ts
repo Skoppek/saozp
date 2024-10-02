@@ -20,8 +20,8 @@ export default class BundleService {
         }
     }
 
-    async getBundleList() {
-        return await this.bundleRepository.getBundleList();
+    async getBundleList(userId: number) {
+        return await this.bundleRepository.getBundleList(userId);
     }
 
     async getBundle(bundleId: number) {

@@ -16,8 +16,6 @@ const problemBasicData = t.Object({
 const contestBasicData = t.Object({
     id: t.Number(),
     name: t.String(),
-    startDate: t.Date(),
-    endDate: t.Date(),
     owner: userBasicData,
 });
 

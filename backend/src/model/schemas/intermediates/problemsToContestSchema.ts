@@ -1,22 +1,22 @@
 import { integer } from 'drizzle-orm/pg-core/columns';
 import { pgTable } from 'drizzle-orm/pg-core/table';
 import { problemSchema } from '../problemSchema';
-import { contestSchema } from '../contestSchema';
 import { primaryKey } from 'drizzle-orm/pg-core';
+import { stageSchema } from '../stageSchema';
 
-export const problemsToContestSchema = pgTable(
-    'problems_to_contests',
+export const problemsToStageSchema = pgTable(
+    'problems_to_stage',
     {
         problemId: integer('problem_id')
             .references(() => problemSchema.id)
             .notNull(),
-        contestId: integer('contest_id')
-            .references(() => contestSchema.id, { onDelete: 'cascade' })
+        stageId: integer('stage_id')
+            .references(() => stageSchema.id, { onDelete: 'cascade' })
             .notNull(),
     },
     (table) => {
         return {
-            pk: primaryKey({ columns: [table.problemId, table.contestId] }),
+            pk: primaryKey({ columns: [table.problemId, table.stageId] }),
         };
     },
 );

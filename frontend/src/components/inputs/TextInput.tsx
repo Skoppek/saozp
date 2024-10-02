@@ -19,7 +19,7 @@ export const TextInput = ({
   label,
   id,
   value,
-  type,
+  type = "text",
   color,
   helperText,
   placeholder,
@@ -35,7 +35,7 @@ export const TextInput = ({
         </div>
       )}
       <FlowBiteTextInput
-        type={type ?? "text"}
+        type={type}
         required
         placeholder={placeholder}
         id={id}

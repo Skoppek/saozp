@@ -5,7 +5,7 @@ import _ from 'lodash';
 const submissionListQuery = t.Object({
     userId: t.Optional(t.String()),
     problemId: t.Optional(t.String()),
-    contestId: t.Optional(t.String()),
+    stageId: t.Optional(t.String()),
     commitsOnly: t.Optional(t.String()),
 });
 
@@ -15,7 +15,7 @@ export const parseSubmissionListQuery = (query: SubmissionListQuery) => {
     return {
         userId: mapIfPresent(query.userId, parseInt),
         problemId: mapIfPresent(query.problemId, parseInt),
-        contestId: mapIfPresent(query.contestId, parseInt),
+        stageId: mapIfPresent(query.stageId, parseInt),
         commitsOnly: mapIfPresent(
             query.commitsOnly,
             (value) => value === 'true',

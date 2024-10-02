@@ -49,6 +49,7 @@ const getSubmissionDetailsResponse = t.Object({
             userId: t.Number(),
         }),
     ),
+    ip: t.Optional(t.String()),
 });
 
 export const submissionResponses = new Elysia().model({

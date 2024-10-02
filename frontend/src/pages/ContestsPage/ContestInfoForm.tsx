@@ -1,19 +1,17 @@
 import { Button } from "flowbite-react/components/Button";
-import { DateTimePicker } from "../../components/inputs/DateTimePicker";
 import { TextInput } from "../../components/inputs/TextInput";
 import { MarkdownEditor } from "../../components/markdown/MarkdownEditor";
-import moment from "moment";
 import { useState } from "react";
+import { Modal } from "flowbite-react";
+import { inRange } from "lodash";
 
 interface ContestBaseInfo {
   name: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
 }
 
 interface ContestInfoFormProps {
-  defaultData: ContestBaseInfo;
+  defaultData?: ContestBaseInfo;
   onSubmit: (data: ContestBaseInfo) => void;
   submitLabel: string;
 }
@@ -23,51 +21,57 @@ export const ContestInfoForm = ({
   onSubmit,
   submitLabel,
 }: ContestInfoFormProps) => {
-  const [name, setName] = useState(defaultData.name);
-  const [description, setDescription] = useState(defaultData.description);
-  const [startDate, setStartDate] = useState(defaultData.startDate);
-  const [endDate, setEndDate] = useState(defaultData.endDate);
+  const [contest, setContest] = useState(
+    defaultData ?? { name: "", description: "" },
+  );
+  const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4">
-      <TextInput
-        id={"groupName"}
-        label={"Nazwa zawodów"}
-        onChange={(value) => setName(value)}
-      />
-      <MarkdownEditor
-        onChange={(value) => setDescription(value)}
-        label="Opis"
-        rows={8}
-      />
-      <div className="flex flex-col gap-2">
-        <DateTimePicker
-          id="startDate"
-          value={startDate}
-          onChange={(value) => setStartDate(value)}
-          label="Start"
-        />
-        <DateTimePicker
-          id="endDate"
-          value={endDate}
-          onChange={(value) => setEndDate(value)}
-          label="Koniec"
-        />
-      </div>
-      <Button
-        color={"success"}
-        disabled={!name.length || moment(startDate).isSameOrAfter(endDate)}
-        onClick={() =>
-          onSubmit({
-            name,
-            description,
-            startDate,
-            endDate,
-          })
-        }
-      >
-        {submitLabel}
-      </Button>
-    </div>
+    <>
+      <Button onClick={() => setShowModal(true)}>{submitLabel}</Button>
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Informacje o zawodach</Modal.Header>
+        <Modal.Body>
+          <div className="flex flex-col gap-4">
+            <TextInput
+              id={"groupName"}
+              label={"Nazwa zawodów"}
+              onChange={(value) =>
+                setContest((prev) => {
+                  return {
+                    ...prev,
+                    name: value,
+                  };
+                })
+              }
+              defaultValue={defaultData?.name ?? ""}
+            />
+            <MarkdownEditor
+              defaultMarkdown={defaultData?.description ?? ""}
+              onChange={(value) =>
+                setContest((prev) => {
+                  return {
+                    ...prev,
+                    description: value,
+                  };
+                })
+              }
+              label="Opis"
+              rows={16}
+            />
+            <Button
+              color={"success"}
+              disabled={!inRange(contest.name.length, 1, 65)}
+              onClick={() => {
+                onSubmit(contest);
+                setShowModal(false);
+              }}
+            >
+              {submitLabel}
+            </Button>
+          </div>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };

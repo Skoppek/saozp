@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../../client/apiClient";
-import moment from "moment";
-import { Spinner } from "flowbite-react";
+import { Card, Spinner } from "flowbite-react";
 import { ContestInfoForm } from "../ContestInfoForm";
+import { MarkdownEditor } from "../../../components/markdown/MarkdownEditor";
 
 interface ContestBaseViewProps {
   contestId: number;
@@ -15,20 +15,24 @@ export const ContestBaseView = ({ contestId }: ContestBaseViewProps) => {
   });
 
   return (
-    <div>
-      {!isFetching ? (
-        <ContestInfoForm
-          defaultData={{
-            name: data?.name ?? "",
-            description: data?.description ?? "",
-            startDate: data?.startDate ?? moment().set("second", 0).toDate(),
-            endDate: data?.endDate ?? moment().set("second", 0).toDate(),
-          }}
-          onSubmit={(x) => {
-            apiClient.contests.put(contestId, x).then(() => refetch());
-          }}
-          submitLabel={"Zatwierdź zmiany"}
-        />
+    <div className="w-1/4">
+      {!isFetching && data ? (
+        <div className="flex flex-col gap-4 justify-center">
+          <Card>
+            <div className="text-3xl">{data.name}</div>
+            <MarkdownEditor
+              displayOnly
+              defaultMarkdown={data.description}
+            ></MarkdownEditor>
+          </Card>
+          <ContestInfoForm
+            defaultData={data}
+            onSubmit={(x) => {
+              apiClient.contests.put(contestId, x).then(() => refetch());
+            }}
+            submitLabel={"Edytuj informacje"}
+          />
+        </div>
       ) : (
         <Spinner />
       )}

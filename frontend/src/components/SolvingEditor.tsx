@@ -15,9 +15,14 @@ import { SubmitControls } from "./SubmitControls.tsx";
 interface SolvingEditorProps {
   problem: Problem;
   contestId?: number;
+  stageId?: number;
 }
 
-export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
+export const SolvingEditor = ({
+  problem,
+  contestId,
+  stageId,
+}: SolvingEditorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState(problem.baseCode);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -31,7 +36,7 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
       apiClient.submissions.getMany({
         problemId: problem.problemId,
         userId: authContext?.user?.userId,
-        contestId,
+        stageId,
       }),
   });
 
@@ -44,15 +49,15 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
           code: code,
           userTests: userTests,
           isCommit: !isTest,
-          contestId,
           createdAt: new Date(),
+          stageId,
         })
         .then(() => {
           setIsSubmitting(false);
           void refetch();
         });
     },
-    [contestId, refetch, code, problem.problemId, userTests],
+    [contestId, refetch, code, problem.problemId, userTests, stageId],
   );
 
   return (
@@ -73,13 +78,14 @@ export const SolvingEditor = ({ problem, contestId }: SolvingEditorProps) => {
             enableTests={!!userTests.length}
             isWaiting={isSubmitting}
             contestId={contestId}
+            stageId={stageId}
           />
           <Accordion className="h-fit w-full" collapseAll>
             <Accordion.Panel>
               <Accordion.Title>Opis</Accordion.Title>
               <Accordion.Content>
                 <MarkdownEditor
-                  markdown={problem.prompt}
+                  defaultMarkdown={problem.prompt}
                   displayOnly
                   className="h-full"
                 />

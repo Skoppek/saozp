@@ -1,12 +1,12 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 import { contestBodies } from '../bodies/contestBodies';
 import { authenticatedUser } from '../plugins/authenticatedUser';
 import { contestResponses } from '../responses/contestResponses';
 import { contestErrorHandler } from '../errorHandlers/contestErrorHandler';
 import ContestService from '../services/ContestService';
-import idParam from '../plugins/idParam';
 import { NotImplementedError } from '../errors/generalErrors';
 import { contestQueries } from '../queryParsers/contestQueries';
+import StageService from '../services/StageService';
 
 export default new Elysia({
     prefix: 'contest',
@@ -19,163 +19,273 @@ export default new Elysia({
     .use(contestResponses)
     .use(authenticatedUser)
     .use(contestQueries)
-    .decorate({
-        contestService: new ContestService(),
-    })
     .post(
         '',
-        async ({ contestService, body, userId }) =>
-            await contestService.createContest(body, userId),
+        async ({ body, userId }) => await ContestService.create(body, userId),
         {
             body: 'createContestBody',
         },
     )
-    .get(
-        '',
-        async ({ contestService, query }) =>
-            await contestService.getContestList(query),
-        {
-            response: 'getContestListResponse',
-            query: 'contestListQuery',
-        },
-    )
-    .use(idParam)
+    .get('', async ({ query }) => await ContestService.getMany(query), {
+        response: 'getContestListResponse',
+        query: 'contestListQuery',
+    })
     .group(
-        '/:id',
+        '/:contestId',
         {
-            params: 'idParam',
+            params: t.Object({
+                contestId: t.Number(),
+            }),
         },
         (app) =>
             app
+                .resolve(({ params: { contestId } }) => {
+                    return {
+                        contestService: new ContestService(contestId),
+                    };
+                })
                 .get(
                     '',
-                    async ({ contestService, params: { id } }) =>
-                        await contestService.getContest(id),
+                    async ({ contestService }) =>
+                        await contestService.getDetails(),
                     {
                         response: 'getContestResponse',
                     },
                 )
                 .put(
                     '',
-                    async ({ contestService, params: { id }, body }) =>
-                        await contestService.updateContest(id, body),
+                    async ({ contestService, body }) =>
+                        await contestService.update(body),
                     {
                         body: 'updateContestBody',
                     },
                 )
                 .delete(
                     '',
-                    async ({ contestService, params: { id } }) =>
-                        await contestService.deleteContest(id),
+                    async ({ contestService }) => await contestService.delete(),
                 )
                 .post(
                     '/rerun',
-                    async ({ contestService, params: { id } }) =>
-                        await contestService.rerunLatestSubmissions(id),
+                    async ({ contestService }) =>
+                        await contestService.rerunLatestSubmissions(),
                 )
                 .group('/users', (app) =>
                     app
                         .get(
                             '',
-                            async ({ contestService, params: { id } }) =>
-                                await contestService.getUsersOfContest(id),
+                            async ({ contestService }) =>
+                                await contestService.getParticipants(),
                             {
                                 response: 'getContestUsersResponse',
                             },
                         )
                         .group('', { body: 'usersIds' }, (app) =>
                             app
-                                .put(
-                                    '',
-                                    async ({
-                                        contestService,
-                                        body,
-                                        params: { id },
-                                    }) => {
-                                        if (body.groupId)
-                                            await contestService.addGroupToContest(
-                                                id,
-                                                body.groupId,
-                                            );
-                                        if (body.usersIds)
-                                            await contestService.addUsersToContest(
-                                                id,
-                                                body.usersIds,
-                                            );
-                                    },
-                                )
+                                .put('', async ({ contestService, body }) => {
+                                    if (body.groupId)
+                                        await contestService.addGroup(
+                                            body.groupId,
+                                        );
+                                    if (body.usersIds)
+                                        await contestService.addParticipants(
+                                            body.usersIds,
+                                        );
+                                })
                                 .delete(
                                     '',
-                                    async ({
-                                        contestService,
-                                        body,
-                                        params: { id },
-                                    }) => {
+                                    async ({ contestService, body }) => {
                                         if (body.groupId)
                                             throw new NotImplementedError();
                                         if (body.usersIds)
-                                            await contestService.removeUsersFromContest(
-                                                id,
+                                            await contestService.removeParticipants(
                                                 body.usersIds,
                                             );
                                     },
                                 ),
                         ),
                 )
-                .group('/problems', (app) =>
+                .group('/stages', (app) =>
                     app
-                        .get(
+                        .post(
                             '',
-                            async ({
-                                contestService,
-                                params: { id },
-                                userId,
-                            }) =>
-                                await contestService.getProblemsOfContest(
-                                    id,
-                                    userId,
-                                ),
+                            async ({ contestService, body }) =>
+                                await StageService.createStage({
+                                    ...body,
+                                    contestId: contestService.getContestId(),
+                                }),
                             {
-                                response: 'getContestProblemsResponse',
+                                body: t.Object({
+                                    name: t.String(),
+                                    startDate: t.Date(),
+                                    endDate: t.Date(),
+                                }),
                             },
                         )
-                        .group('', { body: 'problemsInfo' }, (app) =>
-                            app
-                                .put(
-                                    '',
-                                    async ({
-                                        contestService,
-                                        body,
-                                        params: { id },
-                                    }) => {
-                                        if (body.bundleId)
-                                            await contestService.addBundleToContest(
-                                                id,
-                                                body.bundleId,
-                                            );
-                                        if (body.problemIds)
-                                            await contestService.addProblemsToContest(
-                                                id,
-                                                body.problemIds,
-                                            );
-                                    },
-                                )
-                                .delete(
-                                    '',
-                                    async ({
-                                        contestService,
-                                        body,
-                                        params: { id },
-                                    }) => {
-                                        if (body.bundleId)
-                                            throw new NotImplementedError();
-                                        if (body.problemIds)
-                                            await contestService.removeProblemsFromContest(
-                                                id,
-                                                body.problemIds,
-                                            );
-                                    },
+                        .get(
+                            '',
+                            async ({ contestService }) =>
+                                await contestService.getStages(),
+                            {
+                                response: t.Array(
+                                    t.Object({
+                                        id: t.Number(),
+                                        name: t.String(),
+                                        startDate: t.Date(),
+                                        endDate: t.Date(),
+                                    }),
                                 ),
+                            },
+                        )
+                        .get(
+                            '/stats',
+                            async ({ contestService }) =>
+                                await contestService.getStagesStats(),
+                            {
+                                response: t.Array(
+                                    t.Object({
+                                        stage: t.Object({
+                                            id: t.Number(),
+                                            name: t.String(),
+                                            startDate: t.Date(),
+                                            endDate: t.Date(),
+                                        }),
+                                        results: t.Array(
+                                            t.Object({
+                                                participantId: t.Number(),
+                                                result: t.Number(),
+                                            }),
+                                        ),
+                                    }),
+                                ),
+                            },
+                        )
+                        .group(
+                            '/:stageId',
+                            {
+                                params: t.Object({
+                                    contestId: t.Number(),
+                                    stageId: t.Number(),
+                                }),
+                            },
+                            (app) =>
+                                app
+                                    .resolve(({ params: { stageId } }) => {
+                                        return {
+                                            stageService: new StageService(
+                                                stageId,
+                                            ),
+                                        };
+                                    })
+                                    .get(
+                                        '',
+                                        async ({ stageService }) =>
+                                            await stageService.getDetails(),
+                                        {
+                                            response: t.Object({
+                                                name: t.String(),
+                                                startDate: t.Date(),
+                                                endDate: t.Date(),
+                                                problems: t.Array(
+                                                    t.Object({
+                                                        problemId: t.Number(),
+                                                        name: t.String(),
+                                                        languageId: t.Number(),
+                                                    }),
+                                                ),
+                                            }),
+                                        },
+                                    )
+                                    .post(
+                                        '/stats',
+                                        async ({
+                                            contestService,
+                                            body,
+                                            params: { stageId },
+                                        }) =>
+                                            await contestService.getStatsForStage(
+                                                stageId,
+                                                body.participantId,
+                                            ),
+                                        {
+                                            body: t.Object({
+                                                participantId: t.Number(),
+                                            }),
+                                            response: t.Array(
+                                                t.Object({
+                                                    problem: t.Object({
+                                                        problemId: t.Number(),
+                                                        name: t.String(),
+                                                        languageId: t.Number(),
+                                                    }),
+                                                    submissionId: t.Optional(
+                                                        t.Number(),
+                                                    ),
+                                                    result: t.Number(),
+                                                }),
+                                            ),
+                                        },
+                                    )
+                                    .put(
+                                        '',
+                                        async ({ stageService, body }) =>
+                                            await stageService.update(body),
+                                        {
+                                            body: t.Partial(
+                                                t.Object({
+                                                    name: t.String(),
+                                                    startDate: t.Date(),
+                                                    endDate: t.Date(),
+                                                }),
+                                            ),
+                                        },
+                                    )
+                                    .group(
+                                        '',
+                                        { body: t.Array(t.Number()) },
+                                        (app) =>
+                                            app
+                                                .put(
+                                                    '/problems',
+                                                    async ({
+                                                        stageService,
+                                                        body,
+                                                    }) =>
+                                                        await stageService.addProblems(
+                                                            body,
+                                                        ),
+                                                )
+                                                .delete(
+                                                    '/problems',
+                                                    async ({
+                                                        stageService,
+                                                        body,
+                                                    }) =>
+                                                        await stageService.removeProblems(
+                                                            body,
+                                                        ),
+                                                )
+                                                .put(
+                                                    '/bundle',
+                                                    async ({
+                                                        stageService,
+                                                        body,
+                                                    }) =>
+                                                        await stageService.addBundle(
+                                                            body.bundleId,
+                                                        ),
+                                                    {
+                                                        body: t.Object({
+                                                            bundleId:
+                                                                t.Number(),
+                                                        }),
+                                                    },
+                                                ),
+                                    )
+                                    .delete(
+                                        '',
+                                        async ({ stageService }) =>
+                                            await stageService.delete(),
+                                    ),
                         ),
                 ),
     );

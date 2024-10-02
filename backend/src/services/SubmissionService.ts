@@ -15,109 +15,78 @@ import ProblemRepository from '../repository/ProblemRepository';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
 import TestRepository from '../repository/TestRepository';
 import { mapIfPresent } from '../shared/mapper';
-import ContestRepository from '../repository/ContestRepository';
 import moment from 'moment';
 import _ from 'lodash';
+import StageRepository from '../repository/StageRepository';
 
 export class SubmissionService {
-    private problemRepository = new ProblemRepository();
-    private submissionRepository = new SubmissionRepository();
-    private testRepository = new TestRepository();
-    private contestRepository = new ContestRepository();
-
-    private reduceToStatus(
-        statusIds: number[],
-    ): { id: number; description: string } | undefined {
-        if (statusIds.includes(1)) {
-            return judge0Statuses.inQueue;
-        }
-        if (statusIds.includes(2)) {
-            return judge0Statuses.processing;
-        }
-        if (statusIds.some((status) => status == 5)) {
-            return judge0Statuses.timeLimitExceeded;
-        }
-        if (statusIds.some((status) => status > 5)) {
-            return judge0Statuses.error;
-        }
-        if (statusIds.every((status) => status == 3)) {
-            return judge0Statuses.accepted;
-        }
-        return judge0Statuses.wrongAnswer;
-    }
-
-    private getAverage(array: number[]) {
-        return array.reduce((avg, element) => avg + element / array.length, 0);
-    }
-
-    private submitTests(
-        tests: { input: string; expected: string }[],
-        submissionId: number,
-        languageId: number,
-        code: string,
-    ) {
-        tests.forEach(async (test) => {
-            const token = (
-                await judge0Client.submit({
-                    languageId: languageId,
-                    code: code,
-                    test,
-                })
-            ).token;
-
-            await this.testRepository.createTest({
-                token,
-                submissionId,
-                ...test,
-            });
-        });
-    }
-
-    async createSubmission(
+    static async createSubmission(
         {
             problemId,
             isCommit,
-            contestId,
+            stageId,
             code,
             userTests,
             createdAt,
-        }: CreateSubmissionRequestBody,
+            ip,
+        }: CreateSubmissionRequestBody & { ip?: string },
         userId: number,
     ) {
-        const problem = await this.problemRepository.getProblemById(problemId);
+        const problem = await ProblemRepository.getProblemById(problemId);
 
         if (!problem || problem.isDeactivated) {
             throw new ProblemNotFoundError(problemId);
         }
 
-        if (contestId) {
-            const contest =
-                await this.contestRepository.getContestById(contestId);
-
-            if (
-                contest &&
-                !moment(createdAt).isBetween(contest.startDate, contest.endDate)
-            ) {
-                throw new Error(
-                    'Submissions to this contest are not accepted yet/anymore.',
-                );
-            }
-        }
-
-        if (!isCommit) {
-            await this.submissionRepository.deleteNonCommitSubmissions(
-                userId,
-                problemId,
-            );
-        }
-
-        const newSubmission = await this.submissionRepository.createSubmission({
+        await SubmissionService.checkForContest(stageId, createdAt);
+        await SubmissionService.checkForNonCommits(isCommit, userId, problemId);
+        await SubmissionService.submit(
             problemId,
             userId,
             code,
             isCommit,
-            contestId,
+            stageId,
             createdAt,
+            problem,
+            userTests,
+            ip,
+        );
+        await SubmissionService.checkForContestDeletions(
+            stageId,
+            problemId,
+            userId,
+        );
+    }
+
+    private static async submit(
+        problemId: number,
+        userId: number,
+        code: string,
+        isCommit: boolean,
+        stageId: number | undefined,
+        createdAt: Date | undefined,
+        problem: {
+            name: string;
+            id: number;
+            creatorId: number;
+            prompt: string;
+            languageId: number;
+            tests: { input: string; expected: string }[];
+            baseCode: string;
+            isContestsOnly: boolean;
+            isDeactivated: boolean;
+        },
+        userTests: { input: string; expected: string }[] | undefined,
+        ip?: string,
+    ) {
+        const newSubmission = await SubmissionRepository.createSubmission({
+            problemId,
+            userId,
+            code,
+            isCommit,
+            stageId,
+            createdAt,
+            ip,
         });
 
         if (!newSubmission) {
@@ -129,16 +98,23 @@ export class SubmissionService {
             newSubmission.code,
         );
 
-        this.submitTests(
-            !!isCommit ? problem.tests : userTests ?? [],
+        SubmissionService.submitTests(
+            !!isCommit ? problem.tests : (userTests ?? []),
             newSubmission.id,
             problem.languageId,
             mergedCode,
         );
+        return newSubmission;
+    }
 
-        if (contestId) {
+    private static async checkForContestDeletions(
+        stageId: number | undefined,
+        problemId: number,
+        userId: number,
+    ) {
+        if (stageId) {
             const contestSubmissions = await this.getSubmissionsList({
-                contestId: contestId.toString(),
+                stageId: stageId.toString(),
                 problemId: problemId.toString(),
                 commitsOnly: true.toString(),
                 userId: userId.toString(),
@@ -150,28 +126,54 @@ export class SubmissionService {
                     .dropRight(3)
                     .value()
                     .map((submission) => {
-                        console.log(submission.submissionId);
-                        return this.submissionRepository.deleteSubmissionById(
+                        return SubmissionRepository.deleteSubmissionById(
                             submission.submissionId,
                         );
                     }),
             );
         }
+    }
 
-        return {
-            submissionId: newSubmission.id,
-        };
+    private static async checkForNonCommits(
+        isCommit: boolean,
+        userId: number,
+        problemId: number,
+    ) {
+        if (!isCommit) {
+            await SubmissionRepository.deleteNonCommitSubmissions(
+                userId,
+                problemId,
+            );
+        }
+    }
+
+    private static async checkForContest(
+        stageId: number | undefined,
+        createdAt: Date | undefined,
+    ) {
+        if (stageId) {
+            const stage = await StageRepository.getStageById(stageId);
+
+            if (
+                stage &&
+                !moment(createdAt).isBetween(stage.startDate, stage.endDate)
+            ) {
+                throw new Error(
+                    'Submissions to this contest are not accepted yet/anymore.',
+                );
+            }
+        }
     }
 
     async rerunSubmissions(ids: number[]) {
         const originals = await Promise.all(
-            ids.map((id) => this.submissionRepository.getSubmissionById(id)),
+            ids.map((id) => SubmissionRepository.getSubmissionById(id)),
         );
 
         originals
             .filter((o) => o != undefined)
             .forEach(async (o) => {
-                const problem = await this.problemRepository.getProblemById(
+                const problem = await ProblemRepository.getProblemById(
                     o.problemId,
                 );
 
@@ -180,12 +182,12 @@ export class SubmissionService {
                 }
 
                 const newSubmission =
-                    await this.submissionRepository.createSubmission({
+                    await SubmissionRepository.createSubmission({
                         problemId: o.problemId,
                         userId: o.userId,
                         code: o.code,
                         isCommit: o.isCommit,
-                        contestId: o.contestId,
+                        stageId: o.stageId,
                         createdAt: o.createdAt,
                         rerun: new Date(),
                     });
@@ -199,7 +201,7 @@ export class SubmissionService {
                     newSubmission.code,
                 );
 
-                this.submitTests(
+                SubmissionService.submitTests(
                     problem.tests,
                     newSubmission.id,
                     problem.languageId,
@@ -208,20 +210,20 @@ export class SubmissionService {
             });
     }
 
-    async getSubmissionsList(query: SubmissionListQuery) {
-        const { userId, problemId, contestId, commitsOnly } =
+    static async getSubmissionsList(query: SubmissionListQuery) {
+        const { userId, stageId, problemId, commitsOnly } =
             parseSubmissionListQuery(query);
 
-        const submissions = await this.submissionRepository.getSubmissionsList(
+        const submissions = await SubmissionRepository.getSubmissionsList(
             userId,
             problemId,
             commitsOnly,
-            contestId,
+            stageId,
         );
 
         return await Promise.all(
             submissions.map(async (submission) => {
-                const tests = await this.testRepository.getTestsOfSubmission(
+                const tests = await TestRepository.getTestsOfSubmission(
                     submission.id,
                 );
                 const results = (
@@ -239,7 +241,7 @@ export class SubmissionService {
                         lastName: submission.creator?.lastName ?? '',
                     },
                     createdAt: submission.createdAt ?? undefined,
-                    status: this.reduceToStatus(
+                    status: SubmissionService.reduceToStatus(
                         results.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
@@ -249,15 +251,15 @@ export class SubmissionService {
         );
     }
 
-    async getSubmissionDetails(submissionId: number) {
+    static async getSubmissionDetails(submissionId: number) {
         const submission =
-            await this.submissionRepository.getSubmissionById(submissionId);
+            await SubmissionRepository.getSubmissionById(submissionId);
 
         if (!submission) {
             throw new SubmissionNotFoundError(submissionId);
         }
 
-        const problem = await this.problemRepository.getProblemById(
+        const problem = await ProblemRepository.getProblemById(
             submission.problemId,
         );
 
@@ -265,9 +267,7 @@ export class SubmissionService {
             throw new ProblemNotFoundError(submission.problemId);
         }
 
-        const tests = await this.testRepository.getTestsOfSubmission(
-            submission.id,
-        );
+        const tests = await TestRepository.getTestsOfSubmission(submission.id);
 
         const results = (
             await judge0Client.getSubmissionBatch(
@@ -275,11 +275,11 @@ export class SubmissionService {
             )
         ).submissions;
 
-        const averageTime = this.getAverage(
+        const averageTime = SubmissionService.getAverage(
             results.map((result) => parseFloat(result.time)),
         );
 
-        const averageMemory = this.getAverage(
+        const averageMemory = SubmissionService.getAverage(
             results.map((result) => result.memory),
         );
 
@@ -303,6 +303,55 @@ export class SubmissionService {
             },
             createdAt: mapIfPresent(submission.createdAt, (v) => v),
             creator: mapIfPresent(submission.creator, (v) => v),
+            ip: mapIfPresent(submission.ip, (v) => v),
         };
+    }
+
+    private static reduceToStatus(
+        statusIds: number[],
+    ): { id: number; description: string } | undefined {
+        if (statusIds.includes(1)) {
+            return judge0Statuses.inQueue;
+        }
+        if (statusIds.includes(2)) {
+            return judge0Statuses.processing;
+        }
+        if (statusIds.some((status) => status == 5)) {
+            return judge0Statuses.timeLimitExceeded;
+        }
+        if (statusIds.some((status) => status > 5)) {
+            return judge0Statuses.error;
+        }
+        if (statusIds.every((status) => status == 3)) {
+            return judge0Statuses.accepted;
+        }
+        return judge0Statuses.wrongAnswer;
+    }
+
+    private static getAverage(array: number[]) {
+        return array.reduce((avg, element) => avg + element / array.length, 0);
+    }
+
+    private static submitTests(
+        tests: { input: string; expected: string }[],
+        submissionId: number,
+        languageId: number,
+        code: string,
+    ) {
+        tests.forEach(async (test) => {
+            const token = (
+                await judge0Client.submit({
+                    languageId: languageId,
+                    code: code,
+                    test,
+                })
+            ).token;
+
+            await TestRepository.createTest({
+                token,
+                submissionId,
+                ...test,
+            });
+        });
     }
 }

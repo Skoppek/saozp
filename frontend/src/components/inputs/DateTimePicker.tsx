@@ -7,14 +7,14 @@ import { CustomFlowbiteTheme, Label } from "flowbite-react";
 const customTheme: CustomFlowbiteTheme["datepicker"] = {
   popup: {
     root: {
-      base: "absolute top-[-25rem] z-50 block pt-2",
+      base: "absolute z-50 block pt-2",
     },
   },
 };
 
 interface DateTimePickerProps {
   onChange: (value: Date) => void;
-  value: Date;
+  defaultValue?: Date;
   id: string;
   label: string;
 }
@@ -22,18 +22,18 @@ interface DateTimePickerProps {
 export const DateTimePicker = ({
   id,
   onChange,
-  value,
+  defaultValue = new Date(),
   label,
 }: DateTimePickerProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setThisDate] = useState(value);
+  const [_, setThisDate] = useState(defaultValue);
 
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={id} value={label} />
       <div className="flex w-full gap-2">
         <Datepicker
-          defaultDate={moment(value).toDate()}
+          defaultDate={moment(defaultValue).toDate()}
           theme={customTheme}
           id={id}
           weekStart={1}
@@ -63,8 +63,8 @@ export const DateTimePicker = ({
             });
           }}
           defaultTime={{
-            hours: moment(value).toDate().getHours(),
-            minutes: moment(value).toDate().getMinutes(),
+            hours: moment(defaultValue).toDate().getHours(),
+            minutes: moment(defaultValue).toDate().getMinutes(),
           }}
         />
       </div>

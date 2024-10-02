@@ -8,7 +8,7 @@ import { profileSchema } from '../model/schemas/profileSchema';
 import { mapIfPresent } from '../shared/mapper';
 
 export class SubmissionRepository {
-    async createSubmission(newSubmission: NewSubmission) {
+    static async createSubmission(newSubmission: NewSubmission) {
         const result = await db
             .insert(submissionSchema)
             .values(newSubmission)
@@ -16,11 +16,11 @@ export class SubmissionRepository {
         return result.at(0);
     }
 
-    async getSubmissionsList(
+    static async getSubmissionsList(
         userId?: number,
         problemId?: number,
         commitsOnly?: boolean,
-        contestId?: number,
+        stageId?: number,
     ) {
         return db
             .select({
@@ -30,6 +30,7 @@ export class SubmissionRepository {
                 isCommit: submissionSchema.isCommit,
                 problemId: submissionSchema.problemId,
                 rerun: submissionSchema.rerun,
+                stageId: submissionSchema.stageId,
             })
             .from(submissionSchema)
             .leftJoin(
@@ -47,14 +48,14 @@ export class SubmissionRepository {
                     mapIfPresent(commitsOnly, (isCommit) =>
                         eq(submissionSchema.isCommit, isCommit),
                     ),
-                    mapIfPresent(contestId, (id) =>
-                        eq(submissionSchema.contestId, id),
+                    mapIfPresent(stageId, (id) =>
+                        eq(submissionSchema.stageId, id),
                     ),
                 ),
             );
     }
 
-    async getSubmissionById(id: number) {
+    static async getSubmissionById(id: number) {
         const result = await db
             .select()
             .from(submissionSchema)
@@ -74,11 +75,11 @@ export class SubmissionRepository {
             .at(0);
     }
 
-    async deleteSubmissionById(id: number) {
+    static async deleteSubmissionById(id: number) {
         return db.delete(submissionSchema).where(eq(submissionSchema.id, id));
     }
 
-    async deleteNonCommitSubmissions(userId: number, problemId: number) {
+    static async deleteNonCommitSubmissions(userId: number, problemId: number) {
         await db
             .delete(submissionSchema)
             .where(

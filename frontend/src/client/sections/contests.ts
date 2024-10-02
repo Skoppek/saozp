@@ -1,12 +1,11 @@
 import _ from "lodash";
 import { mapIfPresent } from "../../shared/mapper.ts";
 import edenClient from "../edenClient.ts";
+import { NewStage } from "../../shared/interfaces/NewStage.ts";
 
 interface NewContest {
   name: string;
   description: string;
-  startDate: Date;
-  endDate: Date;
 }
 
 interface Contest extends NewContest {
@@ -42,7 +41,7 @@ const getAll = async ({
 
 const get = async (contestId: number) =>
   await edenClient
-    .contest({ id: contestId })
+    .contest({ contestId })
     .get()
     .then((res) => {
       if (!res.data) {
@@ -52,14 +51,14 @@ const get = async (contestId: number) =>
     });
 
 const put = async (contestId: number, data: Partial<Contest>) =>
-  await edenClient.contest({ id: contestId }).put(data);
+  await edenClient.contest({ contestId }).put(data);
 
 const remove = async (contestId: number) =>
-  await edenClient.contest({ id: contestId }).delete();
+  await edenClient.contest({ contestId }).delete();
 
 const getParticipants = async (contestId: number) =>
   await edenClient
-    .contest({ id: contestId })
+    .contest({ contestId })
     .users.get()
     .then((res) => {
       if (!res.data) {
@@ -73,7 +72,7 @@ const addParticipants = async (
   participantIds?: number[],
   groupId?: number,
 ) =>
-  await edenClient.contest({ id: contestId }).users.put({
+  await edenClient.contest({ contestId }).users.put({
     usersIds: participantIds,
     groupId,
   });
@@ -82,14 +81,29 @@ const removeParticipants = async (
   contestId: number,
   participantIds?: number[],
 ) =>
-  await edenClient.contest({ id: contestId }).users.delete({
+  await edenClient.contest({ contestId }).users.delete({
     usersIds: participantIds,
   });
 
-const getProblems = async (contestId: number) =>
+const addStage = async (contestId: number, newStage: NewStage) => {
+  await edenClient.contest({ contestId }).stages.post(newStage);
+};
+
+const getStages = async (contestId: number) =>
   await edenClient
-    .contest({ id: contestId })
-    .problems.get()
+    .contest({ contestId })
+    .stages.get()
+    .then((res) => {
+      if (!res.data) throw new Error("Unexpected null in response.");
+      if (res.error) throw new Error("Something went wrong");
+      return res.data;
+    });
+
+const getStage = async (contestId: number, stageId: number) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .get()
     .then((res) => {
       if (!res.data) throw new Error("Unexpected null in response.");
       if (res.error) throw new Error("Something went wrong");
@@ -98,21 +112,70 @@ const getProblems = async (contestId: number) =>
 
 const addProblems = async (
   contestId: number,
-  problemIds?: number[],
-  bundleId?: number,
+  stageId: number,
+  problemIds: number[],
 ) =>
-  await edenClient.contest({ id: contestId }).problems.put({
-    problemIds: problemIds,
-    bundleId: bundleId,
-  });
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .problems.put(problemIds);
 
-const removeProblems = async (contestId: number, participantIds?: number[]) =>
-  await edenClient.contest({ id: contestId }).problems.delete({
-    problemIds: participantIds,
-  });
+const addBundle = async (
+  contestId: number,
+  stageId: number,
+  bundleId: number,
+) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .bundle.put({ bundleId });
+
+const removeProblems = async (
+  contestId: number,
+  stageId: number,
+  problemIds: number[],
+) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .problems.delete(problemIds);
 
 const rerun = async (contestId: number) =>
-  await edenClient.contest({ id: contestId }).rerun.post();
+  await edenClient.contest({ contestId }).rerun.post();
+
+const updateStage = async (
+  contestId: number,
+  stageId: number,
+  stageData: NewStage,
+) => await edenClient.contest({ contestId }).stages({ stageId }).put(stageData);
+
+const removeStage = async (contestId: number, stageId: number) =>
+  await edenClient.contest({ contestId }).stages({ stageId }).delete();
+
+const getStagesStats = async (contestId: number) =>
+  await edenClient
+    .contest({ contestId })
+    .stages.stats.get()
+    .then((res) => {
+      if (!res.data) throw new Error("Unexpected null in response.");
+      if (res.error) throw new Error("Something went wrong");
+      return res.data;
+    });
+
+const getStatsForStage = async (
+  contestId: number,
+  stageId: number,
+  participantId: number,
+) =>
+  await edenClient
+    .contest({ contestId })
+    .stages({ stageId })
+    .stats.post({ participantId })
+    .then((res) => {
+      if (!res.data) throw new Error("Unexpected null in response.");
+      if (res.error) throw new Error("Something went wrong");
+      return res.data;
+    });
 
 export default {
   create,
@@ -123,8 +186,15 @@ export default {
   getParticipants,
   addParticipants,
   removeParticipants,
-  getProblems,
   addProblems,
+  addBundle,
+  addStage,
+  getStages,
+  getStage,
+  getStagesStats,
+  getStatsForStage,
+  updateStage,
+  removeStage,
   removeProblems,
   rerun,
 };

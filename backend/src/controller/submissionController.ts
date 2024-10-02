@@ -5,6 +5,7 @@ import { submissionResponses } from '../responses/submissionResponses';
 import { submissionQueries } from '../queryParsers/submissionQueries';
 import { submissionErrorHandler } from '../errorHandlers/submissionErrorHandler';
 import { submissionRequestBodies } from '../bodies/submissionRequests';
+import { ip } from 'elysia-ip';
 
 export default new Elysia({
     prefix: 'submission',
@@ -20,18 +21,18 @@ export default new Elysia({
     .decorate({
         submissionService: new SubmissionService(),
     })
+    .use(ip())
     .post(
         '',
-        async ({ submissionService, userId, body }) =>
-            await submissionService.createSubmission(body, userId),
+        async ({ userId, body, ip }) =>
+            await SubmissionService.createSubmission({ ...body, ip }, userId),
         {
             body: 'createSubmissionRequestBody',
         },
     )
     .get(
         '',
-        async ({ submissionService, query }) =>
-            await submissionService.getSubmissionsList(query),
+        async ({ query }) => await SubmissionService.getSubmissionsList(query),
         {
             query: 'submissionListQuery',
             response: 'getSubmissionListResponse',
@@ -39,8 +40,8 @@ export default new Elysia({
     )
     .get(
         '/:submissionId',
-        async ({ submissionService, params: { submissionId } }) =>
-            await submissionService.getSubmissionDetails(submissionId),
+        async ({ params: { submissionId } }) =>
+            await SubmissionService.getSubmissionDetails(submissionId),
         {
             params: t.Object({
                 submissionId: t.Number(),

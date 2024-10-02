@@ -37,7 +37,7 @@ export default createBrowserRouter([
         element: <ContestEditPage />,
       },
       {
-        path: "/contests/:contestId/problem/:problemId",
+        path: "/contests/:contestId/stage/:stageId/problem/:problemId",
         element: <SolvingPage />,
       },
       {

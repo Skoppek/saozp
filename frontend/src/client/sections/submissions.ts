@@ -7,7 +7,7 @@ interface SubmissionQuery {
   userId?: number;
   problemId?: number;
   commitsOnly?: boolean;
-  contestId?: number;
+  stageId?: number;
 }
 
 interface NewSubmission {
@@ -15,8 +15,8 @@ interface NewSubmission {
   code: string;
   userTests?: TestCase[];
   isCommit: boolean;
-  contestId?: number;
   createdAt?: Date;
+  stageId?: number;
 }
 
 const submit = async (newSubmission: NewSubmission) =>
@@ -29,7 +29,7 @@ const getMany = async (query: SubmissionQuery) =>
         {
           userId: mapIfPresent(query.userId, (id) => id.toString()),
           problemId: mapIfPresent(query.problemId, (id) => id.toString()),
-          contestId: mapIfPresent(query.contestId, (id) => id.toString()),
+          stageId: mapIfPresent(query.stageId, (id) => id.toString()),
           commitsOnly: mapIfPresent(query.commitsOnly, (a) => a.toString()),
         },
         (x) => x == undefined,

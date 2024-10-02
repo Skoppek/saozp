@@ -1,10 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck";
-import { mapIfPresent } from "../../shared/mapper";
+import { StagesView } from "./editViews/stages/StagesView";
+import { ContestContextProvider } from "../../shared/useContestContext";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMemo } from "react";
-import { ContestBaseView } from "./editViews/ContestBaseView";
+import { mapIfPresent } from "../../shared/mapper";
 import { ContestParticipantsView } from "./editViews/participants/ContestParticipantsView";
-import { ContestProblemsView } from "./editViews/problems/ContestProblemsView";
+import { ContestBaseView } from "./editViews/ContestBaseView";
 
 export const ContestEditPage = () => {
   const { id } = useParams();
@@ -14,23 +15,20 @@ export const ContestEditPage = () => {
     const resolvedId = mapIfPresent(id, parseInt);
     if (!resolvedId) {
       navigate("/contests");
+      return -1;
     }
     return resolvedId;
   }, [id, navigate]);
 
   return (
     <UserLoggedCheck>
-      <div className="mx-12 flex flex-col gap-4">
-        <div className="flex justify-center gap-4 overflow-x-auto pt-12">
-          {contestId && (
-            <div className="grid grid-cols-3 gap-4">
-              <ContestBaseView contestId={contestId} />
-              <ContestParticipantsView contestId={contestId} />
-              <ContestProblemsView contestId={contestId} />
-            </div>
-          )}
+      <ContestContextProvider contestId={contestId}>
+        <div className="flex justify-center gap-4 overflow-x-auto mx-12 pt-12">
+          <ContestBaseView contestId={contestId} />
+          <StagesView />
+          <ContestParticipantsView />
         </div>
-      </div>
+      </ContestContextProvider>
     </UserLoggedCheck>
   );
 };

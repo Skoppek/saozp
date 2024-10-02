@@ -9,14 +9,11 @@ import { AddParticipantsModal } from "./AddParticipantsModal";
 import { AddGroupsModal } from "./AddGroupsModal";
 import { displayNames } from "../../../../shared/functions";
 import { TextInput } from "../../../../components/inputs/TextInput";
+import { useContestContext } from "../../../../shared/useContestContext";
 
-interface ContestParticipantsViewProps {
-  contestId: number;
-}
+export const ContestParticipantsView = () => {
+  const { id: contestId } = useContestContext();
 
-export const ContestParticipantsView = ({
-  contestId,
-}: ContestParticipantsViewProps) => {
   const { data, isFetching, refetch } = useQuery({
     queryKey: ["contestEdit", "participants", contestId],
     queryFn: () => apiClient.contests.getParticipants(contestId),

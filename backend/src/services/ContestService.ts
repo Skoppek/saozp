@@ -5,33 +5,40 @@ import {
     ContestNotFoundError,
 } from '../errors/contestErrors';
 import ProfileRepository from '../repository/ProfileRepository';
-import ProblemRepository from '../repository/ProblemRepository';
 import { Contest } from '../model/schemas/contestSchema';
 import {
     ContestListQuery,
     parseContestListQuery,
 } from '../queryParsers/contestQueries';
-import moment from 'moment';
 import { SubmissionRepository } from '../repository/SubmissionRepository';
 import _ from 'lodash';
 import { SubmissionService } from './SubmissionService';
+import StageRepository from '../repository/StageRepository';
+import judge0Client from '../judge/judge0Client';
+import TestRepository from '../repository/TestRepository';
+import judge0Statuses from '../shared/judge0Statuses';
+import ProblemRepository from '../repository/ProblemRepository';
 
 export default class ContestService {
-    private contestRepository = new ContestRepository();
-    private problemRepository = new ProblemRepository();
-    private submissionRepository = new SubmissionRepository();
-
     private submissionService = new SubmissionService();
 
-    async createContest(
-        { name, endDate, startDate, description }: CreateContestBody,
+    private contestId: number;
+
+    constructor(constestId: number) {
+        this.contestId = constestId;
+    }
+
+    getContestId() {
+        return this.contestId;
+    }
+
+    static async create(
+        { name, description }: CreateContestBody,
         ownerId: number,
     ) {
-        const newContest = await this.contestRepository.createContest({
+        const newContest = await ContestRepository.createContest({
             owner: ownerId,
             name,
-            startDate,
-            endDate,
             description,
         });
 
@@ -40,37 +47,49 @@ export default class ContestService {
         }
     }
 
-    async getContestList(query: ContestListQuery) {
+    static async getMany(query: ContestListQuery) {
         const { participantId, ownerId } = parseContestListQuery(query);
-        return this.contestRepository.getContests(participantId, ownerId);
+        return ContestRepository.getContests(participantId, ownerId);
     }
 
-    async getContest(contestId: number) {
-        const contest = await this.contestRepository.getContestById(contestId);
+    async getDetails() {
+        const contest = await ContestRepository.getContestById(this.contestId);
 
         if (!contest) {
-            throw new ContestNotFoundError(contestId);
+            throw new ContestNotFoundError(this.contestId);
         }
 
         return contest;
     }
 
-    async updateContest(contestId: number, data: Partial<Contest>) {
-        await this.contestRepository.updateContest(contestId, data);
+    async getStages() {
+        const phases = await StageRepository.getStagesOfContest(this.contestId);
+
+        return phases.map((phase) => {
+            return {
+                id: phase.id,
+                name: phase.name,
+                startDate: phase.startDate,
+                endDate: phase.endDate,
+            };
+        });
     }
 
-    async deleteContest(contestId: number) {
-        await this.contestRepository.deleteContest(contestId);
+    async update(data: Partial<Contest>) {
+        await ContestRepository.updateContest(this.contestId, data);
     }
 
-    async rerunLatestSubmissions(contestId: number) {
-        const allSubmissions =
-            await this.submissionRepository.getSubmissionsList(
-                undefined,
-                undefined,
-                true,
-                contestId,
-            );
+    async delete() {
+        await ContestRepository.deleteContest(this.contestId);
+    }
+
+    async rerunLatestSubmissions() {
+        const allSubmissions = await SubmissionRepository.getSubmissionsList(
+            undefined,
+            undefined,
+            true,
+            this.contestId,
+        );
 
         const idsToRerun = _.chain(allSubmissions)
             .groupBy('problemId')
@@ -88,68 +107,138 @@ export default class ContestService {
         this.submissionService.rerunSubmissions(idsToRerun);
     }
 
-    async getUsersOfContest(contestId: number) {
-        return await ProfileRepository.getProfilesOfContest(contestId);
+    async getParticipants() {
+        return await ProfileRepository.getProfilesOfContest(this.contestId);
     }
 
-    async getProblemsOfContest(contestId: number, userId: number) {
-        const contest = await this.contestRepository.getContestById(contestId);
-
-        if (
-            userId != contest?.owner.userId &&
-            moment().isBefore(contest?.startDate)
-        )
-            throw new Error('This contest has not started yet.');
-
-        return await this.problemRepository.getProblemsOfContest(contestId);
-    }
-
-    async addUsersToContest(contestId: number, userIds: number[]) {
+    async addParticipants(userIds: number[]) {
         await Promise.all(
-            userIds.map((id) => this.contestRepository.addUser(contestId, id)),
+            userIds.map((id) => ContestRepository.addUser(this.contestId, id)),
         );
     }
 
-    async addGroupToContest(contestId: number, groupId: number) {
+    async addGroup(groupId: number) {
         const users = await ProfileRepository.getProfilesOfGroup(groupId);
-
-        await this.addUsersToContest(
-            contestId,
-            users.map((user) => user.userId),
-        );
+        await this.addParticipants(users.map((user) => user.userId));
     }
 
-    async removeUsersFromContest(contestId: number, userIds: number[]) {
+    async removeParticipants(userIds: number[]) {
         await Promise.all(
             userIds.map((id) =>
-                this.contestRepository.removeUser(contestId, id),
+                ContestRepository.removeUser(this.contestId, id),
             ),
         );
     }
 
-    async addProblemsToContest(contestId: number, problemIds: number[]) {
-        await Promise.all(
-            problemIds.map((id) =>
-                this.contestRepository.addProblem(contestId, id),
-            ),
+    async getStagesStats() {
+        const stages = await StageRepository.getStagesOfContest(this.contestId);
+        const participants = await this.getParticipants();
+
+        return await Promise.all(
+            stages.map(async (stage) => {
+                const participantsResults = await Promise.all(
+                    participants.map(async (participant) => {
+                        return {
+                            participantId: participant.userId,
+                            result: await ContestService.getResultOfParticipantInStage(
+                                participant.userId,
+                                stage.id,
+                            ),
+                        };
+                    }),
+                );
+
+                return {
+                    stage: {
+                        id: stage.id,
+                        name: stage.name,
+                        startDate: stage.startDate,
+                        endDate: stage.endDate,
+                    },
+                    results: participantsResults,
+                };
+            }),
         );
     }
 
-    async addBundleToContest(contestId: number, bundleId: number) {
-        const problems =
-            await this.problemRepository.getProblemsOfBundle(bundleId);
+    private static async getResultOfParticipantInStage(
+        participant: number,
+        stage: number,
+    ) {
+        const submissions = await SubmissionRepository.getSubmissionsList(
+            participant,
+            undefined,
+            true,
+            stage,
+        );
 
-        await this.addProblemsToContest(
-            contestId,
-            problems.map((problem) => problem.id),
+        const x = _(submissions)
+            .sortBy('createdAt')
+            .groupBy('problemId')
+            .map((group) => _.last(group) ?? [])
+            .flatMap()
+            .value();
+
+        const results = await Promise.all(
+            x.map(async (submission) => {
+                return await ContestService.getResultOfSubmission(
+                    submission.id,
+                );
+            }),
+        );
+
+        const mean = _.mean(results);
+
+        return _.isNaN(mean) ? 0 : mean;
+    }
+
+    private static async getResultOfSubmission(submission: number) {
+        const tests = await TestRepository.getTestsOfSubmission(submission);
+        const results = (
+            await judge0Client.getSubmissionBatch(
+                tests.map((test) => test.token),
+            )
+        ).submissions;
+
+        const correctCount = results.filter(
+            (result) => result.status.id == judge0Statuses.accepted.id,
+        ).length;
+
+        return _.floor(
+            (correctCount / (!!results.length ? results.length : 1)) * 100,
         );
     }
 
-    async removeProblemsFromContest(contestId: number, problemIds: number[]) {
-        await Promise.all(
-            problemIds.map((id) =>
-                this.contestRepository.removeProblem(contestId, id),
-            ),
+    async getStatsForStage(stageId: number, participantId: number) {
+        const problems = await ProblemRepository.getProblemsOfStage(stageId);
+
+        return await Promise.all(
+            problems.map(async (problem) => {
+                const submissions =
+                    await SubmissionRepository.getSubmissionsList(
+                        participantId,
+                        problem.problemId,
+                        true,
+                        stageId,
+                    );
+
+                const lastSubmission = _(submissions)
+                    .sortBy('createdAt')
+                    .groupBy('problemId')
+                    .map((group) => _.last(group) ?? [])
+                    .flatMap()
+                    .value()[0];
+
+                return {
+                    problem: problem,
+                    submissionId: lastSubmission?.id,
+                    result: lastSubmission
+                        ? await ContestService.getResultOfSubmission(
+                              lastSubmission.id,
+                          )
+                        : -1,
+                };
+            }),
         );
     }
 }

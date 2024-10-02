@@ -20,7 +20,7 @@ export const LiveSubmissionView = ({
     queryKey: ["contest", contestId, problemId, "stats", "live"],
     queryFn: () =>
       apiClient.submissions.getMany({
-        contestId,
+        stageId: contestId,
         problemId,
         commitsOnly: true,
       }),

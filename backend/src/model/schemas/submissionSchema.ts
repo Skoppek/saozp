@@ -6,10 +6,11 @@ import {
     serial,
     text,
     timestamp,
+    varchar,
 } from 'drizzle-orm/pg-core';
 import { problemSchema } from './problemSchema';
 import { userSchema } from './userSchema';
-import { contestSchema } from './contestSchema';
+import { stageSchema } from './stageSchema';
 
 export const submissionSchema = pgTable(
     'submissions',
@@ -24,10 +25,11 @@ export const submissionSchema = pgTable(
         code: text('code').notNull(),
         createdAt: timestamp('created_at').defaultNow(),
         isCommit: boolean('is_commit').notNull().default(false),
-        contestId: integer('contest_id').references(() => contestSchema.id, {
+        stageId: integer('stage_id').references(() => stageSchema.id, {
             onDelete: 'set null',
         }),
         rerun: timestamp('rerun'),
+        ip: varchar('ip', { length: 15 }),
     },
     (submissionSchema) => ({
         userIdIdx: index('submission_user_id_idx').on(submissionSchema.userId),

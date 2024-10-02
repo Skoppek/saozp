@@ -13,6 +13,7 @@ interface TextInputProps extends ClassName {
   helperText?: ReactNode;
   onChange?: (value: string) => void;
   defaultValue?: string;
+  maxLength?: number;
 }
 
 export const TextInput = ({
@@ -26,6 +27,7 @@ export const TextInput = ({
   onChange,
   className,
   defaultValue,
+  maxLength,
 }: TextInputProps) => {
   return (
     <div className={className}>
@@ -41,6 +43,7 @@ export const TextInput = ({
         id={id}
         color={color}
         onChange={(event) => {
+          if (maxLength && event.target.value.length > maxLength) return;
           onChange?.(event.target.value);
         }}
         defaultValue={defaultValue}

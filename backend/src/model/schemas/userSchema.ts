@@ -6,7 +6,7 @@ export const userSchema = pgTable(
     'users',
     {
         id: serial('id').primaryKey(),
-        login: varchar('login', { length: 256 }).unique().notNull(),
+        login: varchar('login', { length: 64 }).unique().notNull(),
         password: char('password', { length: 118 }).notNull(),
     },
     (users) => ({

@@ -163,6 +163,7 @@ export const AuthModal = ({
                   color={showWarnings ? "failure" : "gray"}
                   helperText={showWarnings ? "Niepoprawny login" : undefined}
                   onChange={(value) => setLogin(value)}
+                  maxLength={64}
                 />
                 <Tooltip
                   content={
@@ -178,6 +179,7 @@ export const AuthModal = ({
                     color={showWarnings ? "failure" : "gray"}
                     helperText={showWarnings ? "Błędny token" : undefined}
                     onChange={(value) => setToken(value)}
+                    maxLength={32}
                   />
                 </Tooltip>
               </div>
@@ -186,6 +188,7 @@ export const AuthModal = ({
                 type={"password"}
                 label={"Nowe hasło"}
                 onChange={(value) => setPassword(value)}
+                maxLength={64}
               />
               <Button
                 onClick={async () => {
@@ -227,6 +230,7 @@ export const AuthModal = ({
                     )}
                   </>
                 }
+                maxLength={64}
               />
               <TextInput
                 id={"password"}
@@ -238,6 +242,7 @@ export const AuthModal = ({
                   setIsLoginFail(false);
                   setPassword(value);
                 }}
+                maxLength={32}
               />
               {isLoginFail && (
                 <span className="text-orange-700 dark:text-red-500">
@@ -256,6 +261,7 @@ export const AuthModal = ({
                       setShowWarnings(false);
                       setFirstName(value);
                     }}
+                    maxLength={32}
                   />
                   <TextInput
                     id={"lastname"}
@@ -267,6 +273,7 @@ export const AuthModal = ({
                       setShowWarnings(false);
                       setLastName(value);
                     }}
+                    maxLength={32}
                   />
                 </>
               )}

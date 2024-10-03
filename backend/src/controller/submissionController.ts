@@ -24,8 +24,11 @@ export default new Elysia({
     .use(ip())
     .post(
         '',
-        async ({ userId, body, ip }) =>
-            await SubmissionService.createSubmission({ ...body, ip }, userId),
+        async ({ userId, body, server, request }) =>
+            await SubmissionService.createSubmission(
+                { ...body, ip: server?.requestIP(request)?.address },
+                userId,
+            ),
         {
             body: 'createSubmissionRequestBody',
         },

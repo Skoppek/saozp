@@ -189,7 +189,7 @@ export default class ContestService {
 
         const mean = _.mean(results);
 
-        return _.isNaN(mean) ? 0 : mean;
+        return _.isNaN(mean) ? -1 : mean;
     }
 
     private static async getResultOfSubmission(submission: number) {

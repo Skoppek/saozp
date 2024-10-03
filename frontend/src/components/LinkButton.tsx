@@ -21,6 +21,7 @@ export const LinkButton = ({
           size={buttonProps?.size}
           color={buttonProps?.color}
           className={className}
+          disabled={buttonProps?.disabled}
         >
           {label}
         </Button>

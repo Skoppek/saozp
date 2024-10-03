@@ -26,44 +26,39 @@ export const StageProblems = ({
       </Button>
       {data && !isFetching ? (
         <div className="flex flex-col gap-2 w-full">
-          <div className="flex justify-around gap-2 w-full">
-            <Badge size={"sm"} color={"success"}>
-              Start: {displayDateTime(data.startDate)}
-            </Badge>
-            <Badge
-              size={"sm"}
-              color={moment().isAfter(data.endDate) ? "red" : "warning"}
-            >
-              Koniec: {displayDateTime(data.endDate)}
-            </Badge>
-          </div>
-          <Accordion collapseAll>
-            {data.problems.map((problem) => (
-              <Accordion.Panel>
-                <Accordion.Title>{problem.name}</Accordion.Title>
-                <Accordion.Content>
-                  <div className="flex flex-col gap-2 w-full">
-                    <LinkButton
-                      to={`/contests/${contestId}/stage/${stageId}/problem/${problem.problemId}`}
-                      label="Rozwiąż"
-                      buttonProps={{
-                        size: "xs",
-                        disabled: !moment().isBetween(
-                          moment(data.startDate),
-                          moment(data.endDate),
-                        ),
-                      }}
-                      className="w-full"
-                    />
-                    <ParticipantsSubmissions
-                      problemId={problem.problemId}
-                      stageId={stageId}
-                    />
-                  </div>
-                </Accordion.Content>
-              </Accordion.Panel>
-            ))}
-          </Accordion>
+          {moment().isAfter(data.startDate) ? (
+            <Accordion collapseAll>
+              {data.problems.map((problem) => (
+                <Accordion.Panel>
+                  <Accordion.Title>{problem.name}</Accordion.Title>
+                  <Accordion.Content>
+                    <div className="flex flex-col gap-2 w-full">
+                      <LinkButton
+                        to={`/contests/${contestId}/stage/${stageId}/problem/${problem.problemId}`}
+                        label="Rozwiąż"
+                        buttonProps={{
+                          size: "xs",
+                          disabled: !moment().isBetween(
+                            data.startDate,
+                            data.endDate,
+                          ),
+                        }}
+                        className="w-full"
+                      />
+                      <ParticipantsSubmissions
+                        problemId={problem.problemId}
+                        stageId={stageId}
+                      />
+                    </div>
+                  </Accordion.Content>
+                </Accordion.Panel>
+              ))}
+            </Accordion>
+          ) : (
+            <div className="text-2xl w-full text-center ">
+              Ten etap jeszcze się nie rozpoczął
+            </div>
+          )}
         </div>
       ) : (
         <Spinner />

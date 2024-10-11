@@ -18,10 +18,13 @@ import TestCasesService from './services/TestCasesService';
 import cors from '@elysiajs/cors';
 
 const app = new Elysia()
+    .get('', () => {
+        return 'This is a valid response from SAOZP backend service!';
+    })
     .use(generalErrorHandler)
     .use(
         cors({
-            origin: true,
+            origin: 'http://localhost:5173',
             credentials: true,
             allowedHeaders: [
                 'Authorization',

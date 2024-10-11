@@ -11,7 +11,7 @@ export const generalErrorHandler = new Elysia()
         ResourceWithIdNotFoundError,
     })
     .use(HttpStatusCode())
-    .onError({ as: 'global' }, ({ code, error, set, httpStatus }) => {
+    .onError({ as: 'global' }, ({ code, error, set, httpStatus, request }) => {
         switch (code) {
             case 'InternalError':
                 set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
@@ -20,6 +20,6 @@ export const generalErrorHandler = new Elysia()
                 set.status = httpStatus.HTTP_404_NOT_FOUND;
                 return error;
             case 'NOT_FOUND':
-                return 'Endpoint not found.';
+                return `Endpoint not found. ${request.url}`;
         }
     });

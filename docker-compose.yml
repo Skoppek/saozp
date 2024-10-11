@@ -1,57 +1,6 @@
-#x-logging: &default-logging
-#  logging:
-#    driver: json-file
-#    options:
-#      max-size: 100m
-
 services:
- server:
-  image: judge0/judge0:1.13.1
-  volumes:
-   - ./judge0/judge0.conf:/judge0.conf:ro
-  ports:
-   - '2358:2358'
-  privileged: true
-  #    <<: *default-logging
-  restart: always
-  networks:
-   - mynet
-
- workers:
-  image: judge0/judge0:1.13.1
-  command: ['./scripts/workers']
-  volumes:
-   - ./judge0/judge0.conf:/judge0.conf:ro
-  privileged: true
-  #    <<: *default-logging
-  restart: always
-  networks:
-   - mynet
-
- db:
-  image: postgres:13.0
-  env_file: ./judge0/judge0.conf
-  volumes:
-   - postgres-data:/var/lib/postgresql/data/
-  #    <<: *default-logging
-  restart: always
-
- redis:
-  image: redis:6.0
-  command:
-   [
-    'bash',
-    '-c',
-    'docker-entrypoint.sh --appendonly yes --requirepass "$$REDIS_PASSWORD"',
-   ]
-  env_file: ./judge0/judge0.conf
-  volumes:
-   - redis-data:/data
-  #    <<: *default-logging
-  restart: always
-
  apidb:
-  image: postgres:latest
+  image: postgres:16.2
   restart: always
   ports:
    - '5432:5432'
@@ -71,7 +20,7 @@ services:
    - mynet
 
  migration:
-  image: api-migration
+  image: migration
   build:
    context: .
    dockerfile: ./backend/drizzle-migration/Dockerfile
@@ -82,6 +31,28 @@ services:
    - mynet
   environment:
    - DB_CONNECTION_STRING=postgres://postgres:postgres@apidb:5432/postgres
+
+ proxy:
+  build: ./proxy
+  image: saozp-proxy
+  restart: always
+  networks:
+   - mynet
+  ports:
+   - '5173:5173'
+  links:
+   - backend
+  expose:
+   - 80
+
+ judgeclient:
+  build: ./judgeclient
+  image: judgeclient
+  restart: always
+  networks:
+   - mynet
+  ports:
+   - '3002:3002'
 
  backend:
   build:
@@ -104,25 +75,12 @@ services:
    - '3000:3000'
   links:
    - apidb
-   - server
-   - workers
   environment:
-   - JUDGE0_HOST=server
-   - JUDGE0_PORT=2358
    - ADMIN_LOGIN=admin
    - ADMIN_PASSWORD=admin
    - ADMIN_FIRST_NAME=Admin
    - ADMIN_LAST_NAME=Account
    - SESSION_LENGTH_IN_HOURS=5
-
- # corsproxy:
- #  build: ./corsproxy
- #  image: saozp-corsproxy
- #  restart: always
- #  networks:
- #   - mynet
- #  ports:
- #   - '80:80'
 
  frontend:
   build: ./frontend
@@ -131,12 +89,12 @@ services:
   depends_on:
    backend:
     condition: service_started
-   # corsproxy:
-   #  condition: service_started
+   proxy:
+    condition: service_started
   networks:
    - mynet
   ports:
-   - '5173:80'
+   - '80:80'
   links:
    - backend
   environment:
@@ -147,7 +105,6 @@ networks:
   driver: bridge
 
 volumes:
- postgres-data:
- redis-data:
+ data:
  apidb:
   driver: local

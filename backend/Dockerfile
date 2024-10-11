@@ -24,9 +24,6 @@ RUN bun build \
 --outfile server \
 ./src/index.ts
 
-RUN bunx drizzle-kit generate
-RUN bunx drizzle-kit push
-
 FROM oven/bun:1.1.30
 
 WORKDIR /app

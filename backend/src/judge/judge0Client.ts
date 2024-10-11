@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const judge0Url = `http://${Bun.env.JUDGE0_HOST}:${Bun.env.JUDGE0_PORT}`;
+const judge0Url = `http://judgeClient:3002`;
 
 const axiosConfig = {
     proxy: false,
@@ -166,6 +166,12 @@ const getSubmissionBatch = async (tokens: string[]) => {
                     'Received object has wrong fields. Expected: SubmissionBatch',
                 );
             }
+        })
+        .catch((error) => {
+            return {
+                error,
+                message: 'Judge0 returned an error.',
+            };
         });
 };
 

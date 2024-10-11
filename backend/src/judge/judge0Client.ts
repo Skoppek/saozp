@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const judge0Url = `http://judgeClient:3002`;
+const judge0Url = `http://judgeclient:3002`;
 
 const axiosConfig = {
     proxy: false,

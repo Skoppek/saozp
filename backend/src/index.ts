@@ -1,7 +1,6 @@
 import { Elysia, t } from 'elysia';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 import { sessionCleaner } from './plugins/sessionCleaner';
-import { corsSettings } from './plugins/corsSettings';
 import { initAdmin } from './shared/init';
 import { swagger } from '@elysiajs/swagger';
 import swaggerConfig from './plugins/swaggerConfig';

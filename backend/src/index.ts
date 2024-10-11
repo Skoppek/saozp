@@ -15,10 +15,25 @@ import bundleController from './controller/bundleController';
 import authController from './controller/authController';
 import contestController from './controller/contestController';
 import TestCasesService from './services/TestCasesService';
+import cors from '@elysiajs/cors';
 
 const app = new Elysia()
     .use(generalErrorHandler)
-    .use(corsSettings)
+    .use(
+        cors({
+            origin: true,
+            credentials: true,
+            allowedHeaders: [
+                'Authorization',
+                'Content-Type',
+                'Cookie',
+                'Set-Cookie',
+                'Access-Control-Allow-Credentials',
+            ],
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            preflight: true,
+        }),
+    )
     .use(swagger(swaggerConfig))
     .use(sessionCleaner)
     .use(passwordResetTokenCleaner)
@@ -66,6 +81,7 @@ try {
     );
 } catch (error) {
     let message = 'Unknown Error';
+    console.error('Error encountered while initializing');
     if (error instanceof Error) message = error.message;
     // we'll proceed, but let's report it
     console.error(message);

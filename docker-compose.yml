@@ -1,5 +1,3 @@
-version: '3'
-
 #x-logging: &default-logging
 #  logging:
 #    driver: json-file
@@ -8,7 +6,7 @@ version: '3'
 
 services:
  server:
-  image: judge0/judge0:1.13.0
+  image: judge0/judge0:1.13.1
   volumes:
    - ./judge0/judge0.conf:/judge0.conf:ro
   ports:
@@ -16,15 +14,19 @@ services:
   privileged: true
   #    <<: *default-logging
   restart: always
+  networks:
+   - mynet
 
  workers:
-  image: judge0/judge0:1.13.0
+  image: judge0/judge0:1.13.1
   command: ['./scripts/workers']
   volumes:
    - ./judge0/judge0.conf:/judge0.conf:ro
   privileged: true
   #    <<: *default-logging
   restart: always
+  networks:
+   - mynet
 
  db:
   image: postgres:13.0
@@ -68,36 +70,59 @@ services:
   networks:
    - mynet
 
- backend:
-  build: ./backend
-  image: saozp-backend
-  restart: always
+ migration:
+  image: api-migration
+  build:
+   context: .
+   dockerfile: ./backend/drizzle-migration/Dockerfile
   depends_on:
    apidb:
     condition: service_healthy
-  #  server:
-  #   condition: service_started
+  networks:
+   - mynet
+  environment:
+   - DB_CONNECTION_STRING=postgres://postgres:postgres@apidb:5432/postgres
+
+ backend:
+  build:
+   context: ./backend
+   args:
+    - DB_CONNECTION_STRING=postgres://postgres:postgres@apidb:5432/postgres
+  image: saozp-backend
+  restart: always
+  depends_on:
+   migration:
+    condition: service_completed_successfully
   healthcheck:
    test: curl --fail http://localhost:3000 || exit 1
    interval: 30s
    timeout: 30s
-   #      start_period: 5s
    retries: 3
   networks:
    - mynet
   ports:
    - '3000:3000'
-  # links:
-  #  - apidb
+  links:
+   - apidb
+   - server
+   - workers
   environment:
-   - DB_CONNECTION_STRING=postgres://postgres:postgres@apidb:5432/postgres
    - JUDGE0_HOST=server
    - JUDGE0_PORT=2358
    - ADMIN_LOGIN=admin
    - ADMIN_PASSWORD=admin
-   - ADMIN_FIRSTNAME=Admin
-   - ADMIN_LASTNAME=Account
+   - ADMIN_FIRST_NAME=Admin
+   - ADMIN_LAST_NAME=Account
    - SESSION_LENGTH_IN_HOURS=5
+
+ # corsproxy:
+ #  build: ./corsproxy
+ #  image: saozp-corsproxy
+ #  restart: always
+ #  networks:
+ #   - mynet
+ #  ports:
+ #   - '80:80'
 
  frontend:
   build: ./frontend
@@ -105,11 +130,13 @@ services:
   restart: always
   depends_on:
    backend:
-    condition: service_healthy
+    condition: service_started
+   # corsproxy:
+   #  condition: service_started
   networks:
    - mynet
   ports:
-   - '3001:5173'
+   - '5173:80'
   links:
    - backend
   environment:

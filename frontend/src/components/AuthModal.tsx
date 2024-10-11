@@ -93,7 +93,7 @@ export const AuthModal = ({
         password,
       })
       .then((res) => {
-        if (res.error) throw res.error;
+        if (res?.error) throw res.error;
         onLogin();
         setIsWaiting(false);
         navigate("/problems");

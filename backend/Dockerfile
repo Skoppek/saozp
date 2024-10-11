@@ -1,21 +1,39 @@
-FROM imbios/bun-node
+FROM oven/bun:1.1.30 AS build
 
 WORKDIR /app
 
-COPY package.json .
-COPY bun.lockb .
-COPY init.sh .
-RUN chmod +x ./init.sh
+# Cache packages installation
+COPY package.json package.json
+COPY bun.lockb bun.lockb
 
-RUN bun install --production
+RUN bun install
 
-COPY src src
-COPY drizzle drizzle
-COPY tsconfig.json .
-COPY drizzle.config.ts .
+COPY ./src ./src
+COPY ./drizzle.config.ts .
+COPY ./drizzle ./drizzle
 
-ENV NODE_ENV production
+ARG DB_CONNECTION_STRING
+ENV DB_CONNECTION_STRING $DB_CONNECTION_STRING
+ENV NODE_ENV=production
 
-CMD ["./init.sh"]
+RUN bun build \
+--compile \
+--minify-whitespace \
+--minify-syntax \
+--target bun \
+--outfile server \
+./src/index.ts
+
+RUN bunx drizzle-kit generate
+RUN bunx drizzle-kit push
+
+FROM oven/bun:1.1.30
+
+WORKDIR /app
+
+COPY --from=build /app/server server
+
+ENV NODE_ENV=production
+CMD ["./server"]
 
 EXPOSE 3000

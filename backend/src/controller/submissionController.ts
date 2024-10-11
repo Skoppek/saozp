@@ -35,7 +35,11 @@ export default new Elysia({
     )
     .get(
         '',
-        async ({ query }) => await SubmissionService.getSubmissionsList(query),
+        async ({ query, request }) => {
+            console.log(request.url);
+
+            return await SubmissionService.getSubmissionsList(query);
+        },
         {
             query: 'submissionListQuery',
             response: 'getSubmissionListResponse',
@@ -43,8 +47,11 @@ export default new Elysia({
     )
     .get(
         '/:submissionId',
-        async ({ params: { submissionId } }) =>
-            await SubmissionService.getSubmissionDetails(submissionId),
+        async ({ params: { submissionId }, request }) => {
+            console.log(request.url);
+
+            return await SubmissionService.getSubmissionDetails(submissionId);
+        },
         {
             params: t.Object({
                 submissionId: t.Number(),

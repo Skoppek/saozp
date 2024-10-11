@@ -5,11 +5,26 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    // host: true,
+    host: true,
     port: 5173,
-    // proxy: {
-    //   "/api": process.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
-    // },
+    strictPort: true,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
+        // target: "http://localhost:80",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => {
+          return path.replace(/^\/api/, "");
+        },
+        // configure: (proxy, options) => {
+        //   proxy.on("proxyReq", (proxyReq, req, res) => {
+        //     proxyReq.setHeader("Origin", "http://localhost:3000");
+        //   });
+        // },
+      },
+    },
+    cors: false,
   },
   build: {
     rollupOptions: {
@@ -23,11 +38,16 @@ export default defineConfig({
       },
     },
   },
-  preview: {
-    // host: "172.19.0.4",
-    port: 5173,
-    proxy: {
-      "/api": process.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
-    },
-  },
+  // preview: {
+  //   // host: "172.19.0.4",
+  //   port: 5173,
+  //   proxy: {
+  //     "/api": {
+  //       target: "http://localhost:3000",
+  //       // target: process.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, ""),
+  //     },
+  //   },
+  // },
 });

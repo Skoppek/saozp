@@ -29,7 +29,7 @@ export const submissionSchema = pgTable(
             onDelete: 'set null',
         }),
         rerun: timestamp('rerun'),
-        ip: varchar('ip', { length: 15 }),
+        ip: varchar('ip', { length: 64 }),
     },
     (submissionSchema) => ({
         userIdIdx: index('submission_user_id_idx').on(submissionSchema.userId),

@@ -50,6 +50,8 @@ export default new Elysia({ prefix: 'auth' })
                 expires: newSession.expiresAt,
                 secure: true,
             });
+
+            return userId;
         },
         {
             detail: {

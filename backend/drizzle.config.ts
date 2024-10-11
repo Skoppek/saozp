@@ -5,6 +5,7 @@ const SCHEMAS_PATH = './src/model/schemas';
 const INTERMEDIATES_SCHEMAS_PATH = SCHEMAS_PATH + '/intermediates';
 
 const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
+console.log(process.env);
 
 if (!DB_CONNECTION_STRING) {
     throw new Error('PSQL credentials not set properly. Check env variables.');

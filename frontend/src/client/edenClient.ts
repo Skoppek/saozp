@@ -1,11 +1,9 @@
 import { treaty } from "@elysiajs/eden";
 import type { App } from "../../../backend/src";
 
-export default treaty<App>(
-  import.meta.env.VITE_SAOZP_BACKEND_URL ?? "http://localhost:3000",
-  {
-    fetch: {
-      credentials: "include",
-    },
+// @ts-ignore
+export default treaty<App>("http://localhost:5173/api", {
+  fetch: {
+    credentials: "include",
   },
-);
+});

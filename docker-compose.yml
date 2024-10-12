@@ -39,7 +39,7 @@ services:
   networks:
    - mynet
   ports:
-   - '${PUBLIC_IP}:5173:5173'
+   - '5173:5173'
   links:
    - backend
 
@@ -94,7 +94,7 @@ services:
   networks:
    - mynet
   ports:
-   - '80:80'
+   - '3003:80'
   environment:
    - BACKEND_URL=${PUBLIC_IP}/api
 

@@ -14,28 +14,12 @@ import bundleController from './controller/bundleController';
 import authController from './controller/authController';
 import contestController from './controller/contestController';
 import TestCasesService from './services/TestCasesService';
-import cors from '@elysiajs/cors';
 
 const app = new Elysia()
     .get('', () => {
         return 'This is a valid response from SAOZP backend service!';
     })
     .use(generalErrorHandler)
-    .use(
-        cors({
-            origin: 'http://localhost:5173',
-            credentials: true,
-            allowedHeaders: [
-                'Authorization',
-                'Content-Type',
-                'Cookie',
-                'Set-Cookie',
-                'Access-Control-Allow-Credentials',
-            ],
-            methods: ['GET', 'POST', 'PUT', 'DELETE'],
-            preflight: true,
-        }),
-    )
     .use(swagger(swaggerConfig))
     .use(sessionCleaner)
     .use(passwordResetTokenCleaner)

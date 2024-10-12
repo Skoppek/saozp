@@ -7,8 +7,7 @@ COPY bun.lockb bun.lockb
 
 RUN bun install
 
-COPY ./src ./src
-COPY ./index.html .
+COPY . .
 
 RUN bun --bunx vite build
 

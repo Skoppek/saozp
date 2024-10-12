@@ -2,7 +2,42 @@
 
 **_System Automatycznego Oceniania Zadań Programistycznych_**
 
-## Backend
+## Uruchomienie lokalnie
+
+### Docker Compose
+
+Należy zainstalować narzędzie `docker` razem z pluginem `docker compose`.  
+(nie pomylić z `docker-compose`)
+
+https://docs.docker.com/compose/install/linux/#install-using-the-repository
+
+### Uruchomienie
+
+System należy uruchomić z użyciem skryptu `run.sh`.
+
+```bash
+sudo ./run.sh
+```
+
+albo
+
+```bash
+source ./run.sh
+```
+
+#### Problemy z końcami linii
+
+W przypadku problemów z uruchomieniem skryptu `run.sh` lub brakiem połączenia z usługą Judge0 powodem mogą być niezgodne znaki końca linii.
+Należy je powrawić poleceniami:
+
+```bash
+sed -i 's/\r//' run.sh
+sed -i 's/\r//' judge0/judge0.conf
+```
+
+## Rozwój lokalny
+
+### Backend
 
 ```bash
 cd ./backend
@@ -40,7 +75,7 @@ Wprowadzenie migracji do bazy danych
 bunx drizzle-kit push
 ```
 
-## Frontend
+### Frontend
 
 ```bash
 cd ./frontend
@@ -89,13 +124,3 @@ Aby usyskać raport w pliku html należy użyć poniższej komendy.
 ```bash
 artillery report <wynik>.json
 ```
-
-## TODO
-
-- [x] ładowanie testów plikami
-- [x] reset hasła przez admina
-- [x] tworzenie grup zajęciowych
-- [x] grupowanie problemów w konkursy
-- [x] przypisanie użytkowników do konkursów
-- [x] statystyka wyników
-- [x] ponowne uruchamianie testów na rozwiązaniach

@@ -35,6 +35,7 @@ const getSubmissionDetailsResponse = t.Object({
                 input: t.String(),
                 expected: t.String(),
                 received: t.Nullable(t.String()),
+                error: t.Optional(t.Nullable(t.String())),
             }),
         ),
         averageMemory: t.Nullable(t.Number()),

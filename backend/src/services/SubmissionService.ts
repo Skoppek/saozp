@@ -226,11 +226,9 @@ export class SubmissionService {
                 const tests = await TestRepository.getTestsOfSubmission(
                     submission.id,
                 );
-                const results = (
-                    await judge0Client.getSubmissionBatch(
-                        tests.map((test) => test.token),
-                    )
-                ).submissions;
+                const results = await judge0Client.getSubmissionBatch(
+                    tests.map((test) => test.token),
+                );
 
                 return {
                     submissionId: submission.id,
@@ -242,7 +240,7 @@ export class SubmissionService {
                     },
                     createdAt: submission.createdAt ?? undefined,
                     status: SubmissionService.reduceToStatus(
-                        results.map((result) => result.status.id),
+                        results.submissions.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
                     rerun: mapIfPresent(submission.rerun, (o) => o),
@@ -296,6 +294,7 @@ export class SubmissionService {
                         input: result.stdin,
                         expected: result.expected_output,
                         received: result.stdout,
+                        error: result.stderr,
                     };
                 }),
                 averageMemory: isNaN(averageMemory) ? null : averageMemory,

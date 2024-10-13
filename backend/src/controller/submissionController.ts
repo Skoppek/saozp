@@ -47,9 +47,7 @@ export default new Elysia({
     )
     .get(
         '/:submissionId',
-        async ({ params: { submissionId }, request }) => {
-            console.log(request.url);
-
+        async ({ params: { submissionId } }) => {
             return await SubmissionService.getSubmissionDetails(submissionId);
         },
         {

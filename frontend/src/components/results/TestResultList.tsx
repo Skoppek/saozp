@@ -2,6 +2,7 @@ import { Table } from "flowbite-react/components/Table";
 import { TestCaseResult } from "../../shared/interfaces/TestCaseResult";
 import { Badge } from "flowbite-react/components/Badge";
 import { TestStatus } from "../../shared/enums";
+import _ from "lodash";
 
 interface TestResultListProps {
   tests: TestCaseResult[];
@@ -21,14 +22,18 @@ export const TestResultList = ({ tests }: TestResultListProps) => {
             <Table.Row id={`${index}`}>
               <Table.Cell>{test.input}</Table.Cell>
               <Table.Cell>
-                <Badge
-                  color={
-                    test.statusId === TestStatus.ACCEPTED ? "green" : "red"
-                  }
-                  className="flex justify-center"
-                >
-                  {test.received != null ? test.received : "Błąd"}
-                </Badge>
+                {_.isNil(test.error) ? (
+                  <Badge
+                    color={
+                      test.statusId === TestStatus.ACCEPTED ? "green" : "red"
+                    }
+                    className="flex justify-center"
+                  >
+                    {test.received != null ? test.received : "Błąd"}
+                  </Badge>
+                ) : (
+                  <Badge color={"red"}>{test.error}</Badge>
+                )}
               </Table.Cell>
               {test.statusId !== TestStatus.ACCEPTED && (
                 <Table.Cell>{test.expected}</Table.Cell>

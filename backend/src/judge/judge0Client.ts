@@ -93,6 +93,7 @@ interface Submission {
     expected_output: string;
     stdout: string | null;
     stdin: string;
+    stderr?: string | null;
     status: Status;
     time: string;
     memory: number;
@@ -103,12 +104,14 @@ const fields = [
     'expected_output',
     'stdout',
     'stdin',
+    'stderr',
     'status',
     'time',
     'memory',
 ];
 
 const isSubmission = (suspect: unknown): suspect is Submission => {
+    console.log(suspect);
     return (
         typeof suspect === 'object' &&
         suspect != null &&
@@ -148,7 +151,9 @@ const isSubmissionBatch = (suspect: unknown): suspect is SubmissionBatch => {
     );
 };
 
-const getSubmissionBatch = async (tokens: string[]) => {
+const getSubmissionBatch = async (
+    tokens: string[],
+): Promise<SubmissionBatch> => {
     if (!tokens.length) return { submissions: [] };
     return await axios
         .get(`${judge0Url}/submissions/batch`, {
@@ -162,15 +167,42 @@ const getSubmissionBatch = async (tokens: string[]) => {
             if (isSubmissionBatch(response.data)) {
                 return response.data;
             } else {
-                throw new Error(
-                    'Received object has wrong fields. Expected: SubmissionBatch',
-                );
+                return {
+                    submissions: [
+                        {
+                            token: '',
+                            expected_output: '',
+                            stdout: 'Unexpected response',
+                            stdin: '',
+                            stderr: '',
+                            status: {
+                                id: 3,
+                                description: '',
+                            },
+                            time: '',
+                            memory: 0,
+                        },
+                    ],
+                };
             }
         })
-        .catch((error) => {
+        .catch(() => {
             return {
-                error,
-                message: 'Judge0 returned an error.',
+                submissions: [
+                    {
+                        token: '',
+                        expected_output: '',
+                        stdout: '',
+                        stdin: '',
+                        stderr: '',
+                        status: {
+                            id: 3,
+                            description: '',
+                        },
+                        time: '',
+                        memory: 0,
+                    },
+                ],
             };
         });
 };

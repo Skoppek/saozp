@@ -185,25 +185,6 @@ const getSubmissionBatch = async (
                     ],
                 };
             }
-        })
-        .catch(() => {
-            return {
-                submissions: [
-                    {
-                        token: '',
-                        expected_output: '',
-                        stdout: '',
-                        stdin: '',
-                        stderr: '',
-                        status: {
-                            id: 3,
-                            description: '',
-                        },
-                        time: '',
-                        memory: 0,
-                    },
-                ],
-            };
         });
 };
 

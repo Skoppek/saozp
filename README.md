@@ -25,6 +25,8 @@ albo
 source ./run.sh
 ```
 
+Serwis powinien być dostępny pod adresem `localhost:5173`.
+
 #### Problemy z końcami linii
 
 W przypadku problemów z uruchomieniem skryptu `run.sh` lub brakiem połączenia z usługą Judge0 powodem mogą być niezgodne znaki końca linii.

@@ -36,8 +36,6 @@ export default new Elysia({
     .get(
         '',
         async ({ query, request }) => {
-            console.log(request.url);
-
             return await SubmissionService.getSubmissionsList(query);
         },
         {

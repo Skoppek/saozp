@@ -4,7 +4,7 @@ const axios = require('axios'); // Using axios to make API requests
 const app = express();
 const PORT = 3002;
 
-const judge0Url = 'http://host.docker.internal:2358/';
+const judge0Url = 'http://193.107.32.226:2358/';
 
 app.use(express.json());
 

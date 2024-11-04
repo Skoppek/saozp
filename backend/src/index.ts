@@ -14,10 +14,14 @@ import bundleController from './controller/bundleController';
 import authController from './controller/authController';
 import contestController from './controller/contestController';
 import TestCasesService from './services/TestCasesService';
+import judge0Client from './judge/judge0Client';
 
 const app = new Elysia()
     .get('', () => {
         return 'This is a valid response from SAOZP backend service!';
+    })
+    .get('/aboutJudge', () => {
+        return judge0Client.getAbout();
     })
     .use(generalErrorHandler)
     .use(swagger(swaggerConfig))

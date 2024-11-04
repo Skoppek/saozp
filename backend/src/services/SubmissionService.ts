@@ -223,12 +223,7 @@ export class SubmissionService {
 
         return await Promise.all(
             submissions.map(async (submission) => {
-                const tests = await TestRepository.getTestsOfSubmission(
-                    submission.id,
-                );
-                const results = await judge0Client.getSubmissionBatch(
-                    tests.map((test) => test.token),
-                );
+                const judge0Submissions = await SubmissionService.getJudge0BatchForSubmission(submission.id)
 
                 return {
                     submissionId: submission.id,
@@ -240,13 +235,25 @@ export class SubmissionService {
                     },
                     createdAt: submission.createdAt ?? undefined,
                     status: SubmissionService.reduceToStatus(
-                        results.submissions.map((result) => result.status.id),
+                        judge0Submissions.submissions.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
                     rerun: mapIfPresent(submission.rerun, (o) => o),
                 };
             }),
         );
+    }
+
+    private static async getJudge0BatchForSubmission(submissionId: number) {
+        const tests = await TestRepository.getTestsOfSubmission(submissionId);
+        const tokens = tests.map((test) => test.token);
+
+        const chunks = _.chunk(tokens, 5);
+        const judge0Submissions = chunks.map(async (chunk) => {
+            return await judge0Client.getSubmissionBatch(chunk);
+        })
+
+        return _.flatten(judge0Submissions);
     }
 
     static async getSubmissionDetails(submissionId: number) {
@@ -265,13 +272,9 @@ export class SubmissionService {
             throw new ProblemNotFoundError(submission.problemId);
         }
 
-        const tests = await TestRepository.getTestsOfSubmission(submission.id);
-
-        const results = (
-            await judge0Client.getSubmissionBatch(
-                tests.map((test) => test.token),
-            )
-        ).submissions;
+        const judge0Submissions = await SubmissionService.getJudge0BatchForSubmission(submission.id)
+        
+        const results = judge0Submissions.submissions;
 
         const averageTime = SubmissionService.getAverage(
             results.map((result) => parseFloat(result.time)),

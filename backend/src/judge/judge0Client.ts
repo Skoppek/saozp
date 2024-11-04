@@ -111,7 +111,6 @@ const fields = [
 ];
 
 const isSubmission = (suspect: unknown): suspect is Submission => {
-    console.log(suspect);
     return (
         typeof suspect === 'object' &&
         suspect != null &&

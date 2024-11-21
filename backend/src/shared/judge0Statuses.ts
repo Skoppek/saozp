@@ -1,4 +1,5 @@
 export default {
+    unknown: { id: 0, description: 'Unknown' },
     inQueue: { id: 1, description: 'In Queue' },
     processing: { id: 2, description: 'Processing' },
     accepted: { id: 3, description: 'Accepted' },

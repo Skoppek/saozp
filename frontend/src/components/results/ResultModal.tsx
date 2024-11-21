@@ -9,6 +9,7 @@ interface ResultsModalProps {
   setIsOpen: (isOpen: boolean) => void;
   submissions: SubmissionEntry[];
   onCheckCode: (submission: Submission) => void;
+  refetch: () => void;
 }
 
 export const ResultsModal = ({

@@ -67,6 +67,7 @@ export const SolvingEditor = ({
         setIsOpen={setIsOpen}
         submissions={submissions ?? []}
         onCheckCode={(submission) => setCode(submission.code)}
+        refetch={() => refetch()}
       />
       <div className="m-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {problem.name}

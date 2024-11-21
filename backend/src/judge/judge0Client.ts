@@ -10,6 +10,8 @@ const getAbout = async () => {
     return await axios.get(`${judge0Url}/about`, axiosConfig);
 };
 
+let x = true;
+
 const submit = async ({
     languageId,
     code,
@@ -97,12 +99,14 @@ interface Submission {
     status: Status;
     time: string;
     memory: number;
+    compile_output?: string | null;
 }
 
 const fields = [
     'token',
     'expected_output',
     'stdout',
+    'compile_output',
     'stdin',
     'stderr',
     'status',

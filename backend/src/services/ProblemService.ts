@@ -18,16 +18,6 @@ export class ProblemService {
         return problem;
     }
 
-    private hideCreatorCode(code: string) {
-        return (
-            code
-                .match(/---(.*?)---/gs)
-                ?.at(0)
-                ?.split('---')
-                .join('') ?? code
-        );
-    }
-
     async createProblem(data: CreateProblemRequest, creatorId: number) {
         const newProblem = await ProblemRepository.createProblem({
             ...data,
@@ -80,9 +70,7 @@ export class ProblemService {
             name: problem.name,
             prompt: problem.prompt,
             languageId: problem.languageId,
-            baseCode: isForSolving
-                ? this.hideCreatorCode(problem.baseCode)
-                : problem.baseCode,
+            baseCode: problem.baseCode,
             creatorId: problem.creatorId,
             tests: problem.tests,
             isContestsOnly: problem.isContestsOnly ? true : undefined,

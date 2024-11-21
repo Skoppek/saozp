@@ -46,11 +46,6 @@ export const CodeEditor = ({
           ) : (
             <Badge className="w-fit">{languages.name}</Badge>
           )}
-          {showEditTips && (
-            <Tooltip content="Kod pomiędzy znakami '---' będzie widoczny dla rozwiązującego.">
-              <HiOutlineInformationCircle size="30" />
-            </Tooltip>
-          )}
         </div>
         <Editor
           // eslint-disable-next-line tailwindcss/no-custom-classname

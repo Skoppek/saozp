@@ -93,16 +93,11 @@ export class SubmissionService {
             throw new SubmissionCreationError();
         }
 
-        const mergedCode = problem.baseCode.replace(
-            /---(.*?)---/gs,
-            newSubmission.code,
-        );
-
         SubmissionService.submitTests(
             !!isCommit ? problem.tests : (userTests ?? []),
             newSubmission.id,
             problem.languageId,
-            mergedCode,
+            newSubmission.code,
         );
         return newSubmission;
     }
@@ -223,8 +218,8 @@ export class SubmissionService {
 
         return await Promise.all(
             submissions.map(async (submission) => {
-                const judge0Submissions = await SubmissionService.getJudge0BatchForSubmission(submission.id)
-
+                const results = await SubmissionService.getJudge0BatchForSubmission(submission.id)
+                
                 return {
                     submissionId: submission.id,
                     creator: {
@@ -235,7 +230,7 @@ export class SubmissionService {
                     },
                     createdAt: submission.createdAt ?? undefined,
                     status: SubmissionService.reduceToStatus(
-                        judge0Submissions.submissions.map((result) => result.status.id),
+                        results.map((result) => result.status.id),
                     ),
                     isCommit: submission.isCommit,
                     rerun: mapIfPresent(submission.rerun, (o) => o),
@@ -249,11 +244,9 @@ export class SubmissionService {
         const tokens = tests.map((test) => test.token);
 
         const chunks = _.chunk(tokens, 5);
-        const judge0Submissions = chunks.map(async (chunk) => {
-            return await judge0Client.getSubmissionBatch(chunk);
-        })
+        const results = await Promise.all(chunks.map((chunk) => judge0Client.getSubmissionBatch(chunk)))
 
-        return _.flatten(judge0Submissions);
+        return _.flatten(_.flatten(results).map((chunk) => chunk.submissions));
     }
 
     static async getSubmissionDetails(submissionId: number) {
@@ -272,10 +265,8 @@ export class SubmissionService {
             throw new ProblemNotFoundError(submission.problemId);
         }
 
-        const judge0Submissions = await SubmissionService.getJudge0BatchForSubmission(submission.id)
+        const results = await SubmissionService.getJudge0BatchForSubmission(submission.id)
         
-        const results = judge0Submissions.submissions;
-
         const averageTime = SubmissionService.getAverage(
             results.map((result) => parseFloat(result.time)),
         );
@@ -297,7 +288,7 @@ export class SubmissionService {
                         input: result.stdin,
                         expected: result.expected_output,
                         received: result.stdout,
-                        error: result.stderr,
+                        error: result.status.id == 6 ? result.compile_output : result.stderr,
                     };
                 }),
                 averageMemory: isNaN(averageMemory) ? null : averageMemory,
@@ -312,6 +303,9 @@ export class SubmissionService {
     private static reduceToStatus(
         statusIds: number[],
     ): { id: number; description: string } | undefined {
+        if (statusIds.length == 0) {
+            return judge0Statuses.unknown;
+        }
         if (statusIds.includes(1)) {
             return judge0Statuses.inQueue;
         }

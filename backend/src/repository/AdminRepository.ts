@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../model/db/db';
-import { adminSchema } from '../model/schemas/adminSchema';
-import { userSchema } from '../model/schemas/userSchema';
-import { profileSchema } from '../model/schemas/profileSchema';
-import { sessionSchema } from '../model/schemas/sessionSchema';
+import { db } from '../db/db';
+import { adminSchema } from '../db/schema/adminSchema';
+import { userSchema } from '../db/schema/userSchema';
+import { profileSchema } from '../db/schema/profileSchema';
+import { sessionSchema } from '../db/schema/sessionSchema';
 
 export default abstract class AdminRepository {
     static async addToAdmins(userId: number) {

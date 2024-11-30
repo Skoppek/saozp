@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { NewUser, User, userSchema } from '../model/schemas/userSchema';
-import { db } from '../model/db/db';
+import { db } from '../db/db';
+import { NewUser, User, userSchema } from '../db/schema/userSchema';
 
 export default abstract class UserRepository {
     static async createUser(user: NewUser) {

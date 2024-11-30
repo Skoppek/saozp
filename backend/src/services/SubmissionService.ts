@@ -122,8 +122,8 @@ export class SubmissionService {
     }
 
     private static async checkForContest(
-        stageId: number | undefined,
-        createdAt: Date | undefined,
+        stageId?: number,
+        createdAt?: Date,
     ) {
         if (stageId) {
             const stage = await StageRepository.getStageById(stageId);
@@ -169,28 +169,22 @@ export class SubmissionService {
                     throw new SubmissionCreationError();
                 }
 
-                const mergedCode = problem.baseCode.replace(
-                    /---(.*?)---/gs,
-                    newSubmission.code,
-                );
-
                 SubmissionService.submitTests(
                     problem.tests,
                     newSubmission.id,
                     problem.languageId,
-                    mergedCode,
+                    newSubmission.code,
                 );
             });
     }
 
     static async getSubmissionsList(query: SubmissionListQuery) {
-        const { userId, stageId, problemId, commitsOnly } =
+        const { userId, stageId, problemId } =
             parseSubmissionListQuery(query);
 
         const submissions = await SubmissionRepository.getSubmissionsList(
             userId,
             problemId,
-            commitsOnly,
             stageId,
         );
 
@@ -215,7 +209,6 @@ export class SubmissionService {
                     status: SubmissionService.reduceToStatus(
                         results.submissions.map((result) => result.status.id),
                     ),
-                    isCommit: submission.isCommit,
                     rerun: mapIfPresent(submission.rerun, (o) => o),
                 };
             }),

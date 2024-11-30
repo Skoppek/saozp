@@ -1,8 +1,8 @@
 import { integer } from 'drizzle-orm/pg-core/columns';
 import { pgTable } from 'drizzle-orm/pg-core/table';
-import { problemSchema } from '../problemSchema';
 import { primaryKey } from 'drizzle-orm/pg-core';
-import { stageSchema } from '../stageSchema';
+import { problemSchema } from './problemSchema';
+import { stageSchema } from './stageSchema';
 
 export const problemsToStageSchema = pgTable(
     'problems_to_stage',

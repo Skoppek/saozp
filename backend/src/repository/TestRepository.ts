@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm/sql';
-import { db } from '../model/db/db';
-import { NewTest, testSchema } from '../model/schemas/testSchema';
+import { db } from '../db/db';
+import { NewTest, testSchema } from '../db/schema/testSchema';
 
 export default class TestRepository {
     static async createTest(newTest: NewTest) {

@@ -1,11 +1,8 @@
 import { and, eq } from 'drizzle-orm';
-import { db } from '../model/db/db';
-import {
-    NewSubmission,
-    submissionSchema,
-} from '../model/schemas/submissionSchema';
-import { profileSchema } from '../model/schemas/profileSchema';
+import { db } from '../db/db';
 import { mapIfPresent } from '../shared/mapper';
+import { NewSubmission, submissionSchema } from '../db/schema/submissionSchema';
+import { profileSchema } from '../db/schema/profileSchema';
 
 export class SubmissionRepository {
     static async createSubmission(newSubmission: NewSubmission) {
@@ -19,7 +16,6 @@ export class SubmissionRepository {
     static async getSubmissionsList(
         userId?: number,
         problemId?: number,
-        commitsOnly?: boolean,
         stageId?: number,
     ) {
         return db
@@ -27,7 +23,6 @@ export class SubmissionRepository {
                 id: submissionSchema.id,
                 creator: profileSchema,
                 createdAt: submissionSchema.createdAt,
-                isCommit: submissionSchema.isCommit,
                 problemId: submissionSchema.problemId,
                 rerun: submissionSchema.rerun,
                 stageId: submissionSchema.stageId,
@@ -44,9 +39,6 @@ export class SubmissionRepository {
                     ),
                     mapIfPresent(problemId, (id) =>
                         eq(submissionSchema.problemId, id),
-                    ),
-                    mapIfPresent(commitsOnly, (isCommit) =>
-                        eq(submissionSchema.isCommit, isCommit),
                     ),
                     mapIfPresent(stageId, (id) =>
                         eq(submissionSchema.stageId, id),
@@ -86,7 +78,6 @@ export class SubmissionRepository {
                 and(
                     eq(submissionSchema.userId, userId),
                     eq(submissionSchema.problemId, problemId),
-                    eq(submissionSchema.isCommit, false),
                 ),
             );
     }

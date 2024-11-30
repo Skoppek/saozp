@@ -1,8 +1,8 @@
 import { integer } from 'drizzle-orm/pg-core/columns';
 import { pgTable } from 'drizzle-orm/pg-core/table';
-import { userSchema } from '../userSchema';
-import { contestSchema } from '../contestSchema';
 import { primaryKey } from 'drizzle-orm/pg-core';
+import { userSchema } from './userSchema';
+import { contestSchema } from './contestSchema';
 
 export const usersToContestSchema = pgTable(
     'users_to_contests',

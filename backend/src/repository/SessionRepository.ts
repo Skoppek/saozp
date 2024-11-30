@@ -1,6 +1,6 @@
 import { desc, eq, lt } from 'drizzle-orm';
-import { NewSession, sessionSchema } from '../model/schemas/sessionSchema';
-import { db } from '../model/db/db';
+import { db } from '../db/db';
+import { NewSession, sessionSchema } from '../db/schema/sessionSchema';
 
 export default abstract class SessionRepository {
     static async createSession(session: NewSession) {

@@ -1,9 +1,9 @@
-import { NewGroup, groupSchema } from '../model/schemas/groupSchema';
-import { db } from '../model/db/db';
-import { usersToGroupSchema } from '../model/schemas/intermediates/usersToGroupSchema';
+import { db } from '../db/db';
+import { usersToGroupSchema } from '../db/schema/usersToGroupSchema';
 import { and } from 'drizzle-orm';
 import { eq } from 'drizzle-orm/sql';
-import { profileSchema } from '../model/schemas/profileSchema';
+import { profileSchema } from '../db/schema/profileSchema';
+import { groupSchema, NewGroup } from '../db/schema/groupSchema';
 
 export default class GroupRepository {
     async createGroup(newUserGroup: NewGroup) {

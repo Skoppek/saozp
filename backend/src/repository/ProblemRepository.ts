@@ -1,11 +1,11 @@
 import { eq, and } from 'drizzle-orm';
-import { db } from '../model/db/db';
-import { NewProblem, problemSchema } from '../model/schemas/problemSchema';
+import { db } from '../db/db';
 import _ from 'lodash';
-import { profileSchema } from '../model/schemas/profileSchema';
-import { userSchema } from '../model/schemas/userSchema';
-import { problemsToBundleSchema } from '../model/schemas/intermediates/problemsToBundleSchema';
-import { problemsToStageSchema } from '../model/schemas/intermediates/problemsToContestSchema';
+import { problemsToBundleSchema } from '../db/schema/problemsToBundleSchema';
+import { problemsToStageSchema } from '../db/schema/problemsToContestSchema';
+import { NewProblem, problemSchema } from '../db/schema/problemSchema';
+import { profileSchema } from '../db/schema/profileSchema';
+import { userSchema } from '../db/schema/userSchema';
 
 export default class ProblemRepository {
     static async createProblem(newProblem: NewProblem) {

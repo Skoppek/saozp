@@ -1,10 +1,7 @@
-import { db } from '../model/db/db';
-import {
-    PasswordResetToken,
-    passwordResetTokenSchema,
-} from '../model/schemas/passwordResetTokenSchema';
+import { db } from '../db/db';
 import { eq } from 'drizzle-orm/sql';
 import { lt } from 'drizzle-orm';
+import { PasswordResetToken, passwordResetTokenSchema } from '../db/schema/passwordResetTokenSchema';
 
 export default abstract class {
     static async putToken(passwordResetToken: PasswordResetToken) {

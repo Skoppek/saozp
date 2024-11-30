@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
-import { NewProfile, profileSchema } from '../model/schemas/profileSchema';
-import { db } from '../model/db/db';
-import { usersToGroupSchema } from '../model/schemas/intermediates/usersToGroupSchema';
-import { usersToContestSchema } from '../model/schemas/intermediates/usersToContestSchema';
+import { db } from '../db/db';
+import { usersToGroupSchema } from '../db/schema/usersToGroupSchema';
+import { usersToContestSchema } from '../db/schema/usersToContestSchema';
+import { NewProfile, profileSchema } from '../db/schema/profileSchema';
 
 export default abstract class ProfileRepository {
     static async createProfile(newProfile: NewProfile) {

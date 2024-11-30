@@ -1,16 +1,13 @@
-import {
-    Contest,
-    contestSchema,
-    NewContest,
-} from '../model/schemas/contestSchema';
-import { db } from '../model/db/db';
+import { db } from '../db/db';
 import { eq } from 'drizzle-orm/sql';
 import { and } from 'drizzle-orm';
-import { usersToContestSchema } from '../model/schemas/intermediates/usersToContestSchema';
-import { profileSchema } from '../model/schemas/profileSchema';
+import { usersToContestSchema } from '../db/schema/usersToContestSchema';
 import { mapIfPresent } from '../shared/mapper';
 import _ from 'lodash';
-import { stageSchema } from '../model/schemas/stageSchema';
+import { Contest, NewContest } from '../db/schema/contestSchema';
+import { contestSchema } from '../schema/contestSchema';
+import { profileSchema } from '../db/schema/profileSchema';
+import { stageSchema } from '../db/schema/stageSchema';
 
 export default class ContestRepository {
     static async createContest(newContest: NewContest) {

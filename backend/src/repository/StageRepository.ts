@@ -1,8 +1,8 @@
 import { and, eq } from 'drizzle-orm';
-import { db } from '../model/db/db';
-import { NewStage, Stage, stageSchema } from '../model/schemas/stageSchema';
+import { db } from '../db/db';
 import _ from 'lodash';
-import { problemsToStageSchema } from '../model/schemas/intermediates/problemsToContestSchema';
+import { problemsToStageSchema } from '../db/schema/problemsToContestSchema';
+import { NewStage, Stage, stageSchema } from '../db/schema/stageSchema';
 
 export default class StageRepository {
     static async createStage(newStage: NewStage) {

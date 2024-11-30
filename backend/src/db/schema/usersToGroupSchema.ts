@@ -1,8 +1,8 @@
 import { integer } from 'drizzle-orm/pg-core/columns';
 import { pgTable } from 'drizzle-orm/pg-core/table';
-import { userSchema } from '../userSchema';
-import { groupSchema } from '../groupSchema';
 import { primaryKey } from 'drizzle-orm/pg-core';
+import { userSchema } from './userSchema';
+import { groupSchema } from './groupSchema';
 
 export const usersToGroupSchema = pgTable(
     'users_to_groups',

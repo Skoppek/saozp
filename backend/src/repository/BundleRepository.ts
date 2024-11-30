@@ -1,10 +1,11 @@
-import { NewBundle, bundleSchema } from '../model/schemas/bundleSchema';
-import { db } from '../model/db/db';
+import { db } from '../db/db';
 import { eq } from 'drizzle-orm/sql';
 import { and } from 'drizzle-orm';
-import { profileSchema } from '../model/schemas/profileSchema';
-import { problemsToBundleSchema } from '../model/schemas/intermediates/problemsToBundleSchema';
-import { problemSchema } from '../model/schemas/problemSchema';
+import { NewBundle } from '../db/schema/bundleSchema';
+import { bundleSchema } from '../schema/bundleSchema';
+import { profileSchema } from '../db/schema/profileSchema';
+import { problemsToBundleSchema } from '../db/schema/problemsToBundleSchema';
+import { problemSchema } from '../db/schema/problemSchema';
 
 export default class BundleRepository {
     async createBundle(newBundle: NewBundle) {

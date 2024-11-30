@@ -83,7 +83,6 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
           code={newProblem.baseCode}
           className="h-full"
           chosenLanguage={getLanguageById(problem?.languageId ?? 0)}
-          showEditTips={true}
         />
         <div className="flex w-full flex-col items-center gap-2">
           <ToggleSwitch

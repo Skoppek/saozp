@@ -5,8 +5,6 @@ import { LanguageId } from "../shared/enums";
 import { Language } from "../shared/interfaces/Language";
 import { LanguageSelect } from "./inputs/LanguageSelect";
 import { Badge } from "flowbite-react/components/Badge";
-import { HiOutlineInformationCircle } from "react-icons/hi";
-import { Tooltip } from "flowbite-react";
 
 interface CodeEditorProps extends ClassName {
   languages: Language[] | Language;
@@ -14,7 +12,6 @@ interface CodeEditorProps extends ClassName {
   onChange?: (value: string) => void;
   onLanguageChange?: (value: LanguageId) => void;
   chosenLanguage?: Language;
-  showEditTips?: boolean;
 }
 
 export const CodeEditor = ({
@@ -24,7 +21,6 @@ export const CodeEditor = ({
   onLanguageChange,
   className,
   chosenLanguage,
-  showEditTips,
 }: CodeEditorProps) => {
   const [language, setLanguage] = useState(
     chosenLanguage ?? (Array.isArray(languages) ? languages.at(0) : languages),
@@ -45,11 +41,6 @@ export const CodeEditor = ({
             />
           ) : (
             <Badge className="w-fit">{languages.name}</Badge>
-          )}
-          {showEditTips && (
-            <Tooltip content="Kod pomiędzy znakami '---' będzie widoczny dla rozwiązującego.">
-              <HiOutlineInformationCircle size="30" />
-            </Tooltip>
           )}
         </div>
         <Editor

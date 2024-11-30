@@ -30,10 +30,8 @@ export const ResultPanel = ({ submission }: ResultPanelProps) => {
   return (
     <Accordion collapseAll onClick={() => setOpen((prev) => !prev)}>
       <Accordion.Panel>
-        <Accordion.Title
-          className={`${submission.isCommit ? "bg-teal-800/10 dark:bg-teal-800/50" : ""}`}
-        >
-          <ResultPanelTitle submission={submission} showCommitFlag={true} />
+        <Accordion.Title>
+          <ResultPanelTitle submission={submission} />
         </Accordion.Title>
         <AccordionContent>
           {data && !isFetching ? (

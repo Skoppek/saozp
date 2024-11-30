@@ -85,16 +85,11 @@ export class SubmissionService {
             throw new SubmissionCreationError();
         }
 
-        const mergedCode = problem.baseCode.replace(
-            /---(.*?)---/gs,
-            newSubmission.code,
-        );
-
         SubmissionService.submitTests(
             problem.tests,
             newSubmission.id,
             problem.languageId,
-            mergedCode,
+            newSubmission.code,
         );
         return newSubmission;
     }

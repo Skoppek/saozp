@@ -1,5 +1,4 @@
 import {
-    boolean,
     index,
     integer,
     pgTable,
@@ -24,7 +23,6 @@ export const submissionSchema = pgTable(
             .notNull(),
         code: text('code').notNull(),
         createdAt: timestamp('created_at').defaultNow(),
-        isCommit: boolean('is_commit').notNull().default(false),
         stageId: integer('stage_id').references(() => stageSchema.id, {
             onDelete: 'set null',
         }),

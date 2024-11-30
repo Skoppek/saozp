@@ -1,15 +1,13 @@
 import { getLanguageById } from "../shared/constansts";
-import { TestCase } from "../shared/interfaces/TestCase";
 import { Problem } from "../shared/interfaces/Problem";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useContext, useState } from "react";
-import { Accordion, Button, Spinner } from "flowbite-react";
+import { Accordion, Button } from "flowbite-react";
 import { ResultsModal } from "./results/ResultModal.tsx";
 import apiClient from "../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../pages/Root.tsx";
-import { TestCasesFileUpload } from "./problems/TestCasesFileUpload.tsx";
 import { SubmitControls } from "./SubmitControls.tsx";
 
 interface SolvingEditorProps {
@@ -26,7 +24,6 @@ export const SolvingEditor = ({
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState(problem.baseCode);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [userTests, setUserTests] = useState<TestCase[]>([]);
 
   const authContext = useContext(AuthContext);
 
@@ -47,7 +44,7 @@ export const SolvingEditor = ({
         .submit({
           problemId: problem.problemId,
           code: code,
-          userTests: userTests,
+          userTests: [],
           isCommit: !isTest,
           createdAt: new Date(),
           stageId,
@@ -57,7 +54,7 @@ export const SolvingEditor = ({
           void refetch();
         });
     },
-    [contestId, refetch, code, problem.problemId, userTests, stageId],
+    [contestId, refetch, code, problem.problemId, stageId],
   );
 
   return (
@@ -75,7 +72,6 @@ export const SolvingEditor = ({
         <div className="flex w-2/5 flex-col gap-2">
           <SubmitControls
             submitFn={commitCode}
-            enableTests={!!userTests.length}
             isWaiting={isSubmitting}
             contestId={contestId}
             stageId={stageId}
@@ -89,26 +85,6 @@ export const SolvingEditor = ({
                   displayOnly
                   className="h-full"
                 />
-              </Accordion.Content>
-            </Accordion.Panel>
-            <Accordion.Panel>
-              <Accordion.Title>Testowanie</Accordion.Title>
-              <Accordion.Content>
-                <div className="flex flex-col gap-2">
-                  <TestCasesFileUpload
-                    tests={userTests}
-                    setTests={(tests) => setUserTests(tests)}
-                  />
-                  <Button
-                    className="w-full"
-                    color="warning"
-                    outline
-                    onClick={() => commitCode(true)}
-                    disabled={!userTests.length}
-                  >
-                    {isSubmitting ? <Spinner /> : "Przetestuj"}
-                  </Button>
-                </div>
               </Accordion.Content>
             </Accordion.Panel>
           </Accordion>

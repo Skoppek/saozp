@@ -16,7 +16,6 @@ export const SubmitControls = ({
   contestId?: number;
   stageId?: number;
   isWaiting?: boolean;
-  enableTests?: boolean;
 }) => {
   const { data, isFetching } = useQuery({
     queryKey: ["submission", "contest", contestId],
@@ -66,8 +65,7 @@ export const SubmitControls = ({
                 </div>
               ) : (
                 <div>
-                  Zgłaszanie rozwiązań w ramach tych zawodów nie jest już
-                  możliwe
+                  Zgłaszanie rozwiązań w ramach tych zawodów nie jest już możliwe
                 </div>
               )}
             </Alert>

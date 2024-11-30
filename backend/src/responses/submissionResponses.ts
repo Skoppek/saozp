@@ -18,7 +18,6 @@ const getSubmissionListResponse = t.Array(
                 description: t.String(),
             }),
         ),
-        isCommit: t.Boolean(),
         contestId: t.Optional(t.Number()),
         rerun: t.Optional(t.Date()),
     }),

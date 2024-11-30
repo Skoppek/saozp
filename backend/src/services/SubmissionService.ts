@@ -23,10 +23,8 @@ export class SubmissionService {
     static async createSubmission(
         {
             problemId,
-            isCommit,
             stageId,
             code,
-            userTests,
             createdAt,
             ip,
         }: CreateSubmissionRequestBody & { ip?: string },
@@ -39,16 +37,13 @@ export class SubmissionService {
         }
 
         await SubmissionService.checkForContest(stageId, createdAt);
-        await SubmissionService.checkForNonCommits(isCommit, userId, problemId);
         await SubmissionService.submit(
             problemId,
             userId,
             code,
-            isCommit,
             stageId,
             createdAt,
             problem,
-            userTests,
             ip,
         );
         await SubmissionService.checkForContestDeletions(
@@ -62,7 +57,6 @@ export class SubmissionService {
         problemId: number,
         userId: number,
         code: string,
-        isCommit: boolean,
         stageId: number | undefined,
         createdAt: Date | undefined,
         problem: {
@@ -76,14 +70,12 @@ export class SubmissionService {
             isContestsOnly: boolean;
             isDeactivated: boolean;
         },
-        userTests: { input: string; expected: string }[] | undefined,
         ip?: string,
     ) {
         const newSubmission = await SubmissionRepository.createSubmission({
             problemId,
             userId,
             code,
-            isCommit,
             stageId,
             createdAt,
             ip,
@@ -99,7 +91,7 @@ export class SubmissionService {
         );
 
         SubmissionService.submitTests(
-            !!isCommit ? problem.tests : (userTests ?? []),
+            problem.tests,
             newSubmission.id,
             problem.languageId,
             mergedCode,
@@ -130,19 +122,6 @@ export class SubmissionService {
                             submission.submissionId,
                         );
                     }),
-            );
-        }
-    }
-
-    private static async checkForNonCommits(
-        isCommit: boolean,
-        userId: number,
-        problemId: number,
-    ) {
-        if (!isCommit) {
-            await SubmissionRepository.deleteNonCommitSubmissions(
-                userId,
-                problemId,
             );
         }
     }
@@ -186,7 +165,6 @@ export class SubmissionService {
                         problemId: o.problemId,
                         userId: o.userId,
                         code: o.code,
-                        isCommit: o.isCommit,
                         stageId: o.stageId,
                         createdAt: o.createdAt,
                         rerun: new Date(),

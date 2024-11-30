@@ -6,6 +6,5 @@ export interface SubmissionEntry {
   creator: User | null;
   createdAt?: Date;
   status?: SubmissionStatus;
-  isCommit: boolean;
   rerun?: Date;
 }

@@ -3,7 +3,7 @@ import type { App } from "../../../backend/src";
 
 // @ts-ignore
 export default treaty<App>(
-  process.env.BACKEND_URL ?? "http://localhost:5173/api/",
+  import.meta.env.VITE_API_URL,
   {
     fetch: {
       credentials: "include",

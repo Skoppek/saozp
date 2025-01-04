@@ -1,8 +1,7 @@
 import { db } from '../db/db';
 import { eq } from 'drizzle-orm/sql';
 import { and } from 'drizzle-orm';
-import { NewBundle } from '../db/schema/bundleSchema';
-import { bundleSchema } from '../schema/bundleSchema';
+import { bundleSchema, NewBundle } from '../db/schema/bundleSchema';
 import { profileSchema } from '../db/schema/profileSchema';
 import { problemsToBundleSchema } from '../db/schema/problemsToBundleSchema';
 import { problemSchema } from '../db/schema/problemSchema';

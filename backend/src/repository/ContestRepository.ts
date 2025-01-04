@@ -4,8 +4,7 @@ import { and } from 'drizzle-orm';
 import { usersToContestSchema } from '../db/schema/usersToContestSchema';
 import { mapIfPresent } from '../shared/mapper';
 import _ from 'lodash';
-import { Contest, NewContest } from '../db/schema/contestSchema';
-import { contestSchema } from '../schema/contestSchema';
+import { Contest, contestSchema, NewContest } from '../db/schema/contestSchema';
 import { profileSchema } from '../db/schema/profileSchema';
 import { stageSchema } from '../db/schema/stageSchema';
 

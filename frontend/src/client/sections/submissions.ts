@@ -2,6 +2,7 @@ import edenClient from "../edenClient.ts";
 import { TestCase } from "../../shared/interfaces/TestCase.ts";
 import { mapIfPresent } from "../../shared/mapper.ts";
 import _ from "lodash";
+import { handleFail } from "../wrapper.ts";
 
 interface SubmissionQuery {
   userId?: number;
@@ -35,23 +36,10 @@ const getMany = async (query: SubmissionQuery) =>
         (x) => x == undefined,
       ),
     })
-    .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
-      return res.data;
-    });
+    .then(handleFail);
 
 const get = async (submissionId: number) =>
-  await edenClient
-    .submission({ submissionId })
-    .get()
-    .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
-      return res.data;
-    });
+  await edenClient.submission({ submissionId }).get().then(handleFail);
 
 export default {
   getMany,

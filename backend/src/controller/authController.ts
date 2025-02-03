@@ -65,13 +65,13 @@ export default new Elysia({ prefix: 'auth' })
     )
     .post(
         '/password_reset',
-        async ({ body: { token, newPassword, login } }) =>
-            await AuthService.resetPassword(token, newPassword, login),
+        async ({ body: { token, password, login } }) =>
+            await AuthService.resetPassword(token, password, login),
         {
             body: t.Object({
                 login: t.String(),
                 token: t.String(),
-                newPassword: t.String(),
+                password: t.String(),
             }),
         },
     )

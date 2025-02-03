@@ -55,9 +55,6 @@ export default new Elysia({
                         ),
                     {
                         response: 'problemDetailsResponse',
-                        query: t.Object({
-                            solve: t.Optional(t.String()),
-                        }),
                     },
                 )
                 .put(

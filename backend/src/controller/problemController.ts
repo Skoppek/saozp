@@ -48,14 +48,10 @@ export default new Elysia({
                     '',
                     async ({
                         problemService,
-                        userId,
                         params: { problemId },
-                        query: { solve },
                     }) =>
                         await problemService.getProblemDetails(
-                            userId,
                             problemId,
-                            solve === 'true',
                         ),
                     {
                         response: 'problemDetailsResponse',

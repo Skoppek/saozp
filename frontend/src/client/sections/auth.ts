@@ -29,7 +29,10 @@ const getLoggedUser = async () =>
 
 const changePassword = async (data: ResetPasswordData
 ) =>
-  await edenClient.auth.password_reset.post(data);
+  await edenClient.auth.password_reset.post(data)
+    .then((response) => {                
+      if (response.error) throw response.error;
+    });
 
 export default {
   signUp,

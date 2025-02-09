@@ -6,8 +6,9 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { User } from "../shared/interfaces/User";
 import apiClient from "../client/apiClient.ts";
 import { StatusCodes } from "http-status-codes";
-import { Tooltip } from "flowbite-react";
-import { TextInput } from "./inputs/TextInput.tsx";
+import { FloatingLabel } from "flowbite-react";
+import KeyboardEventHandler from "react-keyboard-event-handler";
+import { PasswordResetForm } from "./PasswordResetForm.tsx";
 
 interface AuthModalProps {
   onLogin: (user?: User) => void;
@@ -32,7 +33,6 @@ export const AuthModal = ({
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const [showWarnings, setShowWarnings] = useState<boolean>(false);
   const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
-  const [token, setToken] = useState<string>("");
 
   // Maybe looks awful, but I don't have a better idea
   const resetStates = useCallback(() => {
@@ -40,7 +40,6 @@ export const AuthModal = ({
     setPassword("");
     setFirstName("");
     setLastName("");
-    setToken("");
     setIsLoginTaken(false);
     setIsLoginFail(false);
     setIsWaiting(false);
@@ -152,159 +151,109 @@ export const AuthModal = ({
             : "Zarejestruj się"}
       </Modal.Header>
       <Modal.Body>
-        <div className="flex flex-col gap-4">
-          {isPasswordReset ? (
-            <>
-              <div className="flex gap-4">
-                <TextInput
-                  id={"password-token-login"}
-                  type={"text"}
-                  label={"Login"}
-                  color={showWarnings ? "failure" : "gray"}
-                  helperText={showWarnings ? "Niepoprawny login" : undefined}
-                  onChange={(value) => setLogin(value)}
+        <KeyboardEventHandler
+          handleKeys={["enter"]}
+          handleEventType="keydown"
+          onKeyEvent={submit}
+        >
+          <div className="flex flex-col gap-4">
+            {isPasswordReset ? (
+              <PasswordResetForm />
+            ) : (
+              <>
+                <FloatingLabel
+                  variant="outlined"
+                  label="Login"
+                  color={showWarnings && !isEmailCorrect ? "error" : "default"}
+                  onChange={(event) => {
+                    setIsLoginTaken(false);
+                    setShowWarnings(false);
+                    setIsLoginFail(false);
+                    setLogin(event.target.value);
+                  }}
+                  helperText={
+                    isLoginTaken ? "Użytkownik z tym adresem już istnieje" : undefined
+                  }
                   maxLength={64}
                 />
-                <Tooltip
-                  content={
-                    "W razie braku tokena zmiany hasła zgłoś się po nowy do administratora."
+                <FloatingLabel
+                  variant="outlined"
+                  type="password"
+                  label="Hasło"
+                  color={
+                    showWarnings && !isPasswordCorrect ? "error" : "default"
                   }
-                  style={"light"}
-                  placement={"right-start"}
-                >
-                  <TextInput
-                    id={"password-token"}
-                    type={"text"}
-                    label={"Token zmiany hasła"}
-                    color={showWarnings ? "failure" : "gray"}
-                    helperText={showWarnings ? "Błędny token" : undefined}
-                    onChange={(value) => setToken(value)}
-                    maxLength={32}
-                  />
-                </Tooltip>
-              </div>
-              <TextInput
-                id={"new-password"}
-                type={"password"}
-                label={"Nowe hasło"}
-                onChange={(value) => setPassword(value)}
-                maxLength={64}
-              />
-              <Button
-                onClick={async () => {
-                  await apiClient.auth
-                    .changePassword(token, password, login)
-                    .then((response) => {
-                      if (response.error) throw response.error;
-                      resetStates();
-                    })
-                    .catch((error) => {
-                      switch (error.status) {
-                        case StatusCodes.NOT_FOUND: {
-                          setShowWarnings(true);
-                        }
-                      }
-                    });
-                }}
-              >
-                Ustaw nowe hasło
-              </Button>
-            </>
-          ) : (
-            <>
-              <TextInput
-                id={"login"}
-                type="text"
-                label="Login"
-                color={showWarnings && !isEmailCorrect ? "failure" : "gray"}
-                onChange={(value) => {
-                  setIsLoginTaken(false);
-                  setShowWarnings(false);
-                  setIsLoginFail(false);
-                  setLogin(value);
-                }}
-                helperText={
-                  <>
-                    {isLoginTaken && (
-                      <span>Użytkownik z tym adresem już istnieje</span>
-                    )}
-                  </>
-                }
-                maxLength={64}
-              />
-              <TextInput
-                id={"password"}
-                type="password"
-                label="Hasło"
-                color={showWarnings && !isPasswordCorrect ? "failure" : "gray"}
-                onChange={(value) => {
-                  setShowWarnings(false);
-                  setIsLoginFail(false);
-                  setPassword(value);
-                }}
-                maxLength={32}
-              />
-              {isLoginFail && (
-                <span className="text-orange-700 dark:text-red-500">
-                  Niepoprawny email lub hasło
-                </span>
-              )}
-              {!hasAccount && (
-                <>
-                  <TextInput
-                    id={"name"}
-                    label="Imię"
-                    color={
-                      showWarnings && !isFirstNameCorrect ? "failure" : "gray"
-                    }
-                    onChange={(value) => {
-                      setShowWarnings(false);
-                      setFirstName(value);
-                    }}
-                    maxLength={32}
-                  />
-                  <TextInput
-                    id={"lastname"}
-                    label="Nazwisko"
-                    color={
-                      showWarnings && !isLastNameCorrect ? "failure" : "gray"
-                    }
-                    onChange={(value) => {
-                      setShowWarnings(false);
-                      setLastName(value);
-                    }}
-                    maxLength={32}
-                  />
-                </>
-              )}
-              <Button type="submit" onClick={submit}>
-                {isWaiting ? (
-                  <Spinner aria-label="Register spinner" size="md" />
-                ) : hasAccount ? (
-                  "Zaloguj się"
-                ) : (
-                  "Zarejestruj się"
+                  onChange={(event) => {
+                    setShowWarnings(false);
+                    setIsLoginFail(false);
+                    setPassword(event.target.value);
+                  }}
+                  maxLength={32}
+                />
+                {isLoginFail && (
+                  <span className="text-orange-700 dark:text-red-500">
+                    Niepoprawny email lub hasło
+                  </span>
                 )}
-              </Button>
-              {hasAccount && (
-                <Button onClick={() => setIsPasswordReset(true)}>
-                  Zmień hasło
+                {!hasAccount && (
+                  <>
+                    <FloatingLabel
+                      variant="outlined"
+                      label="Imię"
+                      color={
+                        showWarnings && !isFirstNameCorrect
+                          ? "error"
+                          : "default"
+                      }
+                      onChange={(event) => {
+                        setShowWarnings(false);
+                        setFirstName(event.target.value);
+                      }}
+                      maxLength={32}
+                    />
+                    <FloatingLabel
+                      variant="outlined"
+                      label="Nazwisko"
+                      color={
+                        showWarnings && !isLastNameCorrect ? "error" : "default"
+                      }
+                      onChange={(event) => {
+                        setShowWarnings(false);
+                        setLastName(event.target.value);
+                      }}
+                      maxLength={32}
+                    />
+                  </>
+                )}
+                <Button type="submit" onClick={submit}>
+                  {isWaiting ? (
+                    <Spinner aria-label="Register spinner" size="md" />
+                  ) : hasAccount ? (
+                    "Zaloguj się"
+                  ) : (
+                    "Zarejestruj się"
+                  )}
                 </Button>
-              )}
-              <Button
-                onClick={() => {
-                  setShowWarnings(false);
-                  setHasAccount((prev) => !prev);
-                }}
-                color={"light"}
-              >
-                {hasAccount
-                  ? "Nie masz konta? Dołącz tutaj!"
-                  : "Masz już konto? Zaloguj się tutaj!"}
-              </Button>
-            </>
-          )}
-        </div>
+                {hasAccount && (
+                  <Button onClick={() => setIsPasswordReset(true)}>
+                    Zmień hasło
+                  </Button>
+                )}
+                <Button
+                  onClick={() => {
+                    setShowWarnings(false);
+                    setHasAccount((prev) => !prev);
+                  }}
+                  color={"light"}
+                >
+                  {hasAccount
+                    ? "Nie masz konta? Dołącz tutaj!"
+                    : "Masz już konto? Zaloguj się tutaj!"}
+                </Button>
+              </>
+            )}
+          </div>
+        </KeyboardEventHandler>
       </Modal.Body>
     </Modal>
   );

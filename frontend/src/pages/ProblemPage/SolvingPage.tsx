@@ -3,7 +3,7 @@ import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { useEffect } from "react";
 import { SolvingEditor } from "../../components/SolvingEditor.tsx";
 import { useNumberParam } from "../../shared/useParam.tsx";
-import { ProblemContextProvider } from "../../contexts/ProblemContext.tsx";
+import { ProblemContextProvider } from "../../contexts/ProblemContext/ProblemContextProvider.tsx";
 
 export const SolvingPage = () => {
   const { problemId, contestId, stageId } = useParams();
@@ -17,7 +17,7 @@ export const SolvingPage = () => {
       navigate("/problems");
       return;
     }
-  }, [problemId, navigate]);
+  }, [navigate, problem]);
 
   return (
     <UserLoggedCheck>

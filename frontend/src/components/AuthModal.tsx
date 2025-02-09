@@ -1,4 +1,3 @@
-import { Modal } from "flowbite-react/components/Modal";
 import { useCallback, useMemo, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import { useNavigate } from "react-router-dom";
@@ -6,23 +5,18 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { User } from "../shared/interfaces/User";
 import apiClient from "../client/apiClient.ts";
 import { StatusCodes } from "http-status-codes";
-import { FloatingLabel } from "flowbite-react";
+import { Card, FloatingLabel } from "flowbite-react";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import { PasswordResetForm } from "./PasswordResetForm.tsx";
+import { HiX } from "react-icons/hi";
 
 interface AuthModalProps {
   onLogin: (user?: User) => void;
   onClose: () => void;
-  show: boolean;
   isLogin?: boolean;
 }
 
-export const AuthModal = ({
-  onLogin,
-  onClose,
-  show,
-  isLogin,
-}: AuthModalProps) => {
+export const AuthModal = ({ onLogin, onClose, isLogin }: AuthModalProps) => {
   const [hasAccount, setHasAccount] = useState<boolean>(isLogin ?? false);
   const [login, setLogin] = useState<string>("");
   const [isLoginTaken, setIsLoginTaken] = useState<boolean>(false);
@@ -136,33 +130,38 @@ export const AuthModal = ({
   ]);
 
   return (
-    <Modal
-      show={show}
-      onClose={() => {
-        onClose();
-        resetStates();
-      }}
-    >
-      <Modal.Header>
-        {isPasswordReset
-          ? "Zmiana hasła"
-          : hasAccount
-            ? "Zaloguj się"
-            : "Zarejestruj się"}
-      </Modal.Header>
-      <Modal.Body>
+    <div className="absolute right-3 z-50 m-8">
+      <Card className="w-[400px]">
+        <div className="flex justify-between align-middle">
+          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {isPasswordReset
+              ? "Zmiana hasła"
+              : hasAccount
+                ? "Zaloguj się"
+                : "Zarejestruj się"}
+          </h5>
+          <Button
+            outline
+            onClick={() => {
+              resetStates();
+              onClose();
+            }}
+          >
+            <HiX className="size-4" />
+          </Button>
+        </div>
         <KeyboardEventHandler
           handleKeys={["enter"]}
           handleEventType="keydown"
           onKeyEvent={submit}
         >
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
             {isPasswordReset ? (
-              <PasswordResetForm />
+              <PasswordResetForm onSuccess={onClose}/>
             ) : (
               <>
                 <FloatingLabel
-                  variant="outlined"
+                  variant="filled"
                   label="Login"
                   color={showWarnings && !isEmailCorrect ? "error" : "default"}
                   onChange={(event) => {
@@ -172,12 +171,14 @@ export const AuthModal = ({
                     setLogin(event.target.value);
                   }}
                   helperText={
-                    isLoginTaken ? "Użytkownik z tym adresem już istnieje" : undefined
+                    isLoginTaken
+                      ? "Użytkownik z tym adresem już istnieje"
+                      : undefined
                   }
                   maxLength={64}
                 />
                 <FloatingLabel
-                  variant="outlined"
+                  variant="filled"
                   type="password"
                   label="Hasło"
                   color={
@@ -198,7 +199,7 @@ export const AuthModal = ({
                 {!hasAccount && (
                   <>
                     <FloatingLabel
-                      variant="outlined"
+                      variant="filled"
                       label="Imię"
                       color={
                         showWarnings && !isFirstNameCorrect
@@ -212,7 +213,7 @@ export const AuthModal = ({
                       maxLength={32}
                     />
                     <FloatingLabel
-                      variant="outlined"
+                      variant="filled"
                       label="Nazwisko"
                       color={
                         showWarnings && !isLastNameCorrect ? "error" : "default"
@@ -254,7 +255,7 @@ export const AuthModal = ({
             )}
           </div>
         </KeyboardEventHandler>
-      </Modal.Body>
-    </Modal>
+      </Card>
+    </div>
   );
 };

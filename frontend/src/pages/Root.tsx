@@ -1,16 +1,11 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, Outlet } from "react-router-dom";
 import { Navigation } from "../components/Navigation";
-import { createContext, useEffect, useState } from "react";
 import apiClient from "../client/apiClient.ts";
 import { User } from "../shared/interfaces/User.ts";
-
-export const AuthContext = createContext<
-  | {
-      user?: User;
-      setUser: (value?: User) => void;
-    }
-  | undefined
->(undefined);
+import { WELCOME_PICTURE } from "../shared/constansts.ts";
+import { ToastContextProvider } from "../contexts/ToastContext/ToastContextProvider.tsx";
+import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";
 
 export const Root = () => {
   const [user, setUser] = useState<User | undefined>();
@@ -20,6 +15,9 @@ export const Root = () => {
     apiClient.auth
       .getLoggedUser()
       .then((data) => {
+        if (data == null) {
+          throw Error();
+        }
         setUser(data);
       })
       .catch(() => {
@@ -28,26 +26,16 @@ export const Root = () => {
   }, []);
 
   return (
-    <>
-      <AuthContext.Provider
-        value={{ user, setUser: (user?: User) => setUser(user) }}
-      >
+    <AuthContext.Provider
+      value={{ user, setUser: (user?: User) => setUser(user) }}
+    >
+      <ToastContextProvider>
         <Navigation />
         {url.pathname === "/" && (
           <div className="mt-[20vh] flex flex-col items-center gap-8">
             <div className="font-sans text-2xl dark:text-zinc-50/80">
               <pre>
-                <code>
-                  {[
-                    " ▒▓███████▓▒░  ▒▓██████▓▒░  ▒▓██████▓▒  ▒▓████████▓▒ ▒▓███████▓▒░",
-                    "░▒▓█▓▒░       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░       ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░ ",
-                    "░▒▓█▓▒░       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓   ▒▓██▓▒      ▓█▓▒░░  ▓█▓▒  ▒▓█▓▒░",
-                    " ░▒▓██████▓▒░ ▒▓████████▓▒ ▒▓█▓▒  ▒▓█▓▒░    ▒▓██▓▒░  ▒▓███████▓▒░",
-                    "       ░▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░  ▒▓██▓▒░     ▓█▓▒░",
-                    "       ░▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░ ▓█▓▒        ▒▓█▓▒░",
-                    "░▒▓███████▓▒░ ▒▓█▓▒  ▒▓█▓▒ ░▒▓██████▓▒░ ▒▓████████▓▒ ▒▓█▓▒░",
-                  ].join("\n")}
-                </code>
+                <code>{WELCOME_PICTURE}</code>
               </pre>
             </div>
             <div className="text-2xl dark:text-zinc-50/30">
@@ -58,7 +46,7 @@ export const Root = () => {
         <div className="text-black dark:text-slate-50">
           <Outlet />
         </div>
-      </AuthContext.Provider>
-    </>
+      </ToastContextProvider>
+    </AuthContext.Provider>
   );
 };

@@ -6,9 +6,9 @@ import { Accordion, Button } from "flowbite-react";
 import { ResultsModal } from "./results/ResultModal.tsx";
 import apiClient from "../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
-import { AuthContext } from "../pages/Root.tsx";
 import { SubmitControls } from "./SubmitControls.tsx";
-import { useProblemContext } from "../contexts/ProblemContext.tsx";
+import { useProblemContext } from "../contexts/ProblemContext/useProblemContext.tsx";
+import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";
 
 interface SolvingEditorProps {
   contestId?: number;

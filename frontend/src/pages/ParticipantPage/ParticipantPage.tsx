@@ -2,13 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck";
 import apiClient from "../../client/apiClient";
 import { useContext, useState } from "react";
-import { AuthContext } from "../Root";
 import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Button } from "flowbite-react/components/Button";
 import { HiChevronRight } from "react-icons/hi";
 import { ParticipantStagesList } from "./ParticipantStagesList";
 import { TextInput } from "../../components/inputs/TextInput";
+import { AuthContext } from "../../contexts/AuthContext/AuthContext";
 
 export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);
@@ -25,7 +25,7 @@ export const ParticipantPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="flex flex-col gap-4 h-full">
+      <div className="flex h-full flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           <div className="flex w-1/2 flex-col gap-2">
             <TextInput

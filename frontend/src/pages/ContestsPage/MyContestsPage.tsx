@@ -11,10 +11,10 @@ import {
 } from "react-icons/hi";
 import { useContext, useState } from "react";
 import { ContestCreateModal } from "./ContestCreateModal.tsx";
-import { AuthContext } from "../Root.tsx";
 import { useNavigate } from "react-router-dom";
 import { TextInput } from "../../components/inputs/TextInput.tsx";
 import { ContestInfoForm } from "./ContestInfoForm.tsx";
+import { AuthContext } from "../../contexts/AuthContext/AuthContext.tsx";
 
 const ContestOptions = ({
   onScore,

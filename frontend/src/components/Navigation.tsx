@@ -8,7 +8,7 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { AuthModal } from "./AuthModal";
 import { FaBoltLightning } from "react-icons/fa6";
 import apiClient from "../client/apiClient.ts";
-import { AuthContext } from "../pages/Root.tsx";
+import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";
 
 export const Navigation = () => {
   const [user, setUser] = useState<User | undefined>();
@@ -108,15 +108,16 @@ export const Navigation = () => {
           <DarkThemeToggle />
         </Navbar.Collapse>
       </Navbar>
-      <AuthModal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        isLogin={isLogin}
-        onLogin={(user) => {
-          if (user) setUser(user);
-          else getUser();
-        }}
-      />
+      {showModal && (
+        <AuthModal
+          onClose={() => setShowModal(false)}
+          isLogin={isLogin}
+          onLogin={(user) => {
+            if (user) setUser(user);
+            else getUser();
+          }}
+        />
+      )}
     </>
   );
 };

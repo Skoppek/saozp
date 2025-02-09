@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
 import { useContext } from "react";
-import { AuthContext } from "../Root";
 import { Spinner, Table, TableBody } from "flowbite-react";
 import { SubmissionStatusBadge } from "../../components/SubmissionStatusBadge";
 import moment from "moment";
 import { dateTimeFormat } from "../../shared/constansts";
 import _ from "lodash";
 import { RerunIcon } from "../../components/RerunIcon";
+import { AuthContext } from "../../contexts/AuthContext/AuthContext";
 
 interface ParticipantsSubmissions {
   problemId: number;

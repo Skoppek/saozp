@@ -1,21 +1,23 @@
 import { Button, Spinner, Tooltip } from "flowbite-react";
-import { FloatingLabel } from "flowbite-react/components/FloatingLabel";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo } from "react";
 import KeyboardEventHandler from "react-keyboard-event-handler";
 import apiClient from "../client/apiClient";
-import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
 import { useToast } from "../contexts/ToastContext/useToast";
+import { ValidatedInput } from "./ValidatedInput";
 
 const getTokenHint =
   "W razie braku tokena zmiany hasła zgłoś się po nowy do administratora.";
 
 export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const [showWarnings, setShowWarnings] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
-  const [login, setLogin] = useState("");
-  const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
+  const [login, setLogin] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>("asda");
+  const [token, setToken] = useState<string | null>("asd");
+
+  const isValid = useMemo(() => {
+    return login && password && token;
+  }, [login, password, token]);
 
   const { showToast } = useToast();
 
@@ -23,19 +25,21 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
     setLoading(true);
     await apiClient.auth
       .changePassword({
-        token,
-        login,
-        password,
+        token: token!,
+        login: login!,
+        password: password!,
       })
       .then(() => {
         setLoading(false);
         onSuccess();
         showToast({ content: "Hasło zostało zmienione.", type: "success" });
       })
-      .catch((error) => {
+      .catch(() => {
         setLoading(false);
-        showToast({ content: "Nie udało się zmienić hasła.", type: "failure" });
-        error.status == StatusCodes.NOT_FOUND && setShowWarnings(true);
+        showToast({
+          content: "Nie udało się zmienić hasła.",
+          type: "failure",
+        });
       });
   }, [login, onSuccess, password, showToast, token]);
 
@@ -46,36 +50,35 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
       onKeyEvent={submit}
     >
       <div className="flex flex-col gap-2">
-        <FloatingLabel
-          variant="outlined"
+        <ValidatedInput
           label={"Login"}
-          color={showWarnings ? "error" : "default"}
-          helperText={showWarnings ? "Niepoprawny login" : undefined}
-          onChange={(event) => setLogin(event.target.value)}
           maxLength={64}
+          minLength={4}
+          onError={() => setLogin(null)}
+          onCorrect={(value) => setLogin(value)}
         />
         <Tooltip
           content={getTokenHint}
           style={"light"}
           placement={"right-start"}
         >
-          <FloatingLabel
-            variant="outlined"
+          <ValidatedInput
             label={"Token zmiany hasła"}
-            color={showWarnings ? "error" : "default"}
-            helperText={showWarnings ? "Błędny token" : undefined}
-            onChange={(event) => setToken(event.target.value)}
-            maxLength={32}
+            maxLength={4}
+            minLength={4}
+            onError={() => setToken(null)}
+            onCorrect={(value) => setToken(value)}
           />
         </Tooltip>
-        <FloatingLabel
-          variant="outlined"
-          type={"password"}
+        <ValidatedInput
           label={"Nowe hasło"}
-          onChange={(event) => setPassword(event.target.value)}
+          type={"password"}
           maxLength={64}
+          minLength={4}
+          onError={() => setPassword(null)}
+          onCorrect={(value) => setPassword(value)}
         />
-        <Button onClick={submit}>
+        <Button onClick={submit} disabled={!isValid}>
           {isLoading ? <Spinner /> : "Zmień hasło"}
         </Button>
       </div>

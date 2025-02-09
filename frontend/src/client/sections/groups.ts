@@ -1,4 +1,5 @@
 import edenClient from "../edenClient.ts";
+import { handleFail } from "../wrapper.ts";
 
 interface NewGroup {
   name: string;
@@ -10,31 +11,13 @@ interface UpdateGroup {
 }
 
 const create = async (newGroup: NewGroup) =>
-  await edenClient.group.post(newGroup).then((res) => {
-    if (!res.data) {
-      throw new Error("Unexpected null in response.");
-    }
-    return res.data;
-  });
+  await edenClient.group.post(newGroup).then(handleFail);
 
 const getAll = async () =>
-  await edenClient.group.get().then((res) => {
-    if (!res.data) {
-      throw new Error("Unexpected null in response.");
-    }
-    return res.data;
-  });
+  await edenClient.group.get().then(handleFail);
 
 const get = async (groupId: number) =>
-  await edenClient
-    .group({ groupId })
-    .get()
-    .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
-      return res.data;
-    });
+  await edenClient.group({ groupId }).get().then(handleFail);
 
 const update = async (groupId: number, updatedGroup: UpdateGroup) =>
   await edenClient.group({ groupId }).put(updatedGroup);
@@ -49,23 +32,10 @@ const removeUsers = async (groupId: number, userIds: number[]) =>
   await edenClient.group({ groupId }).users.delete({ userIds });
 
 const getUsers = async (groupId: number) =>
-  await edenClient
-    .group({ groupId })
-    .users.get()
-    .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
-      return res.data;
-    });
+  await edenClient.group({ groupId }).users.get().then(handleFail);
 
 const getAllUsers = async () =>
-  await edenClient.all.get().then((res) => {
-    if (!res.data) {
-      throw new Error("Unexpected null in response.");
-    }
-    return res.data;
-  });
+  await edenClient.all.get().then(handleFail);
 
 export default {
   create,

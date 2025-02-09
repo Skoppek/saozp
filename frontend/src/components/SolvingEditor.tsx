@@ -1,5 +1,4 @@
 import { getLanguageById } from "../shared/constansts";
-import { Problem } from "../shared/interfaces/Problem";
 import { CodeEditor } from "./CodeEditor";
 import { MarkdownEditor } from "./markdown/MarkdownEditor";
 import { useCallback, useContext, useState } from "react";
@@ -9,18 +8,19 @@ import apiClient from "../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../pages/Root.tsx";
 import { SubmitControls } from "./SubmitControls.tsx";
+import { useProblemContext } from "../contexts/ProblemContext.tsx";
 
 interface SolvingEditorProps {
-  problem: Problem;
   contestId?: number;
   stageId?: number;
 }
 
 export const SolvingEditor = ({
-  problem,
   contestId,
   stageId,
 }: SolvingEditorProps) => {
+  const {problem} = useProblemContext()
+
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState(problem.baseCode);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);

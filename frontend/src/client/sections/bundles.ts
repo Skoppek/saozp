@@ -1,4 +1,5 @@
 import edenClient from "../edenClient.ts";
+import { handleFail } from "../wrapper.ts";
 
 interface NewBundle {
   name: string;
@@ -13,23 +14,10 @@ const create = async (newBundle: NewBundle) =>
   await edenClient.bundle.post(newBundle);
 
 const getAll = async () =>
-  await edenClient.bundle.get().then((res) => {
-    if (!res.data) {
-      throw new Error("Unexpected null in response.");
-    }
-    return res.data;
-  });
+  await edenClient.bundle.get().then(handleFail);
 
 const get = async (bundleId: number) =>
-  await edenClient
-    .bundle({ bundleId })
-    .get()
-    .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
-      return res.data;
-    });
+  await edenClient.bundle({ bundleId }).get().then(handleFail);
 
 const update = async (bundleId: number, updatedBundle: UpdateBundle) =>
   await edenClient.bundle({ bundleId }).put(updatedBundle);
@@ -44,15 +32,7 @@ const removeProblems = async (bundleId: number, problemIds: number[]) =>
   await edenClient.bundle({ bundleId }).problems.delete({ problemIds });
 
 const getProblems = async (bundleId: number) =>
-  await edenClient
-    .bundle({ bundleId })
-    .problems.get()
-    .then((res) => {
-      if (!res.data) {
-        throw new Error("Unexpected null in response.");
-      }
-      return res.data;
-    });
+  await edenClient.bundle({ bundleId }).problems.get().then(handleFail);
 
 export default {
   create,

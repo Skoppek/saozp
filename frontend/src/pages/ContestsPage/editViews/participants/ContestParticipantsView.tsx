@@ -4,12 +4,12 @@ import apiClient from "../../../../client/apiClient";
 import { Button } from "flowbite-react/components/Button";
 import { Checkbox, Spinner } from "flowbite-react";
 import { useState } from "react";
-import { Profile } from "../../../../shared/interfaces/Profile";
 import { AddParticipantsModal } from "./AddParticipantsModal";
 import { AddGroupsModal } from "./AddGroupsModal";
 import { displayNames } from "../../../../shared/functions";
 import { TextInput } from "../../../../components/inputs/TextInput";
 import { useContestContext } from "../../../../shared/useContestContext";
+import { Participant } from "../../../../shared/interfaces/Participant";
 
 export const ContestParticipantsView = () => {
   const { id: contestId } = useContestContext();
@@ -19,7 +19,7 @@ export const ContestParticipantsView = () => {
     queryFn: () => apiClient.contests.getParticipants(contestId),
   });
 
-  const [selected, setSelected] = useState<Profile[]>([]);
+  const [selected, setSelected] = useState<Participant[]>([]);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
   const [showAddGroups, setShowAddGroups] = useState(false);
   const [nameFilter, setNameFilter] = useState("");

@@ -5,8 +5,8 @@ interface ValidatedInputProps {
   onError: () => void;
   onCorrect: (value: string) => void;
   label: string;
-  type?: React.HTMLInputTypeAttribute;
-  minLength: number;
+  type?: "text" | "password";
+  minLength?: number;
   maxLength: number;
 }
 
@@ -15,7 +15,7 @@ export const ValidatedInput = ({
   onCorrect,
   type = "text",
   label,
-  minLength,
+  minLength = 1,
   maxLength,
 }: ValidatedInputProps) => {
   const [value, setValue] = useState("");

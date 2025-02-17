@@ -5,7 +5,7 @@ import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { User } from "../shared/interfaces/User";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { AuthModal } from "./AuthModal";
+import { AuthModal } from "./authModal/AuthModal.tsx";
 import { FaBoltLightning } from "react-icons/fa6";
 import apiClient from "../client/apiClient.ts";
 import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";

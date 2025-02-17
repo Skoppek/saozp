@@ -4,17 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "flowbite-react/components/Table";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Checkbox } from "flowbite-react/components/Checkbox";
-import { Profile } from "../../../../shared/interfaces/Profile";
 import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
 import { displayNames } from "../../../../shared/functions";
 import { TextInput } from "../../../../components/inputs/TextInput";
+import { Participant } from "../../../../shared/interfaces/Participant";
 
 interface AddParticipantsModalProps {
   contestId: number;
   show: boolean;
-  participants: Profile[];
+  participants: Participant[];
   onClose: () => void;
 }
 
@@ -29,7 +29,7 @@ export const AddParticipantsModal = ({
     queryFn: () => apiClient.groups.getAllUsers(),
   });
 
-  const [selected, setSelected] = useState<Profile[]>([]);
+  const [selected, setSelected] = useState<Participant[]>([]);
   const [nameFilter, setNameFilter] = useState("");
 
   useEffect(() => {

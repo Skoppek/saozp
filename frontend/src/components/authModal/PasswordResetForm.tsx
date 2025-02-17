@@ -1,9 +1,9 @@
 import { Button, Spinner, Tooltip } from "flowbite-react";
 import { useCallback, useState, useMemo } from "react";
 import KeyboardEventHandler from "react-keyboard-event-handler";
-import apiClient from "../client/apiClient";
-import { useToast } from "../contexts/ToastContext/useToast";
-import { ValidatedInput } from "./ValidatedInput";
+import { useToast } from "../../contexts/ToastContext/useToast";
+import apiClient from "../../client/apiClient";
+import { ValidatedInput } from "../inputs/ValidatedInput";
 
 const getTokenHint =
   "W razie braku tokena zmiany hasła zgłoś się po nowy do administratora.";
@@ -12,8 +12,8 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const [isLoading, setLoading] = useState(false);
 
   const [login, setLogin] = useState<string | null>(null);
-  const [password, setPassword] = useState<string | null>("asda");
-  const [token, setToken] = useState<string | null>("asd");
+  const [password, setPassword] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
   const isValid = useMemo(() => {
     return login && password && token;

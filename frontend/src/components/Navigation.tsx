@@ -10,11 +10,18 @@ import { FaBoltLightning } from "react-icons/fa6";
 import apiClient from "../client/apiClient.ts";
 import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";
 
+const LightningIcon = () => {
+  return (
+    <div className="place-content-center text-2xl text-amber-400">
+      <FaBoltLightning />
+    </div>
+  );
+};
+
 export const Navigation = () => {
   const [user, setUser] = useState<User | undefined>();
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [isLogin, setIsLogin] = useState<boolean>(true);
   const navigate = useNavigate();
   const authContext = useContext(AuthContext);
 
@@ -79,11 +86,9 @@ export const Navigation = () => {
             <div className="flex gap-2">
               <div className="place-content-center text-3xl">{`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}</div>
               {user.isAdmin && (
-                <div className="place-content-center text-2xl text-amber-400">
-                  <Link to="/admin">
-                    <FaBoltLightning />
-                  </Link>
-                </div>
+                <Link to="/admin">
+                  <LightningIcon />
+                </Link>
               )}
             </div>
           )}
@@ -94,16 +99,7 @@ export const Navigation = () => {
               <Spinner aria-label="Extra large spinner" size="md" />
             )
           ) : (
-            <>
-              <Button
-                onClick={() => {
-                  setIsLogin(true);
-                  setShowModal(true);
-                }}
-              >
-                Zaloguj się
-              </Button>
-            </>
+            <Button onClick={() => setShowModal(true)}>Zaloguj się</Button>
           )}
           <DarkThemeToggle />
         </Navbar.Collapse>
@@ -111,7 +107,6 @@ export const Navigation = () => {
       {showModal && (
         <AuthModal
           onClose={() => setShowModal(false)}
-          isLogin={isLogin}
           onLogin={(user) => {
             if (user) setUser(user);
             else getUser();

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
-import { Navigation } from "../components/Navigation";
-import apiClient from "../client/apiClient.ts";
-import { User } from "../shared/interfaces/User.ts";
-import { WELCOME_PICTURE } from "../shared/constansts.ts";
-import { ToastContextProvider } from "../contexts/ToastContext/ToastContextProvider.tsx";
-import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";
+import { Navigation } from "./Navigation.tsx";
+import apiClient from "../../client/apiClient.ts";
+import { User } from "../../shared/interfaces/User.ts";
+import { WELCOME_PICTURE } from "../../shared/constansts.ts";
+import { ToastContextProvider } from "../../contexts/ToastContext/ToastContextProvider.tsx";
+import { AuthContext } from "../../contexts/AuthContext/AuthContext.tsx";
 
 export const Root = () => {
   const [user, setUser] = useState<User | undefined>();

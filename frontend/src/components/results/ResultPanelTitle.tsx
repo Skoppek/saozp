@@ -1,5 +1,5 @@
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
-import { SubmissionStatusBadge } from "../SubmissionStatusBadge";
+import { SubmissionStatusBadge } from "../shared/SubmissionStatusBadge";
 import { RerunIcon } from "../RerunIcon";
 
 interface ResultPanelTitleProps {

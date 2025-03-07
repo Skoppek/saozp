@@ -4,7 +4,7 @@ import {
 } from "flowbite-react/components/Accordion";
 import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry.ts";
 import { useState } from "react";
-import { CodeEditor } from "../CodeEditor.tsx";
+import { CodeEditor } from "../shared/CodeEditor.tsx";
 import { getLanguageById } from "../../shared/constansts.ts";
 import { TestResultList } from "../results/TestResultList.tsx";
 import { ResultPanelTitle } from "../results/ResultPanelTitle.tsx";

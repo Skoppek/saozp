@@ -1,14 +1,14 @@
-import { getLanguageById } from "../shared/constansts";
-import { CodeEditor } from "./CodeEditor";
-import { MarkdownEditor } from "./markdown/MarkdownEditor";
+import { getLanguageById } from "../../shared/constansts.ts";
+import { CodeEditor } from "../../components/shared/CodeEditor.tsx";
+import { MarkdownEditor } from "../../components/markdown/MarkdownEditor.tsx";
 import { useCallback, useContext, useState } from "react";
 import { Accordion, Button } from "flowbite-react";
-import { ResultsModal } from "./results/ResultModal.tsx";
-import apiClient from "../client/apiClient.ts";
+import { ResultsModal } from "../../components/results/ResultModal.tsx";
+import apiClient from "../../client/apiClient.ts";
 import { useQuery } from "@tanstack/react-query";
-import { SubmitControls } from "./SubmitControls.tsx";
-import { useProblemContext } from "../contexts/ProblemContext/useProblemContext.tsx";
-import { AuthContext } from "../contexts/AuthContext/AuthContext.tsx";
+import { SubmitControls } from "../../components/SubmitControls.tsx";
+import { useProblemContext } from "../../contexts/ProblemContext/useProblemContext.tsx";
+import { AuthContext } from "../../contexts/AuthContext/AuthContext.tsx";
 
 interface SolvingEditorProps {
   contestId?: number;

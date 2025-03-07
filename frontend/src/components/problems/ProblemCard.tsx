@@ -1,6 +1,6 @@
 import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { Badge } from "flowbite-react/components/Badge";
-import { LinkButton } from "../LinkButton";
+import { LinkButton } from "../shared/LinkButton";
 import { getLanguageById } from "../../shared/constansts";
 
 interface ProblemCardProps {

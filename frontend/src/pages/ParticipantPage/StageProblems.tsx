@@ -3,7 +3,7 @@ import apiClient from "../../client/apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { Accordion, Badge, Button } from "flowbite-react";
 import { ParticipantsSubmissions } from "./ParticipantSubmissions";
-import { LinkButton } from "../../components/LinkButton";
+import { LinkButton } from "../../components/shared/LinkButton";
 import moment from "moment";
 import { displayDateTime } from "../../shared/functions";
 

@@ -3,7 +3,7 @@ import { UserLoggedCheck } from "../../checks/UserLoggedCheck";
 import { useNumberParam } from "../../shared/useParam";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
-import { RerunButton } from "../../components/RerunButton";
+import { RerunButton } from "./RerunButton";
 import { Spinner } from "flowbite-react";
 import _ from "lodash";
 import { StatsTable } from "./StatsTable";

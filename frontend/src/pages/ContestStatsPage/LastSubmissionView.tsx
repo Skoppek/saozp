@@ -3,7 +3,7 @@ import apiClient from "../../client/apiClient";
 import { Badge, Spinner } from "flowbite-react";
 import { getLanguageById } from "../../shared/constansts";
 import { TestResultList } from "../../components/results/TestResultList";
-import { CodeEditor } from "../../components/CodeEditor";
+import { CodeEditor } from "../../components/shared/CodeEditor";
 
 export const LastSubmissionView = ({
   submissionId,
@@ -18,11 +18,11 @@ export const LastSubmissionView = ({
   return (
     <>
       {submission ? (
-        <div className="flex flex-col gap-4 items-center w-full">
+        <div className="flex w-full flex-col items-center gap-4">
           <Badge size="sm" color={"dark"}>
             IP: {submission.ip ?? "N/A"}
           </Badge>
-          <div className="w-full h-[200px]">
+          <div className="h-[200px] w-full">
             <CodeEditor
               languages={getLanguageById(submission.languageId)}
               code={submission.code}

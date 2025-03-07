@@ -6,7 +6,7 @@ import { ProblemsGallery } from "../../components/problems/ProblemsGallery.tsx";
 import { Spinner } from "flowbite-react/components/Spinner";
 import { LanguageSelect } from "../../components/inputs/LanguageSelect.tsx";
 import { ALL_LANGUAGES } from "../../shared/constansts.ts";
-import { LinkButton } from "../../components/LinkButton.tsx";
+import { LinkButton } from "../../components/shared/LinkButton.tsx";
 import { ToggleSwitch } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
 import { TextInput } from "../../components/inputs/TextInput.tsx";

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
 import { useContext } from "react";
 import { Spinner, Table, TableBody } from "flowbite-react";
-import { SubmissionStatusBadge } from "../../components/SubmissionStatusBadge";
+import { SubmissionStatusBadge } from "../../components/shared/SubmissionStatusBadge";
 import moment from "moment";
 import { dateTimeFormat } from "../../shared/constansts";
 import _ from "lodash";

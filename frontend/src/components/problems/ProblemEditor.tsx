@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MarkdownEditor } from "../markdown/MarkdownEditor";
-import { CodeEditor } from "../CodeEditor";
+import { CodeEditor } from "../shared/CodeEditor.tsx";
 import { Button } from "flowbite-react/components/Button";
 import { NewProblem } from "../../shared/interfaces/Problem";
 import { Problem } from "../../shared/interfaces/Problem";

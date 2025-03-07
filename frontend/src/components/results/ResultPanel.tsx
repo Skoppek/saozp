@@ -6,7 +6,7 @@ import { SubmissionEntry } from "../../shared/interfaces/SubmissionEntry";
 import { useState } from "react";
 import { TestResultList } from "./TestResultList.tsx";
 import { ResultPanelTitle } from "./ResultPanelTitle";
-import { CodeEditor } from "../CodeEditor";
+import { CodeEditor } from "../shared/CodeEditor.tsx";
 import { getLanguageById } from "../../shared/constansts";
 import { Spinner } from "flowbite-react/components/Spinner";
 import apiClient from "../../client/apiClient.ts";

@@ -10,7 +10,7 @@ import { ProblemStatsPage } from "./pages/ProblemPage/ProblemsStatsPage";
 import { SolvingPage } from "./pages/ProblemPage/SolvingPage";
 import { AdminAuthenticatedPage } from "./pages/AdminPages/AdminAuthenticatedPage";
 import { AdminPage } from "./pages/AdminPages/AdminPage";
-import { Root } from "./pages/Root";
+import { Root } from "./pages/Root/Root";
 import { ParticipantPage } from "./pages/ParticipantPage/ParticipantPage";
 import { ContestStatsPage } from "./pages/ContestStatsPage/ContestStatsPage";
 

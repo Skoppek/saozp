@@ -5,7 +5,6 @@ import {
     PasswordResetWrongLoginError,
     UserNotFoundError,
 } from '../errors/authErrors';
-import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const authErrorHandler = new Elysia()
     .error({
@@ -14,16 +13,15 @@ export const authErrorHandler = new Elysia()
         PasswordResetWrongLoginError,
         UserNotFoundError,
     })
-    .use(HttpStatusCode())
-    .onError({ as: 'scoped' }, ({ code, error, set, httpStatus }) => {
+    .onError({ as: 'scoped' }, ({ code, error, set }) => {
         switch (code) {
             case 'PasswordMarkedForResetError':
-                set.status = httpStatus.HTTP_418_IM_A_TEAPOT;
+                set.status = 418;
                 return error;
             case 'PasswordResetTokenNotFoundError':
             case 'PasswordResetWrongLoginError':
             case 'UserNotFoundError':
-                set.status = httpStatus.HTTP_404_NOT_FOUND;
+                set.status = 404;
                 return error;
         }
     });

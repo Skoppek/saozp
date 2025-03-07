@@ -16,13 +16,11 @@ export default new Elysia()
     })
     .get(
         '/me',
-        async ({ user: { id, login, isAdmin } }) => {
-            return {
-                ...(await ProfileService.getProfileByUserId(id)),
-                login,
-                isAdmin,
-            };
-        },
+        async ({ user: { id, login, isAdmin } }) => ({
+            ...(await ProfileService.getProfileByUserId(id)),
+            login,
+            isAdmin,
+        }),
         {
             detail: {
                 tags: ['Profiles'],

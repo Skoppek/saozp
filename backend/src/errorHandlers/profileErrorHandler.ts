@@ -1,16 +1,14 @@
 import { Elysia } from 'elysia';
 import { ProfileNotFoundError } from '../errors/profileErrors';
-import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const profileErrorHandler = new Elysia()
     .error({
         ProfileNotFoundError,
     })
-    .use(HttpStatusCode())
-    .onError({ as: 'scoped' }, ({ code, error, set, httpStatus }) => {
+    .onError({ as: 'scoped' }, ({ code, error, set }) => {
         switch (code) {
             case 'ProfileNotFoundError':
-                set.status = httpStatus.HTTP_404_NOT_FOUND;
+                set.status = 404;
                 return error;
         }
     });

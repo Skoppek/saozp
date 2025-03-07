@@ -4,7 +4,6 @@ import {
     ProblemNotFoundError,
     ProblemUpdateError,
 } from '../errors/problemErrors';
-import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const problemErrorHandler = new Elysia()
     .error({
@@ -12,15 +11,14 @@ export const problemErrorHandler = new Elysia()
         ProblemUpdateError,
         ProblemCreationError,
     })
-    .use(HttpStatusCode())
-    .onError({ as: 'scoped' }, ({ code, error, set, httpStatus }) => {
+    .onError({ as: 'scoped' }, ({ code, error, set }) => {
         switch (code) {
             case 'ProblemNotFoundError':
-                set.status = httpStatus.HTTP_404_NOT_FOUND;
+                set.status = 404;
                 return error;
             case 'ProblemCreationError':
             case 'ProblemUpdateError':
-                set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
+                set.status = 500;
                 return error;
         }
     });

@@ -54,7 +54,7 @@ export const SolvingEditor = ({
           void refetch();
         });
     },
-    [contestId, refetch, code, problem.problemId, stageId],
+    [refetch, code, problem.problemId, stageId],
   );
 
   return (

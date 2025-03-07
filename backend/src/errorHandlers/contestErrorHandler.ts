@@ -1,5 +1,4 @@
 import { Elysia } from 'elysia';
-import { HttpStatusCode } from 'elysia-http-status-code';
 import {
     ContestCreationError,
     ContestNotFoundError,
@@ -12,15 +11,14 @@ export const contestErrorHandler = new Elysia()
         ContestUpdateError,
         ContestCreationError,
     })
-    .use(HttpStatusCode())
-    .onError({ as: 'scoped' }, ({ code, error, set, httpStatus }) => {
+    .onError({ as: 'scoped' }, ({ code, error, set }) => {
         switch (code) {
             case 'ContestNotFoundError':
-                set.status = httpStatus.HTTP_404_NOT_FOUND;
+                set.status = 404;
                 return error;
             case 'ContestCreationError':
             case 'ContestUpdateError':
-                set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
+                set.status = 500;
                 return error;
         }
     });

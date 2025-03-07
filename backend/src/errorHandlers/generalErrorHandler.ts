@@ -3,21 +3,19 @@ import {
     InternalError,
     ResourceWithIdNotFoundError,
 } from '../errors/generalErrors';
-import { HttpStatusCode } from 'elysia-http-status-code';
 
 export const generalErrorHandler = new Elysia()
     .error({
         InternalError,
         ResourceWithIdNotFoundError,
     })
-    .use(HttpStatusCode())
-    .onError({ as: 'global' }, ({ code, error, set, httpStatus, request }) => {
+    .onError({ as: 'global' }, ({ code, error, set, request }) => {
         switch (code) {
             case 'InternalError':
-                set.status = httpStatus.HTTP_500_INTERNAL_SERVER_ERROR;
+                set.status = 500;
                 return error;
             case 'ResourceWithIdNotFoundError':
-                set.status = httpStatus.HTTP_404_NOT_FOUND;
+                set.status = 404;
                 return error;
             case 'NOT_FOUND':
                 return `Endpoint not found. ${request.url}`;

@@ -1,4 +1,4 @@
-import { FloatingLabel } from "flowbite-react/components/FloatingLabel";
+import { FloatingLabel, FloatingLabelVariant } from "flowbite-react/components/FloatingLabel";
 import { useMemo, useState } from "react";
 
 interface ValidatedInputProps {
@@ -8,6 +8,7 @@ interface ValidatedInputProps {
   type?: "text" | "password";
   minLength?: number;
   maxLength: number;
+  variant?: FloatingLabelVariant 
 }
 
 export const ValidatedInput = ({
@@ -17,6 +18,7 @@ export const ValidatedInput = ({
   label,
   minLength = 1,
   maxLength,
+  variant = 'outlined',
 }: ValidatedInputProps) => {
   const [value, setValue] = useState("");
 
@@ -37,7 +39,7 @@ export const ValidatedInput = ({
   return (
     <FloatingLabel
       type={type}
-      variant="outlined"
+      variant={variant}
       label={label}
       color={"default"}
       helperText={helperText}

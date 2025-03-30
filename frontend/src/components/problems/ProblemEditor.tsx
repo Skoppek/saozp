@@ -7,9 +7,8 @@ import { Problem } from "../../shared/interfaces/Problem";
 import { ALL_LANGUAGES, getLanguageById } from "../../shared/constansts";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { ToggleSwitch } from "flowbite-react";
+import { FloatingLabel, ToggleSwitch } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
-import { TextInput } from "../inputs/TextInput.tsx";
 import { TestCasesFileUpload } from "./TestCasesFileUpload.tsx";
 import { LanguageId } from "../../shared/enums.ts";
 import { languageToSnippet } from "../../shared/defaultCodeSnippets/snippetToLanguage.ts";
@@ -36,13 +35,13 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
     <div className="m-8 flex h-[75vh] flex-row gap-4">
       <div className="flex h-full w-1/2 flex-col gap-2">
         <div className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800">
-          <TextInput
+          <FloatingLabel
+            variant="standard"
             className="w-full"
             label="Nazwa zadania"
-            id="problem-name"
-            onChange={(value) => {
+            onChange={(event) => {
               setNewProblem((prev) => {
-                return { ...prev, name: value };
+                return { ...prev, name: event.target.value };
               });
             }}
             value={newProblem.name}

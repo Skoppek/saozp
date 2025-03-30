@@ -33,7 +33,7 @@ export const MarkdownEditor = ({
               setShowPreview((prev) => !prev);
             }}
           >
-            {showPreview ? "Podgląd" : "Edycja"}
+            {showPreview ? "Edytuj" : "Podgląd"}
           </Button>
         </div>
       )}

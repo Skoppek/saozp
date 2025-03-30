@@ -23,7 +23,7 @@ export const UsersTable = ({ users, onSelect }: UsersTableInterface) => {
       </Table.Head>
       <Table.Body>
         {users.map((user, index) => (
-          <Table.Row id={`${index}userRow`}>
+          <Table.Row key={`${index}userRow`}>
             <Table.Cell>{user.userId}</Table.Cell>
             <Table.Cell>{user.login}</Table.Cell>
             <Table.Cell>{user.firstName}</Table.Cell>

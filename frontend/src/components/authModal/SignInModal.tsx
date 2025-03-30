@@ -17,32 +17,38 @@ export const SignInModal = ({ onSuccess, onError }: SignInModalInterface) => {
 
   const signIn = useCallback(() => {
     setWaiting(true);
-    if (!credentials) throw Error("Sending null credentials on sign-ip.");
+    if (!credentials) {
+      setWaiting(false);
+      throw Error("Sending null credentials on sign-in.")
+    };
     apiClient.auth
       .signIn(credentials)
       .then((res) => {
         if (res?.error) throw res.error;
         onSuccess();
       })
-      .catch(onError);
+      .catch((error) => {
+        setWaiting(false);
+        onError(error)
+      });
   }, [credentials, onError, onSuccess]);
 
   return (
-    <div className="flex flex-col gap-1">
-      <KeyboardEventHandler
-        handleKeys={["enter"]}
-        handleEventType="keydown"
-        onKeyEvent={signIn}
-      >
+    <KeyboardEventHandler
+      handleKeys={["enter"]}
+      handleEventType="keydown"
+      onKeyEvent={signIn}
+    >
+      <div className="flex flex-col gap-6">
         <CredentialsForm setCredentials={setCredentials} />
-        <Button type="submit" onClick={signIn} disabled={isWaiting}>
+        <Button type="submit" onClick={signIn} disabled={isWaiting || !credentials}>
           {isWaiting ? (
             <Spinner aria-label="spinner" size="md" />
           ) : (
             "Zaloguj się"
           )}
         </Button>
-      </KeyboardEventHandler>
-    </div>
+      </div>
+    </KeyboardEventHandler>
   );
 };

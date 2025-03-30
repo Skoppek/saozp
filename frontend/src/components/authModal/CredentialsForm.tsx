@@ -22,7 +22,7 @@ export const CredentialsForm = ({
   }, [login, password, setCredentials]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       <ValidatedInput
         label="Login"
         onCorrect={(value) => setLogin(value)}

@@ -35,22 +35,22 @@ export const SignUpModal = ({ onSuccess, onError }: SignUpModalInterface) => {
   }, [credentials, onError, onSuccess, profile]);
 
   return (
-    <div className="flex flex-col gap-1">
-      <KeyboardEventHandler
-        handleKeys={["enter"]}
-        handleEventType="keydown"
-        onKeyEvent={signUp}
-      >
+    <KeyboardEventHandler
+      handleKeys={["enter"]}
+      handleEventType="keydown"
+      onKeyEvent={signUp}
+    >
+      <div className="flex flex-col gap-4">
         <CredentialsForm setCredentials={setCredentials} />
         <ProfileForm setProfile={setProfile} />
-        <Button type="submit" onClick={signUp} disabled={isWaiting}>
+        <Button type="submit" onClick={signUp} disabled={isWaiting || !credentials || !profile}>
           {isWaiting ? (
             <Spinner aria-label="spinner" size="md" />
           ) : (
             "Zarejestruj się"
           )}
         </Button>
-      </KeyboardEventHandler>
-    </div>
+      </div>
+    </KeyboardEventHandler>
   );
 };

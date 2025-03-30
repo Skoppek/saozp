@@ -22,7 +22,7 @@ export const ProfileForm = ({
   }, [firstName, lastName, setProfile]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       <ValidatedInput
         label="Imię"
         onCorrect={(value) => setFirstName(value)}

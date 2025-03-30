@@ -53,7 +53,7 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <ValidatedInput
           label={"Login"}
           maxLength={64}
-          minLength={4}
+          minLength={1}
           onError={() => setLogin(null)}
           onCorrect={(value) => setLogin(value)}
         />
@@ -74,7 +74,7 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
           label={"Nowe hasło"}
           type={"password"}
           maxLength={64}
-          minLength={4}
+          minLength={1}
           onError={() => setPassword(null)}
           onCorrect={(value) => setPassword(value)}
         />

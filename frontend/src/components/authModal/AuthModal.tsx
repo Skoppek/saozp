@@ -112,6 +112,26 @@ export const AuthModal = ({ onLogin, onClose }: AuthModalProps) => {
             }}
           />
         )}
+        {mode == "signIn" && (
+          <div className="flex flex-col gap-1">
+            <Button onClick={() => setMode("reset")} outline size={"xs"}>
+              Nie pamiętam hasła
+            </Button>
+            <Button onClick={() => setMode("signUp")} outline size={"xs"}>
+              Zarejestruj się
+            </Button>
+          </div>
+        )}
+        {mode == "signUp" && (
+          <Button onClick={() => setMode("signIn")} outline size={"xs"}>
+            Zaloguj się
+          </Button>
+        )}
+        {mode == "reset" && (
+          <Button onClick={() => setMode("signIn")} outline size={"xs"}>
+            Zaloguj się
+          </Button>
+        )}
       </Card>
     </div>
   );

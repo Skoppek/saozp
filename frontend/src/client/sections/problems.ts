@@ -8,7 +8,7 @@ interface Tests {
 }
 
 const validateTests = async (file: FileList) =>
-  await edenClient.tests_validation.post({ testsFile: file }).then(handleFail);
+  await edenClient.testCases.tests_validation.post({ testsFile: file }).then(handleFail);
 
 const create = async (newProblem: NewProblem) =>
   await edenClient.problem.post(newProblem);

@@ -58,9 +58,7 @@ export const ProblemEditor = ({ problem }: ProblemEditorProps) => {
         <TestCasesFileUpload
           tests={newProblem.tests}
           setTests={(tests) => {
-            setNewProblem((prev) => {
-              return { ...prev, tests };
-            });
+            setNewProblem((prev) => ({ ...prev, tests }));
           }}
         />
       </div>

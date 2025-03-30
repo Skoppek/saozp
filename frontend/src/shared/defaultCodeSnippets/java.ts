@@ -7,9 +7,7 @@ public class Main {
         System.out.print(solve(t));
     }
 
----
     public static int solve(int input) {
         return input;
     }
----
 }`;

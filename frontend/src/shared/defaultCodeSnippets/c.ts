@@ -1,12 +1,8 @@
 export default `#include <stdio.h>
 
----
-
 int solve(int input) {
     return input;
 }
-
----
 
 int main() {
     int input;

@@ -45,7 +45,7 @@ export const CodeEditor = ({
         </div>
         <Editor
           // eslint-disable-next-line tailwindcss/no-custom-classname
-          theme="vs-dark"
+          theme="vs-light"
           value={code}
           defaultLanguage={language?.monacoForm}
           language={language?.monacoForm}

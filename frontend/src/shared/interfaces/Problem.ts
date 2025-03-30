@@ -14,9 +14,7 @@ export interface Problem {
 
 export interface ProblemFilter {
   name?: string;
-  language?: LanguageId;
   creator?: string;
-  isOwner?: boolean;
 }
 
 export interface NewProblem extends Omit<Problem, "problemId" | "creatorId"> {

@@ -4,12 +4,9 @@ import { ProblemEntry } from "../../shared/interfaces/ProblemEntry.ts";
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { ProblemsGallery } from "../../components/problems/ProblemsGallery.tsx";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { LanguageSelect } from "../../components/inputs/LanguageSelect.tsx";
-import { ALL_LANGUAGES } from "../../shared/constansts.ts";
 import { LinkButton } from "../../components/shared/LinkButton.tsx";
-import { ToggleSwitch } from "flowbite-react";
+import { FloatingLabel } from "flowbite-react";
 import apiClient from "../../client/apiClient.ts";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
 
 export const ProblemsPage = () => {
   const [problems, setProblems] = useState<ProblemEntry[]>();
@@ -23,49 +20,25 @@ export const ProblemsPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="flex flex-col gap-4">
+      <div className="mt-8 flex flex-col gap-4">
         <div className="flex items-end justify-center gap-4">
           <LinkButton label="Stwórz nowe zadanie" to="/problems/create" />
-          <TextInput
+          <FloatingLabel
+            variant="standard"
             label="Nazwa"
-            id="nameFilter"
-            onChange={(value) =>
-              setFilter((prev) => {
-                return { ...prev, name: value };
-              })
+            maxLength={256}
+            onChange={(event) =>
+              setFilter((prev) => ({ ...prev, name: event.target.value }))
             }
-            className="w-96"
           />
-          <TextInput
+          <FloatingLabel
+            variant="standard"
             label="Twórca"
-            id="creatorFilter"
-            onChange={(value) =>
-              setFilter((prev) => {
-                return { ...prev, creator: value };
-              })
-            }
-            className="w-96"
-          />
-          <LanguageSelect
-            languages={ALL_LANGUAGES}
-            label="Język"
-            onChange={(language) =>
-              setFilter((prev) => {
-                return { ...prev, language: language?.id };
-              })
+            maxLength={256}
+            onChange={(event) =>
+              setFilter((prev) => ({ ...prev, creator: event.target.value }))
             }
           />
-          <div>
-            <ToggleSwitch
-              checked={!!filter.isOwner}
-              label="Tylko moje"
-              onChange={() =>
-                setFilter((prev) => {
-                  return { ...prev, isOwner: !prev.isOwner };
-                })
-              }
-            />
-          </div>
         </div>
         {problems ? (
           <ProblemsGallery problems={problems} filter={filter} />

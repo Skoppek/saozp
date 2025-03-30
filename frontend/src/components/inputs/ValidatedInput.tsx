@@ -2,7 +2,7 @@ import { FloatingLabel } from "flowbite-react/components/FloatingLabel";
 import { useMemo, useState } from "react";
 
 interface ValidatedInputProps {
-  onError: () => void;
+  onError?: () => void;
   onCorrect: (value: string) => void;
   label: string;
   type?: "text" | "password";
@@ -11,7 +11,7 @@ interface ValidatedInputProps {
 }
 
 export const ValidatedInput = ({
-  onError,
+  onError = () => {},
   onCorrect,
   type = "text",
   label,

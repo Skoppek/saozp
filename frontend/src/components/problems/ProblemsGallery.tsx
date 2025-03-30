@@ -3,7 +3,6 @@ import { ProblemFilter } from "../../shared/interfaces/Problem";
 import { User } from "../../shared/interfaces/User";
 import { ProblemEntry } from "../../shared/interfaces/ProblemEntry";
 import { ProblemCard } from "./ProblemCard";
-import { LanguageId } from "../../shared/enums";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../client/apiClient.ts";
 
@@ -28,10 +27,6 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
       {problems
         .filter(
           (problem) =>
-            !filter.isOwner || problem.creator.userId === user?.userId,
-        )
-        .filter(
-          (problem) =>
             !filter.name || problem.name.toLowerCase().includes(filter.name),
         )
         .filter(
@@ -41,12 +36,6 @@ export const ProblemsGallery = ({ problems, filter }: ProblemsGalleryProps) => {
               .join(" ")
               .toLowerCase()
               .includes(filter.creator),
-        )
-        .filter(
-          (problem) =>
-            !filter.language ||
-            filter.language === LanguageId.UNKNOWN ||
-            problem.languageId === filter.language,
         )
         .map((problem, index) => (
           <ProblemCard

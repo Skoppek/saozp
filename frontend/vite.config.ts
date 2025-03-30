@@ -8,6 +8,7 @@ export default defineConfig({
     host: true,
     port: 3001,
     strictPort: true,
+    cors: true
   },
   build: {
     rollupOptions: {

@@ -8,6 +8,7 @@
         "lint": "bunx prettier -w ./src/ --config .prettierrc.json"
     },
     "dependencies": {
+        "@elysiajs/cors": "^1.2.0",
         "@elysiajs/cron": "^1.2.0",
         "@elysiajs/swagger": "^1.2.2",
         "@types/randomstring": "^1.3.0",

@@ -14,8 +14,12 @@ import bundleController from './controller/bundleController';
 import authController from './controller/authController';
 import contestController from './controller/contestController';
 import testCasesController from './controller/testCasesController';
+import cors from '@elysiajs/cors';
 
 const app = new Elysia()
+    .use(cors({
+        origin: ['localhost']
+    }))    
     .get('', () => {
         return 'This is a valid response from SAOZP backend service!';
     })

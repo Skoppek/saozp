@@ -6,9 +6,6 @@ import AuthService from '../services/AuthService';
 
 export default new Elysia({
     prefix: 'admin',
-    detail: {
-        tags: ['Auth'],
-    },
 })
     .use(adminUserAccess)
     .post(

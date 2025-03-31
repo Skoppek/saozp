@@ -7,9 +7,6 @@ import { bundleResponses } from '../responses/bundleResponses';
 
 export default new Elysia({
     prefix: 'bundle',
-    detail: {
-        tags: ['Bundles'],
-    },
 })
     .use(bundleBodies)
     .use(bundleResponses)

@@ -10,9 +10,6 @@ import StageService from '../services/StageService';
 
 export default new Elysia({
     prefix: 'contest',
-    detail: {
-        tags: ['Contest'],
-    },
 })
     .use(contestErrorHandler)
     .use(contestBodies)

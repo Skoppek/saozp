@@ -25,9 +25,6 @@ export default new Elysia({ prefix: 'auth' })
             });
         },
         {
-            detail: {
-                tags: ['Auth'],
-            },
             body: t.Object({
                 login: t.String(),
                 password: t.String(),
@@ -54,9 +51,6 @@ export default new Elysia({ prefix: 'auth' })
             return userId;
         },
         {
-            detail: {
-                tags: ['Auth'],
-            },
             body: t.Object({
                 login: t.String(),
                 password: t.String(),
@@ -86,8 +80,5 @@ export default new Elysia({ prefix: 'auth' })
             cookie: t.Object({
                 session: t.String(),
             }),
-            detail: {
-                tags: ['Auth'],
-            },
         },
     );

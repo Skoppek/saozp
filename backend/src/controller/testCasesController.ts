@@ -3,9 +3,6 @@ import TestCasesService from "../services/TestCasesService";
 
 export default new Elysia({
     prefix: 'testCases',
-    detail: {
-        tags: ['TestCases']
-    }
 }).post(
     '/tests_validation',
     async ({ body }) =>

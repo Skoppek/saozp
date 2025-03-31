@@ -2,8 +2,6 @@ import { Elysia } from 'elysia';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 import { sessionCleaner } from './plugins/sessionCleaner';
 import { initAdmin } from './shared/init';
-import { swagger } from '@elysiajs/swagger';
-import swaggerConfig from './plugins/swaggerConfig';
 import { passwordResetTokenCleaner } from './plugins/passwordResetTokenCleaner';
 import profileController from './controller/profileController';
 import problemController from './controller/problemController';
@@ -24,7 +22,6 @@ const app = new Elysia()
         return 'This is a valid response from SAOZP backend service!';
     })
     .use(generalErrorHandler)
-    .use(swagger(swaggerConfig))
     .use(sessionCleaner)
     .use(passwordResetTokenCleaner)
     .use(testCasesController)

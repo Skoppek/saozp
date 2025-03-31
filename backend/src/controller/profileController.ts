@@ -9,9 +9,6 @@ export default new Elysia()
     .use(profileErrorHandler)
     .use(profileResponses)
     .get('/all', async ({}) => await ProfileService.getAllProfiles(), {
-        detail: {
-            tags: ['Profiles'],
-        },
         response: 'profileList',
     })
     .get(
@@ -22,9 +19,6 @@ export default new Elysia()
             isAdmin,
         }),
         {
-            detail: {
-                tags: ['Profiles'],
-            },
             response: 'profileResponse',
         },
     );

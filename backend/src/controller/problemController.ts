@@ -7,9 +7,6 @@ import { problemErrorHandler } from '../errorHandlers/problemErrorHandler';
 
 export default new Elysia({
     prefix: 'problem',
-    detail: {
-        tags: ['Problems'],
-    },
 })
     .use(authenticatedUser)
     .use(problemRequests)

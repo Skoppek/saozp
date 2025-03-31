@@ -8,9 +8,6 @@ import { groupIdParam } from '../plugins/groupIdParam';
 
 export default new Elysia({
     prefix: 'group',
-    detail: {
-        tags: ['Groups'],
-    },
 })
     .use(authenticatedUser)
     .use(groupErrorHandler)

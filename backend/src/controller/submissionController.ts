@@ -8,9 +8,6 @@ import { submissionRequestBodies } from '../bodies/submissionRequests';
 
 export default new Elysia({
     prefix: 'submission',
-    detail: {
-        tags: ['Submissions'],
-    },
 })
     .use(authenticatedUser)
     .use(submissionErrorHandler)

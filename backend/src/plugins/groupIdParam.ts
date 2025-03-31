@@ -7,5 +7,5 @@ export const groupIdParam = new Elysia()
         }),
     })
     .derive({ as: 'global' }, ({ params: { groupId } }) => {
-        return { groupId };
+        return { groupId } as unknown as { groupId: number };
     });

@@ -7,5 +7,5 @@ export const bundleIdParam = new Elysia()
         }),
     })
     .derive({ as: 'scoped' }, ({ params: { bundleId } }) => {
-        return { bundleId };
+        return { bundleId } as unknown as { bundleId: number};
     });

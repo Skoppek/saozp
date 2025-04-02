@@ -17,7 +17,7 @@ export const ContestBaseView = ({ contestId }: ContestBaseViewProps) => {
   return (
     <div className="w-1/4">
       {!isFetching && data ? (
-        <div className="flex flex-col gap-4 justify-center">
+        <div className="flex flex-col justify-center gap-4">
           <Card>
             <div className="text-3xl">{data.name}</div>
             <MarkdownEditor

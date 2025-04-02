@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
 import { Spinner } from "flowbite-react/components/Spinner";
-import { Accordion, Badge, Button } from "flowbite-react";
+import { Accordion, Button } from "flowbite-react";
 import { ParticipantsSubmissions } from "./ParticipantSubmissions";
 import { LinkButton } from "../../components/shared/LinkButton";
 import moment from "moment";
-import { displayDateTime } from "../../shared/functions";
 
 export const StageProblems = ({
   contestId,
@@ -20,19 +19,19 @@ export const StageProblems = ({
   });
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       <Button onClick={() => refetch()} size="xs" outline>
         Odśwież
       </Button>
       {data && !isFetching ? (
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex w-full flex-col gap-2">
           {moment().isAfter(data.startDate) ? (
             <Accordion collapseAll>
               {data.problems.map((problem) => (
                 <Accordion.Panel>
                   <Accordion.Title>{problem.name}</Accordion.Title>
                   <Accordion.Content>
-                    <div className="flex flex-col gap-2 w-full">
+                    <div className="flex w-full flex-col gap-2">
                       <LinkButton
                         to={`/contests/${contestId}/stage/${stageId}/problem/${problem.problemId}`}
                         label="Rozwiąż"
@@ -55,7 +54,7 @@ export const StageProblems = ({
               ))}
             </Accordion>
           ) : (
-            <div className="text-2xl w-full text-center ">
+            <div className="w-full text-center text-2xl ">
               Ten etap jeszcze się nie rozpoczął
             </div>
           )}

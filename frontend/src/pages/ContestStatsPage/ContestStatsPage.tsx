@@ -5,7 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient";
 import { RerunButton } from "./RerunButton";
 import { Spinner } from "flowbite-react";
-import _ from "lodash";
 import { StatsTable } from "./StatsTable";
 import { ContestContextProvider } from "../../shared/useContestContext";
 

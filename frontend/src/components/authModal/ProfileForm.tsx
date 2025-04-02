@@ -25,14 +25,14 @@ export const ProfileForm = ({
     <div className="flex flex-col gap-4">
       <ValidatedInput
         label="Imię"
-        onCorrect={(value) => setFirstName(value)}
+        onChange={setFirstName}
         onError={() => setFirstName(null)}
         maxLength={64}
         minLength={1}
       />
       <ValidatedInput
         label="Nazwisko"
-        onCorrect={(value) => setLastName(value)}
+        onChange={setLastName}
         onError={() => setLastName(null)}
         maxLength={64}
         minLength={1}

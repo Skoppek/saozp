@@ -24,9 +24,9 @@ export const ParticipantStagesList = ({ contestId }: { contestId: number }) => {
             .map((stage, index) => (
               <Accordion.Panel id={index.toString()}>
                 <Accordion.Title>
-                  <div className="flex w-[400px] flex-col gap-2 items-center">
+                  <div className="flex w-[400px] flex-col items-center gap-2">
                     <div className="text-xl">{stage.name}</div>
-                    <div className="flex justify-around gap-2 w-full">
+                    <div className="flex w-full justify-around gap-2">
                       <Badge size={"sm"} color={"success"}>
                         Start: {displayDateTime(stage.startDate)}
                       </Badge>

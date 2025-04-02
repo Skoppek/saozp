@@ -51,7 +51,7 @@ export const CreateStageModal = ({
       }
       setWaiting(false);
     }
-  }, [contestId, newStage]);
+  }, [contestId, defaultValue, newStage, stageId]);
 
   return (
     <>
@@ -65,10 +65,10 @@ export const CreateStageModal = ({
       </Button>
       <Modal show={show} onClose={() => setShow(false)}>
         <Modal.Header>
-          {defaultValue ? "Edycja etapu" : "Dodwanie etapu"}
+          {defaultValue ? "Edycja etapu" : "Dodawanie etapu"}
         </Modal.Header>
         <Modal.Body>
-          <div className="flex flex-col gap-4 mb-[15rem]">
+          <div className="mb-60 flex flex-col gap-4">
             <TextInput
               id={"stageCreation"}
               label={"Nazwa"}

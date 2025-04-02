@@ -1,10 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { Accordion, Badge, Modal } from "flowbite-react";
+import {
+  Accordion,
+  Badge,
+  Modal,
+} from "flowbite-react";
 import apiClient from "../../client/apiClient";
 import { useContestContext } from "../../shared/useContestContext";
 import { getLanguageById } from "../../shared/constansts";
-import { useCallback } from "react";
 import { LastSubmissionView } from "./LastSubmissionView";
+import { pointsToColor } from "./StatusColor";
 
 interface StageStatsModalProps {
   show: boolean;
@@ -29,15 +33,6 @@ export const StageStatsModal = ({
       apiClient.contests.getStatsForStage(contestId, stageId, participantId),
   });
 
-  const color = useCallback((value: number) => {
-    if (value < 0) return "grey";
-    if (value < 10) return "failure";
-    if (value < 30) return "warning";
-    if (value < 75) return "light";
-    if (value < 100) return "blue";
-    return "success";
-  }, []);
-
   return (
     <Modal show={show} onClose={onClose}>
       <Modal.Header>{stageName}</Modal.Header>
@@ -52,19 +47,18 @@ export const StageStatsModal = ({
                     <Badge>
                       {getLanguageById(problem.problem?.languageId).name}
                     </Badge>
-                    <Badge color={color(problem.result)}>
+                    <Badge color={pointsToColor(problem.result)}>
                       {problem.result > 0 ? `${problem.result}%` : "N/A"}
                     </Badge>
                   </div>
                 </Accordion.Title>
                 <Accordion.Content>
-                  {problem.submissionId ? (
+                  {problem.submissionId ?
                     <LastSubmissionView submissionId={problem.submissionId} />
-                  ) : (
-                    <Badge size={"sm"} color={"warning"}>
+                  : <Badge size={"sm"} color={"warning"}>
                       Brak zgłoszeń
                     </Badge>
-                  )}
+                  }
                 </Accordion.Content>
               </Accordion.Panel>
             ))}

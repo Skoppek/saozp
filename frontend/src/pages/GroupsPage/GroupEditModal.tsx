@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient.ts";
 import { GroupUsersTable } from "./GroupUsersTable.tsx";
 import _ from "lodash";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
+import { ValidatedInput } from "../../components/inputs/ValidatedInput.tsx";
 
 interface GroupEditModalProps {
   group: {
@@ -58,11 +58,12 @@ export const GroupEditModal = ({
         <Modal.Header>{`Edycja grupy - ${group.name}`}</Modal.Header>
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <TextInput
-              id={"groupName"}
+            <ValidatedInput 
               label={"Nazwa grupy"}
               onChange={changeName}
               defaultValue={group.name}
+              minLength={1}
+              maxLength={128}
             />
             <div className={"flex justify-around gap-2"}>
               {!isFetchingAll &&

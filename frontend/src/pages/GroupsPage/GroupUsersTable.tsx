@@ -1,8 +1,7 @@
-import { Checkbox, Table } from "flowbite-react";
+import { Checkbox, FloatingLabel, Table } from "flowbite-react";
 import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import { displayNames } from "../../shared/functions";
-import { TextInput } from "../../components/inputs/TextInput";
 
 interface User {
   userId: number;
@@ -27,12 +26,11 @@ export const GroupUsersTable = ({
   return (
     <div className={"flex w-1/2 flex-col"}>
       <div className="flex w-full flex-col gap-2">
-        <TextInput
-          className="w-full"
-          placeholder="Szukaj"
+        <FloatingLabel
           type="text"
-          id={"memberFilter"}
-          onChange={(value) => setNameFilter(value.toLowerCase())}
+          onChange={(event) => setNameFilter(event.target.value.toLowerCase())}
+          label="Szukaj"
+          variant="standard"
         />
         <Button
           onClick={() => {

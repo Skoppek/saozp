@@ -1,6 +1,7 @@
 import { Button } from "flowbite-react/components/Button";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { StageStatsModal } from "./StageStatsModal";
+import { pointsToColor } from "./StatusColor";
 
 export const ScoreButton = ({
   value,
@@ -15,18 +16,9 @@ export const ScoreButton = ({
 }) => {
   const [show, setShow] = useState(false);
 
-  const color = useMemo(() => {
-    if (value < 0) return "gray";
-    if (value < 10) return "failure";
-    if (value < 30) return "warning";
-    if (value < 75) return "light";
-    if (value < 100) return "blue";
-    return "success";
-  }, [value]);
-
   return (
     <>
-      <Button color={color} onClick={() => setShow(true)}>
+      <Button color={pointsToColor(value)} onClick={() => setShow(true)}>
         {value >= 0 ? `${value}%` : "N/A"}
       </Button>
       <StageStatsModal

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import apiClient from "../../client/apiClient.ts";
 import { Table } from "flowbite-react/components/Table";
-import { Button, ListGroup, Popover, Spinner } from "flowbite-react";
+import { Button, FloatingLabel, ListGroup, Popover, Spinner } from "flowbite-react";
 import {
   HiDotsVertical,
   HiOutlineTrash,
@@ -12,7 +12,6 @@ import {
 import { useContext, useState } from "react";
 import { ContestCreateModal } from "./ContestCreateModal.tsx";
 import { useNavigate } from "react-router-dom";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
 import { ContestInfoForm } from "./ContestInfoForm.tsx";
 import { AuthContext } from "../../contexts/AuthContext/AuthContext.tsx";
 
@@ -67,8 +66,8 @@ export const MyContestsPage = () => {
 
   return (
     <UserLoggedCheck>
-      <div className="w-full flex justify-center">
-        <div className="flex flex-col gap-4 overflow-x-auto pt-12 w-1/2">
+      <div className="flex w-full justify-center">
+        <div className="flex w-1/2 flex-col gap-4 overflow-x-auto pt-12">
           <ContestCreateModal
             show={showCreationModal}
             onClose={() => {
@@ -76,13 +75,13 @@ export const MyContestsPage = () => {
               void refetch();
             }}
           />
-          <div className="flex justify-between w-full gap-2">
-            <TextInput
-              className="w-4/5"
-              placeholder="Szukaj po nazwie"
+          <div className="flex w-full justify-between gap-2">
+            <FloatingLabel
+              className="w-96"
               type="text"
-              id={"contestFilter"}
-              onChange={(value) => setNameFilter(value.toLowerCase())}
+              onChange={(event) => setNameFilter(event.target.value.toLowerCase())}
+              label="Szukaj"
+              variant="standard"
             />
             <ContestInfoForm
               submitLabel="Dodaj zawody"

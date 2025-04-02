@@ -25,7 +25,7 @@ export const CredentialsForm = ({
     <div className="flex flex-col gap-4">
       <ValidatedInput
         label="Login"
-        onCorrect={(value) => setLogin(value)}
+        onChange={setLogin}
         onError={() => setLogin(null)}
         maxLength={64}
         minLength={1}
@@ -33,7 +33,7 @@ export const CredentialsForm = ({
       <ValidatedInput
         label="Hasło"
         type="password"
-        onCorrect={(value) => setPassword(value)}
+        onChange={setPassword}
         onError={() => setPassword(null)}
         maxLength={32}
         minLength={1}

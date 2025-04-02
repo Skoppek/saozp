@@ -3,22 +3,26 @@ import { useMemo, useState } from "react";
 
 interface ValidatedInputProps {
   onError?: () => void;
-  onCorrect: (value: string) => void;
+  onChange: (value: string) => void;
+  isValid?: (isValid: boolean) => void;
   label: string;
   type?: "text" | "password";
   minLength?: number;
   maxLength: number;
-  variant?: FloatingLabelVariant 
+  variant?: FloatingLabelVariant
+  defaultValue?: string
 }
 
 export const ValidatedInput = ({
   onError = () => {},
-  onCorrect,
+  onChange,
+  isValid,
   type = "text",
   label,
   minLength = 1,
   maxLength,
   variant = 'outlined',
+  defaultValue = ""
 }: ValidatedInputProps) => {
   const [value, setValue] = useState("");
 
@@ -31,10 +35,11 @@ export const ValidatedInput = ({
           : undefined;
 
     if (result) onError();
-    else onCorrect(value);
+    onChange(value);
+    isValid?.(!result);
 
     return result;
-  }, [maxLength, minLength, onCorrect, onError, value]);
+  }, [isValid, maxLength, minLength, onChange, onError, value]);
 
   return (
     <FloatingLabel
@@ -44,7 +49,7 @@ export const ValidatedInput = ({
       color={"default"}
       helperText={helperText}
       onChange={(event) => setValue(event.target.value)}
-      maxLength={64}
+      defaultValue={defaultValue}
     />
   );
 };

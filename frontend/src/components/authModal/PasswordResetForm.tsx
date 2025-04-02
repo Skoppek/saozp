@@ -54,8 +54,8 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
           label={"Login"}
           maxLength={64}
           minLength={1}
+          onChange={setLogin}
           onError={() => setLogin(null)}
-          onCorrect={(value) => setLogin(value)}
         />
         <Tooltip
           content={getTokenHint}
@@ -66,8 +66,8 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
             label={"Token zmiany hasła"}
             maxLength={4}
             minLength={4}
+            onChange={setToken}
             onError={() => setToken(null)}
-            onCorrect={(value) => setToken(value)}
           />
         </Tooltip>
         <ValidatedInput
@@ -76,7 +76,7 @@ export const PasswordResetForm = ({ onSuccess }: { onSuccess: () => void }) => {
           maxLength={64}
           minLength={1}
           onError={() => setPassword(null)}
-          onCorrect={(value) => setPassword(value)}
+          onChange={setPassword}
         />
         <Button onClick={submit} disabled={!isValid}>
           {isLoading ? <Spinner /> : "Zmień hasło"}

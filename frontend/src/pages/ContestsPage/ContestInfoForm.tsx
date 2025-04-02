@@ -1,9 +1,9 @@
 import { Button } from "flowbite-react/components/Button";
-import { TextInput } from "../../components/inputs/TextInput";
 import { MarkdownEditor } from "../../components/markdown/MarkdownEditor";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Modal } from "flowbite-react";
 import { inRange } from "lodash";
+import { ValidatedInput } from "../../components/inputs/ValidatedInput";
 
 interface ContestBaseInfo {
   name: string;
@@ -21,10 +21,16 @@ export const ContestInfoForm = ({
   onSubmit,
   submitLabel,
 }: ContestInfoFormProps) => {
-  const [contest, setContest] = useState(
-    defaultData ?? { name: "", description: "" },
+  const [name, setName] = useState(defaultData?.name ?? "");
+  const [description, setDescription] = useState(
+    defaultData?.description ?? "",
   );
   const [showModal, setShowModal] = useState(false);
+
+  const contest = useMemo<ContestBaseInfo>(
+    () => ({ name, description }),
+    [description, name],
+  );
 
   return (
     <>
@@ -33,29 +39,16 @@ export const ContestInfoForm = ({
         <Modal.Header>Informacje o zawodach</Modal.Header>
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <TextInput
-              id={"groupName"}
-              label={"Nazwa zawodów"}
-              onChange={(value) =>
-                setContest((prev) => {
-                  return {
-                    ...prev,
-                    name: value,
-                  };
-                })
-              }
-              defaultValue={defaultData?.name ?? ""}
+            <ValidatedInput
+              label="Nazwa zawodów"
+              onChange={setName}
+              minLength={1}
+              maxLength={128}
+              defaultValue={defaultData?.name}
             />
             <MarkdownEditor
               defaultMarkdown={defaultData?.description ?? ""}
-              onChange={(value) =>
-                setContest((prev) => {
-                  return {
-                    ...prev,
-                    description: value,
-                  };
-                })
-              }
+              onChange={setDescription}
               label="Opis"
               rows={16}
             />

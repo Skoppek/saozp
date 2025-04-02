@@ -23,7 +23,7 @@ export const ContestEditPage = () => {
   return (
     <UserLoggedCheck>
       <ContestContextProvider contestId={contestId}>
-        <div className="flex justify-center gap-4 overflow-x-auto mx-12 pt-12">
+        <div className="mx-12 flex justify-center gap-4 overflow-x-auto pt-12">
           <ContestBaseView contestId={contestId} />
           <StagesView />
           <ContestParticipantsView />

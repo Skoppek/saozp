@@ -1,4 +1,7 @@
-import { FloatingLabel, FloatingLabelVariant } from "flowbite-react/components/FloatingLabel";
+import {
+  FloatingLabel,
+  FloatingLabelVariant,
+} from "flowbite-react/components/FloatingLabel";
 import { useMemo, useState } from "react";
 
 interface ValidatedInputProps {
@@ -9,8 +12,8 @@ interface ValidatedInputProps {
   type?: "text" | "password";
   minLength?: number;
   maxLength: number;
-  variant?: FloatingLabelVariant
-  defaultValue?: string
+  variant?: FloatingLabelVariant;
+  defaultValue?: string;
 }
 
 export const ValidatedInput = ({
@@ -21,18 +24,16 @@ export const ValidatedInput = ({
   label,
   minLength = 1,
   maxLength,
-  variant = 'outlined',
-  defaultValue = ""
+  variant = "outlined",
+  defaultValue = "",
 }: ValidatedInputProps) => {
   const [value, setValue] = useState("");
 
   const helperText = useMemo(() => {
     const result =
-      value.length < minLength
-        ? `Minimalna długość: ${minLength}`
-        : value.length > maxLength
-          ? `Maksymalna długość: ${maxLength}`
-          : undefined;
+      value.length < minLength ? `Minimalna długość: ${minLength}`
+      : value.length > maxLength ? `Maksymalna długość: ${maxLength}`
+      : undefined;
 
     if (result) onError();
     onChange(value);
@@ -42,14 +43,16 @@ export const ValidatedInput = ({
   }, [isValid, maxLength, minLength, onChange, onError, value]);
 
   return (
-    <FloatingLabel
-      type={type}
-      variant={variant}
-      label={label}
-      color={"default"}
-      helperText={helperText}
-      onChange={(event) => setValue(event.target.value)}
-      defaultValue={defaultValue}
-    />
+    <div className="w-full">
+      <FloatingLabel
+        type={type}
+        variant={variant}
+        label={label}
+        color={"default"}
+        helperText={helperText}
+        onChange={(event) => setValue(event.target.value)}
+        defaultValue={defaultValue}
+      />
+    </div>
   );
 };

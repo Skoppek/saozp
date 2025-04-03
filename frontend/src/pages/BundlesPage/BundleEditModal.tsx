@@ -1,11 +1,11 @@
 import { Modal } from "flowbite-react/components/Modal";
-import { useEffect, useMemo, useRef } from "react";
-import { Spinner } from "flowbite-react";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Spinner } from "flowbite-react";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient.ts";
 import { BundleProblemsTable } from "./BundleProblemsTable.tsx";
 import _ from "lodash";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
+import { ValidatedInput } from "../../components/inputs/ValidatedInput.tsx";
 
 interface BundleEditModalProps {
   bundle: {
@@ -46,12 +46,6 @@ export const BundleEditModal = ({
     }
   }, [show, refetchBundle, refetchAll]);
 
-  const changeName = useRef(
-    _.debounce(async (value: string) => {
-      void apiClient.bundles.update(bundle.id, { name: value });
-    }, 1000),
-  ).current;
-
   const filteredAllProblems = useMemo(
     () =>
       _.differenceBy(
@@ -68,22 +62,39 @@ export const BundleEditModal = ({
     [allProblems, bundleProblems],
   );
 
+  const [name, setName] = useState(bundle.name);
+
   return (
     <>
       <Modal show={show} onClose={() => onClose()}>
         <Modal.Header>{`Edycja paczki - ${bundle.name}`}</Modal.Header>
         <Modal.Body>
           <div className="flex flex-col gap-4">
-            <TextInput
-              id={"bundleName"}
-              label={"Nazwa paczki"}
-              onChange={changeName}
-              defaultValue={bundle.name}
-            />
+            <div className="flex w-full gap-4">
+              <ValidatedInput
+                label="Nazwa paczki"
+                onChange={setName}
+                minLength={1}
+                maxLength={128}
+                defaultValue={bundle.name}
+              />
+              <div>
+                <Button
+                  size={"xs"}
+                  onClick={() => {
+                    void apiClient.bundles.update(bundle.id, { name });
+                  }}
+                >
+                  Zmień nazwę
+                </Button>
+              </div>
+            </div>
             <div className={"flex justify-around gap-2"}>
-              {!isFetchingAll &&
-              allProblems != undefined &&
-              bundleProblems != undefined ? (
+              {(
+                !isFetchingAll &&
+                allProblems != undefined &&
+                bundleProblems != undefined
+              ) ?
                 <BundleProblemsTable
                   data={filteredAllProblems}
                   confirmLabel={"Dodaj do paczki"}
@@ -99,10 +110,8 @@ export const BundleEditModal = ({
                       });
                   }}
                 />
-              ) : (
-                <Spinner aria-label="Extra large spinner" size="xl" />
-              )}
-              {!isFetchingBundle && bundleProblems !== undefined ? (
+              : <Spinner aria-label="Extra large spinner" size="xl" />}
+              {!isFetchingBundle && bundleProblems !== undefined ?
                 <BundleProblemsTable
                   data={bundleProblems}
                   confirmLabel={"Usuń z paczki"}
@@ -118,9 +127,7 @@ export const BundleEditModal = ({
                       });
                   }}
                 />
-              ) : (
-                <Spinner aria-label="Extra large spinner" size="xl" />
-              )}
+              : <Spinner aria-label="Extra large spinner" size="xl" />}
             </div>
           </div>
         </Modal.Body>

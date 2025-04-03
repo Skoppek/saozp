@@ -3,7 +3,7 @@ import { ClassName } from "../../../shared/interfaces/ClassName.ts";
 import { UsersList } from "./UsersList.tsx";
 import { UserAdminDataFilter } from "../../../shared/interfaces/UserAdminData.ts";
 import { useState } from "react";
-import { TextInput } from "../../inputs/TextInput.tsx";
+import { FloatingLabel } from "flowbite-react";
 
 interface UsersControlSectionProps extends ClassName {}
 
@@ -24,65 +24,64 @@ export const UsersControlSection = ({
       <div className="flex w-full flex-col gap-4">
         <div className="text-3xl">Widok użytkowników</div>
         <div className="flex flex-wrap items-center gap-4">
-          <TextInput
-            id={"id"}
+          <FloatingLabel
+            type="text"
+            onChange={(event) => {
+              setFilter((prev) => {
+                return { ...prev, id: event.target.value.toLowerCase() };
+              });
+            }}
             label="Id"
-            onChange={(value) => {
+            variant="standard"
+          />
+          <FloatingLabel
+            type="text"
+            onChange={(event) => {
               setFilter((prev) => {
-                return { ...prev, id: value.toLowerCase() };
+                return { ...prev, login: event.target.value.toLowerCase() };
               });
             }}
-          />
-          <TextInput
-            id={"login"}
             label="Login"
-            className="grow"
-            onChange={(value) => {
+            variant="standard"
+          />
+          <FloatingLabel
+            type="text"
+            onChange={(event) => {
               setFilter((prev) => {
-                return { ...prev, login: value.toLowerCase() };
+                return { ...prev, firstName: event.target.value.toLowerCase() };
               });
             }}
-          />
-          <TextInput
-            id={"firstName"}
             label="Imię"
-            className="grow"
-            onChange={(value) => {
+            variant="standard"
+          />
+          <FloatingLabel
+            type="text"
+            onChange={(event) => {
               setFilter((prev) => {
-                return { ...prev, firstName: value.toLowerCase() };
+                return { ...prev, lastName: event.target.value.toLowerCase() };
               });
             }}
-          />
-          <TextInput
-            id={"lastName"}
             label="Nazwisko"
-            className="grow"
-            onChange={(value) => {
-              setFilter((prev) => {
-                return { ...prev, lastName: value.toLowerCase() };
-              });
-            }}
+            variant="standard"
           />
-          <div className="flex h-full flex-col justify-end gap-2">
-            <ToggleSwitch
-              checked={!!filter.isAdmin}
-              label="Admin"
-              onChange={() =>
-                setFilter((prev) => {
-                  return { ...prev, isAdmin: !prev.isAdmin };
-                })
-              }
-            />
-            <ToggleSwitch
-              checked={!!filter.hasSession}
-              label="Aktywna sesja"
-              onChange={() =>
-                setFilter((prev) => {
-                  return { ...prev, hasSession: !prev.hasSession };
-                })
-              }
-            />
-          </div>
+          <ToggleSwitch
+            checked={!!filter.isAdmin}
+            label="Admin"
+            onChange={() =>
+              setFilter((prev) => {
+                return { ...prev, isAdmin: !prev.isAdmin };
+              })
+            }
+          />
+          <ToggleSwitch
+            checked={!!filter.hasSession}
+            label="Aktywna sesja"
+            onChange={() =>
+              setFilter((prev) => {
+                return { ...prev, hasSession: !prev.hasSession };
+              })
+            }
+          />
         </div>
         <UsersList filter={filter} />
       </div>

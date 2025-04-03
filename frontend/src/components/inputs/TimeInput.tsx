@@ -1,4 +1,4 @@
-import { Label, TextInput } from "flowbite-react";
+import { FloatingLabel } from "flowbite-react";
 import _ from "lodash";
 import { useMemo, useState } from "react";
 
@@ -6,9 +6,10 @@ interface TimePartInputProps {
   onChange: (value: number) => void;
   value: number;
   maxValue: 24 | 60;
+  label?: string
 }
 
-const TimePartInput = ({ value, maxValue, onChange }: TimePartInputProps) => {
+const TimePartInput = ({ value, maxValue, onChange, label = "" }: TimePartInputProps) => {
   const [isFocus, setIsFocus] = useState(false);
   const hoursLong = useMemo<string>(
     () => (value < 10 ? "0" + value.toString() : value.toString()),
@@ -21,8 +22,10 @@ const TimePartInput = ({ value, maxValue, onChange }: TimePartInputProps) => {
   );
 
   return (
-    <TextInput
+    <FloatingLabel
       id="time"
+      label={label}
+      variant="standard"
       value={hoursDisplay}
       onChange={(event) => {
         const value = parseInt(_.trimStart(event.target.value, "0")) % 100;
@@ -43,19 +46,18 @@ interface TimeInputProps {
     hours: number;
     minutes: number;
   };
-  label?: string;
   setTime: (hours: number, minutes: number) => void;
 }
 
-export const TimeInput = ({ label, defaultTime, setTime }: TimeInputProps) => {
+export const TimeInput = ({ defaultTime, setTime }: TimeInputProps) => {
   const [hours, setThisHours] = useState<number>(defaultTime?.hours ?? 12);
   const [minutes, setThisMinutes] = useState<number>(defaultTime?.minutes ?? 0);
 
   return (
     <div className="flex flex-col gap-2">
-      {label && <Label htmlFor="time" value={label} />}
       <div className="flex w-20 gap-1">
         <TimePartInput
+          label={"hh"}
           onChange={(value) => {
             setThisHours(value);
             setTime(value, minutes);
@@ -64,6 +66,7 @@ export const TimeInput = ({ label, defaultTime, setTime }: TimeInputProps) => {
           maxValue={24}
         />
         <TimePartInput
+        label="mm"
           onChange={(value) => {
             setThisMinutes(value);
             setTime(hours, value);

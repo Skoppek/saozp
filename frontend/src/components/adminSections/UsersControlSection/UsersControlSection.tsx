@@ -3,7 +3,7 @@ import { ClassName } from "../../../shared/interfaces/ClassName.ts";
 import { UsersList } from "./UsersList.tsx";
 import { UserAdminDataFilter } from "../../../shared/interfaces/UserAdminData.ts";
 import { useState } from "react";
-import { FloatingLabel } from "flowbite-react";
+import { TextFilterInput } from "../../inputs/TextFilterInput.tsx";
 
 interface UsersControlSectionProps extends ClassName {}
 
@@ -24,45 +24,37 @@ export const UsersControlSection = ({
       <div className="flex w-full flex-col gap-4">
         <div className="text-3xl">Widok użytkowników</div>
         <div className="flex flex-wrap items-center gap-4">
-          <FloatingLabel
-            type="text"
-            onChange={(event) => {
-              setFilter((prev) => {
-                return { ...prev, id: event.target.value.toLowerCase() };
-              });
-            }}
+          <TextFilterInput
             label="Id"
-            variant="standard"
-          />
-          <FloatingLabel
-            type="text"
-            onChange={(event) => {
+            onChange={(value) => {
               setFilter((prev) => {
-                return { ...prev, login: event.target.value.toLowerCase() };
+                return { ...prev, id: value.toLowerCase() };
               });
             }}
+          />
+          <TextFilterInput
             label="Login"
-            variant="standard"
-          />
-          <FloatingLabel
-            type="text"
-            onChange={(event) => {
+            onChange={(value) => {
               setFilter((prev) => {
-                return { ...prev, firstName: event.target.value.toLowerCase() };
+                return { ...prev, login: value.toLowerCase() };
               });
             }}
+          />
+          <TextFilterInput
             label="Imię"
-            variant="standard"
-          />
-          <FloatingLabel
-            type="text"
-            onChange={(event) => {
+            onChange={(value) => {
               setFilter((prev) => {
-                return { ...prev, lastName: event.target.value.toLowerCase() };
+                return { ...prev, firstName: value.toLowerCase() };
               });
             }}
+          />
+          <TextFilterInput
             label="Nazwisko"
-            variant="standard"
+            onChange={(value) => {
+              setFilter((prev) => {
+                return { ...prev, lastName: value.toLowerCase() };
+              });
+            }}
           />
           <ToggleSwitch
             checked={!!filter.isAdmin}

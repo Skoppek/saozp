@@ -2,7 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import apiClient from "../../client/apiClient.ts";
 import { Table } from "flowbite-react/components/Table";
-import { Button, FloatingLabel, ListGroup, Popover, Spinner } from "flowbite-react";
+import {
+  Button,
+  ListGroup,
+  Popover,
+  Spinner,
+} from "flowbite-react";
 import {
   HiDotsVertical,
   HiOutlineTrash,
@@ -14,6 +19,7 @@ import { ContestCreateModal } from "./ContestCreateModal.tsx";
 import { useNavigate } from "react-router-dom";
 import { ContestInfoForm } from "./ContestInfoForm.tsx";
 import { AuthContext } from "../../contexts/AuthContext/AuthContext.tsx";
+import { TextFilterInput } from "../../components/inputs/TextFilterInput.tsx";
 
 const ContestOptions = ({
   onScore,
@@ -75,13 +81,10 @@ export const MyContestsPage = () => {
               void refetch();
             }}
           />
-          <div className="flex w-full justify-between gap-2">
-            <FloatingLabel
-              className="w-96"
-              type="text"
-              onChange={(event) => setNameFilter(event.target.value.toLowerCase())}
+          <div className="flex w-full justify-between gap-4">
+            <TextFilterInput
               label="Szukaj"
-              variant="standard"
+              onChange={(value) => setNameFilter(value.toLowerCase())}
             />
             <ContestInfoForm
               submitLabel="Dodaj zawody"
@@ -97,7 +100,7 @@ export const MyContestsPage = () => {
                 <Table.HeadCell>Nazwa</Table.HeadCell>
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
-              {!isFetching && data ? (
+              {!isFetching && data ?
                 <Table.Body>
                   {data
                     .filter((contest) =>
@@ -124,9 +127,7 @@ export const MyContestsPage = () => {
                       </Table.Row>
                     ))}
                 </Table.Body>
-              ) : (
-                <Spinner />
-              )}
+              : <Spinner />}
             </Table>
           </div>
         </div>

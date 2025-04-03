@@ -34,7 +34,7 @@ export const ContestInfoForm = ({
 
   return (
     <>
-      <Button onClick={() => setShowModal(true)}>{submitLabel}</Button>
+      <Button onClick={() => setShowModal(true)} size={'xs'}>{submitLabel}</Button>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Informacje o zawodach</Modal.Header>
         <Modal.Body>

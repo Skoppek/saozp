@@ -7,8 +7,8 @@ import { Spinner } from "flowbite-react/components/Spinner";
 import { Button } from "flowbite-react/components/Button";
 import { HiChevronRight } from "react-icons/hi";
 import { ParticipantStagesList } from "./ParticipantStagesList";
-import { TextInput } from "../../components/inputs/TextInput";
 import { AuthContext } from "../../contexts/AuthContext/AuthContext";
+import { TextFilterInput } from "../../components/inputs/TextFilterInput";
 
 export const ParticipantPage = () => {
   const authContext = useContext(AuthContext);
@@ -28,14 +28,11 @@ export const ParticipantPage = () => {
       <div className="flex h-full flex-col gap-4">
         <div className="flex justify-center gap-4 overflow-x-auto pt-12">
           <div className="flex w-1/2 flex-col gap-2">
-            <TextInput
-              className="w-full"
-              placeholder="Szukaj po nazwie"
-              type="text"
-              id={"contestsFilter"}
+            <TextFilterInput
+              label="Szukaj"
               onChange={(value) => setNameFilter(value.toLowerCase())}
             />
-            {data && !isFetching ? (
+            {data && !isFetching ?
               <Table>
                 <Table.Head>
                   <Table.HeadCell>Nazwa</Table.HeadCell>
@@ -65,9 +62,7 @@ export const ParticipantPage = () => {
                     ))}
                 </Table.Body>
               </Table>
-            ) : (
-              <Spinner />
-            )}
+            : <Spinner />}
           </div>
           {contestId && <ParticipantStagesList contestId={contestId} />}
         </div>

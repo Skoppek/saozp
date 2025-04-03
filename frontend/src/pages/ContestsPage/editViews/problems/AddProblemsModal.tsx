@@ -10,7 +10,7 @@ import _ from "lodash";
 import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
 import { Badge } from "flowbite-react/components/Badge";
 import { getLanguageById } from "../../../../shared/constansts";
-import { TextInput } from "../../../../components/inputs/TextInput";
+import { TextFilterInput } from "../../../../components/inputs/TextFilterInput";
 
 type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
 
@@ -42,11 +42,8 @@ export const AddProblemsModal = ({
       <Modal.Header>Dodaj zadania</Modal.Header>
       <Modal.Body>
         <div className="flex w-full gap-2">
-          <TextInput
-            className="w-full"
-            placeholder="Szukaj po nazwie"
-            type="text"
-            id={"problemFilter"}
+          <TextFilterInput
+            label="Szukaj"
             onChange={(value) => setNameFilter(value.toLowerCase())}
           />
           <Button
@@ -71,7 +68,7 @@ export const AddProblemsModal = ({
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {data && !isFetching ? (
+            {data && !isFetching ?
               _.differenceBy(data, problems, "problemId")
                 .filter((problem) =>
                   problem.name.toLowerCase().includes(nameFilter),
@@ -100,9 +97,7 @@ export const AddProblemsModal = ({
                     </Table.Cell>
                   </Table.Row>
                 ))
-            ) : (
-              <Spinner />
-            )}
+            : <Spinner />}
           </Table.Body>
         </Table>
       </Modal.Body>

@@ -7,7 +7,7 @@ import { Checkbox } from "flowbite-react/components/Checkbox";
 import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import { Group } from "../../../../shared/interfaces/Group";
-import { TextInput } from "../../../../components/inputs/TextInput";
+import { TextFilterInput } from "../../../../components/inputs/TextFilterInput";
 
 const AddGroupsButton = ({
   group: participants,
@@ -60,11 +60,8 @@ export const AddGroupsModal = ({
       <Modal.Header>Dodaj uczestników z grup</Modal.Header>
       <Modal.Body className="w-full">
         <div className="flex w-full gap-2">
-          <TextInput
-            className="w-full"
-            placeholder="Szukaj po nazwie"
-            type="text"
-            id={"groupFilter"}
+          <TextFilterInput
+            label="Szukaj"
             onChange={(value) => setNameFilter(value.toLowerCase())}
           />
           <AddGroupsButton
@@ -79,7 +76,7 @@ export const AddGroupsModal = ({
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {data && !isFetching ? (
+            {data && !isFetching ?
               data
                 .filter((group) =>
                   group.name.toLowerCase().includes(nameFilter),
@@ -102,9 +99,7 @@ export const AddGroupsModal = ({
                     </Table.Cell>
                   </Table.Row>
                 ))
-            ) : (
-              <Spinner />
-            )}
+            : <Spinner />}
           </Table.Body>
         </Table>
       </Modal.Body>

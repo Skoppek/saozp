@@ -6,9 +6,9 @@ import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { Datepicker } from "flowbite-react/components/Datepicker";
 import apiClient from "../../client/apiClient.ts";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
 import { Label } from "flowbite-react/components/Label";
 import { StatsAccordion } from "../../components/results/StatsAccordion.tsx";
+import { TextFilterInput } from "../../components/inputs/TextFilterInput.tsx";
 
 export const ProblemStatsPage = () => {
   const { id } = useParams();
@@ -44,15 +44,11 @@ export const ProblemStatsPage = () => {
         <div className="text-6xl">{problem?.name}</div>
       </div>
       <div className="flex items-end justify-center gap-4">
-        <TextInput
+        <TextFilterInput
           label="Zgłaszający"
-          id="creatorFilter"
           onChange={(value) =>
-            setFilter((prev) => {
-              return { ...prev, creator: value };
-            })
+            setFilter((prev) => ({ ...prev, creator: value }))
           }
-          className="w-96"
         />
         <div>
           <div className="mb-2 block">

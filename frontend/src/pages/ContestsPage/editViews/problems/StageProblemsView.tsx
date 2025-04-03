@@ -8,8 +8,8 @@ import { AddProblemsModal } from "./AddProblemsModal";
 import { AddBundlesModal } from "./AddBundlesModal";
 import { ProblemEntry } from "../../../../shared/interfaces/ProblemEntry";
 import { getLanguageById } from "../../../../shared/constansts";
-import { TextInput } from "../../../../components/inputs/TextInput";
 import { useContestContext } from "../../../../shared/useContestContext";
+import { TextFilterInput } from "../../../../components/inputs/TextFilterInput";
 
 type Problem = Pick<ProblemEntry, "problemId" | "name" | "languageId">;
 
@@ -28,7 +28,7 @@ export const StageProblemsView = ({ stageId }: { stageId: number }) => {
 
   return (
     <div>
-      {data && !isFetching ? (
+      {data && !isFetching ?
         <>
           <AddProblemsModal
             contestId={contestId}
@@ -88,11 +88,8 @@ export const StageProblemsView = ({ stageId }: { stageId: number }) => {
                 Wyrzuć
               </Button>
             </div>
-            <TextInput
-              className="w-full"
-              placeholder="Szukaj"
-              type="text"
-              id={"problemFilter"}
+            <TextFilterInput
+              label="Szukaj"
               onChange={(value) => setNameFilter(value.toLowerCase())}
             />
             <Table>
@@ -134,9 +131,7 @@ export const StageProblemsView = ({ stageId }: { stageId: number }) => {
             </Table>
           </div>
         </>
-      ) : (
-        <Spinner />
-      )}
+      : <Spinner />}
     </div>
   );
 };

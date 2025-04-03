@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import _ from "lodash";
 import { displayNames } from "../../../../shared/functions";
-import { TextInput } from "../../../../components/inputs/TextInput";
 import { Participant } from "../../../../shared/interfaces/Participant";
+import { TextFilterInput } from "../../../../components/inputs/TextFilterInput";
 
 interface AddParticipantsModalProps {
   contestId: number;
@@ -41,11 +41,8 @@ export const AddParticipantsModal = ({
       <Modal.Header>Dodaj uczestników</Modal.Header>
       <Modal.Body>
         <div className="flex w-full gap-2">
-          <TextInput
-            className="w-full"
-            placeholder="Szukaj"
-            type="text"
-            id={"participantFilter"}
+          <TextFilterInput
+            label="Szukaj"
             onChange={(value) => setNameFilter(value.toLowerCase())}
           />
           <Button
@@ -69,7 +66,7 @@ export const AddParticipantsModal = ({
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {data && !isFetching ? (
+            {data && !isFetching ?
               _.differenceBy(data, participants, "userId")
                 .filter((participant) =>
                   displayNames(participant).toLowerCase().includes(nameFilter),
@@ -93,9 +90,7 @@ export const AddParticipantsModal = ({
                     </Table.Cell>
                   </Table.Row>
                 ))
-            ) : (
-              <Spinner />
-            )}
+            : <Spinner />}
           </Table.Body>
         </Table>
       </Modal.Body>

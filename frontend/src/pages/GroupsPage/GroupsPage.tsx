@@ -1,5 +1,5 @@
 import { UserLoggedCheck } from "../../checks/UserLoggedCheck.tsx";
-import { FloatingLabel, Table } from "flowbite-react";
+import { Table } from "flowbite-react";
 import { Button } from "flowbite-react/components/Button";
 import { useQuery } from "@tanstack/react-query";
 import apiClient from "../../client/apiClient.ts";
@@ -8,6 +8,7 @@ import { useState } from "react";
 import { GroupCreateModal } from "./GroupCreateModal.tsx";
 import { GroupDeleteModal } from "./GroupDeleteModal.tsx";
 import { GroupEditModal } from "./GroupEditModal.tsx";
+import { TextFilterInput } from "../../components/inputs/TextFilterInput.tsx";
 
 export const GroupsPage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
@@ -56,15 +57,12 @@ export const GroupsPage = () => {
             </>
           )}
           <div className="flex flex-col gap-2">
-            <div className="flex w-full justify-between">
-              <FloatingLabel
-                className="w-96"
-                type="text"
-                onChange={(event) =>
-                  setNameFilter(event.target.value.toLowerCase())
-                }
+            <div className="flex w-full gap-4">
+              <TextFilterInput 
                 label="Szukaj"
-                variant="standard"
+                onChange={(value) =>
+                  setNameFilter(value.toLowerCase())
+                }
               />
               <Button
                 color={"green"}

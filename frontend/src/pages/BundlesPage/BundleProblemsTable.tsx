@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import { getLanguageById } from "../../shared/constansts.ts";
 import { Badge } from "flowbite-react/components/Badge";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
+import { TextFilterInput } from "../../components/inputs/TextFilterInput.tsx";
 
 interface Problem {
   id: number;
@@ -28,11 +28,8 @@ export const BundleProblemsTable = ({
   return (
     <div className={"flex w-1/2 flex-col"}>
       <div className="flex w-full flex-col gap-2">
-        <TextInput
-          className="w-full"
-          placeholder="Szukaj po nazwie"
-          type="text"
-          id={"groupFilter"}
+        <TextFilterInput
+          label="Szukaj"
           onChange={(value) => setNameFilter(value.toLowerCase())}
         />
         <Button onClick={() => onConfirm(selected)} disabled={!selected.length}>

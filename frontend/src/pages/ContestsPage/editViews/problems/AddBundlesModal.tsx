@@ -7,7 +7,7 @@ import { Checkbox } from "flowbite-react/components/Checkbox";
 import { useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import { Bundle } from "../../../../shared/interfaces/Bundle";
-import { TextInput } from "../../../../components/inputs/TextInput";
+import { TextFilterInput } from "../../../../components/inputs/TextFilterInput";
 
 interface AddBundlesModalProps {
   contestId: number;
@@ -35,11 +35,8 @@ export const AddBundlesModal = ({
       <Modal.Header>Dodaj zadania z paczek</Modal.Header>
       <Modal.Body>
         <div className="flex w-full gap-2">
-          <TextInput
-            className="w-full"
-            placeholder="Szukaj po nazwie"
-            type="text"
-            id={"bundleFilter"}
+          <TextFilterInput
+            label="Szukaj"
             onChange={(value) => setNameFilter(value.toLowerCase())}
           />
           <Button
@@ -63,7 +60,7 @@ export const AddBundlesModal = ({
             <Table.HeadCell></Table.HeadCell>
           </Table.Head>
           <Table.Body>
-            {data && !isFetching ? (
+            {data && !isFetching ?
               data
                 .filter((bundle) =>
                   bundle.name.toLowerCase().includes(nameFilter),
@@ -86,9 +83,7 @@ export const AddBundlesModal = ({
                     </Table.Cell>
                   </Table.Row>
                 ))
-            ) : (
-              <Spinner />
-            )}
+            : <Spinner />}
           </Table.Body>
         </Table>
       </Modal.Body>

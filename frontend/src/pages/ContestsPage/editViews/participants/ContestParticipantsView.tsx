@@ -7,9 +7,9 @@ import { useState } from "react";
 import { AddParticipantsModal } from "./AddParticipantsModal";
 import { AddGroupsModal } from "./AddGroupsModal";
 import { displayNames } from "../../../../shared/functions";
-import { TextInput } from "../../../../components/inputs/TextInput";
 import { useContestContext } from "../../../../shared/useContestContext";
 import { Participant } from "../../../../shared/interfaces/Participant";
+import { TextFilterInput } from "../../../../components/inputs/TextFilterInput";
 
 export const ContestParticipantsView = () => {
   const { id: contestId } = useContestContext();
@@ -26,7 +26,7 @@ export const ContestParticipantsView = () => {
 
   return (
     <div>
-      {data && !isFetching ? (
+      {data && !isFetching ?
         <>
           <AddParticipantsModal
             contestId={contestId}
@@ -83,11 +83,8 @@ export const ContestParticipantsView = () => {
                 Wyrzuć
               </Button>
             </div>
-            <TextInput
-              className="w-full"
-              placeholder="Szukaj"
-              type="text"
-              id={"participantFilter"}
+            <TextFilterInput
+              label="Szukaj"
               onChange={(value) => setNameFilter(value.toLowerCase())}
             />
             <Table>
@@ -126,9 +123,7 @@ export const ContestParticipantsView = () => {
             </Table>
           </div>
         </>
-      ) : (
-        <Spinner />
-      )}
+      : <Spinner />}
     </div>
   );
 };

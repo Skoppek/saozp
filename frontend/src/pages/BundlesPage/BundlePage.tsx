@@ -8,7 +8,7 @@ import { useState } from "react";
 import { BundleCreateModal } from "./BundleCreateModal.tsx";
 import { BundleDeleteModal } from "./BundleDeleteModal.tsx";
 import { BundleEditModal } from "./BundleEditModal.tsx";
-import { TextInput } from "../../components/inputs/TextInput.tsx";
+import { TextFilterInput } from "../../components/inputs/TextFilterInput.tsx";
 
 export const BundlePage = () => {
   const [showCreationModal, setShowCreationModal] = useState(false);
@@ -58,11 +58,8 @@ export const BundlePage = () => {
           )}
           <div className="flex flex-col gap-2">
             <div className="flex w-full gap-2">
-              <TextInput
-                className="w-full"
-                placeholder="Szukaj po nazwie"
-                type="text"
-                id={"bundleFilter"}
+              <TextFilterInput 
+                label="Szukaj"
                 onChange={(value) => setNameFilter(value.toLowerCase())}
               />
               <Button

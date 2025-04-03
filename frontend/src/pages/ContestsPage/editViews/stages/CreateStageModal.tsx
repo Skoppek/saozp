@@ -1,5 +1,4 @@
 import { Modal } from "flowbite-react/components/Modal";
-import { TextInput } from "../../../../components/inputs/TextInput";
 import { useCallback, useMemo, useState } from "react";
 import { Button } from "flowbite-react/components/Button";
 import { DateTimePicker } from "../../../../components/inputs/DateTimePicker";
@@ -9,6 +8,7 @@ import { useContestContext } from "../../../../shared/useContestContext";
 import { Spinner } from "flowbite-react";
 import inRange from "lodash/inRange";
 import moment from "moment";
+import { ValidatedInput } from "../../../../components/inputs/ValidatedInput";
 
 interface CreateStageModalProps {
   onCreate: () => void;
@@ -24,12 +24,19 @@ export const CreateStageModal = ({
   const [show, setShow] = useState(false);
   const [waiting, setWaiting] = useState(false);
 
-  const [newStage, setNewStage] = useState<NewStage>(
-    defaultValue ?? {
-      name: "",
-      startDate: new Date(),
-      endDate: new Date(),
-    },
+  const [name, setName] = useState(defaultValue?.name ?? "");
+  const [startDate, setStartDate] = useState(
+    defaultValue?.startDate ?? new Date(),
+  );
+  const [endDate, setEndDate] = useState(defaultValue?.endDate ?? new Date());
+
+  const newStage = useMemo(
+    () => ({
+      name,
+      startDate,
+      endDate,
+    }),
+    [endDate, name, startDate],
   );
 
   const isValid = useMemo<boolean>(() => {
@@ -69,43 +76,23 @@ export const CreateStageModal = ({
         </Modal.Header>
         <Modal.Body>
           <div className="mb-60 flex flex-col gap-4">
-            <TextInput
-              id={"stageCreation"}
+            <ValidatedInput
               label={"Nazwa"}
-              onChange={(value) => {
-                setNewStage((prev) => {
-                  return {
-                    ...prev,
-                    name: value,
-                  };
-                });
-              }}
-              defaultValue={defaultValue ? defaultValue.name : ""}
+              onChange={setName}
+              defaultValue={defaultValue?.name}
+              minLength={1}
+              maxLength={64}
             />
             <div className="flex gap-4">
               <DateTimePicker
                 id="stageStart"
                 label="Start"
-                onChange={(value) =>
-                  setNewStage((prev) => {
-                    return {
-                      ...prev,
-                      startDate: value,
-                    };
-                  })
-                }
+                onChange={setStartDate}
               />
               <DateTimePicker
                 id="stageEnd"
                 label="Koniec"
-                onChange={(value) =>
-                  setNewStage((prev) => {
-                    return {
-                      ...prev,
-                      endDate: value,
-                    };
-                  })
-                }
+                onChange={setEndDate}
               />
             </div>
             <Button
@@ -116,13 +103,11 @@ export const CreateStageModal = ({
                 onCreate();
               }}
             >
-              {waiting ? (
+              {waiting ?
                 <Spinner />
-              ) : defaultValue ? (
+              : defaultValue ?
                 "Modyfikuj"
-              ) : (
-                "Dodaj etap"
-              )}
+              : "Dodaj etap"}
             </Button>
           </div>
         </Modal.Body>

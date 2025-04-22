@@ -11,7 +11,7 @@ import {
 
 export default abstract class AuthService {
     private static getSaltedString(password: string) {
-        return password + Bun.env.PASSWORD_SALT ?? '';
+        return password + (Bun.env.PASSWORD_SALT ?? '');
     }
 
     private static async getHashedString(value: string) {

@@ -18,6 +18,8 @@ import { mapIfPresent } from '../shared/mapper';
 import moment from 'moment';
 import _ from 'lodash';
 import StageRepository from '../repository/StageRepository';
+import { TestQueue } from '../shared/testQueue';
+import { Submission } from '../judge/judge0Client';
 
 export class SubmissionService {
     static async createSubmission(
@@ -85,11 +87,13 @@ export class SubmissionService {
             throw new SubmissionCreationError();
         }
 
-        SubmissionService.submitTests(
-            problem.tests,
-            newSubmission.id,
-            problem.languageId,
-            newSubmission.code,
+        TestQueue.put(() =>
+            SubmissionService.submitTests(
+                problem.tests,
+                newSubmission.id,
+                problem.languageId,
+                newSubmission.code,
+            ),
         );
         return newSubmission;
     }
@@ -121,10 +125,7 @@ export class SubmissionService {
         }
     }
 
-    private static async checkForContest(
-        stageId?: number,
-        createdAt?: Date,
-    ) {
+    private static async checkForContest(stageId?: number, createdAt?: Date) {
         if (stageId) {
             const stage = await StageRepository.getStageById(stageId);
 
@@ -179,8 +180,7 @@ export class SubmissionService {
     }
 
     static async getSubmissionsList(query: SubmissionListQuery) {
-        const { userId, stageId, problemId } =
-            parseSubmissionListQuery(query);
+        const { userId, stageId, problemId } = parseSubmissionListQuery(query);
 
         const submissions = await SubmissionRepository.getSubmissionsList(
             userId,
@@ -193,9 +193,18 @@ export class SubmissionService {
                 const tests = await TestRepository.getTestsOfSubmission(
                     submission.id,
                 );
-                const results = await judge0Client.getSubmissionBatch(
-                    tests.map((test) => test.token),
-                );
+                const resultsInWaiting = tests
+                    .filter((test) => test.token === null)
+                    .map(() => 1);
+                const resultStatuses = (
+                    await judge0Client.getSubmissionBatch(
+                        tests
+                            .filter((test) => typeof test.token === 'string')
+                            .map((test) => test.token as string),
+                    )
+                ).submissions
+                    .map((result) => result.status.id)
+                    .concat(resultsInWaiting);
 
                 return {
                     submissionId: submission.id,
@@ -206,9 +215,7 @@ export class SubmissionService {
                         lastName: submission.creator?.lastName ?? '',
                     },
                     createdAt: submission.createdAt ?? undefined,
-                    status: SubmissionService.reduceToStatus(
-                        results.submissions.map((result) => result.status.id),
-                    ),
+                    status: SubmissionService.reduceToStatus(resultStatuses),
                     rerun: mapIfPresent(submission.rerun, (o) => o),
                 };
             }),
@@ -233,11 +240,24 @@ export class SubmissionService {
 
         const tests = await TestRepository.getTestsOfSubmission(submission.id);
 
+        const resultsInWaiting: Submission[] = tests
+            .filter((test) => test.token === null)
+            .map(() => ({
+                token: '',
+                expected_output: '',
+                stdout: '',
+                stdin: '',
+                status: { description: 'In queue', id: 1 },
+                time: '',
+                memory: 0,
+            }));
         const results = (
             await judge0Client.getSubmissionBatch(
-                tests.map((test) => test.token),
+                tests
+                    .filter((test) => typeof test.token === 'string')
+                    .map((test) => test.token as string),
             )
-        ).submissions;
+        ).submissions.concat(resultsInWaiting);
 
         const averageTime = SubmissionService.getAverage(
             results.map((result) => parseFloat(result.time)),

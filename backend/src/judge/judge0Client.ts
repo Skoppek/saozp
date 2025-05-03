@@ -88,7 +88,7 @@ const isStatus = (suspect: unknown): suspect is Status => {
     );
 };
 
-interface Submission {
+export interface Submission {
     token: string;
     expected_output: string;
     stdout: string | null;

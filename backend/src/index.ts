@@ -13,6 +13,7 @@ import authController from './controller/authController';
 import contestController from './controller/contestController';
 import testCasesController from './controller/testCasesController';
 import cors from '@elysiajs/cors';
+import { TestQueue } from './shared/testQueue';
 
 const app = new Elysia()
     .use(cors({
@@ -32,10 +33,11 @@ const app = new Elysia()
     .use(adminsController)
     .use(groupController)
     .use(bundleController)
-    .use(contestController);
+    .use(contestController)
 
 try {
     await initAdmin();
+    TestQueue.run();
     app.listen(3000);
     console.log(
         `Elysia is running at ${app.server?.hostname}:${app.server?.port}`,

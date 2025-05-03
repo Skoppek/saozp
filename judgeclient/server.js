@@ -33,5 +33,5 @@ app
  });
 
 app.listen(PORT, () => {
- console.log(`Server is running on port ${PORT}`);
+ console.log(`JudgeClient server is running on port ${PORT}`);
 });

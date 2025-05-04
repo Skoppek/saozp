@@ -1,13 +1,16 @@
-FROM oven/bun AS build
+FROM oven/bun:1.2.11 AS build
 
 COPY ./backend/package.json package.json
-COPY ./backend/bun.lockb bun.lockb
+COPY ./backend/bun.lock bun.lock
 
 RUN bun install
 
 COPY ./backend/drizzle.config.ts .
-COPY ./backend/src/model ./src/model
+COPY ./backend/src/db ./src/db
 COPY ./backend/drizzle ./drizzle
+
+ARG POSTGRES_URL
+ENV POSTGRES_URL=$POSTGRES_URL
 
 RUN apt-get update && \
 apt-get install -y curl && \

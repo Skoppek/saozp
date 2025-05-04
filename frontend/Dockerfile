@@ -1,9 +1,9 @@
-FROM oven/bun:1.1.30 AS build
+FROM oven/bun:1.2.11 AS build
 
 WORKDIR /app
 
 COPY package.json package.json
-COPY bun.lockb bun.lockb
+COPY bun.lock bun.lock
 
 RUN bun install
 

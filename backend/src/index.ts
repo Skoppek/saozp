@@ -14,6 +14,7 @@ import contestController from './controller/contestController';
 import testCasesController from './controller/testCasesController';
 import cors from '@elysiajs/cors';
 import { TestQueue } from './shared/testQueue';
+import judge0Client from './judge/judge0Client';
 
 const app = new Elysia()
     .use(cors({
@@ -42,6 +43,7 @@ try {
     console.log(
         `Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
     );
+    console.log(await judge0Client.getAbout())
 } catch (error) {
     let message = 'Unknown Error';
     console.error('Error encountered while initializing');

@@ -11,6 +11,9 @@ export const SolvingPage = () => {
   const { value: stage } = useNumberParam({ param: stageId });
   const { value: problem } = useNumberParam({ param: problemId });
   const navigate = useNavigate();
+  console.log(import.meta.env.VITE_API_URL);
+  console.log(process.env.BASE_URL);
+  
 
   useEffect(() => {
     if (!problem || isNaN(problem)) {

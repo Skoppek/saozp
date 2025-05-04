@@ -24,22 +24,26 @@ export const UsersControlSection = ({
       <div className="flex w-full flex-col gap-4">
         <div className="text-3xl">Widok użytkowników</div>
         <div className="flex flex-wrap items-center gap-4">
-          <TextFilterInput
-            label="Id"
-            onChange={(value) => {
-              setFilter((prev) => {
-                return { ...prev, id: value.toLowerCase() };
-              });
-            }}
-          />
-          <TextFilterInput
-            label="Login"
-            onChange={(value) => {
-              setFilter((prev) => {
-                return { ...prev, login: value.toLowerCase() };
-              });
-            }}
-          />
+          <div className="flex w-full gap-4">
+            <TextFilterInput
+              label="Id"
+              onChange={(value) => {
+                setFilter((prev) => {
+                  return { ...prev, id: value.toLowerCase() };
+                });
+              }}
+            />
+            <TextFilterInput
+              label="Login"
+              onChange={(value) => {
+                setFilter((prev) => {
+                  return { ...prev, login: value.toLowerCase() };
+                });
+              }}
+            />
+          </div>
+          <div className="flex w-full gap-4">
+
           <TextFilterInput
             label="Imię"
             onChange={(value) => {
@@ -56,6 +60,7 @@ export const UsersControlSection = ({
               });
             }}
           />
+          </div>
           <ToggleSwitch
             checked={!!filter.isAdmin}
             label="Admin"

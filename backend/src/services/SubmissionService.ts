@@ -324,16 +324,8 @@ export class SubmissionService {
         code: string,
     ) {
         tests.forEach(async (test) => {
-            const token = (
-                await judge0Client.submit({
-                    languageId: languageId,
-                    code: code,
-                    test,
-                })
-            ).token;
-
             await TestRepository.createTest({
-                token,
+                token: null,
                 submissionId,
                 ...test,
             });

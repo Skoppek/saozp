@@ -2,10 +2,10 @@ import 'dotenv/config';
 import type { Config } from 'drizzle-kit';
 
 export default {
-    schema: "./src/schema",
+    schema: "./src/db/schema",
     out: './drizzle',
     dialect: 'postgresql',
     dbCredentials: {
-        url: Bun.env.POSTGRES_URL!,
+        url: process.env.POSTGRES_URL!,
     },
 } satisfies Config;

@@ -7,7 +7,6 @@ export class TestQueue {
 
     static run() {
         setInterval(() => {
-            console.log(this.queue.length);
             const temp = this.queue.map(x => x)
             this.queue = []
             Promise.all(temp.map((x) => new Promise(x)))

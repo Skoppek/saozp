@@ -47,7 +47,10 @@ export const UsersList = ({ filter }: UsersListProps) => {
       <UserControlModal
         isShown={!!selectedUser}
         close={() => setSelectedUser(undefined)}
-        onClose={() => refetch()}
+        onClose={() => {
+          setSelectedUser(undefined)
+          refetch()
+        }}
         selectedUser={selectedUser}
       />
       {isFetching ? (

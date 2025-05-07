@@ -78,9 +78,11 @@ async function main() {
   console.log("Start");
   setInterval(async () => {
     const tests = await getNewTests();
-    console.log(
-      `${new Date().toLocaleString()} | ${tests.length} waiting tests found.`
-    );
+    if (tests.length > 0) {
+      console.log(
+        `${new Date().toLocaleString()} | ${tests.length} waiting tests found.`
+      );
+    }
 
     const testsBySubmission = _.groupBy(tests, "submission_id");
 

@@ -6,5 +6,5 @@ echo 'Starting Judge0'
 echo 'Starting SAOZP'
 docker compose up -d --build
 
-# echo 'Removing auxiliary containers'
-# docker compose rm -v -f
+echo 'Removing auxiliary containers'
+docker compose rm -v -f

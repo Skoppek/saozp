@@ -13,7 +13,7 @@ services:
       timeout: 5s
       retries: 10
     volumes:
-      - apidb:/var/lib/postgresql/data
+      - apidb:/home/mskop/saozp/psql
     expose:
       - 5432
     networks:

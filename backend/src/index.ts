@@ -46,10 +46,10 @@ try {
     console.log(await judge0Client.getAbout())
 } catch (error) {
     let message = 'Unknown Error';
-    console.error('Error encountered while initializing');
+    console.error('[ERR] | new Date().toLocaleString() | Error encountered while initializing');
     if (error instanceof Error) message = error.message;
     // we'll proceed, but let's report it
-    console.error(message);
+    console.error(error);
 }
 
 export type App = typeof app;

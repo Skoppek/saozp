@@ -5,7 +5,7 @@ const app = express();
 const PORT = 3002;
 
 // const judge0Url = 'http://host.docker.internal:2358';
-const judge0Url = "http://localhost:2358";
+const judge0Url = "http://172.17.0.1:2358";
 
 let failuresCount = 0;
 

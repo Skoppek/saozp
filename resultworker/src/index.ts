@@ -75,7 +75,22 @@ const getNewTests = async () =>
     .limit(FETCH_LIMIT);
 
 async function main() {
+  console.log(
+    `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0.`
+  );
   console.log("Start");
+  judge0Client
+    .getAbout()
+    .then((res) => {
+      console.log("Connected with success");
+      console.log(res.data);
+    })
+    .catch((err) =>
+      console.error(
+        `[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0.`
+      )
+    );
+
   setInterval(async () => {
     const tests = await getNewTests();
     if (tests.length > 0) {

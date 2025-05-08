@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const judge0Url = `http://localhost:3002`;
+const judge0Url = `http://${process.env.PUBLIC_IP}:3002`;
 
 const axiosConfig = {
     proxy: false,

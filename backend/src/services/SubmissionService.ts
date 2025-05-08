@@ -88,12 +88,7 @@ export class SubmissionService {
         }
 
         TestQueue.put(() =>
-            SubmissionService.submitTests(
-                problem.tests,
-                newSubmission.id,
-                problem.languageId,
-                newSubmission.code,
-            ),
+            SubmissionService.submitTests(problem.tests, newSubmission.id),
         );
         return newSubmission;
     }
@@ -170,12 +165,7 @@ export class SubmissionService {
                     throw new SubmissionCreationError();
                 }
 
-                SubmissionService.submitTests(
-                    problem.tests,
-                    newSubmission.id,
-                    problem.languageId,
-                    newSubmission.code,
-                );
+                SubmissionService.submitTests(problem.tests, newSubmission.id);
             });
     }
 
@@ -251,6 +241,7 @@ export class SubmissionService {
                 time: '',
                 memory: 0,
             }));
+        
         const results = (
             await judge0Client.getSubmissionBatch(
                 tests
@@ -320,8 +311,6 @@ export class SubmissionService {
     private static submitTests(
         tests: { input: string; expected: string }[],
         submissionId: number,
-        languageId: number,
-        code: string,
     ) {
         tests.forEach(async (test) => {
             await TestRepository.createTest({

@@ -6,6 +6,8 @@ export const testSchema = pgTable('tests', {
     token: varchar('token', { length: 40 }),
     submissionId: integer('submission_id')
         .references(() => submissionSchema.id, { onDelete: 'cascade' }),
+    input: varchar({length: 256}),
+    expected: varchar({length: 256})
 });
 
 export type NewTest = typeof testSchema.$inferInsert;

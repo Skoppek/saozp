@@ -4,6 +4,8 @@ export const testSchema = pgTable('tests', {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     token: varchar({ length: 40 }),
     submission_id: integer(),
+    input: varchar({length: 256}),
+    expected: varchar({length: 256})
 });
 
 export type Test = typeof testSchema.$inferSelect;

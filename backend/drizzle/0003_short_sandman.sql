@@ -1,0 +1,1 @@
+ALTER TABLE "tests" RENAME COLUMN "output" TO "expected";

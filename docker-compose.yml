@@ -68,7 +68,7 @@ services:
       - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apidb:5432/postgres
       - FETCH_PERIOD=${FETCH_PERIOD}
       - FETCH_LIMIT=${FETCH_LIMIT}
-      - PUBLIC_IP=${PUBLIC_IP}
+      - JUDGE_CLIENT_IP=judgeclient
 
   backend:
     build:
@@ -100,6 +100,7 @@ services:
       - ADMIN_FIRST_NAME=${ADMIN_FIRST_NAME}
       - ADMIN_LAST_NAME=${ADMIN_LAST_NAME}
       - SESSION_LENGTH_IN_HOURS=${SESSION_LENGTH_IN_HOURS}
+      - JUDGE_CLIENT_IP=judgeclient
 
   frontend:
     build: ./frontend

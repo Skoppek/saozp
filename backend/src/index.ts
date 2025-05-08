@@ -43,7 +43,6 @@ try {
     console.log(
         `Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
     );
-    console.log(await judge0Client.getAbout())
 } catch (error) {
     let message = 'Unknown Error';
     console.error(`[ERR] | ${new Date().toLocaleString()} | Error encountered while initializing`);

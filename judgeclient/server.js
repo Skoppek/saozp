@@ -4,8 +4,9 @@ const axios = require("axios"); // Using axios to make API requests
 const app = express();
 const PORT = 3002;
 
-// const judge0Url = 'http://host.docker.internal:2358';
-const judge0Url = "http://172.17.0.1:2358";
+const judge0Url = 'http://host.docker.internal:2358';
+// const judge0Url = 'http://0.0.0.0:2358';
+// const judge0Url = "http://172.18.0.5:2358";
 
 let failuresCount = 0;
 
@@ -20,11 +21,17 @@ app.use(express.json());
 
 app
   .get("/about", async (req, res) => {
-    await axios
+    try {
+      console.log(`[INFO] | ${new Date().toDateString()} | About call from ${req.ip}`);
+      await axios
       .get(`${judge0Url}/about`, {
         params: req.query,
       })
       .then((judgeRes) => res.json(judgeRes.data));
+    } catch(err) {
+      console.error(`[ERR] | ${new Date().toDateString()} | Failed to get an about endpoint`);
+      res.json(err)
+    }
   })
   .get("/submissions/batch", async (req, res) => {
     try {

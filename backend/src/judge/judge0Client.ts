@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const judge0Url = `http://judgeclient:3002`;
+const judge0Url = `http://${process.env.JUDGE_CLIENT_IP}:3002`;
 
 const axiosConfig = {
     proxy: false,
@@ -112,6 +112,7 @@ const fields = [
 
 const isSubmission = (suspect: unknown): suspect is Submission => {
     console.log(suspect);
+    
     return (
         typeof suspect === 'object' &&
         suspect != null &&

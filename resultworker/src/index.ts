@@ -36,6 +36,7 @@ const submitToJudge0 = async (
   code: string
 ) => {
   let failedSubmitsCount = 0;
+  console.log({tests});
 
   Promise.all(
     tests.map(async (test) => {
@@ -75,10 +76,10 @@ const getNewTests = async () =>
     .limit(FETCH_LIMIT);
 
 async function main() {
+  console.log("Start");
   console.log(
     `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0.`
   );
-  console.log("Start");
   judge0Client
     .getAbout()
     .then((res) => {

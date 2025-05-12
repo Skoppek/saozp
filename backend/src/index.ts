@@ -14,7 +14,6 @@ import contestController from './controller/contestController';
 import testCasesController from './controller/testCasesController';
 import cors from '@elysiajs/cors';
 import { TestQueue } from './shared/testQueue';
-import judge0Client from './judge/judge0Client';
 
 const app = new Elysia()
     .use(cors({

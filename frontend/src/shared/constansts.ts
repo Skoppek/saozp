@@ -66,6 +66,7 @@ export const TEST_EXPECTED_VALUE_LENGTH_LIMIT = 64;
 
 export const dateTimeFormat = "DD.MM.YYYY - HH:mm";
 
+export const APP_NAME = "System Automatycznej Oceny Zadań Programistycznych";
 export const WELCOME_PICTURE = [
   " ▒▓███████▓▒░  ▒▓██████▓▒░  ▒▓██████▓▒  ▒▓████████▓▒ ▒▓███████▓▒░",
   "░▒▓█▓▒░       ▒▓█▓▒  ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░       ▒▓█▓▒ ▒▓█▓▒  ▒▓█▓▒░ ",

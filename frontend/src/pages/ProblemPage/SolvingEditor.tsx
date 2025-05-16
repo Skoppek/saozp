@@ -65,10 +65,10 @@ export const SolvingEditor = ({ contestId, stageId }: SolvingEditorProps) => {
       <div className="m-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {problem.name}
       </div>
-      <div className="flex gap-4">
+      <div className="flex h-[700px] gap-4">
         <div className="flex w-2/5 flex-col gap-2">
-          <Accordion className="h-fit w-full" collapseAll>
-            <Accordion.Panel>
+          <Accordion className="h-fit w-full">
+            <Accordion.Panel isOpen={true}>
               <Accordion.Title>Opis</Accordion.Title>
               <Accordion.Content>
                 <MarkdownEditor
@@ -81,14 +81,13 @@ export const SolvingEditor = ({ contestId, stageId }: SolvingEditorProps) => {
           </Accordion>
           <Button onClick={() => setIsOpen(true)}>Wyniki</Button>
         </div>
-        <div className="flex w-3/5 flex-col gap-2">
+        <div className="flex h-4/5 w-3/5 flex-col justify-around gap-2">
           <CodeEditor
             languages={getLanguageById(problem.languageId)}
             code={code}
             onChange={setCode}
             className="size-full"
           />
-          <div>KURWAAA</div>
           <SubmitControls
             submitFn={commitCode}
             isWaiting={isSubmitting}

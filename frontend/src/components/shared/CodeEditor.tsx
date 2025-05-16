@@ -30,7 +30,7 @@ export const CodeEditor = ({
     <div className={className}>
       <div className="flex h-full flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="flex w-full items-center justify-between gap-4">
-          {Array.isArray(languages) ? (
+          {Array.isArray(languages) ?
             <LanguageSelect
               languages={languages}
               onChange={(language) => {
@@ -39,9 +39,7 @@ export const CodeEditor = ({
               }}
               chosenLanguage={language}
             />
-          ) : (
-            <Badge className="w-fit">{languages.name}</Badge>
-          )}
+          : <Badge className="w-fit">{languages.name}</Badge>}
         </div>
         <Editor
           // eslint-disable-next-line tailwindcss/no-custom-classname
@@ -49,9 +47,7 @@ export const CodeEditor = ({
           value={code}
           defaultLanguage={language?.monacoForm}
           language={language?.monacoForm}
-          onChange={(value) => {
-            onChange?.(value ?? "");
-          }}
+          onChange={(value) => onChange?.(value ?? "")}
         />
       </div>
     </div>

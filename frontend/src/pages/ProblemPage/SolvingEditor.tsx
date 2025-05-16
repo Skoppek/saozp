@@ -15,11 +15,8 @@ interface SolvingEditorProps {
   stageId?: number;
 }
 
-export const SolvingEditor = ({
-  contestId,
-  stageId,
-}: SolvingEditorProps) => {
-  const {problem} = useProblemContext()
+export const SolvingEditor = ({ contestId, stageId }: SolvingEditorProps) => {
+  const { problem } = useProblemContext();
 
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState(problem.baseCode);
@@ -70,12 +67,6 @@ export const SolvingEditor = ({
       </div>
       <div className="flex gap-4">
         <div className="flex w-2/5 flex-col gap-2">
-          <SubmitControls
-            submitFn={commitCode}
-            isWaiting={isSubmitting}
-            contestId={contestId}
-            stageId={stageId}
-          />
           <Accordion className="h-fit w-full" collapseAll>
             <Accordion.Panel>
               <Accordion.Title>Opis</Accordion.Title>
@@ -94,10 +85,15 @@ export const SolvingEditor = ({
           <CodeEditor
             languages={getLanguageById(problem.languageId)}
             code={code}
-            onChange={(value) => {
-              setCode(value);
-            }}
+            onChange={setCode}
             className="size-full"
+          />
+          <div>KURWAAA</div>
+          <SubmitControls
+            submitFn={commitCode}
+            isWaiting={isSubmitting}
+            contestId={contestId}
+            stageId={stageId}
           />
         </div>
       </div>

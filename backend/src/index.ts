@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia';
+import { Elysia, error } from 'elysia';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 import { sessionCleaner } from './plugins/sessionCleaner';
 import { initAdmin } from './shared/init';
@@ -14,11 +14,14 @@ import contestController from './controller/contestController';
 import testCasesController from './controller/testCasesController';
 import cors from '@elysiajs/cors';
 import { TestQueue } from './shared/testQueue';
+import judge0Client from './judge/judge0Client';
 
 const app = new Elysia()
-    .use(cors({
-        origin: ['localhost']
-    }))    
+    .use(
+        cors({
+            origin: ['localhost'],
+        }),
+    )
     .get('', () => {
         return 'This is a valid response from SAOZP backend service!';
     })
@@ -33,7 +36,24 @@ const app = new Elysia()
     .use(adminsController)
     .use(groupController)
     .use(bundleController)
-    .use(contestController)
+    .use(contestController);
+
+try {
+    console.log(
+        `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0`,
+    );
+    await judge0Client.getAbout().then((res) => {
+        console.log(
+            `[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 successfully established`,
+        );
+        console.log(res.data);
+    });
+} catch {
+    console.error(
+        `[ERR] | ${new Date().toLocaleString()} | Connection to Judge0 failed`,
+    );
+    process.exit(1);
+}
 
 try {
     await initAdmin();
@@ -44,10 +64,12 @@ try {
     );
 } catch (error) {
     let message = 'Unknown Error';
-    console.error(`[ERR] | ${new Date().toLocaleString()} | Error encountered while initializing`);
+    console.error(
+        `[ERR] | ${new Date().toLocaleString()} | Error encountered while initializing`,
+    );
     if (error instanceof Error) message = error.message;
-    // we'll proceed, but let's report it
     console.error(message);
+    process.exit(1);
 }
 
 export type App = typeof app;

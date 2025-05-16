@@ -1,7 +1,6 @@
 import { Button } from "flowbite-react/components/Button";
 import { Navbar } from "flowbite-react/components/Navbar";
 import { Link, useNavigate } from "react-router-dom";
-import { DarkThemeToggle } from "flowbite-react/components/DarkThemeToggle";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { User } from "../../shared/interfaces/User.ts";
 import { Spinner } from "flowbite-react/components/Spinner";
@@ -101,7 +100,6 @@ export const Navigation = () => {
           ) : (
             <Button onClick={() => setShowModal(true)}>Zaloguj się</Button>
           )}
-          <DarkThemeToggle />
         </Navbar.Collapse>
       </Navbar>
       {showModal && (

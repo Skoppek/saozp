@@ -27,7 +27,7 @@ export const Root = () => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser: (user?: User) => setUser(user) }}
+      value={{ user, setUser }}
     >
       <ToastContextProvider>
         <Navigation />
@@ -39,7 +39,7 @@ export const Root = () => {
               </pre>
             </div>
             <div className="text-2xl dark:text-zinc-50/30">
-              System Automatycznej Oceny Zadań Programistycznych
+              System Automatycznej Oceny Zadań Programistycznych aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
             </div>
           </div>
         )}

@@ -23,7 +23,7 @@ services:
     image: migration
     build:
       context: .
-      dockerfile: ./backend/drizzle-migration/Dockerfile
+      dockerfile: ./migration/Dockerfile
       args:
         - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apidb:5432/postgres
     depends_on:
@@ -42,6 +42,8 @@ services:
       - '5173:5173'
     links:
       - backend
+    environment:
+      - HOST_IP=host.docker.internal
 
   judgeclient:
     build: ./judgeclient
@@ -51,11 +53,13 @@ services:
       - mynet
     ports:
       - '3002:3002'
+    environment:
+      - DEPLOYMENT=dev-compose
 
-  resultworker:
+  testsender:
     build:
-      context: ./resultworker
-    image: resultworker
+      context: ./testsender
+    image: testsender
     restart: always
     depends_on:
       migration:
@@ -80,7 +84,7 @@ services:
         condition: service_completed_successfully
       judgeclient:
         condition: service_started
-      resultworker:
+      testsender:
         condition: service_started
     healthcheck:
       test: curl --fail http://localhost:3000 || exit 1
@@ -114,7 +118,7 @@ services:
     networks:
       - mynet
     ports:
-      - '3003:80'
+      - '3001:3001'
     environment:
       - BACKEND_URL=${PUBLIC_IP}/api
 

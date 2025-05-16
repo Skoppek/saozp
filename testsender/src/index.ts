@@ -6,8 +6,8 @@ import { isNull, inArray, eq } from "drizzle-orm";
 import judge0Client from "./judge0Client";
 import { Pool } from "pg";
 
-const FETCH_LIMIT = parseInt(process.env.FETCH_LIMIT!);
-const FETCH_PERIOD = parseInt(process.env.FETCH_PERIOD!);
+const FETCH_LIMIT = parseInt(process.env.FETCH_LIMIT ?? "150");
+const FETCH_PERIOD = parseInt(process.env.FETCH_PERIOD ?? "3000");
 
 const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
@@ -21,9 +21,14 @@ export const db = drizzle({ client: pool });
 
 try {
   await db.execute("select 1");
+  console.log(
+    "[INFO] | " +
+      new Date().toLocaleString() +
+      " | Successfully connected to DB"
+  );
 } catch {
   console.error(
-    "[ERROR] | " + new Date().toLocaleString() + " | Failed to connect to DB"
+    "[ERR] | " + new Date().toLocaleString() + " | Failed to connect to DB"
   );
   process.exit(1);
 }
@@ -36,8 +41,6 @@ const submitToJudge0 = async (
   code: string
 ) => {
   let failedSubmitsCount = 0;
-  console.log({tests});
-
   Promise.all(
     tests.map(async (test) => {
       try {
@@ -78,19 +81,23 @@ const getNewTests = async () =>
 async function main() {
   console.log("Start");
   console.log(
-    `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0.`
+    `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0`
   );
   judge0Client
     .getAbout()
     .then((res) => {
-      console.log("Connected with success");
+      console.log(
+        `[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 established`
+      );
       console.log(res.data);
     })
-    .catch((err) =>
+    .catch((err) => {
       console.error(
-        `[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0.`
-      )
-    );
+        `[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0`
+      );
+      console.error(err);
+      process.exit(1);
+    });
 
   setInterval(async () => {
     const tests = await getNewTests();

@@ -8,7 +8,10 @@ const PORT = 3002;
 
 const { judge0Url } = deployment;
 
+console.log(`Judge0 address: ${judge0Url}`);
+
 try {
+  console.log("Testing connection to Judge0");
   await axios
   .get(`${judge0Url}/about`)
   .then((judgeRes) => {
@@ -17,7 +20,7 @@ try {
   });
 } catch {
   console.error(`[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0. Exiting.`);
-  process.exit()
+  process.exit(1)
 }
 
 let failuresCount = 0;

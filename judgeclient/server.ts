@@ -18,6 +18,7 @@ try {
       console.log(`[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 established.`);
       console.log(judgeRes.data);
     });
+  console.log("Testing connection to Judge0 finished");
 } catch {
   console.log(`[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0. Exiting.`);
   process.exit(1)

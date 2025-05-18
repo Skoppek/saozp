@@ -27,7 +27,7 @@ export const ValidatedInput = ({
   variant = "outlined",
   defaultValue = "",
 }: ValidatedInputProps) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
 
   const helperText = useMemo(() => {
     const result =
@@ -36,6 +36,7 @@ export const ValidatedInput = ({
       : undefined;
 
     if (result) onError();
+    
     onChange(value);
     isValid?.(!result);
 

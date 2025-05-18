@@ -18,7 +18,7 @@ export const ToastContextProvider = ({ children }: { children: ReactNode }) => {
     >
       {children}
       {content && (
-        <div className="absolute bottom-0 right-0 m-16">
+        <div className="absolute bottom-0 right-0 z-[60] m-16">
           <Toast duration={100}>
             {type == "success" ? (
               <div className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">

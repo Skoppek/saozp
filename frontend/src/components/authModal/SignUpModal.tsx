@@ -31,7 +31,8 @@ export const SignUpModal = ({ onSuccess, onError }: SignUpModalInterface) => {
         if (res?.error) throw res.error;
         onSuccess();
       })
-      .catch(onError);
+      .catch(onError)
+      .finally(() => setWaiting(false));
   }, [credentials, onError, onSuccess, profile]);
 
   return (

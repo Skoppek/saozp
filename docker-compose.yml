@@ -1,5 +1,5 @@
 services:
-  apidb:
+  db:
     image: postgres:16.2
     restart: always
     ports:
@@ -13,7 +13,7 @@ services:
       timeout: 5s
       retries: 10
     volumes:
-      - apidb:/home/mskop/saozp/psql
+      - db:/home/mskop/saozp/psql
     expose:
       - 5432
     networks:
@@ -25,9 +25,9 @@ services:
       context: .
       dockerfile: ./migration/Dockerfile
       args:
-        - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apidb:5432/postgres
+        - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/postgres
     depends_on:
-      apidb:
+      db:
         condition: service_healthy
     networks:
       - mynet
@@ -69,7 +69,7 @@ services:
     networks:
       - mynet
     environment:
-      - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apidb:5432/postgres
+      - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/postgres
       - FETCH_PERIOD=${FETCH_PERIOD}
       - FETCH_LIMIT=${FETCH_LIMIT}
       - JUDGE_CLIENT_IP=judgeclient
@@ -96,9 +96,9 @@ services:
     ports:
       - '3000:3000'
     links:
-      - apidb
+      - db
     environment:
-      - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@apidb:5432/postgres
+      - POSTGRES_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/postgres
       - ADMIN_LOGIN=${ADMIN_LOGIN}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - ADMIN_FIRST_NAME=${ADMIN_FIRST_NAME}
@@ -128,5 +128,5 @@ networks:
 
 volumes:
   data:
-  apidb:
+  db:
     driver: local

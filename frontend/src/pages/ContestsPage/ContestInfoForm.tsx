@@ -21,20 +21,24 @@ export const ContestInfoForm = ({
   onSubmit,
   submitLabel,
 }: ContestInfoFormProps) => {
-  const [name, setName] = useState(defaultData?.name ?? "");
-  const [description, setDescription] = useState(
-    defaultData?.description ?? "",
-  );
   const [showModal, setShowModal] = useState(false);
+
+  const [name, setName] = useState(defaultData?.name ?? "op");
+  const [description, setDescription] = useState(
+    defaultData?.description ?? "ej",
+  );
 
   const contest = useMemo<ContestBaseInfo>(
     () => ({ name, description }),
     [description, name],
   );
 
+
   return (
     <>
-      <Button onClick={() => setShowModal(true)} size={'xs'}>{submitLabel}</Button>
+      <Button onClick={() => setShowModal(true)} size={"xs"}>
+        {submitLabel}
+      </Button>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Informacje o zawodach</Modal.Header>
         <Modal.Body>
@@ -45,6 +49,7 @@ export const ContestInfoForm = ({
               minLength={1}
               maxLength={128}
               defaultValue={defaultData?.name}
+              onError={() => console.log("yay")}
             />
             <MarkdownEditor
               defaultMarkdown={defaultData?.description ?? ""}
@@ -54,7 +59,7 @@ export const ContestInfoForm = ({
             />
             <Button
               color={"success"}
-              disabled={!inRange(contest.name.length, 1, 65)}
+              disabled={!inRange(contest.name.length, 4, 65)}
               onClick={() => {
                 onSubmit(contest);
                 setShowModal(false);

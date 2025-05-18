@@ -20,10 +20,10 @@ if (!isDeployment(DEPLOYMENT)) {
 
 const judge0Url =
   DEPLOYMENT == "dev"
-    ? "host.docker.internal:2358"
+    ? "http://host.docker.internal:2358"
     : DEPLOYMENT == "dev-compose"
-    ? "host.docker.internal:2358"
-    : "172.18.0.5:2358";
+    ? "http://host.docker.internal:2358"
+    : "http://172.18.0.5:2358";
 
 export default {
   DEPLOYMENT,

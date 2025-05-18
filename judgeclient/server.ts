@@ -23,6 +23,8 @@ try {
   process.exit(1)
 }
 
+console.log("Judge0 connection check passed.");
+
 let failuresCount = 0;
 
 setInterval(() => {

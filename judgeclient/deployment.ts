@@ -25,8 +25,6 @@ const judge0Url =
     ? "http://host.docker.internal:2358"
     : "http://172.18.0.5:2358";
 
-console.log(`Judge0 address: ${judge0Url}`);
-
 export default {
   DEPLOYMENT,
   judge0Url

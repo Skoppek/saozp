@@ -28,7 +28,7 @@ try {
   );
 } catch {
   console.error(
-    "[ERR] | " + new Date().toLocaleString() + " | Failed to connect to DB"
+    "[ERR] | " + new Date().toLocaleString() + " | Failed to connect to DB. Exiting."
   );
   process.exit(1);
 }
@@ -79,7 +79,6 @@ const getNewTests = async () =>
     .limit(FETCH_LIMIT);
 
 async function main() {
-  console.log("Start");
   console.log(
     `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0`
   );
@@ -98,6 +97,8 @@ async function main() {
       console.error(err);
       process.exit(1);
     });
+    
+  console.log("Start");
 
   setInterval(async () => {
     const tests = await getNewTests();

@@ -17,12 +17,12 @@ import { TestQueue } from './shared/testQueue';
 import judge0Client from './judge/judge0Client';
 
 const app = new Elysia()
+    .get('', () => 'This is a valid response from SAOZP backend service!')
     .use(
         cors({
             origin: ['localhost'],
         }),
     )
-    .get('', () => 'This is a valid response from SAOZP backend service!')
     .use(generalErrorHandler)
     .use(sessionCleaner)
     .use(passwordResetTokenCleaner)

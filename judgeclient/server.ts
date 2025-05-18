@@ -1,7 +1,7 @@
 import deployment from "./deployment.js";
 
-import express from 'express' 
-import axios from 'axios' 
+import express from "express";
+import axios from "axios";
 
 const app = express();
 const PORT = 3002;
@@ -10,19 +10,21 @@ const { judge0Url } = deployment;
 
 console.log(`Judge0 address: ${judge0Url}`);
 
-// try {
-//   console.log("Testing connection to Judge0");
-//   await axios
-//     .get(`${judge0Url}/about`)
-//     .then((judgeRes) => {
-//       console.log(`[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 established.`);
-//       console.log(judgeRes.data);
-//     });
-//   console.log("Testing connection to Judge0 finished.");
-// } catch {
-//   console.log(`[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0. Exiting.`);
-//   process.exit(1)
-// }
+console.log("Testing connection to Judge0");
+await axios
+  .get(`${judge0Url}/about`)
+  .then((judgeRes) => {
+    console.log(
+      `[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 established.`
+    );
+    console.log(judgeRes.data);
+  })
+  .catch(() => {
+    console.log(
+      `[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0. Exiting.`
+    );
+    process.exit(1);
+  });
 
 let failuresCount = 0;
 

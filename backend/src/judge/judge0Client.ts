@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 const judge0Url = `http://${process.env.JUDGE_CLIENT_IP}:3002`;
+console.log(`Recieved Judge0 address: ${judge0Url}`);
 
 const axiosConfig = {
     proxy: false,

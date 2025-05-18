@@ -1,4 +1,4 @@
-import { Elysia, error } from 'elysia';
+import { Elysia } from 'elysia';
 import { generalErrorHandler } from './errorHandlers/generalErrorHandler';
 import { sessionCleaner } from './plugins/sessionCleaner';
 import { initAdmin } from './shared/init';
@@ -22,9 +22,7 @@ const app = new Elysia()
             origin: ['localhost'],
         }),
     )
-    .get('', () => {
-        return 'This is a valid response from SAOZP backend service!';
-    })
+    .get('', () => 'This is a valid response from SAOZP backend service!')
     .use(generalErrorHandler)
     .use(sessionCleaner)
     .use(passwordResetTokenCleaner)

@@ -76,9 +76,9 @@ export const MyContestsPage = () => {
         <div className="flex w-1/2 flex-col gap-4 overflow-x-auto pt-12">
           <ContestCreateModal
             show={showCreationModal}
-            onClose={() => {
+            onClose={async () => {
               setShowCreationModal(false);
-              void refetch();
+              await refetch();
             }}
           />
           <div className="flex w-full justify-between gap-4">

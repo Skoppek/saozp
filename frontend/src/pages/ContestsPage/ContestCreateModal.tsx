@@ -12,7 +12,7 @@ export const ContestCreateModal = ({
   onClose,
 }: ContestCreateModalProps) => {
   return (
-    <Modal show={show} onClose={() => onClose()}>
+    <Modal show={show} onClose={onClose}>
       <Modal.Header>Tworzenie zawodów</Modal.Header>
       <Modal.Body>
         <ContestInfoForm
@@ -21,7 +21,7 @@ export const ContestCreateModal = ({
             description: "",
           }}
           onSubmit={(data) =>
-            apiClient.contests.create(data).then(() => onClose())
+            apiClient.contests.create(data).then(onClose)
           }
           submitLabel={"Stwórz"}
         />

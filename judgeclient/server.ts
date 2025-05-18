@@ -13,13 +13,13 @@ console.log(`Judge0 address: ${judge0Url}`);
 try {
   console.log("Testing connection to Judge0");
   await axios
-  .get(`${judge0Url}/about`)
-  .then((judgeRes) => {
-    console.log(`[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 established.`);
-    console.log(judgeRes.data);
-  });
+    .get(`${judge0Url}/about`)
+    .then((judgeRes) => {
+      console.log(`[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 established.`);
+      console.log(judgeRes.data);
+    });
 } catch {
-  console.error(`[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0. Exiting.`);
+  console.log(`[ERR] | ${new Date().toLocaleString()} | Failed to connect to Judge0. Exiting.`);
   process.exit(1)
 }
 

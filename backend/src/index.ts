@@ -20,7 +20,7 @@ const app = new Elysia()
     .get('', () => 'This is a valid response from SAOZP backend service!')
     .use(
         cors({
-            origin: ['localhost'],
+            origin: process.env.DEPLOYMENT == 'prod' ? true : ['localhost'],
         }),
     )
     .use(generalErrorHandler)
@@ -35,6 +35,27 @@ const app = new Elysia()
     .use(groupController)
     .use(bundleController)
     .use(contestController);
+
+// try {
+    console.log(
+        `[INFO] | ${new Date().toLocaleString()} | Testing connection to Judge0 client http://${process.env.JUDGE_CLIENT_IP}:3002`,
+    );
+    await judge0Client
+        .testConnection()
+        .then(() =>
+            console.log(
+                `[INFO] | ${new Date().toLocaleString()} | Connection to Judge0 client successfully established`,
+            ),
+        )
+        .catch(() => {
+            throw new Error();
+        });
+// } catch {
+    // console.error(
+        // `[ERR] | ${new Date().toLocaleString()} | Connection to Judge0 client failed`,
+    // );
+    // process.exit(1);
+// }
 
 try {
     console.log(

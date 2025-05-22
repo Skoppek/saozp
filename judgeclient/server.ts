@@ -1,12 +1,10 @@
-import deployment from "./deployment.js";
+import judge0Url from "./judge0Url.js";
 
 import express from "express";
 import axios from "axios";
 
 const app = express();
 const PORT = 3002;
-
-const { judge0Url } = deployment;
 
 console.log(`Judge0 address: ${judge0Url}`);
 
@@ -38,6 +36,13 @@ setInterval(() => {
 app.use(express.json());
 
 app
+  .get("", async (req, res) => {
+    console.log(
+        `[INFO] | ${new Date().toLocaleString()} | Check call from ${req.ip}`
+    );
+    res.status(200)
+    res.json("Good call")
+  })
   .get("/about", async (req, res) => {
     try {
       console.log(

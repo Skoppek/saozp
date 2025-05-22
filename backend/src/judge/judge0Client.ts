@@ -112,8 +112,6 @@ const fields = [
 ];
 
 const isSubmission = (suspect: unknown): suspect is Submission => {
-    console.log(suspect);
-    
     return (
         typeof suspect === 'object' &&
         suspect != null &&
@@ -190,9 +188,12 @@ const getSubmissionBatch = async (
         });
 };
 
+const testConnection = async () => await axios.get(judge0Url, {...axiosConfig, timeout: 1000}).then(() => true)
+
 export default {
     getAbout,
     getLanguageById,
     submit,
     getSubmissionBatch,
+    testConnection
 };

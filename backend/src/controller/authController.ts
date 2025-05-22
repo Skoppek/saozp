@@ -19,9 +19,9 @@ export default new Elysia({ prefix: 'auth' })
                 value: newSession.id,
                 httpOnly: true,
                 path: '/',
-                sameSite: 'none',
+                sameSite: 'lax',
                 expires: newSession.expiresAt,
-                secure: true,
+                secure: false,
             });
         },
         {
@@ -43,9 +43,9 @@ export default new Elysia({ prefix: 'auth' })
                 value: newSession.id,
                 httpOnly: true,
                 path: '/',
-                sameSite: 'none',
+                sameSite: 'lax',
                 expires: newSession.expiresAt,
-                secure: true,
+                secure: false,
             });
 
             return userId;

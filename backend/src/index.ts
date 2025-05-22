@@ -19,9 +19,9 @@ import judge0Client from './judge/judge0Client';
 const app = new Elysia()
     .get('', () => 'This is a valid response from SAOZP backend service!')
     .use(
-        cors({
-            origin: ['localhost'],
-        }),
+       cors({
+	origin: true
+	})
     )
     .use(generalErrorHandler)
     .use(sessionCleaner)

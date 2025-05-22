@@ -23,7 +23,7 @@ const judge0Url =
     ? "http://host.docker.internal:2358"
     : DEPLOYMENT == "dev-compose"
     ? "http://host.docker.internal:2358"
-    : "http://172.18.0.5:2358";
+    : "http://193.107.32.226:5173/judge";
 
 export default {
   DEPLOYMENT,

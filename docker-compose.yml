@@ -13,11 +13,7 @@ services:
       timeout: 5s
       retries: 10
     volumes:
-<<<<<<< HEAD
-      - apidb:/var/lib/postgresql/data
-=======
       - db:/home/mskop/saozp/psql
->>>>>>> cdc80fc56498537d4f19bc947295c8d513eed001
     expose:
       - 5432
     networks:
@@ -44,10 +40,6 @@ services:
       - mynet
     ports:
       - '5173:5173'
-    links:
-      - backend
-    environment:
-      - HOST_IP=host.docker.internal
 
   judgeclient:
     build: ./judgeclient
@@ -58,7 +50,8 @@ services:
     ports:
       - '3002:3002'
     environment:
-      - DEPLOYMENT=dev-compose
+    # "dev", "dev-compose", "prod"
+      - DEPLOYMENT=prod
 
   testsender:
     build:
@@ -90,8 +83,10 @@ services:
         condition: service_started
       testsender:
         condition: service_started
+      proxy:
+        condition: service_started
     healthcheck:
-      test: curl --fail http://localhost:3000 || exit 1
+      test: curl --fail http://193.107.32.226:5173/api/ || exit 1
       interval: 30s
       timeout: 30s
       retries: 3

@@ -10,11 +10,11 @@ export default new Elysia({
             .json()
             .then((val) => TestCasesService.validateTestsFile(val)),
     {
-        body: t.Object({
-            testsFile: t.File({
-                type: 'application/json',
-            }),
-        }),
+//        body: t.Object({
+  //          testsFile: t.File({
+    //            type: 'application/json',
+      //      }),
+        //}),
         response: t.Union([
             t.Null(),
             t.Array(

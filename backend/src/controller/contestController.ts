@@ -166,13 +166,9 @@ export default new Elysia({
                             },
                             (app) =>
                                 app
-                                    .resolve(({ params: { stageId } }) => {
-                                        return {
-                                            stageService: new StageService(
-                                                stageId,
-                                            ),
-                                        };
-                                    })
+                                    .resolve(({ params: { stageId } }) => ({
+                                        stageService: new StageService(stageId),
+                                    }))
                                     .get(
                                         '',
                                         async ({ stageService }) =>

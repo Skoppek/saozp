@@ -5,7 +5,6 @@ import {
     ContestNotFoundError,
 } from '../errors/contestErrors';
 import ProfileRepository from '../repository/ProfileRepository';
-import { Contest } from '../model/schemas/contestSchema';
 import {
     ContestListQuery,
     parseContestListQuery,
@@ -18,6 +17,7 @@ import judge0Client from '../judge/judge0Client';
 import TestRepository from '../repository/TestRepository';
 import judge0Statuses from '../shared/judge0Statuses';
 import ProblemRepository from '../repository/ProblemRepository';
+import { Contest } from '../db/schema/contestSchema';
 
 export default class ContestService {
     private submissionService = new SubmissionService();
@@ -87,7 +87,6 @@ export default class ContestService {
         const allSubmissions = await SubmissionRepository.getSubmissionsList(
             undefined,
             undefined,
-            true,
             this.contestId,
         );
 
@@ -168,7 +167,6 @@ export default class ContestService {
         const submissions = await SubmissionRepository.getSubmissionsList(
             participant,
             undefined,
-            true,
             stage,
         );
 
@@ -196,7 +194,7 @@ export default class ContestService {
         const tests = await TestRepository.getTestsOfSubmission(submission);
         const results = (
             await judge0Client.getSubmissionBatch(
-                tests.map((test) => test.token),
+                tests.filter((test) => test != null).map((test) => test.token!),
             )
         ).submissions;
 
@@ -218,7 +216,6 @@ export default class ContestService {
                     await SubmissionRepository.getSubmissionsList(
                         participantId,
                         problem.problemId,
-                        true,
                         stageId,
                     );
 

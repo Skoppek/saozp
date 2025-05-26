@@ -1,4 +1,4 @@
-import { NewStage } from '../model/schemas/stageSchema';
+import { NewStage } from '../db/schema/stageSchema';
 import ProblemRepository from '../repository/ProblemRepository';
 import StageRepository from '../repository/StageRepository';
 

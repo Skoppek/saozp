@@ -23,9 +23,9 @@ export const ContestInfoForm = ({
 }: ContestInfoFormProps) => {
   const [showModal, setShowModal] = useState(false);
 
-  const [name, setName] = useState(defaultData?.name ?? "op");
+  const [name, setName] = useState(defaultData?.name ?? "");
   const [description, setDescription] = useState(
-    defaultData?.description ?? "ej",
+    defaultData?.description ?? "",
   );
 
   const contest = useMemo<ContestBaseInfo>(

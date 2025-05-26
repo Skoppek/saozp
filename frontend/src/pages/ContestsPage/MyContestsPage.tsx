@@ -78,10 +78,10 @@ export const MyContestsPage = () => {
             show={showCreationModal}
             onClose={async () => {
               setShowCreationModal(false);
-              await refetch();
+              refetch();
             }}
           />
-          <div className="flex w-full justify-between gap-4">
+          <div className="flex w-full justify-between gap-4 pr-4">
             <TextFilterInput
               label="Szukaj"
               onChange={(value) => setNameFilter(value.toLowerCase())}

@@ -172,21 +172,7 @@ export default new Elysia({
                                     .get(
                                         '',
                                         async ({ stageService }) =>
-                                            await stageService.getDetails(),
-                                        {
-                                            response: t.Object({
-                                                name: t.String(),
-                                                startDate: t.Date(),
-                                                endDate: t.Date(),
-                                                problems: t.Array(
-                                                    t.Object({
-                                                        problemId: t.Number(),
-                                                        name: t.String(),
-                                                        languageId: t.Number(),
-                                                    }),
-                                                ),
-                                            }),
-                                        },
+                                            await stageService.getDetails()
                                     )
                                     .post(
                                         '/stats',

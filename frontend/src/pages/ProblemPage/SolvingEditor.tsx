@@ -40,14 +40,14 @@ export const SolvingEditor = ({ contestId, stageId }: SolvingEditorProps) => {
       apiClient.submissions
         .submit({
           problemId: problem.problemId,
-          code: code,
+          code,
           userTests: [],
           isCommit: !isTest,
           createdAt: new Date(),
           stageId,
         })
         .then(() => {
-          setIsSubmitting(false);
+          setTimeout(() => setIsSubmitting(false), 1000);
           void refetch();
         });
     },

@@ -1,6 +1,5 @@
 import { integer } from 'drizzle-orm/pg-core/columns';
 import { pgTable } from 'drizzle-orm/pg-core/table';
-import { primaryKey } from 'drizzle-orm/pg-core';
 import { userSchema } from './userSchema';
 import { groupSchema } from './groupSchema';
 
@@ -13,10 +12,5 @@ export const usersToGroupSchema = pgTable(
         groupId: integer('group_id')
             .references(() => groupSchema.id, { onDelete: 'cascade' })
             .notNull(),
-    },
-    (table) => {
-        return {
-            pk: primaryKey({ columns: [table.userId, table.groupId] }),
-        };
-    },
+    }
 );

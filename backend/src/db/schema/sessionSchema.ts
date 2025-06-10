@@ -1,4 +1,4 @@
-import { index, integer, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { userSchema } from './userSchema';
 
 export const sessionSchema = pgTable(
@@ -9,10 +9,7 @@ export const sessionSchema = pgTable(
             .references(() => userSchema.id)
             .notNull(),
         expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
-    },
-    (sessionSchema) => ({
-        sessionIdIdx: index('session_id_idx').on(sessionSchema.id),
-    }),
+    }
 );
 
 export type NewSession = typeof sessionSchema.$inferInsert;

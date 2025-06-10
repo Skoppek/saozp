@@ -1,5 +1,4 @@
 import {
-    index,
     integer,
     pgTable,
     serial,
@@ -28,10 +27,7 @@ export const submissionSchema = pgTable(
         }),
         rerun: timestamp('rerun'),
         ip: varchar('ip', { length: 64 }),
-    },
-    (submissionSchema) => ({
-        userIdIdx: index('submission_user_id_idx').on(submissionSchema.userId),
-    }),
+    }
 );
 
 export type NewSubmission = typeof submissionSchema.$inferInsert;
